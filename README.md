@@ -9,3 +9,8 @@ wget https://bit.ly/cgray-percona
 
 wget https://bit.ly/cgray-webmin
 
+------------------------------------------
+once downloaded do the following:
+
+chmod u+x <FILENAME>
+./<FILENAME>
