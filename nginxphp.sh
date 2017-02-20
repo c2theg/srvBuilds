@@ -43,7 +43,7 @@ cd ~
 echo "Downloading PHP-Fastcgi Config"
 wget "/etc/init.d/php-fastcgi" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/php-fastcgi.sh"
 wait
-cp "php-fastcgi" "/etc/init.d/php-fastcgi"
+sudo cp "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
 echo "PHP Config Download Complete"
@@ -52,7 +52,7 @@ echo "PHP Config Download Complete"
 echo "Downloading Nginx Config"
 wget "nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/nginx.conf"
 wait
-cp "nginx.conf" "/etc/nginx/nginx.conf"
+sudo cp "nginx.conf" "/etc/nginx/nginx.conf"
 wait
 echo "Nginx Config Download Complete"
 
@@ -60,7 +60,7 @@ echo "Nginx Config Download Complete"
 echo "Basic HTTP Website Config"
 wget "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1.conf"
 wait
-cp "site1.conf" "/etc/nginx/sites-enabled/site1.conf"
+sudo cp "site1.conf" "/etc/nginx/sites-enabled/site1.conf"
 wait
 echo "Basic HTTP Website Config Download Complete"
 
@@ -68,6 +68,6 @@ echo "Basic HTTP Website Config Download Complete"
 echo "SSL-TLS HTTP Website Config"
 wget "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1_tls.conf"
 wait
-cp "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
+sudo cp "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
 wait
 echo "SSL-TLS HTTP Website Config Download Complete"
