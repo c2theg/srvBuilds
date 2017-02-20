@@ -16,6 +16,10 @@ sudo apt-get install -y php7.0-mysql
 wait
 
 echo "Downloading Config"
-wget "/etc/mysql/my.cnf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/my.cnf"
+wget "my.cnf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/my.cnf"
+wait
+cp "my.cnf" "/etc/mysql/my.cnf"
 wait
 echo "Percona Config Download Complete"
+sudo /etc/init.d/mysql restart
+
