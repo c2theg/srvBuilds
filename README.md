@@ -12,5 +12,8 @@ wget https://bit.ly/cgray-webmin
 ------------------------------------------
 once downloaded do the following:
 
-chmod u+x <FILENAME>
-sudo ./<FILENAME>
+chmod u+x < FILENAME >
+sudo ./< FILENAME >
+
+
+Thats it
