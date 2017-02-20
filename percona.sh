@@ -1,10 +1,6 @@
 sudo apt-key adv --keyserver keys.gnupg.net --recv-keys 8507EFA5
 wait
 
-#Add To
-#nano /etc/apt/sources.list
-#deb http://repo.percona.com/apt trusty main
-#deb-src http://repo.percona.com/apt trusty main
 echo "deb http://repo.percona.com/apt trusty main" >> /etc/apt/sources.list
 echo "deb-src http://repo.percona.com/apt trusty main" >> /etc/apt/sources.list
 wait
@@ -17,3 +13,9 @@ wait
 
 #sudo apt-get install -y php5-mysqlnd 
 sudo apt-get install -y php7.0-mysql
+wait
+
+echo "Downloading Config"
+wget "/etc/mysql/my.cnf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/my.cnf"
+wait
+echo "Percona Config Download Complete"

@@ -33,12 +33,33 @@ make test
 sudo make install
 #----------------------
 
-#---- NGINX --------
-
+#------- NGINX --------
 sudo add-apt-repository ppa:chris-lea/nginx-devel
 sudo apt-get -y update && apt-get -y install nginx nginx-common nginx-full fcgiwrap
 
 #-- download php-fastcgi file ---
 #sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start  && update-rc.d php-fastcgi defaults
 
+echo "Downloading PHP-Fastcgi Config"
+wget "/etc/init.d/php-fastcgi" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/php-fastcgi.sh"
+wait
+sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
+echo "PHP Config Download Complete"
 
+
+echo "Downloading Nginx Config"
+wget "/etc/nginx/nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/nginx.conf"
+wait
+echo "Nginx Config Download Complete"
+
+
+echo "Basic HTTP Website Config"
+wget "/etc/nginx/sites-enabled/site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1.conf"
+wait
+echo "Basic HTTP Website Config Download Complete"
+
+
+echo "SSL-TLS HTTP Website Config"
+wget "/etc/nginx/sites-enabled/site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1_tls.conf"
+wait
+echo "SSL-TLS HTTP Website Config Download Complete"
