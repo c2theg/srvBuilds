@@ -24,7 +24,6 @@ echo "\r\n"
 echo "\r\n -------------- Done Cleaning system -------- \r\n"
 echo "\r\n"
 echo "\r\n"
-echo "\r\n"
 echo "But Just incase you still dont have space... \r\n"
 echo "\r\n"
 sudo uname -r
