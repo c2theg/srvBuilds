@@ -62,6 +62,8 @@ wget "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/sit
 wait
 sudo cp "site1.conf" "/etc/nginx/sites-enabled/site1.conf"
 wait
+rm "/etc/nginx/sites-enabled/default"
+wait
 echo "Basic HTTP Website Config Download Complete"
 
 
@@ -71,3 +73,8 @@ wait
 sudo cp "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
 wait
 echo "SSL-TLS HTTP Website Config Download Complete"
+wait
+echo "restarting nginx... "
+echo " "
+/etc/init.d/nginx restart
+echo "Done all"
