@@ -84,10 +84,11 @@ sudo /etc/init.d/redis-server restart
 echo " "
 echo " "
 echo " "
-echo " Running benchmark again. This will fail. please edit the command and add password. https://redis.io/topics/benchmarks "
+echo " Running benchmark again. https://redis.io/topics/benchmarks "
 echo " "
 echo " "
-redis-benchmark -q -n 1000 -c 10 -P 5 -p 46378 -a password
+redis-benchmark -q -n 1000 -c 10 -P 5 -p 46378 
+# -a password
 wait
 echo " "
 echo " "
@@ -100,6 +101,6 @@ echo " "
 echo " redis-cli -p 46378 -a <password>"
 echo "      >  info"
 echo " "
-echo " ./usr/bin/redis-server /etc/redis/redis_slave.conf"
+echo " /usr/bin/redis-server /etc/redis/redis_slave.conf"
 echo " "
 echo "Done!"
