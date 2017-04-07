@@ -26,4 +26,12 @@ sudo apt-get -y update
 wait
 sudo apt-get install -y btsync
 
-
+echo " "
+echo " "
+echo " "
+echo "--------------------------------------"
+echo "If you want to reconfigure btsync enter the following command"
+echo "  sudo dpkg-reconfigure btsync  "
+echo " "
+echo " "
+echo " "
