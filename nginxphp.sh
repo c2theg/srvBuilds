@@ -20,17 +20,18 @@ sudo pear channel-update pear.php.net
 sudo pear install mail Net_SMTP Auth_SASL2-0.1.0 mail_mime
 
 #--- PHP Memcached ----
-sudo apt-get install -y php-memcached  php-igbinary php-memcached php-msgpack
-sudo apt-get install -y php7.0-dev git pkg-config build-essential libmemcached-dev
-cd ~
-git clone https://github.com/php-memcached-dev/php-memcached.git
-cd php-memcached
-git checkout php7
-phpize
-./configure --disable-memcached-sasl
-make
-make test
-sudo make install
+sudo apt-get install -y php7.0-memcached memcached
+wait
+echo "Downloading Memcache Config"
+wget "memcached.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/memcached.conf"
+wait
+sudo cp "memcached.conf" "/etc/memcached.conf"
+wait
+echo "Memcache Config Download Complete"
+wait
+echo "Restarting service..."
+/etc/init.d/memcached restart
+echo "DONE! "
 #----------------------
 
 #------- NGINX --------
