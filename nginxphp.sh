@@ -35,7 +35,7 @@ echo "DONE! "
 #----------------------
 
 #------- NGINX --------
-sudo add-apt-repository ppa:chris-lea/nginx-devel
+sudo add-apt-repository -y ppa:chris-lea/nginx-devel
 sudo apt-get -y update && apt-get -y install nginx nginx-common nginx-full fcgiwrap
 
 #-- download php-fastcgi file ---
