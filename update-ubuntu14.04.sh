@@ -7,6 +7,8 @@ sudo apt-get -y autoremove
 wait
 apt-get dist-upgrade -y
 wait
+sudo dpkg --configure -a
+wait
 apt-get update && apt-get upgrade -y
 wait
 echo "-----------------------------------------------------------------------"
