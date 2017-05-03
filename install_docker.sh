@@ -41,5 +41,12 @@ wait
 
 echo "Running sample container"
 sudo docker run hello-world
+wait
+echo "\r\n \r\n -------------------------------------------------------------- \r\n \r\n"
 
-echo "\r\n \r\n DONE! \r\n \r\n"
+echo "Downloading a better way to manage containers... container! \r\n.."
+echo " PORTAINER! - https://github.com/portainer/portainer \r\n "
+
+sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
+echo "Visit http://127.0.0.1:9000/ in chrome / firefox"
+echo "\r\n \r\n Docker deployment complete!!! \r\n \r\n"
