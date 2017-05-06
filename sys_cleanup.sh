@@ -1,3 +1,9 @@
+#!/bin/sh
+#    If you update this from Windows, using Notepad ++, do the following:
+#       apt-get install dos2unix
+#       dos2unix install_redis.sh
+#       chmod u+x install_redis.sh
+#
 clear
 echo " --- Running System cleanup...  "
 echo " "
