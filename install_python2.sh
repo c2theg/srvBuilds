@@ -7,8 +7,8 @@ sudo -E apt-get -y upgrade
 wait
 #-- Upgrade to latest Kernal --
 sudo -E apt-get -y dist-upgrade
-wait
-sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
+#wait
+#sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
 wait
 sudo -E apt-get install -y python-software-properties python python-pip python-dev python2.7
 wait
