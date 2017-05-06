@@ -11,8 +11,8 @@ echo "This install's speedtest to your"
 # https://www.howtoforge.com/tutorial/check-internet-speed-with-speedtest-cli-on-ubuntu/
 
 
-apt-get update
-apt-get install python-pip
+sudo apt-get -y apt-get update
+sudo apt-get -y apt-get install python-pip
 pip install speedtest-cli
 
 cd /tmp
