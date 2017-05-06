@@ -14,14 +14,16 @@ wait
 echo "-----------------------------------------------------------------------"
 echo " "
 echo " "
-echo "Downloading latest custom config's "
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/50unattended-upgrades
-wait
-cp 50unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades
-echo "Done setting up AutoUpdates!"
-echo " "
-echo " "
-echo " "
+if [ -s "50unattended-upgrades" ] then
+  echo "Downloading latest custom config's "
+  wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/50unattended-upgrades
+  wait
+  cp 50unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades
+  echo "Done setting up AutoUpdates!"
+  echo " "
+  echo " "
+  echo " "
+fi
 echo "----------------------------------------------"
 wait
 sudo apt-get autoclean
