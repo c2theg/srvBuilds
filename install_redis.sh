@@ -13,8 +13,6 @@ wait
 sudo apt-get install -y tcl8.5
 wait
 sudo apt-get install -y redis-server
-#sudo apt-get install -y python-pip
-#wait
 #pip install redis-trib
 wait
 clear
