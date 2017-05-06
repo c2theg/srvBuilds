@@ -11,15 +11,13 @@ wait
 sudo apt-get -y upgrade
 wait
 
-
 sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
 wait
 
-
-apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties autossh screen whois 
+sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties autossh screen whois 
 wait
 
-apt-get install -y traceroute htop sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer 
+sudo -E apt-get install -y traceroute htop sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer hping3 
 wait
 
 echo "(display graph from speedometer) \r\n
