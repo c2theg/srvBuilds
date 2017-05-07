@@ -6,9 +6,8 @@ sudo apt-get -y dist-upgrade
 wait
 sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute htop sysstat iptraf iftop speedometer ncdu
 #---------- PYTHON STUFF ----------------------------------
-sudo apt-get install -y python2-virtualenv python3-virtualenv libicu-dev python-software-properties python python-pip python-dev python3-setuptools
-
-wait
+#sudo apt-get install -y python2-virtualenv python3-virtualenv libicu-dev python-software-properties python python-pip python-dev python3-setuptools
+#wait
 #--- PHP 7.0 ---
 sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 wait
@@ -52,7 +51,6 @@ echo "PHP Config Download Complete"
 
 echo "Downloading Nginx Config"
 wget "nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/nginx.conf"
-wait
 sudo cp "nginx.conf" "/etc/nginx/nginx.conf"
 wait
 echo "Nginx Config Download Complete"
