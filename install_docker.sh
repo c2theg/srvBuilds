@@ -36,8 +36,15 @@ wait
 apt-cache madison docker-ce
 wait
 
-sudo apt-get install docker-ce
+sudo apt-get -y install docker-ce
 wait
+
+echo "Cleaning the system... "
+sudo apt-get -y autoremove
+sudo apt-get -y autoclean
+sudo apt-get -y clean
+echo " ... done! \r\n \r\n"
+
 
 echo "Running sample container"
 sudo docker run hello-world
