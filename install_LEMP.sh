@@ -19,13 +19,14 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  2.4                             \r\n
+Version:  1.0                             \r\n
 Last Updated:  5/7/2017
 \r\n \r\n
 Updating system first..."
-apt-get update && apt-get upgrade -y
+sudo -E apt-get update
 wait
-
+sudo -E apt-get upgrade -y
+wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo apt-get -y dist-upgrade
