@@ -17,9 +17,10 @@ echo "
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-"
-echo "\r\n \r\n"
-echo "Downloading required files.."
+
+\r\n \r\n
+Downloading required files.."
+
 sudo apt-get -y install unattended-upgrades
 wait
 sudo apt-get -y autoremove
