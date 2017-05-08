@@ -23,9 +23,10 @@ Version:  1.0                             \r\n
 Last Updated:  5/7/2017
 \r\n \r\n
 Updating system first..."
-apt-get update && apt-get upgrade -y
+sudo -E apt-get update
 wait
-
+sudo -E apt-get upgrade -y
+wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Install Percona 5.6"
@@ -38,7 +39,6 @@ sudo echo "deb-src http://repo.percona.com/apt trusty main" >> /etc/apt/sources.
 wait
 sudo apt-get update -y
 wait
-
 sudo apt-get install -y percona-server-server-5.6 percona-server-client-5.6
 wait
 echo " "
