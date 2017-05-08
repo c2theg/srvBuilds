@@ -23,15 +23,14 @@ Version:  1.0                             \r\n
 Last Updated:  5/7/2017
 \r\n \r\n
 Updating system first..."
-apt-get update && apt-get upgrade -y
+sudo -E apt-get update
 wait
-
+sudo -E apt-get upgrade -y
+wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-
 sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
 wait
-
 sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties autossh screen whois 
 wait
 
