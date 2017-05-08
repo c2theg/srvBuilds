@@ -5,7 +5,7 @@
 #       chmod u+x <FILE>
 #
 clear
-echo "                                                                                 
+echo "
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
@@ -19,8 +19,15 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Downloading required files.."
+Version:  1.4                             \r\n
+Last Updated:  5/7/2017
+\r\n \r\n
+Updating system first..."
+apt-get update && apt-get upgrade -y
+wait
 
+echo "Downloading required dependencies...\r\n\r\n"
+#--------------------------------------------------------------------------------------------
 sudo apt-get -y install unattended-upgrades
 wait
 sudo apt-get -y autoremove
@@ -28,8 +35,6 @@ wait
 apt-get dist-upgrade -y
 wait
 sudo dpkg --configure -a
-wait
-apt-get update && apt-get upgrade -y
 wait
 echo "-----------------------------------------------------------------------"
 echo " "
