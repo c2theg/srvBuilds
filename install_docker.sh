@@ -23,9 +23,10 @@ Version:  1.0                             \r\n
 Last Updated:  5/7/2017
 \r\n \r\n
 Updating system first..."
-apt-get update && apt-get upgrade -y
+sudo -E apt-get update
 wait
-
+sudo -E apt-get upgrade -y
+wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "This installs docker to your ubuntu 14.04.5+ box..."
