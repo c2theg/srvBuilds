@@ -76,7 +76,8 @@ echo "Downloading files tests......."
 echo "\r\n\r\n"
 
 echo "GitHub File......."
-if [ -s "chris_github.jpg" ] then
+if [ -s "chris_github.jpg" ] 
+then
 	echo "Deleting file  chris_github.jpg "
 	rm chris_github.jpg
 fi
@@ -85,7 +86,8 @@ echo "\r\n\r\n"
 
 
 echo "Google Drive file......."
-if [ -s "chris_gdrive.jpg" ] then
+if [ -s "chris_gdrive.jpg" ] 
+then
 	echo "Deleting file  chris_gdrive.jpg "
 	rm chris_gdrive.jpg
 fi
@@ -94,23 +96,24 @@ echo "\r\n\r\n"
 
 
 echo "One Drive file......."
-if [ -s "chris_onedrive.jpg" ] then
+if [ -s "chris_onedrive.jpg" ] 
+then
 	echo "Deleting file  chris_onedrive.jpg "
 	rm chris_onedrive.jpg
 fi
 wget -O chris_onedrive.jpg 'https://1drv.ms/i/s!AoAmz4TVHIb5g2Entfcb_SWuYlrP'
+echo "\r\n\r\n"
 
 
-echo "One Drive file......."
-if [ -s "ubuntu1604.iso" ] then
+echo "One Drive file (800mbps+ this will take some time)......."
+if [ -s "ubuntu1604.iso" ] 
+then
 	echo "Deleting file  ubuntu1604.iso "
 	rm ubuntu1604.iso
 fi
 wget -O ubuntu1604.iso 'https://1drv.ms/u/s!AoAmz4TVHIb5g2D6aDTsFkZvE9Vq'
+echo "\r\n\r\n"
 
-
-
-
-
+echo "ALL DONE!!!"
 
 
