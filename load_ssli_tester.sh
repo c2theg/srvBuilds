@@ -71,6 +71,52 @@ dig 8.8.8.8
 echo "\r\n\r\n"
 echo "------------------------------------------------------------------------"
 echo "\r\n\r\n"
+echo "Downloading webpages  ( These should be bypassed from SSL Decrypt)..."
+
+
+echo "Fidelity.com......."
+if [ -s "Fidelity.html" ] 
+then
+	echo "Deleting file  Fidelity.html "
+	rm Fidelity.html
+fi
+wget -O Fidelity.html 'https://www.fidelity.com/'
+echo "\r\n\r\n"
+
+echo "BankofAmerica.com......."
+if [ -s "BankofAmerica.html" ] 
+then
+	echo "Deleting file  BankofAmerica.html "
+	rm BankofAmerica.html
+fi
+wget -O BankofAmerica.html 'https://www.bankofamerica.com/'
+echo "\r\n\r\n"
+
+#-------------------------------------------------------------
+
+echo "BlueCrossBlueShield.com  (bcbs.com)..."
+if [ -s "BlueCrossBlueShield.html" ]
+then
+	echo "Deleting file  BlueCrossBlueShield.html "
+	rm BlueCrossBlueShield.html
+fi
+wget -O BlueCrossBlueShield.html 'https://www.bcbs.com/'
+echo "\r\n\r\n"
+
+echo "wageworks.com......."
+if [ -s "wageworks.html" ] 
+then
+	echo "Deleting file  wageworks.html "
+	rm wageworks.html
+fi
+wget -O wageworks.html 'https://www.wageworks.com/'
+echo "\r\n\r\n"
+
+
+echo "\r\n\r\n"
+echo "------------------------------------------------------------------------"
+echo "\r\n\r\n"
+
 
 echo "Downloading files tests......."
 echo "\r\n\r\n"
@@ -114,10 +160,8 @@ fi
 wget -O ubuntu1604.iso 'https://1drv.ms/u/s!AoAmz4TVHIb5g2D6aDTsFkZvE9Vq'
 echo "\r\n\r\n"
 
-echo "ALL DONE!!!"
-
-echo "\r\n\r\n"
-
 ls -ltrh
+
 echo "\r\n\r\n"
 
+echo "ALL DONE!!!"
