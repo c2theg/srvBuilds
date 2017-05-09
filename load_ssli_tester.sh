@@ -116,4 +116,8 @@ echo "\r\n\r\n"
 
 echo "ALL DONE!!!"
 
+echo "\r\n\r\n"
+
+ls -ltrh
+echo "\r\n\r\n"
 
