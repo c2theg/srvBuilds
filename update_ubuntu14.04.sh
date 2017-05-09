@@ -39,7 +39,8 @@ wait
 echo "-----------------------------------------------------------------------"
 echo " "
 echo " "
-if [ -s "50unattended-upgrades" ] then
+if [ -s "50unattended-upgrades" ]
+then
   echo "Downloading latest custom config's "
   wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/50unattended-upgrades
   wait
@@ -62,5 +63,4 @@ echo " To add to cron use the following: "
 echo " crontab -e"
 echo " 15 4 6 * * /home/ubuntu/update-ubuntu14.04.sh >/dev/null 2>&1"
 echo " /etc/init.d/cron restart "
-echo " "
 echo " "
