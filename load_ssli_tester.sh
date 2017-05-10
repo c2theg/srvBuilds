@@ -171,13 +171,13 @@ wget -O chris_onedrive.jpg 'https://wsbinw.by3302.livefilestore.com/y4p68TSHrZAQ
 echo "\r\n\r\n"
 
 
-echo "One Drive file (800mbps+ this will take some time)......."
+echo "One Drive file Ubuntu 16.04 Server (829Mb this will take some time)......."
 if [ -s "ubuntu1604.iso" ] 
 then
 	echo "Deleting file  ubuntu1604.iso "
 	rm ubuntu1604.iso
 fi
-wget -O ubuntu1604.iso 'https://1drv.ms/u/s!AoAmz4TVHIb5g2D6aDTsFkZvE9Vq'
+wget -O ubuntu1604.iso 'https://wsdjqw.by3302.livefilestore.com/y4mu7gqFAWJo_odn8fRPaanU4_es61c2p1rf4o4ItAlaaIKEbuxnqIEQMQ1DUwhr5_07n9XaiuUeP0bRSFqXGhcYbnzlz0uiBBIqChk8l_b6CmomffvLPaVnq6fff1tGE5X72m7jIl7ayg8FTfdbfSRIE3Jsaj8LgtCoaXpIeHYEjuJAT_SPJuBkT5QNs4lC68A/ubuntu-16.04.2-server-amd64.iso?download&psid=1'
 echo "\r\n\r\n"
 
 ls -ltrh
