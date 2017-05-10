@@ -36,8 +36,8 @@ echo "This installs docker to your ubuntu 14.04.5+ box..."
 #sudo apt-get -y remove docker docker-engine
 #wait
 echo "DONE. Updating dependencies"
-sudo apt-get -y update && sudo apt-get -y install linux-image-extra-$(uname -r) linux-image-extra-virtual
-wait
+#sudo apt-get -y update && sudo apt-get -y install linux-image-extra-$(uname -r) linux-image-extra-virtual
+#wait
 
 echo "\r\n \r\n"
 echo "\r\n Downloading keys... "
