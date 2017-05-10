@@ -81,6 +81,7 @@ then
 	rm Fidelity.html
 fi
 wget -O Fidelity.html 'https://www.fidelity.com/'
+wait
 echo "\r\n\r\n"
 
 echo "BankofAmerica.com......."
@@ -90,6 +91,7 @@ then
 	rm BankofAmerica.html
 fi
 wget -O BankofAmerica.html 'https://www.bankofamerica.com/'
+wait
 echo "\r\n\r\n"
 
 #-------------------------------------------------------------
@@ -101,6 +103,7 @@ then
 	rm BlueCrossBlueShield.html
 fi
 wget -O BlueCrossBlueShield.html 'https://www.bcbs.com/'
+wait
 echo "\r\n\r\n"
 
 echo "wageworks.com......."
@@ -110,6 +113,7 @@ then
 	rm wageworks.html
 fi
 wget -O wageworks.html 'https://www.wageworks.com/'
+wait
 echo "\r\n\r\n"
 
 
@@ -129,6 +133,7 @@ then
 	rm salesforce.html
 fi
 wget -O salesforce.html 'https://www.salesforce.com/editions-pricing/sales-cloud/'
+wait
 echo "\r\n\r\n"
 
 
@@ -139,6 +144,7 @@ then
 	rm chris_github.jpg
 fi
 wget -O chris_github.jpg 'https://raw.githubusercontent.com/c2theg/srvBuilds/master/20150503_102930.jpg'
+wait
 echo "\r\n\r\n"
 
 
@@ -149,6 +155,7 @@ then
 	rm chris_gdrive.jpg
 fi
 wget -O chris_gdrive.jpg 'https://goo.gl/niOFPb'
+wait
 echo "\r\n\r\n"
 
 echo "Apple iCloud file......."
@@ -157,7 +164,8 @@ then
 	echo "Deleting file  chris_icloud.jpg"
 	rm chris_icloud.jpg
 fi
-wget -O chris_icloud.jpg 'https://cvws.icloud-content.com/B/AZrDzrdROAsL7Uy64083BsQGY0OtAWUWE6SgJXIPEAK1Ib1ozjezu7oM/20150503_102930.jpg?o=AiHdcjRa3zVMOKHkHd0agJ2HIhNyVQb-6DMXyoXjyMiZ&v=1&x=3&a=BR0L83wsJt9qA7UFOw&e=1494389040&k=tAPh-JMzx5rlcyKRJNan4w&fl=&r=d8e9bb3f-24a3-4dee-baca-4fd77e21dbab-1&ckc=com.apple.clouddocs&ckz=com.apple.CloudDocs&p=27&s=9V2W4UEumF52lCOWJACObJtArZg&cd=i'
+wget -O chris_icloud.jpg 'https://goo.gl/1V55ic'
+wait
 echo "\r\n\r\n"
 
 
@@ -167,7 +175,8 @@ then
 	echo "Deleting file  chris_onedrive.jpg "
 	rm chris_onedrive.jpg
 fi
-wget -O chris_onedrive.jpg 'https://wsbinw.by3302.livefilestore.com/y4p68TSHrZAQKIa-TDd_qA8p1u2W4K6sABZzKX6cMK7HzBHRY4xhijidfz9dant39YnvIfV0juYFdHnf6UXLSIaJXLlDrjaRRtHizLCKFbD17Shpi3xu3yBu7JFE88bfdjByFlPhaFP8pAyN2-M8hSxs1-xNtnpBWhSmSPN83xl02OOCrBqlindS2FDucBifKt7JGrt8h22V6QBDUxiDhqKjA/20150503_102930.jpg?psid=1'
+wget -O chris_onedrive.jpg 'https://goo.gl/vUYUod'
+wait
 echo "\r\n\r\n"
 
 
@@ -178,6 +187,7 @@ then
 	rm ubuntu1604.iso
 fi
 wget -O ubuntu1604.iso 'https://wsdjqw.by3302.livefilestore.com/y4mu7gqFAWJo_odn8fRPaanU4_es61c2p1rf4o4ItAlaaIKEbuxnqIEQMQ1DUwhr5_07n9XaiuUeP0bRSFqXGhcYbnzlz0uiBBIqChk8l_b6CmomffvLPaVnq6fff1tGE5X72m7jIl7ayg8FTfdbfSRIE3Jsaj8LgtCoaXpIeHYEjuJAT_SPJuBkT5QNs4lC68A/ubuntu-16.04.2-server-amd64.iso?download&psid=1'
+wait
 echo "\r\n\r\n"
 
 ls -ltrh
