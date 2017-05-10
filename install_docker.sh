@@ -54,6 +54,8 @@ wait
 sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 wait
 
+echo "\r\n \r\n"
+echo "Installing Docker... "
 sudo apt-get update && sudo apt-get -y install docker-ce
 wait
 
@@ -63,12 +65,24 @@ wait
 sudo apt-get -y install docker-ce
 wait
 
-echo "Cleaning the system... "
-sudo apt-get -y autoremove
-sudo apt-get -y autoclean
-sudo apt-get -y clean
-echo " ... done! \r\n \r\n"
+echo "Done!"
 
+echo "\r\n \r\n"
+
+echo "----------------------------  "
+# from: https://github.com/hobby-kube/guide
+
+echo "Installing Kubernetes....  \r\n"
+echo "Learning more about it here: https://kubernetes.io/docs/tutorials/kubernetes-basics/" 
+echo "\r\n \r\n"
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
+deb http://apt.kubernetes.io/ kubernetes-xenial-unstable main
+EOF
+apt-get update
+apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+
+echo "\r\n \r\n"
 
 echo "Running sample container"
 sudo docker run hello-world
