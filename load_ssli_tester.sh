@@ -148,7 +148,7 @@ then
 	echo "Deleting file  chris_gdrive.jpg "
 	rm chris_gdrive.jpg
 fi
-wget -O chris_gdrive.jpg 'https://doc-14-70-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/ab3fumr6r70qso3i1mfmhqtc1c1ng3hs/1494388800000/02278441165478627718/*/1w4DmwMbVBCTc2u_5r7V54zWb_gS3JXpkqg?e=download'
+wget -O chris_gdrive.jpg 'https://goo.gl/niOFPb'
 echo "\r\n\r\n"
 
 echo "Apple iCloud file......."
