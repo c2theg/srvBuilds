@@ -164,7 +164,7 @@ then
 	echo "Deleting file  chris_icloud.jpg"
 	rm chris_icloud.jpg
 fi
-wget -O chris_icloud.jpg 'https://goo.gl/1V55ic'
+wget -O chris_icloud.jpg 'https://goo.gl/iBX2zs'
 wait
 echo "\r\n\r\n"
 
