@@ -29,33 +29,22 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-
 echo "Installing Python 3.+ latest.... "
-sudo apt-get -y update 
-wait
-sudo apt-get -y upgrade
-wait
-#---------- PYTHON STUFF ----------------------------------
 sudo apt-get install -y libicu-dev python-software-properties python python-pip python-dev python3-setuptools
 wait
 sudo apt install python3-pip
 wait
 sudo easy_install3 pip
 wait
-
 sudo -H pip3 install --upgrade pip 
 sudo -H pip install --upgrade pip
-
+wait
 pip install virtualenv
 pip install python3-virtualenv
 #--------------------------------------------
 sudo pip3 install --upgrade requests
-
 #--------------------------------------------
 echo "\r\n \r\n "
 echo "Done installing Python3 "
 pip -V; pip3 -V
-
 echo "\r\n \r\n "
-
-
