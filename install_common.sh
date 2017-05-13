@@ -47,9 +47,11 @@ speedometer -l -r em3 -t em3 -m $(( 1024 * 1024 * 3 / 2 ))
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.conf
 
 chmod u+x sys_cleanup.sh 
 chmod u+x update_ubuntu14.04.sh
+chmod u+x install_snmp.sh
 
 
 echo " "
