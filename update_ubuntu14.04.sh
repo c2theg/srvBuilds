@@ -50,6 +50,10 @@ then
   echo " "
   echo " "
 fi
+
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/script_updater.py
+chmod u+x script_updater.py
+
 echo "----------------------------------------------"
 wait
 sudo apt-get autoclean
@@ -62,5 +66,7 @@ echo " "
 echo " To add to cron use the following: "
 echo " crontab -e"
 echo " 15 4 6 * * /home/ubuntu/update-ubuntu14.04.sh >/dev/null 2>&1"
+echo " 15 1 6 * * /home/ubuntu/script_updater.py >/dev/null 2>&1"
+
 echo " /etc/init.d/cron restart "
 echo " "
