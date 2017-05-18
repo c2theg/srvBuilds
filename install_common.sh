@@ -44,15 +44,21 @@ or \r\n
 speedometer -l -r em3 -t em3 -m $(( 1024 * 1024 * 3 / 2 ))
  \r\n
 "
-
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.conf
+echo "Downloading files..."
+if [ -s "sys_cleanup.sh" ] 
+then
+	echo "Deleting files"
+	rm sys_cleanup.sh
+ rm update_ubuntu14.04.sh
+ rm install_snmp.sh
+fi
+wget -O https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
+wget -O https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
+wget -O https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh
 
 chmod u+x sys_cleanup.sh 
 chmod u+x update_ubuntu14.04.sh
 chmod u+x install_snmp.sh
-
 
 echo " "
 echo " To add to cron use the following: "
