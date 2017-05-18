@@ -51,6 +51,6 @@ wait
 chmod u+x sys_cleanup.sh 
 chmod u+x update_ubuntu14.04.sh
 chmod u+x update_core.sh
-chmod u+x install_common.sh
+
 
 echo "done! \r\n \r\n"
