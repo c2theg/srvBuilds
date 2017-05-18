@@ -47,17 +47,21 @@ then
 fi
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh
 
 chmod u+x sys_cleanup.sh 
 chmod u+x update_ubuntu14.04.sh
+chmod u+x update_core.sh
 chmod u+x install_snmp.sh
 
 echo " "
 echo " To add to cron use the following: "
-echo " crontab -e"
-echo " 15 3 6 * * /home/ubuntu/sys_cleanup.sh >/dev/null 2>&1"
-echo " 15 4 6 * * /home/ubuntu/update-ubuntu14.04.sh >/dev/null 2>&1"
+echo " crontab -e \r\n"
+echo " 10 3 */4 * * /home/ubuntu/update_core.sh >/dev/null 2>&1"
+echo " 15 4 */4 * * /home/ubuntu/update-ubuntu14.04.sh >/dev/null 2>&1"
+echo " 15 3 */10 * * /home/ubuntu/sys_cleanup.sh >/dev/null 2>&1"
+echo "\r\n "
 echo " /etc/init.d/cron restart "
 echo " \r\n \r\n"
 
