@@ -31,19 +31,9 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
 wait
-sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties autossh screen whois 
-wait
-sudo -E apt-get install -y traceroute htop sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer hping3 
+sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties autossh screen sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer hping3
 wait
 
-echo "(display graph from speedometer) \r\n
-speedometer -l -r eth0 -t eth0 -m $(( 1024 * 1024 * 3 / 2 ))  \r\n
-or \r\n
-speedometer -l -r p4p1 -t p4p1 -m $(( 1024 * 1024 * 3 / 2 )) \r\n
-or \r\n
-speedometer -l -r em3 -t em3 -m $(( 1024 * 1024 * 3 / 2 ))
- \r\n
-"
 echo "Downloading files..."
 if [ -s "sys_cleanup.sh" ] 
 then
@@ -66,8 +56,15 @@ echo " crontab -e"
 echo " 15 3 6 * * /home/ubuntu/sys_cleanup.sh >/dev/null 2>&1"
 echo " 15 4 6 * * /home/ubuntu/update-ubuntu14.04.sh >/dev/null 2>&1"
 echo " /etc/init.d/cron restart "
-echo " "
+echo " \r\n \r\n"
 
+echo "(display graph from speedometer) \r\n
+speedometer -l -r eth0 -t eth0 -m $(( 1024 * 1024 * 3 / 2 ))  \r\n
+or \r\n
+speedometer -l -r p4p1 -t p4p1 -m $(( 1024 * 1024 * 3 / 2 )) \r\n
+or \r\n
+speedometer -l -r em3 -t em3 -m $(( 1024 * 1024 * 3 / 2 ))
+ \r\n
+"
 
-
-
+echo " \r\n \r\n"
