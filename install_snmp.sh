@@ -30,12 +30,15 @@ wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/snmpd.conf
-
+wait
+chmod u+x snmpd.conf
+wait
 sudo apt-get install -y libperl-dev snmp lm-sensors fancontrol sensord read-edid i2c-tools rrdtool  libi2c-dev python-smbus librrds-perl unzip zip snmpd
+wait
 
 echo "deb http://nova.clouds.archive.ubuntu.com/ubuntu trusty main multiverse" >> /etc/apt/sources.list
 wait
-sudo apt-get update 
+sudo apt-get update -y
 wait
 sudo apt-get install -y snmp-mibs-downloader
 wait
