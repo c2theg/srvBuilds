@@ -27,6 +27,9 @@ sudo -E apt-get update
 wait
 sudo -E apt-get upgrade -y
 wait
+echo "Freeing up space"
+sudo apt-get autoremove
+wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
@@ -42,9 +45,9 @@ then
  	rm update_ubuntu14.04.sh
  	rm install_snmp.sh
 fi
-wget -O https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
-wget -O https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
-wget -O https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh
 
 chmod u+x sys_cleanup.sh 
 chmod u+x update_ubuntu14.04.sh
