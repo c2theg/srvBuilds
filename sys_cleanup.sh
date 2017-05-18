@@ -39,11 +39,11 @@ sudo apt-get remove --purge $(dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | s
 wait
 sudo apt-get -f install
 wait
-sudo apt-get autoclean
+sudo apt-get autoclean -y
 wait
-sudo apt-get clean
+sudo apt-get clean -y
 wait
-sudo apt-get autoremove
+sudo apt-get autoremove -y
 wait
 sudo apt-get -f install
 wait
@@ -51,7 +51,9 @@ sudo dpkg --configure -a
 wait
 sudo update-grub2
 wait
-sudo apt-get upgrade && sudo apt-get upgrade
+sudo -E apt-get update
+wait
+sudo -E apt-get upgrade -y
 echo " "
 echo " "
 echo " -------------- Done Cleaning system -------- "
