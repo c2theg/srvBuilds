@@ -49,8 +49,8 @@ if [ -s "sys_cleanup.sh" ]
 then
 	echo "Deleting files"
 	rm sys_cleanup.sh
- rm update_ubuntu14.04.sh
- rm install_snmp.sh
+ 	rm update_ubuntu14.04.sh
+ 	rm install_snmp.sh
 fi
 wget -O https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 wget -O https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
