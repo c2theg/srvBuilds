@@ -28,7 +28,7 @@ wait
 sudo -E apt-get upgrade -y
 wait
 echo "Freeing up space"
-sudo apt-get autoremove
+sudo apt-get autoremove -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
