@@ -62,7 +62,8 @@ chmod u ntp.conf
 #---- NTP Time related ---------
 cp ntp.conf /etc/ntp.conf
 wait
-sudo systemctl reload ntp.service
+#sudo systemctl reload ntp.service
+sudo /etc/init.d/ntp restart
 wait
 sudo timedatectl set-timezone America/New_York
 #-----------------------------------------------------
