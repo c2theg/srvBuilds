@@ -45,16 +45,28 @@ then
  	rm update_ubuntu14.04.sh
  	rm install_snmp.sh
 	rm update_core.sh
+	rm ntp.conf
 fi
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/ntp.conf
 
 chmod u+x sys_cleanup.sh 
 chmod u+x update_ubuntu14.04.sh
 chmod u+x update_core.sh
 chmod u+x install_snmp.sh
+chmod u ntp.conf
+
+#---- NTP Time related ---------
+cp ntp.conf /etc/ntp.conf
+wait
+sudo systemctl reload ntp.service
+wait
+sudo timedatectl set-timezone America/New_York
+#-----------------------------------------------------
+
 
 echo " "
 echo " To add to cron use the following: "
