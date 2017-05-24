@@ -77,8 +77,11 @@ EOF
 sudo -E apt-get update
 sudo -E apt-get install -y kubelet kubeadm kubectl kubernetes-cni
 wait
-echo "\r\n \r\n"
+echo "\r\n \r\n Trying to use SNAP to install Kubernetes... \r\n "
+sudo snap install conjure-up --classic
+conjure-up kubernetes
 
+echo "\r\n \r\n \r\n"
 echo "Running sample container"
 sudo docker run hello-world
 wait
