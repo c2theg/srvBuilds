@@ -57,7 +57,7 @@ sudo -E apt-get update
 wait
 sudo -E apt-get -y install apt-transport-https ca-certificates curl software-properties-common
 wait
-sudo -E apt-get -y install docker-ce
+sudo -E apt-get -y install docker-ce docker.io
 wait
 apt-cache madison docker-ce
 wait
