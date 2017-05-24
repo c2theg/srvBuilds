@@ -7,9 +7,8 @@ Short URLs
 
 wget https://bit.ly/cgray-common
 
-wget https://bit.ly/cgray-nginxphp
+wget https://bit.ly/cgray-lemp
 
-wget https://bit.ly/cgray-percona
 
 wget https://bit.ly/cgray-webmin
 
