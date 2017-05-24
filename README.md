@@ -5,6 +5,8 @@ Short URLs
 
 ---------- Installers ------------------
 
+wget https://bit.ly/cgray-common
+
 wget https://bit.ly/cgray-nginxphp
 
 wget https://bit.ly/cgray-percona
