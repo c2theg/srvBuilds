@@ -56,6 +56,8 @@ wait
 wait
 
 # Move Sample snmp.conf to the correct location
+chmod u snmpd.conf
+wait
 mv snmpd.conf /etc/snmp/snmpd.conf
 wait
 /etc/init.d/snmpd restart
