@@ -19,6 +19,9 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
+https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
+
+\r\n \r\n
 Version:  1.0                             \r\n
 Last Updated:  5/18/2017
 \r\n \r\n
@@ -73,7 +76,7 @@ echo " "
 echo " To add to cron use the following: "
 echo " crontab -e \r\n"
 echo " 10 3 */4 * * /home/ubuntu/update_core.sh >/dev/null 2>&1"
-echo " 15 4 */4 * * /home/ubuntu/update-ubuntu14.04.sh >/dev/null 2>&1"
+echo " 15 4 */4 * * /home/ubuntu/update_ubuntu14.04.sh >/dev/null 2>&1"
 echo " 15 3 */10 * * /home/ubuntu/sys_cleanup.sh >/dev/null 2>&1"
 echo "\r\n "
 echo " /etc/init.d/cron restart "
