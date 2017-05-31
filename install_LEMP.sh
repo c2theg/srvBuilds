@@ -48,6 +48,8 @@ sudo pear install mail Net_SMTP Auth_SASL2-0.1.0 mail_mime
 #--- PHP Memcached ----
 sudo apt-get install -y php7.0-memcached memcached
 wait
+
+cd ~
 if [ -s "memcached.conf" ]
 then
 	echo "Deleting file  memcached.conf "
