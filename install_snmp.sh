@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.0                             \r\n
-Last Updated:  5/10/2017
+Version:  1.2                             \r\n
+Last Updated:  5/31/2017
 \r\n \r\n
 #Updating system first..."
 #sudo -E apt-get update
@@ -29,13 +29,14 @@ Last Updated:  5/10/2017
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/snmpd.conf
+cd ~
+rm snmpd.conf
+wget "snmpd.conf" https://raw.githubusercontent.com/c2theg/srvBuilds/master/snmpd.conf
 wait
 chmod u+x snmpd.conf
 wait
-sudo apt-get install -y libperl-dev snmp lm-sensors fancontrol sensord read-edid i2c-tools rrdtool  libi2c-dev python-smbus librrds-perl unzip zip snmpd
+sudo apt-get install -y libperl-dev snmp lm-sensors fancontrol sensord read-edid i2c-tools rrdtool libi2c-dev python-smbus librrds-perl unzip zip snmpd
 wait
-
 echo "deb http://nova.clouds.archive.ubuntu.com/ubuntu trusty main multiverse" >> /etc/apt/sources.list
 wait
 sudo apt-get update -y
@@ -56,9 +57,7 @@ wait
 wait
 
 # Move Sample snmp.conf to the correct location
-chmod u snmpd.conf
-wait
-mv snmpd.conf /etc/snmp/snmpd.conf
+cp snmpd.conf /etc/snmp/snmpd.conf
 wait
 /etc/init.d/snmpd restart
 wait
