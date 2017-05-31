@@ -75,7 +75,7 @@ sudo apt-get -y update && apt-get -y install nginx nginx-common nginx-full fcgiw
 #sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start  && update-rc.d php-fastcgi defaults
 cd ~
 echo "Downloading PHP-Fastcgi Config"
-wget "/etc/init.d/php-fastcgi" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/php-fastcgi.sh"
+wget "php-fastcgi" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/php-fastcgi.sh"
 wait
 sudo cp "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
