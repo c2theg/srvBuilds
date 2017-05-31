@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.0                             \r\n
-Last Updated:  5/7/2017
+Version:  1.2                             \r\n
+Last Updated:  5/30/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -48,6 +48,11 @@ sudo pear install mail Net_SMTP Auth_SASL2-0.1.0 mail_mime
 #--- PHP Memcached ----
 sudo apt-get install -y php7.0-memcached memcached
 wait
+if [ -s "memcached.conf" ]
+then
+	echo "Deleting file  memcached.conf "
+	rm memcached.conf
+fi
 echo "Downloading Memcache Config"
 wget "memcached.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/memcached.conf"
 wait
@@ -77,26 +82,30 @@ echo "PHP Config Download Complete"
 
 
 echo "Downloading Nginx Config"
-wget "nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/nginx.conf"
-sudo cp "nginx.conf" "/etc/nginx/nginx.conf"
+wget "/etc/nginx/nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/nginx.conf"
+#sudo cp "nginx.conf" "/etc/nginx/nginx.conf"
 wait
 echo "Nginx Config Download Complete"
 
 
 echo "Basic HTTP Website Config"
-wget "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1.conf"
+wget "/etc/nginx/sites-enabled/site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1.conf"
+#wait
+#sudo cp "site1.conf" "/etc/nginx/sites-enabled/site1.conf"
 wait
-sudo cp "site1.conf" "/etc/nginx/sites-enabled/site1.conf"
-wait
-rm "/etc/nginx/sites-enabled/default"
+
+if [ -s "/etc/nginx/sites-enabled/default" ]
+then
+	echo "Deleting file  nginx default config "
+	rm "/etc/nginx/sites-enabled/default"
+fi
 wait
 echo "Basic HTTP Website Config Download Complete"
 
-
 echo "SSL-TLS HTTP Website Config"
-wget "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1_tls.conf"
-wait
-sudo cp "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
+wget "/etc/nginx/sites-available/site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1_tls.conf"
+#wait
+#sudo cp "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
 wait
 echo "SSL-TLS HTTP Website Config Download Complete"
 wait
