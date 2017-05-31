@@ -3,3 +3,4 @@
 #
 #
 lcdproc C M D '!L'
+# lcdproc P G M K
