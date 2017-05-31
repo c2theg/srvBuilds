@@ -85,10 +85,11 @@ if [ -s "/etc/nginx/nginx.conf" ]
 then
 	echo "Deleting file  nginx config "
 	rm /etc/nginx/nginx.conf
+	rm nginx.conf
 fi
 echo "Downloading Nginx Config"
-wget "/etc/nginx/nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/nginx.conf"
-#sudo cp "nginx.conf" "/etc/nginx/nginx.conf"
+wget "nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/nginx.conf"
+sudo cp "nginx.conf" "/etc/nginx/nginx.conf"
 wait
 echo "Nginx Config Download Complete"
 
@@ -96,12 +97,13 @@ echo "Nginx Config Download Complete"
 if [ -s "/etc/nginx/sites-enabled/site1.conf" ]
 then
 	echo "Deleting file  site1 config "
-	rm /etc/nginx/sites-enabled/site1.conf
+	rm /etc/nginx/sites-enabled/site1.conf*
+	rm site1.conf
 fi
 echo "Basic HTTP Website Config"
-wget "/etc/nginx/sites-enabled/site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1.conf"
-#wait
-#sudo cp "site1.conf" "/etc/nginx/sites-enabled/site1.conf"
+wget "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1.conf"
+wait
+sudo cp "site1.conf" "/etc/nginx/sites-enabled/site1.conf"
 wait
 
 if [ -s "/etc/nginx/sites-enabled/default" ]
@@ -116,12 +118,13 @@ echo "Basic HTTP Website Config Download Complete"
 if [ -s "/etc/nginx/sites-available/site1_tls.conf" ]
 then
 	echo "Deleting file  site1_tls config "
-	rm /etc/nginx/sites-available/site1_tls.conf
+	rm /etc/nginx/sites-available/site1_tls.conf*
+	rm site1_tls.conf
 fi
 echo "SSL-TLS HTTP Website Config"
-wget "/etc/nginx/sites-available/site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1_tls.conf"
-#wait
-#sudo cp "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
+wget "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1_tls.conf"
+wait
+sudo cp "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
 wait
 echo "SSL-TLS HTTP Website Config Download Complete"
 wait
