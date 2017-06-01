@@ -78,6 +78,8 @@ echo " crontab -e \r\n"
 echo "10 3 */4 * * /home/ubuntu/update_core.sh >/dev/null 2>&1"
 echo "15 4 */4 * * /home/ubuntu/update_ubuntu14.04.sh >/dev/null 2>&1"
 echo "15 3 */10 * * /home/ubuntu/sys_cleanup.sh >/dev/null 2>&1"
+echo "* 3 */10 * * /home/ubuntu/script_updater.sh >/dev/null 2>&1"
+
 echo "\r\n "
 echo " /etc/init.d/cron restart "
 echo " \r\n \r\n"
