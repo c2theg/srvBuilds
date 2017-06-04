@@ -22,8 +22,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
 \r\n \r\n
-Version:  1.0                             \r\n
-Last Updated:  5/18/2017
+Version:  1.4                             \r\n
+Last Updated:  6/4/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -35,7 +35,7 @@ sudo apt-get autoremove -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
+sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop cockpit
 wait
 sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties autossh screen sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer hping3
 wait
