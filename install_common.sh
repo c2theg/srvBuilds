@@ -48,9 +48,11 @@ then
  	rm update_ubuntu14.04.sh
  	rm install_snmp.sh
 	rm update_core.sh
+	rm script_updater.sh
 	rm ntp.conf
 fi
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/script_updater.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh
@@ -58,6 +60,7 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/ntp.conf
 
 chmod u+x sys_cleanup.sh 
 chmod u+x update_ubuntu14.04.sh
+chmod u+x script_updater.sh
 chmod u+x update_core.sh
 chmod u+x install_snmp.sh
 chmod u ntp.conf
