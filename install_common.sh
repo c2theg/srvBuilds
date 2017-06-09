@@ -22,8 +22,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
 \r\n \r\n
-Version:  1.4                             \r\n
-Last Updated:  6/4/2017
+Version:  1.5                             \r\n
+Last Updated:  6/9/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -51,6 +51,25 @@ then
 	rm script_updater.sh
 	rm ntp.conf
 fi
+
+echo " "
+echo " "
+if [ -s "50unattended-upgrades" ]
+then
+  echo "Downloading latest custom config's "
+  wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/50unattended-upgrades
+  wait
+  cp 50unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades
+  echo "Done setting up AutoUpdates!"
+  echo " "
+  echo " "
+  echo " "
+fi
+
+
+echo "----------------------------------------------"
+
+
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/script_updater.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
