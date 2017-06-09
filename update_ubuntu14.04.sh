@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4                             \r\n
-Last Updated:  5/7/2017
+Version:  1.5                             \r\n
+Last Updated:  6/9/2017
 \r\n \r\n
 Updating system first..."
 apt-get update && apt-get upgrade -y
