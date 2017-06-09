@@ -37,36 +37,8 @@ wait
 sudo dpkg --configure -a
 wait
 echo "-----------------------------------------------------------------------"
-echo " "
-echo " "
-if [ -s "50unattended-upgrades" ]
-then
-  echo "Downloading latest custom config's "
-  wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/50unattended-upgrades
-  wait
-  cp 50unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades
-  echo "Done setting up AutoUpdates!"
-  echo " "
-  echo " "
-  echo " "
-fi
-
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/script_updater.py
-chmod u+x script_updater.py
-
-echo "----------------------------------------------"
-wait
 sudo apt-get autoclean
 wait
 sudo apt-get -y autoremove
 wait
 echo "Done "
-echo " "
-echo " "
-echo " To add to cron use the following: "
-echo " crontab -e"
-echo " 15 4 6 * * /home/ubuntu/update-ubuntu14.04.sh >/dev/null 2>&1"
-echo " 15 1 6 * * /home/ubuntu/script_updater.py >/dev/null 2>&1"
-
-echo " /etc/init.d/cron restart "
-echo " "
