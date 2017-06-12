@@ -70,12 +70,12 @@ fi
 echo "----------------------------------------------"
 
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/script_updater.sh
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/ntp.conf
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/ntp.conf
 
 chmod u+x sys_cleanup.sh 
 chmod u+x update_ubuntu14.04.sh
