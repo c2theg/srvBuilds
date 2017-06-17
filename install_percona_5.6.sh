@@ -56,5 +56,5 @@ sudo /etc/init.d/mysql restart
 echo "\r\n \r\n \r\n \r\n"
 echo "To create a remote connection use the following: \r\n \r\n"
 echo " mysql --user=root --password=*** mysql  \r\n\r\n"
-echo " GRANT ALL PRIVILEGES ON *.* TO 'cgray'@'%' IDENTIFIED BY '***' WITH GRANT OPTION; \r\n\r\n"
+echo " GRANT ALL PRIVILEGES ON *.* TO 'user1'@'%' IDENTIFIED BY '***' WITH GRANT OPTION; \r\n\r\n"
 echo " Done! \r\n\r\n"
