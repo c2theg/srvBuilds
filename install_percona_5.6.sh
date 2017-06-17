@@ -53,9 +53,8 @@ sudo cp "my.cnf" "/etc/mysql/my.cnf"
 wait
 echo "Percona Config Download Complete"
 sudo /etc/init.d/mysql restart
-echo " "
-echo " "
-echo " "
-echo " "
-echo " Done! "
-
+echo "\r\n \r\n \r\n \r\n"
+echo "To create a remote connection use the following: \r\n \r\n"
+echo " mysql --user=root --password=*** mysql  \r\n\r\n"
+echo " GRANT ALL PRIVILEGES ON *.* TO 'cgray'@'%' IDENTIFIED BY '***' WITH GRANT OPTION; \r\n\r\n"
+echo " Done! \r\n\r\n"
