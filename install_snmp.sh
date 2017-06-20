@@ -29,9 +29,8 @@ Last Updated:  5/31/2017
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-cd ~
 rm snmpd.conf
-wget "snmpd.conf" https://raw.githubusercontent.com/c2theg/srvBuilds/master/snmpd.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/snmpd.conf
 wait
 chmod u+x snmpd.conf
 wait
