@@ -56,11 +56,7 @@ echo " nmap -sTU --top-ports 25 <IP> \r\n  \r\n"
 echo " ------------------------------------------------------------------------ \r\n "
 
 echo " -- to Update NMAP from Git (Latest) \r\n "
+echo " cd /home/ubuntu/nmap-git/nmap/ \r\n"
 echo " git pull origin master  \r\n"
-echo " sudo make clean \r\n"
-echo " sudo make \r\n"
-echo " sudo make install  \r\n"
-
-
-
+echo " sudo make clean && sudo make && sudo make install \r\n"
 echo "\r\n \r\n"
