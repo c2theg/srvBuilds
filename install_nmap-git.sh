@@ -29,7 +29,7 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-sudo apt-get install -y git build-essential netcat zmap 
+sudo -E apt-get install -y git wget build-essential checkinstall libpcre3-dev libssl-dev netcat zmap
 wait
 mkdir nmap-git
 cd nmap-git/
