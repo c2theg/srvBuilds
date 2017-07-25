@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.0                             \r\n
-Last Updated:  5/7/2017
+Version:  1.1                             \r\n
+Last Updated:  7/25/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -54,8 +54,20 @@ wait
 sudo -E apt-get update
 wait
 sudo -E apt-get upgrade -y
-echo " "
-echo " "
+echo "\r\n \r\n \r\n"
+echo "---- removing logs from /var/log  ----- \r\n\r\n"
+rm /var/log/alternatives.log.*
+rm /var/log/auth.log.*
+rm /var/log/dmesg.*
+rm /var/log/dpkg.log.*
+rm /var/log/kern.log.*
+rm /var/log/mail.log.*
+rm /var/log/php5-fpm.log.*
+rm /var/log/php7.0-fpm.log.*
+rm /var/log/syslog.*
+rm -rf /var/log/nginx/*
+/etc/init.d/nginx restart
+
 echo " -------------- Done Cleaning system -------- "
 echo " "
 echo " "
