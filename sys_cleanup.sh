@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.1                             \r\n
+Version:  1.2                             \r\n
 Last Updated:  7/25/2017
 \r\n \r\n
 Updating system first..."
@@ -65,13 +65,15 @@ rm /var/log/mail.log.*
 rm /var/log/php5-fpm.log.*
 rm /var/log/php7.0-fpm.log.*
 rm /var/log/syslog.*
+rm /var/log/redis/redis-server.log.*
+
 rm -rf /var/log/nginx/*
 /etc/init.d/nginx restart
 
 echo " -------------- Done Cleaning system -------- "
 echo " "
 echo " "
-echo "But Just incase you still dont have space... "
+echo "But just incase you still dont have space... "
 echo " "
 sudo uname -r
 sudo dpkg --list | grep linux-image
