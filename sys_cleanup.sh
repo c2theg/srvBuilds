@@ -62,12 +62,11 @@ rm /var/log/dmesg.*
 rm /var/log/dpkg.log.*
 rm /var/log/kern.log.*
 rm /var/log/mail.log.*
-rm /var/log/php5-fpm.log.*
-rm /var/log/php7.0-fpm.log.*
 rm /var/log/syslog.*
 rm /var/log/redis/redis-server.log.*
 
 rm -rf /var/log/nginx/*
+/etc/init.d/php7.0-fpm restart
 /etc/init.d/nginx restart
 
 echo " -------------- Done Cleaning system -------- "
