@@ -55,13 +55,15 @@ sudo -E apt-get update
 wait
 sudo -E apt-get upgrade -y
 echo "\r\n \r\n \r\n"
-echo "---- removing logs from /var/log  ----- \r\n\r\n"
+echo "---- removing old logs from /var/log  ----- \r\n\r\n"
 rm /var/log/alternatives.log.*
 rm /var/log/auth.log.*
 rm /var/log/dmesg.*
 rm /var/log/dpkg.log.*
 rm /var/log/kern.log.*
 rm /var/log/mail.log.*
+rm /var/log/mail.err.*
+rm /var/log/mysql.log.*
 rm /var/log/syslog.*
 rm /var/log/redis/redis-server.log.*
 
