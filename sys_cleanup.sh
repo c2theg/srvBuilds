@@ -75,7 +75,11 @@ echo " -------------- Done Cleaning system -------- "
 echo " "
 echo " "
 echo "But just incase you still dont have space... "
-echo " "
+echo "\r\n \r\n"
+echo "Running the following commands: \r\n"
+echo "    uname -r \r\n"
+echo "    sudo dpkg --list | grep linux-image \r\n"
+echo "\r\n \r\n"
 sudo uname -r
 sudo dpkg --list | grep linux-image
 echo " "
