@@ -58,5 +58,5 @@ echo " ------------------------------------------------------------------------ 
 echo " -- to Update NMAP from Git (Latest) \r\n "
 echo " cd /home/ubuntu/nmap-git/nmap/ \r\n"
 echo " git pull origin master  \r\n"
-echo " sudo make clean && sudo make && sudo make install \r\n"
+echo " sudo make clean && sudo make && sudo make install &&  ./configure \r\n"
 echo "\r\n \r\n"
