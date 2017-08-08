@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3                             \r\n
-Last Updated:  8/3/2017
+Version:  1.4                             \r\n
+Last Updated:  8/8/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -65,8 +65,11 @@ rm /var/log/mail.log.*
 rm /var/log/mail.err.*
 rm /var/log/mysql.log.*
 rm /var/log/syslog.*
-rm /var/log/redis/redis-server.log.*
+rm /var/log/apport.log.*
+rm /var/log/aptitude.*
+rm /var/log/php5-fpm.log.*
 
+rm /var/log/redis/redis-server.log.*
 rm -rf /var/log/nginx/*
 /etc/init.d/php7.0-fpm restart
 /etc/init.d/nginx restart
