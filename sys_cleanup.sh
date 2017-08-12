@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4                             \r\n
-Last Updated:  8/8/2017
+Version:  1.4.1                             \r\n
+Last Updated:  8/12/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -68,6 +68,9 @@ rm /var/log/syslog.*
 rm /var/log/apport.log.*
 rm /var/log/aptitude.*
 rm /var/log/php5-fpm.log.*
+rm /var/log/clamav/clamav.log.*
+rm /var/log/clamav/freshclam.log.*
+rm /var/log/fail2ban.log.*
 
 rm /var/log/redis/redis-server.log.*
 rm -rf /var/log/nginx/*
