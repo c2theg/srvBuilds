@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6                             \r\n
-Last Updated:  5/9/2017
+Version:  1.7                             \r\n
+Last Updated:  8/16/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -186,6 +186,8 @@ then
 	echo "Deleting file  ubuntu1604.iso "
 	rm ubuntu1604.iso
 fi
+# Get link from this site: http://metadataconsulting.blogspot.com/2014/05/how-to-get-direct-download-link-from.html
+
 wget -O ubuntu1604.iso 'https://onedrive.live.com/download?cid=F9861CD584CF2680&resid=F9861CD584CF2680%21480&authkey=AAuqbwXa3GMmuwM'
 wait
 echo "\r\n\r\n"
