@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.1                             \r\n
-Last Updated:  8/12/2017
+Version:  1.5                             \r\n
+Last Updated:  8/16/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -30,12 +30,15 @@ wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo " --- Running System cleanup...  "
-echo " "
-echo " "
+echo "\r\n \r\n \r\n"
 sudo df -h
-echo " "
-echo " "
-sudo apt-get remove --purge $(dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d')
+echo "\r\n \r\n \r\n"
+#sudo apt-get remove --purge $(dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d')
+dpkg --list | grep linux-image | awk '{ print $2 }' | sort -V | sed -n '/'`uname -r`'/q;p' | xargs sudo apt-get -y purge
+wait
+dpkg --list | grep linux-image-extra | awk '{ print $2 }' | sort -V | sed -n '/'`uname -r`'/q;p' | xargs sudo apt-get -y purge
+wait
+sudo update-grub2
 wait
 sudo apt-get -f install
 wait
@@ -71,15 +74,15 @@ rm /var/log/php5-fpm.log.*
 rm /var/log/clamav/clamav.log.*
 rm /var/log/clamav/freshclam.log.*
 rm /var/log/fail2ban.log.*
-
 rm /var/log/redis/redis-server.log.*
+
+echo "\r\n \r\n Removing Nginx and PHP logs, then restarting both services.. \r\n \r\n "
 rm -rf /var/log/nginx/*
 /etc/init.d/php7.0-fpm restart
 /etc/init.d/nginx restart
 
 echo " -------------- Done Cleaning system -------- "
-echo " "
-echo " "
+echo "\r\n \r\n"
 echo "But just incase you still dont have space... "
 echo "\r\n \r\n"
 echo "Running the following commands: \r\n"
@@ -88,8 +91,8 @@ echo "    sudo dpkg --list | grep linux-image \r\n"
 echo "\r\n \r\n"
 sudo uname -r
 sudo dpkg --list | grep linux-image
-echo " "
+echo "\r\n \r\n"
 sudo df -h
-echo " "
+echo "\r\n \r\n"
 echo "Then issue the following: sudo apt-get purge linux-image-x.x.x.x-generic"
-echo " "
+echo "\r\n \r\n \r\n \r\n"
