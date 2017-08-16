@@ -186,7 +186,7 @@ then
 	echo "Deleting file  ubuntu1604.iso "
 	rm ubuntu1604.iso
 fi
-wget -O ubuntu1604.iso 'https://wsdjqw.by3302.livefilestore.com/y4mu7gqFAWJo_odn8fRPaanU4_es61c2p1rf4o4ItAlaaIKEbuxnqIEQMQ1DUwhr5_07n9XaiuUeP0bRSFqXGhcYbnzlz0uiBBIqChk8l_b6CmomffvLPaVnq6fff1tGE5X72m7jIl7ayg8FTfdbfSRIE3Jsaj8LgtCoaXpIeHYEjuJAT_SPJuBkT5QNs4lC68A/ubuntu-16.04.2-server-amd64.iso?download&psid=1'
+wget -O ubuntu1604.iso 'https://onedrive.live.com/download?cid=F9861CD584CF2680&resid=F9861CD584CF2680%21480&authkey=AAuqbwXa3GMmuwM'
 wait
 echo "\r\n\r\n"
 
