@@ -19,15 +19,9 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5                             \r\n
+Version:  1.5.1                             \r\n
 Last Updated:  8/16/2017
-\r\n \r\n
-Updating system first..."
-sudo -E apt-get update
-wait
-sudo -E apt-get upgrade -y
-wait
-echo "Downloading required dependencies...\r\n\r\n"
+\r\n \r\n"
 #--------------------------------------------------------------------------------------------
 echo " --- Running System cleanup...  "
 echo "\r\n \r\n \r\n"
