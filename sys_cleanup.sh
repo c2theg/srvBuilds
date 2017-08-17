@@ -23,6 +23,10 @@ Version:  1.5.1                             \r\n
 Last Updated:  8/16/2017
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
+sudo rm /var/lib/apt/lists/lock
+sudo rm /var/cache/apt/archives/lock
+sudo rm /var/lib/dpkg/lock
+
 echo " --- Running System cleanup...  "
 echo "\r\n \r\n \r\n"
 sudo df -h
