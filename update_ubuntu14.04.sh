@@ -19,18 +19,20 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5                             \r\n
-Last Updated:  6/9/2017
-\r\n \r\n
-Updating system first..."
-apt-get update && apt-get upgrade -y
+Version:  1.6                             \r\n
+Last Updated:  8/21/2017
+\r\n \r\n"
 wait
-
+sudo -E apt-get update
+wait
+sudo -E apt-get upgrade -y
+wait
+echo "Freeing up space"
+sudo apt-get autoremove -y
+wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo apt-get -y install unattended-upgrades
-wait
-sudo apt-get -y autoremove
 wait
 apt-get dist-upgrade -y
 wait
@@ -39,6 +41,6 @@ wait
 echo "-----------------------------------------------------------------------"
 sudo apt-get autoclean
 wait
-sudo apt-get -y autoremove
+sudo apt-get autoremove -y
 wait
 echo "Done "
