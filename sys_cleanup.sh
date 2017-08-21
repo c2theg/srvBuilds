@@ -74,6 +74,7 @@ rm /var/log/clamav/freshclam.log.*
 rm /var/log/fail2ban.log.*
 rm /var/log/redis/redis-server.log.*
 rm /var/mail/root
+rm /var/mail/www-data
 rm /var/mail/ubuntu
 /etc/init.d/sendmail restart
 
