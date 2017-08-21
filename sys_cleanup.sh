@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.2                             \r\n
-Last Updated:  8/17/2017
+Version:  1.5.3                             \r\n
+Last Updated:  8/21/2017
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
