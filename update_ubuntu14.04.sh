@@ -44,3 +44,14 @@ wait
 sudo apt-get autoremove -y
 wait
 echo "Done "
+
+echo "\r\n \r\n "
+echo " To add to cron use the following: "
+echo " crontab -e \r\n"
+echo "10 3 * * * /home/ubuntu/update_core.sh >> /var/log/update_core.log 2>&1"
+echo "40 4 * * * /home/ubuntu/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
+echo "20 4 * * 7 /home/ubuntu/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
+
+echo "\r\n \r\n "
+echo " /etc/init.d/cron restart "
+echo " \r\n \r\n"
