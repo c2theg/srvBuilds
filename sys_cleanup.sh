@@ -73,6 +73,9 @@ rm /var/log/clamav/clamav.log.*
 rm /var/log/clamav/freshclam.log.*
 rm /var/log/fail2ban.log.*
 rm /var/log/redis/redis-server.log.*
+rm /var/mail/root
+rm /var/mail/ubuntu
+/etc/init.d/sendmail restart
 
 echo "\r\n \r\n Removing Nginx and PHP logs, then restarting both services.. \r\n \r\n "
 rm -rf /var/log/nginx/*
