@@ -22,8 +22,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
 \r\n \r\n
-Version:  1.5                             \r\n
-Last Updated:  6/9/2017
+Version:  1.6                             \r\n
+Last Updated:  7/21/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -71,7 +71,6 @@ echo "----------------------------------------------"
 
 
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
-sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/script_updater.sh
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh
@@ -79,7 +78,6 @@ sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/ntp.conf
 
 chmod u+x sys_cleanup.sh 
 chmod u+x update_ubuntu14.04.sh
-chmod u+x script_updater.sh
 chmod u+x update_core.sh
 chmod u+x install_snmp.sh
 chmod u ntp.conf
@@ -93,14 +91,12 @@ wait
 sudo timedatectl set-timezone America/New_York
 #-----------------------------------------------------
 
-
 echo " "
 echo " To add to cron use the following: "
 echo " crontab -e \r\n"
-echo "10 3 */4 * * /home/ubuntu/update_core.sh >/dev/null 2>&1"
-echo "15 4 */4 * * /home/ubuntu/update_ubuntu14.04.sh >/dev/null 2>&1"
-echo "15 3 */10 * * /home/ubuntu/sys_cleanup.sh >/dev/null 2>&1"
-echo "* 3 */10 * * /home/ubuntu/script_updater.sh >/dev/null 2>&1"
+echo "10 3 * * * /home/ubuntu/update_core.sh >> /var/log/update_core.log 2>&1"
+echo "40 4 * * * /home/ubuntu/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
+echo "20 4 * * 7 /home/ubuntu/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
 
 echo "\r\n "
 echo " /etc/init.d/cron restart "
