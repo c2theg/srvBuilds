@@ -9,7 +9,6 @@ wget https://bit.ly/cgray-common
 
 wget https://bit.ly/cgray-lemp
 
-
 wget https://bit.ly/cgray-webmin
 
 --------- Updaters -----------------------
@@ -26,3 +25,8 @@ sudo ./< FILENAME >
 
 
 Thats it
+
+All else fail's... force update core!
+
+rm update_core.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh && ./update_core.sh
+
