@@ -13,7 +13,7 @@ wget https://bit.ly/cgray-webmin
 
 --------- Updaters -----------------------
 
-wget http://bit.ly/cgray-updateU1404
+wget http://bit.ly/cgray-updateU1404  && mv cgray-updateU1404 update_ubuntu14.04.sh  && chmod u+x update_ubuntu14.04.sh && ./update_ubuntu14.04.sh
 
 ------------------------------------------
 
