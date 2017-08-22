@@ -21,9 +21,11 @@ echo "
 \r\n \r\n
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
+This really is meant to be run under Ubuntu 16.04 LTS +
+
 \r\n \r\n
-Version:  1.6                             \r\n
-Last Updated:  7/21/2017
+Version:  1.6.1                             \r\n
+Last Updated:  8/21/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -35,53 +37,42 @@ sudo apt-get autoremove -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
+sudo add-apt-repository -y ppa:cockpit-project/cockpit
+
 sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop cockpit
 wait
-sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties autossh screen sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer hping3
+sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties autossh screen sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer
 wait
+
+#--- start Cockpit ---
+sudo systemctl start cockpit && sudo systemctl enable cockpit
 
 echo "Downloading files..."
 if [ -s "sys_cleanup.sh" ] 
 then
 	echo "Deleting files"
 	rm sys_cleanup.sh
- 	rm update_ubuntu14.04.sh
+ 	rm update_ubuntu16.04.sh
  	rm install_snmp.sh
 	rm update_core.sh
-	rm script_updater.sh
 	rm ntp.conf
 fi
 
-echo " "
-echo " "
+echo "\r\n \r\n \r\n \r\n"
 if [ -s "50unattended-upgrades" ]
 then
   echo "Downloading latest custom config's "
   wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/50unattended-upgrades
   wait
   cp 50unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades
-  echo "Done setting up AutoUpdates!"
-  echo " "
-  echo " "
-  echo " "
+  echo "Done setting up AutoUpdates! \r\n \r\n"
 fi
-
-
-echo "----------------------------------------------"
-
-
-sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
-sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
-sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
-sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh
-sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/ntp.conf
-
-chmod u+x sys_cleanup.sh 
-chmod u+x update_ubuntu14.04.sh
-chmod u+x update_core.sh
-chmod u+x install_snmp.sh
-chmod u ntp.conf
-
+echo "\r\n \r\n ---------------------------------------------- \r\n \r\n"
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && sudo chmod u+x sys_cleanup.sh 
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu16.04.sh && chmod u+x update_ubuntu16.04.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/ntp.conf && chmod u ntp.conf
 #---- NTP Time related ---------
 cp ntp.conf /etc/ntp.conf
 wait
@@ -90,8 +81,6 @@ sudo /etc/init.d/ntp restart
 wait
 sudo timedatectl set-timezone America/New_York
 #-----------------------------------------------------
-
-echo " "
 echo " To add to cron use the following: "
 echo " crontab -e \r\n"
 echo "10 3 * * * /home/ubuntu/update_core.sh >> /var/log/update_core.log 2>&1"
@@ -110,5 +99,4 @@ or \r\n
 speedometer -l -r em3 -t em3 -m $(( 1024 * 1024 * 3 / 2 ))
  \r\n
 "
-
 echo " \r\n \r\n"
