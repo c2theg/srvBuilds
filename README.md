@@ -7,6 +7,7 @@ rm update_core.sh && wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && 
 
 Other Short URLs
 ---------- Installers ------------------
+
 wget https://bit.ly/cgray-common
 
 wget https://bit.ly/cgray-lemp
