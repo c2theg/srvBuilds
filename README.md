@@ -1,10 +1,12 @@
 A set of shell scripts I use to deploy various ubuntu servers.
 
+TL:DR;
 
-Short URLs
+rm update_core.sh && wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && chmod u+x update_core.sh && ./update_core.sh
 
+
+Other Short URLs
 ---------- Installers ------------------
-
 wget https://bit.ly/cgray-common
 
 wget https://bit.ly/cgray-lemp
@@ -16,7 +18,6 @@ wget https://bit.ly/cgray-webmin
 wget http://bit.ly/cgray-updateU1404  && mv cgray-updateU1404 update_ubuntu14.04.sh  && chmod u+x update_ubuntu14.04.sh && ./update_ubuntu14.04.sh
 
 ------------------------------------------
-
 once downloaded do the following:
 
 chmod u+x < FILENAME >
@@ -25,10 +26,6 @@ sudo ./< FILENAME >
 
 
 Thats it
-
-All else fail's... force update core!
-
-rm update_core.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh && ./update_core.sh
 
 ----  Cronjob -------------------------------------------------
 
