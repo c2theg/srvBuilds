@@ -8,15 +8,13 @@ rm update_core.sh && wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && 
 Other Short URLs
 ---------- Installers ------------------
 
-wget https://bit.ly/cgray-common
+wget https://bit.ly/cgray-lemp && mv cgray-lemp install_lemp.sh && chmod u+x install_lemp.sh && ./install_lemp.sh
 
-wget https://bit.ly/cgray-lemp
+wget https://bit.ly/cgray-webmin && mv cgray-lemp install_lemp.sh && chmod u+x install_lemp.sh && ./install_lemp.sh
 
-wget https://bit.ly/cgray-webmin
+NOT NEEDED ANYMORE. Just Run update_core.sh
 
---------- Updaters -----------------------
-
-wget http://bit.ly/cgray-updateU1404  && mv cgray-updateU1404 update_ubuntu14.04.sh  && chmod u+x update_ubuntu14.04.sh && ./update_ubuntu14.04.sh
+wget https://bit.ly/cgray-common && mv cgray-common install_common.sh && chmod u+x install_common.sh && ./install_common.sh
 
 ------------------------------------------
 once downloaded do the following:
