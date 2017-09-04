@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 16.04 LTS +
 
 \r\n \r\n
-Version:  1.6.1                             \r\n
-Last Updated:  8/21/2017
+Version:  1.6.2                             \r\n
+Last Updated:  9/4/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -37,11 +37,7 @@ sudo apt-get autoremove -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-#sudo add-apt-repository -y ppa:cockpit-project/cockpit
-#sudo -E apt-get install -y cockpit
-#wait
-
-sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop cockpit
+sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
 wait
 sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties autossh screen sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer
 wait
@@ -83,6 +79,8 @@ sudo /etc/init.d/ntp restart
 wait
 sudo timedatectl set-timezone America/New_York
 #-----------------------------------------------------
+echo "\r\n\r\n \r\n Add Cockpit!  sudo add-apt-repository -y ppa:cockpit-project/cockpit && apt-get install -y cockpit \r\n \r\n"
+
 echo " To add to cron use the following: "
 echo " crontab -e \r\n"
 echo "10 3 * * * /home/ubuntu/update_core.sh >> /var/log/update_core.log 2>&1"
