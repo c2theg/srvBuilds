@@ -45,3 +45,12 @@ wait
 sudo -E apt-get install -y logstash
 
 echo "\r\n \r\n DONE! \r\n \r\n"
+
+echo "To TEST it out!... \r\n \r\n "
+
+echo "cd logstash-5.5.2 \r\n \r\"
+echo "bin/logstash -e 'input { stdin { } } output { stdout {} }' \r\n \r\n"
+
+
+
+
