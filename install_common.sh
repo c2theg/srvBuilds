@@ -37,7 +37,9 @@ sudo apt-get autoremove -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-sudo add-apt-repository -y ppa:cockpit-project/cockpit
+#sudo add-apt-repository -y ppa:cockpit-project/cockpit
+#sudo -E apt-get install -y cockpit
+#wait
 
 sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop cockpit
 wait
