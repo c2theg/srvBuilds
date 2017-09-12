@@ -47,10 +47,10 @@ wait
 echo " \r\n \r\n"
 echo " \r\n \r\n"
 
+echo "What version of PhantomJS is installed: \r\n \r\n"
 phantomjs --version
 
 echo " \r\n \r\n"
-
 echo "DONE! "
 echo " \r\n \r\n"
 echo " \r\n \r\n"
