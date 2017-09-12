@@ -21,7 +21,7 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_phantomjs.sh
 This really is meant to be run under Ubuntu 14.04 LTS +
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  9/12/2017
 \r\n \r\n
 Updating system first..."
