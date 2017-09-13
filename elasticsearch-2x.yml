@@ -1,11 +1,11 @@
 #========== Christopher Gray - Custom Config v 0.5 - 5/11/16 - ElasticSearch 2.x ================
-node.name: asa-db1
+node.name: db1
 network.host: 0.0.0.0
 #---------------------------------------------
 cluster.name: Cluster-ES1
 node.rack: r1
 node.rack_id: r1
-node.zone: ashburn
+node.zone: ndc_ashburn
 cluster.routing.allocation.awareness.attributes: rack_id, zone
 cluster.routing.allocation.awareness.force.zone.values: zone
 http.port: 9200
@@ -22,7 +22,7 @@ discovery.zen.ping.multicast.enabled: true
 #discovery.zen.ping_timeout: 10
 #------------------------
 gateway.recover_after_nodes: 2
-# discovery.zen.minimum_master_nodes: 2  ###-- import for master node failure
+# discovery.zen.minimum_master_nodes: 2  ###-- important for master node failures
 http.cors.allow-origin: "*"
 http.cors.enabled: true
 #========== END CUSTOM CONFIG ===================================
