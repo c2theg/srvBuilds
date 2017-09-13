@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.3                             \r\n
-Last Updated:  8/21/2017
+Version:  1.5.4                             \r\n
+Last Updated:  9/13/2017
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -66,6 +66,11 @@ rm /var/log/mail.log.*
 rm /var/log/mail.err.*
 rm /var/log/mysql.log.*
 rm /var/log/syslog.*
+rm /var/log/user.log.*
+rm /var/log/debug.*
+rm /var/log/daemon.log.*
+rm /var/log/cron.log.*
+rm /var/log/messages.*
 rm /var/log/apport.log.*
 rm /var/log/aptitude.*
 rm /var/log/php5-fpm.log.*
