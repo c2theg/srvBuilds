@@ -1,8 +1,8 @@
 A set of shell scripts I use to deploy various ubuntu servers.
 
-TL:DR;
+<h1>TL:DR;  - run the following and all your problems will be solved :)</h1>
 
-rm update_core.sh && wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && chmod u+x update_core.sh && ./update_core.sh
+<h2> wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && chmod u+x update_core.sh && ./update_core.sh </h2>
 
 
 Other Short URLs
