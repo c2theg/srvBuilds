@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.4                             \r\n
-Last Updated:  9/13/2017
+Version:  1.5.5                             \r\n
+Last Updated:  10/2/2017
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -52,9 +52,9 @@ sudo dpkg --configure -a
 wait
 sudo update-grub2
 wait
-sudo -E apt-get update
+#sudo -E apt-get update
 wait
-sudo -E apt-get upgrade -y
+#sudo -E apt-get upgrade -y
 echo "\r\n \r\n \r\n"
 echo "---- removing old logs from /var/log  ----- \r\n\r\n"
 rm /var/log/alternatives.log.*
