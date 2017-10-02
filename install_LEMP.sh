@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2                             \r\n
-Last Updated:  5/30/2017
+Version:  1.3                             \r\n
+Last Updated:  10/2/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -39,7 +39,7 @@ sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute h
 sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 wait
 
-sudo apt-get -y update && sudo apt-get -y install php7.0 php7.0-fpm php7.0-common php7.0-cli php7.0-json php7.0-gd php7.0-opcache php7.0-readline php7.0-mysql php7.0-curl php7.0-mcrypt php7.0-soap php7.0-ldap php-pear openssl-blacklist ssl-cert php-xdebug php-apcu php7.0-mbstring php7.0-ssh2 php-geoip php7.0-zip php7.0-xml php-mailparse php7.0-bz2 php7.0-xmlrpc libmcrypt-dev mcrypt
+sudo apt-get -y update && sudo apt-get -y install php7.0 php7.0-fpm php7.0-common php7.0-cli php7.0-json php7.0-gd php7.0-opcache php7.0-readline php7.0-mysql php7.0-curl php7.0-mcrypt php7.0-soap php7.0-ldap php-pear openssl-blacklist ssl-cert php-xdebug php-apcu php7.0-mbstring php7.0-ssh2 php-geoip php7.0-zip php7.0-xml php-mailparse php7.0-bz2 php7.0-xmlrpc libmcrypt-dev mcrypt php7.0-bcmath
 wait
 
 sudo pear channel-update pear.php.net
