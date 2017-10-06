@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3.2                             \r\n
+Version:  1.3.3                             \r\n
 Last Updated:  10/6/2017
 \r\n \r\n
 Updating system first..."
@@ -34,31 +34,29 @@ wait
 #--------------------------------------------------------------------------------------------
 ping -q -c5 github.com > /dev/null
 if [ $? -eq 0 ]
- 	echo "Not connected to internet. Fix that first and try again"
+ 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 then
-	echo "Connected to internet! "
-	echo "Downloading files..."
-	if [ -s "sys_cleanup.sh" ] 
+	echo "Connected to internet!!! \r\n"
+	if [ -s "update_core.sh" ] 
 	then
-		echo "Deleting files"
+		echo "Deleting files \r\n"
 		rm sys_cleanup.sh
  		rm update_ubuntu14.04.sh
  		rm install_common.sh
 		rm update_core.sh
 	fi
 
-	echo "Downloading latest versions..."
+	echo "Downloading latest versions... \r\n\r\n"
 
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 	wait
+	chmod u+x update_core.sh
 	chmod u+x sys_cleanup.sh 
 	chmod u+x update_ubuntu14.04.sh
 	chmod u+x install_common.sh
-	chmod u+x update_core.sh
-	
 	sh ./update_ubuntu14.04.sh
 fi
 echo "done! \r\n \r\n"
