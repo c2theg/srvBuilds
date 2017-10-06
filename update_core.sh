@@ -36,27 +36,25 @@ ping -q -c5 github.com > /dev/null
 if [ $? -eq 0 ]
  	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 then
-	echo "Connected to internet!!! \r\n"
+	echo "Connected to internet!!! \r\n \r\n"
 	if [ -s "update_core.sh" ] 
 	then
-		echo "Deleting files \r\n"
+		echo "Deleting old files \r\n"
 		rm sys_cleanup.sh
  		rm update_ubuntu14.04.sh
  		rm install_common.sh
 		rm update_core.sh
 	fi
-
-	echo "Downloading latest versions... \r\n\r\n"
-
-	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
+	echo "Downloading latest versions... \r\n\r\n"	
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
-	wait
-	chmod u+x update_core.sh
+	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
+	wait	
 	chmod u+x sys_cleanup.sh 
 	chmod u+x update_ubuntu14.04.sh
 	chmod u+x install_common.sh
+	chmod u+x update_core.sh
 	sh ./update_ubuntu14.04.sh
 fi
 echo "done! \r\n \r\n"
