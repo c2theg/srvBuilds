@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3.4                             \r\n
+Version:  1.3.5                             \r\n
 Last Updated:  10/6/2017
 \r\n \r\n"
 #sudo -E apt-get update
@@ -45,15 +45,11 @@ then
 		rm update_core.sh
 	fi
 	echo "Downloading latest versions... \r\n\r\n"	
-	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
-	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
-	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
-	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && sudo chmod u+x sys_cleanup.sh 
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu16.04.sh && chmod u+x update_ubuntu16.04.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh	
+	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && chmod u+x install_common.sh
 	wait	
-	chmod u+x sys_cleanup.sh 
-	chmod u+x update_ubuntu14.04.sh
-	chmod u+x install_common.sh
-	chmod u+x update_core.sh
 	sh ./update_ubuntu14.04.sh
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
