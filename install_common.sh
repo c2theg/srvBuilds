@@ -24,29 +24,29 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  1.6.3                             \r\n
+Version:  1.6.4                             \r\n
 Last Updated:  10/5/2017
-\r\n \r\n
-Updating system first..."
-sudo -E apt-get update
-wait
-sudo -E apt-get upgrade -y
-wait
-echo "Freeing up space"
-sudo apt-get autoremove -y
-wait
-echo "Downloading required dependencies...\r\n\r\n"
-#--------------------------------------------------------------------------------------------
-sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
-wait
-sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties screen sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer
-wait
-#----------------------------------------------------------------------------------------------
+\r\n \r\n"
+echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
 if [ $? -eq 0 ]
 then
-	echo "Connected to internet!!! \r\n \r\n"
-	if [ -s "sys_cleanup.sh" ] 
+	echo "Connected \r\n \r\n"
+	sudo -E apt-get update
+	wait
+	sudo -E apt-get upgrade -y
+	wait
+	echo "Freeing up space"
+	sudo apt-get autoremove -y
+	wait
+	echo "Downloading required dependencies...\r\n\r\n"
+	#--------------------------------------------------------------------------------------------
+	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
+	wait
+	sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties screen sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer
+	wait
+	#----------------------------------------------------------------------------------------------
+	if [ -s "update_core.sh" ] 
 	then
 		echo "Deleting files"
 		rm sys_cleanup.sh
