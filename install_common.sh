@@ -78,7 +78,7 @@ then
 	wait
 	sudo timedatectl set-timezone America/New_York
 	#-----------------------------------------------------
-	echo "\r\n\r\n \r\n Add Cockpit!  sudo add-apt-repository -y ppa:cockpit-project/cockpit && apt-get install -y cockpit \r\n \r\n"
+	echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04) sudo add-apt-repository -y ppa:cockpit-project/cockpit && apt-get install -y cockpit \r\n \r\n"
 	#--- start Cockpit ---
 	echo "sudo systemctl start cockpit && sudo systemctl enable cockpit"
 	echo "\r\n \r\n"
