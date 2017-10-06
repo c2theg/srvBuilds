@@ -19,18 +19,18 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2                             \r\n
-Last Updated:  8/21/2017
+Version:  1.3                             \r\n
+Last Updated:  10/6/2017
 \r\n \r\n
 Updating system first..."
-sudo -E apt-get update
+#sudo -E apt-get update
 wait
-sudo -E apt-get upgrade -y
+#sudo -E apt-get upgrade -y
+#wait
+#echo "Freeing up space"
+#sudo apt-get autoremove -y
 wait
-echo "Freeing up space"
-sudo apt-get autoremove -y
-wait
-echo "Downloading required dependencies...\r\n\r\n"
+#echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Downloading files..."
 if [ -s "sys_cleanup.sh" ] 
@@ -53,6 +53,4 @@ chmod u+x sys_cleanup.sh
 chmod u+x update_ubuntu14.04.sh
 chmod u+x install_common.sh
 chmod u+x update_core.sh
-
-
 echo "done! \r\n \r\n"
