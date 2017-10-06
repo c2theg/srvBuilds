@@ -34,7 +34,6 @@ wait
 #--------------------------------------------------------------------------------------------
 ping -q -c5 github.com > /dev/null
 if [ $? -eq 0 ]
- 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 then
 	echo "Connected to internet!!! \r\n \r\n"
 	if [ -s "update_core.sh" ] 
@@ -56,5 +55,7 @@ then
 	chmod u+x install_common.sh
 	chmod u+x update_core.sh
 	sh ./update_ubuntu14.04.sh
+else
+	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
 echo "done! \r\n \r\n"
