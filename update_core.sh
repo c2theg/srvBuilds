@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #    If you update this from Windows, using Notepad ++, do the following:
 #       sudo apt-get -y install dos2unix
 #       dos2unix <FILE>
@@ -54,3 +54,5 @@ chmod u+x update_ubuntu14.04.sh
 chmod u+x install_common.sh
 chmod u+x update_core.sh
 echo "done! \r\n \r\n"
+
+sh ./update_ubuntu14.04.sh
