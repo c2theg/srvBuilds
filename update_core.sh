@@ -19,10 +19,9 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3.3                             \r\n
+Version:  1.3.4                             \r\n
 Last Updated:  10/6/2017
-\r\n \r\n
-Updating system first..."
+\r\n \r\n"
 #sudo -E apt-get update
 wait
 #sudo -E apt-get upgrade -y
@@ -32,10 +31,11 @@ wait
 wait
 #echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
+echo "Checking Internet status...\r\n\r\n"
 ping -q -c5 github.com > /dev/null
 if [ $? -eq 0 ]
 then
-	echo "Connected to internet!!! \r\n \r\n"
+	echo "Connected!!! \r\n \r\n"
 	if [ -s "update_core.sh" ] 
 	then
 		echo "Deleting old files \r\n"
