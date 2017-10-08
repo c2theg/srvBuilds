@@ -5,7 +5,8 @@
 #       chmod u+x <FILE>
 #
 clear
-echo "
+now=$(date)
+echo " Running update_core.sh at echo $now \r\n \r\n
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
