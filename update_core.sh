@@ -6,7 +6,7 @@
 #
 clear
 now=$(date)
-echo " Running update_core.sh at echo $now \r\n \r\n
+echo "Running update_core.sh at $now 
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
@@ -19,9 +19,9 @@ echo " Running update_core.sh at echo $now \r\n \r\n
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
-Version:  1.3.6                             \r\n
-Last Updated:  10/6/2017
+
+Version:  1.3.7                             \r\n
+Last Updated:  10/8/2017
 \r\n \r\n"
 #sudo -E apt-get update
 wait
