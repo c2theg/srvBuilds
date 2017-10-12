@@ -1,5 +1,5 @@
 <?php
-    // Chreistopher Gray - Christophermjgray@gmail.com
+    // Christopher Gray - Christophermjgray@gmail.com
     // Version 0.5.1
     // Updated 10/12/17
     // WARNING: ---- Make sure to change default passwords / salts. Use: https://www.grc.com/passwords.htm
