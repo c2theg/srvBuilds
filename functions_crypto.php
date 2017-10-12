@@ -3,7 +3,6 @@
     // Version 0.5.1
     // Updated 10/12/17
     // WARNING: ---- Make sure to change default passwords / salts. Use: https://www.grc.com/passwords.htm
-    ini_set('session.hash_function', 'sha256');
     
     function cryptoGenHMAC($Value, $Length = 64, $key = 'sbfXJToi1OBHLGQxGJwPDZOZk3HIk24OVvh8CO4Y8eUnOdpuWL2ClG1ipYA3mEj', $Cypher = 'sha512', $debug = 0) {
         // old. dont use, use gen_StrongHash
