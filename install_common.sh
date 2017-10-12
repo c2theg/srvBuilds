@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  1.6.4                             \r\n
-Last Updated:  10/5/2017
+Version:  1.6.5                             \r\n
+Last Updated:  10/12/2017
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
@@ -43,7 +43,7 @@ then
 	#--------------------------------------------------------------------------------------------
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
 	wait
-	sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties screen sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer
+	sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties screen sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer nload
 	wait
 	#----------------------------------------------------------------------------------------------
 	if [ -s "update_core.sh" ] 
