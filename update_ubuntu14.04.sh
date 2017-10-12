@@ -5,7 +5,9 @@
 #       chmod u+x <FILE>
 #
 clear
-echo "
+now=$(date)
+echo "Running update_core.sh at $now 
+
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
@@ -19,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6                             \r\n
-Last Updated:  8/21/2017
+Version:  1.6.1                             \r\n
+Last Updated:  10/12/2017
 \r\n \r\n"
 wait
 sudo -E apt-get update
