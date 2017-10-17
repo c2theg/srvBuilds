@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.0                             \r\n
-Last Updated:  5/7/2017
+Version:  1.2                             \r\n
+Last Updated:  10/17/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -31,7 +31,7 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo apt-get -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 wait
-sudo wget http://prdownloads.sourceforge.net/webadmin/webmin_1.831_all.deb 
+sudo wget http://prdownloads.sourceforge.net/webadmin/webmin_1.860_all.deb 
 wait
-sudo dpkg --install webmin_1.831_all.deb
+sudo dpkg --install webmin_1.860_all.deb
 echo "Done! \r\n \r\n"
