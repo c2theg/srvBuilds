@@ -1,5 +1,4 @@
 #!/bin/bash
-
 fqdn='cloud.site.com'
 #----------------------------------------------------------------------------
 clear
@@ -9,6 +8,11 @@ sudo apt-get update
 wait
 sudo apt-get install -y python-certbot-nginx
 wait
+
+echo -e "\r\n \r\n \r\n";
+echo -e "For Let's Encrypt to work, you must have generated the self signed cert first, and configured nginx \r\n "
+echo -e "If this hasn't been done yet, please stop, and work on that. \r\n "
+
 
 echo -e "\r\n \r\n"
 read -p "Enter your FQDN: "  fqdn
