@@ -1,0 +1,156 @@
+# -------------- Custom MySQL / Percona config  -----------------------------------------------------------------
+#      By Christopher Gray
+#      christophermjgray@gmail.com
+#      10/17/2017
+#      Version 2.1.0
+#      Supported Versions: Percona 5.7
+#
+#      Path: /etc/mysql/percona-server.conf.d/mysqld.cnf
+#---------------------------------------------------------------------------------------------------------------
+#   Setup the system correctly...
+#       Put the data in another partition, so you dont worry about running out of space on /
+#
+#       do the following:
+#
+#           Moving MySQL Database: 
+#                cp -p -r /var/lib/mysql/ /media/data/
+#
+#           Create correct directors
+#               mkdir /media/data/mysql/tmp
+#               mkdir /media/data/mysql_logs/
+#               mkdir /media/data/mysql_logs/replication/          
+#
+#               sudo chmod -R 755 /media/data/mysql/ && sudo chown -R mysql:mysql /media/data/mysql/
+#               sudo chmod -R 755 /media/data/mysql_logs/ && sudo chown -R mysql:mysql /media/data/mysql_logs/
+#   
+#   PLEASE GO OVER EACH LINE, and MAKE SURE the paths are correct for all directories, or mysql will FAIL to start!
+#---------------------------------------------------------------------------------------------------------------
+#8888888888888888888
+[client]
+port            = 3306
+socket          = /var/run/mysqld/mysqld.sock
+
+#8888888888888888888
+[mysqld_safe]
+socket          = /var/run/mysqld/mysqld.sock
+nice            = 0
+log_error       = /var/log/mysql/mysql_error.log
+
+#8888888888888888888
+[mysqld]
+user            = mysql
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+port            = 3306
+basedir         = /usr
+datadir         = /var/lib/mysql
+tmpdir          = /tmp
+lc-messages-dir = /usr/share/mysql
+
+#---- Additions for MySQL 5.7 --
+explicit_defaults_for_timestamp  
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_ALL_TABLES
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+
+# ----- Logging and Replication ------
+log_error            = /var/log/mysql/mysql_error.log
+#general_log_file    = /var/log/mysql/general.log
+#general_log         = 1
+#log_slow_queries    = /var/log/mysql/slow.log
+
+#---------- Recommended -----------------
+# --- ^^ rem the lines above for datadir and tmpdir ^^ ---
+#datadir          = /media/data/mysql
+#tmpdir           = /media/data/mysql/tmp
+
+#-- logging --
+# -- Error logging goes to syslog due to /etc/mysql/conf.d/mysqld_safe_syslog.cnf.
+#log_error	      = /media/data/mysql_logs/mysql_error.log
+#general_log_file = /media/data/mysql_logs/general.log
+#--- NOT ON when defined. Turn on General Logging with : SET GLOBAL general_log = 'ON'; and Off with: SET GLOBAL general_log = 'OFF';
+#log_slow_queries = /media/data/mysql_logs/slow.log
+
+# Be aware that this log type is a performance killer.
+#long_query_time = 2
+#log-queries-not-using-indexes
+
+#-----------------------------------------
+skip-external-locking
+#bind-address           = 127.0.0.1
+#---- Fine Tuning --------
+#--- Optimizing InnoDB ----
+innodb_buffer_pool_size = 4G   # - Set this to 80% of system memory
+#  System Ram   |   MySQL Setting
+#     2Gb       |       1600Mb (Dont enter . )
+#     4Gb       |       3.2Gb
+#     8Gb       |       6.4Gb
+#     12Gb      |       9.6Gb
+#     16Gb      |       12.8Gb
+#     32Gb      |       25.6Gb
+#     64Gb      |       51.2Gb
+#     128Gb     |       102.4Gb
+
+innodb_log_file_size = 128M
+# Set this to 1-2 hours worth of writes during your busiest time
+# How to find out the number to set it too:
+# mysql> pager grep sequence
+# mysql> show engine innodb status\G select sleep(60); show engine innodb status\G;
+# mysql> Select (Before - After)*60/1024/1024; as MakeLogSize;
+
+innodb_flush_log_at_trx_commit = 0
+sync_binlog = 1
+innodb_flush_method=O_DIRECT
+innodb_buffer_pool_instances=8 # or 16
+innodb_lock_wait_timeout=120
+skip_name_resolve=1
+innodb_stats_on_metadata=0
+
+innodb_checksum_algorithm=crc32
+table_open_cache_instances=16
+
+#key_buffer              = 16M
+max_allowed_packet      = 64M
+thread_stack            = 192K
+thread_cache_size       = 8
+max_connections         = 2048
+#table_cache            = 64
+
+# --- Query Cache Configuration ----
+#only use this for 95% read only databases, with light workloads
+#query_cache_limit       = 32M
+#query_cache_size        = 128M  # never >=256M
+query_cache_size=0
+query_cache_type=OFF
+
+#------- Replication -------------
+server-id               = 2
+#relay-log              = /var/log/mysql/replication/slave-relay.log
+#relay-log-index        = /var/log/mysql/replication/slave-relay-log.index
+#log_bin                = /var/log/mysql/replication/mysql-bin.log
+#--- Recommended ---
+#relay-log              = /media/data/mysql_logs/replication/slave-relay.log
+#relay-log-index        = /media/data/mysql_logs/replication/slave-relay-log.index
+#log_bin                = /media/data/mysql_logs/replication/mysql-bin.log
+#-------------------
+expire_logs_days        = 3
+max_binlog_size         = 256M
+#binlog_do_db           = main_db
+#binlog_ignore_db       = include_database_name
+# --- Security Features ----
+# For generating SSL certificates I recommend the OpenSSL GUI "tinyca"
+# ssl-ca=/etc/mysql/cacert.pem
+# ssl-cert=/etc/mysql/server-cert.pem
+# ssl-key=/etc/mysql/server-key.pem
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet      = 64M
+[mysql]
+#no-auto-rehash # faster start of mysql but no tab completion
+
+# * IMPORTANT: Additional settings that can override those from this file!
+#   The files must end with '.cnf', otherwise they'll be ignored.
+#!includedir /etc/mysql/conf.d/
+#!includedir /etc/mysql/mysql.conf.d/
