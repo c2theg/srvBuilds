@@ -38,8 +38,9 @@ sudo -E apt-get update
 
 
 wait
-sudo apt-get install -y mysql-client-core-5.7 
-sudo apt-get install -y libmecab2 percona-server-client-5.7 percona-server-common-5.7 
+sudo apt-get install -y percona-server-server-5.7 libmecab2
+#sudo apt-get install -y mysql-client-core-5.7 
+#sudo apt-get install -y  percona-server-common-5.7 
 sudo apt-get install -y php7.0-mysql
 
 echo "\r\n Downloading Config \r\n"
