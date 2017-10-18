@@ -18,3 +18,6 @@ chown ${rootuser}:${htgroup} ${ocpath}/data/.htaccess
 
 chmod 0644 ${ocpath}/.htaccess
 chmod 0644 ${ocpath}/data/.htaccess
+
+sudo chmod -R 755 ${ocpath}
+sudo chown -R www-data:www-data ${ocpath}
