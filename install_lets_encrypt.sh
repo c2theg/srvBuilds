@@ -2,9 +2,13 @@
 
 fqdn='cloud.site.com'
 #----------------------------------------------------------------------------
-sudo add-apt-repository ppa:certbot/certbot
+clear
+sudo add-apt-repository -y ppa:certbot/certbot
+wait
 sudo apt-get update 
+wait
 sudo apt-get install -y python-certbot-nginx
+wait
 
 echo -e "\r\n \r\n"
 read -p "Enter your FQDN: "  fqdn
