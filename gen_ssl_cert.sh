@@ -9,7 +9,7 @@ echo "\r\n \r\n SSL Cert Path: $path \r\n \r\n"
 read -p "Enter your FQDN: "  fqdn
 echo "Welcome $fqdn!"
 
-read -p "Enter DH key size: "  dhsize
+read -p "Enter DH key size: "  certsize
 echo "Cert Size: $certsize"
 
 echo "\r\n \r\n"
