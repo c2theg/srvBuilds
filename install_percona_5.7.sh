@@ -34,4 +34,18 @@ wget https://repo.percona.com/apt/percona-release_0.1-4.$(lsb_release -sc)_all.d
 dpkg -i percona-release_0.1-4.$(lsb_release -sc)_all.deb
 sudo apt-get update && sudo apt-get install mysql-client-core-5.7 libmecab2 percona-server-client-5.7 percona-server-common-5.7 php7.0-mysql
 
+echo "Downloading Config"
+wget "my.cnf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/my.cnf"
+wait
+sudo cp "my.cnf" "/etc/mysql/my.cnf"
+wait
+echo "Percona Config Download Complete"
+sudo /etc/init.d/mysql restart
+echo "\r\n \r\n \r\n \r\n"
+echo "To create a remote connection use the following: \r\n \r\n"
+echo " mysql --user=root --password=*** mysql  \r\n\r\n"
+echo " GRANT ALL PRIVILEGES ON *.* TO 'user1'@'%' IDENTIFIED BY '***' WITH GRANT OPTION; \r\n\r\n"
+echo " Done! \r\n\r\n"
+
+
 echo "DONE \r\n \r\n"
