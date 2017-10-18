@@ -18,6 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
+https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP.sh
+
 \r\n \r\n
 Version:  1.3                             \r\n
 Last Updated:  10/2/2017
