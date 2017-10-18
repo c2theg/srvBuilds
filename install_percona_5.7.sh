@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  1.1                             \r\n
+Version:  1.2                             \r\n
 Last Updated:  10/18/2017
 \r\n \r\n
 Updating system first..."
@@ -30,7 +30,7 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 cd ~
 
-apt-key -y adv --keyserver keys.gnupg.net --recv-keys 8507EFA5
+apt-key adv --keyserver keys.gnupg.net --recv-keys 8507EFA5
 
 wget https://repo.percona.com/apt/percona-release_0.1-4.$(lsb_release -sc)_all.deb
 dpkg -i percona-release_0.1-4.$(lsb_release -sc)_all.deb
