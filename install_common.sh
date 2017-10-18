@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  1.6.5                             \r\n
-Last Updated:  10/12/2017
+Version:  1.6.6                             \r\n
+Last Updated:  10/18/2017
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
@@ -50,7 +50,7 @@ then
 	then
 		echo "Deleting files"
 		rm sys_cleanup.sh
-		rm update_ubuntu16.04.sh
+		rm update_ubuntu14.04.sh
 		rm install_snmp.sh
 		rm update_core.sh
 		rm ntp.conf
@@ -66,7 +66,7 @@ then
 	fi
 	echo "\r\n \r\n ---------------------------------------------- \r\n \r\n"
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && sudo chmod u+x sys_cleanup.sh 
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu16.04.sh && chmod u+x update_ubuntu16.04.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/ntp.conf && chmod u ntp.conf
