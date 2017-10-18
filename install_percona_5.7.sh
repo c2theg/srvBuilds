@@ -28,11 +28,15 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
+cd ~
+
 apt-key -y adv --keyserver keys.gnupg.net --recv-keys 8507EFA5
 
 wget https://repo.percona.com/apt/percona-release_0.1-4.$(lsb_release -sc)_all.deb
 dpkg -i percona-release_0.1-4.$(lsb_release -sc)_all.deb
 sudo -E apt-get update
+
+
 wait
 sudo apt-get install -y mysql-client-core-5.7 libmecab2 percona-server-client-5.7 percona-server-common-5.7 php7.0-mysql
 
