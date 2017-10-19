@@ -23,7 +23,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2.5                             \r\n
+Version:  1.2.6                             \r\n
 Last Updated:  10/19/2017
 \r\n \r\n
 
@@ -40,18 +40,21 @@ sudo apt-get -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpa
 wait
 #sudo wget http://prdownloads.sourceforge.net/webadmin/webmin_1.860_all.deb 
 
-URL="https://downloads.sourceforge.net/project/webadmin/webmin/"
-URL+="$Version"
-URL+="/webmin_"
-URL+="$Version"
-URL+="_all.deb?r=http%3A%2F%2Fwww.webmin.com%2Fdownload.html&ts=1508439010&use_mirror=ayera"
+#URL="https://downloads.sourceforge.net/project/webadmin/webmin/"
+#URL+="$Version"
+#URL+="/webmin_"
+#URL+="$Version"
+#URL+="_all.deb?r=http%3A%2F%2Fwww.webmin.com%2Fdownload.html&ts=1508439010&use_mirror=ayera"
 
-FileName="webmin_"
-FileName+="$Version"
-FileName+="_all.deb"
+#FileName="webmin_"
+#FileName+="$Version"
+#FileName+="_all.deb"
 
-sudo wget -O "$FileName" "$URL"
+#sudo wget -O "$FileName" "$URL"
 
+sudo wget -O "webmin.deb" "https://downloads.sourceforge.net/project/webadmin/webmin/1.860/webmin_1.860_all.deb?r=&ts=1508441364&use_mirror=phoenixnap"
 wait
-sudo dpkg --install "webmin_$Version_all.deb"
+#sudo dpkg --install "webmin_$Version_all.deb"
+
+sudo dpkg --install "webmin.deb"
 echo "Done! \r\n \r\n"
