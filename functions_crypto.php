@@ -11,7 +11,7 @@
         return substr(strtr(base64_encode(hex2bin(RandomToken())), '+', '.'), 0, $length);
     }
     
-    function cryptoGenHMAC($Value, $Length = 64, $key = 'sbfXJToi1OBHLGQxGJwPDZOZk3HIk24OVvh8CO4Y8eUnOdpuWL2ClG1ipYA3mEj', $Cypher = 'sha512', $debug = 0) {
+    function cryptoGenHMAC($Value, $Length = 64, $key = '', $Cypher = 'sha512', $debug = 0) {
         // old. dont use, use gen_StrongHash
         $Output = substr(hash_hmac($Cypher, $Value, $key),0,$Length);
         return $Output;
@@ -22,7 +22,7 @@
         return $Hash;
     }
     
-    function Super_Encrypt($PlainText, $password = 'kPU2RJ55VYOXL99L3Z3ZxEGOiUggYYXNxso7CW3WChUL5DejSQqT717xF1WrG8q', $enc_method = 'AES-256-CTR') {
+    function Super_Encrypt($PlainText, $password = '', $enc_method = 'AES-256-CTR') {
         //$enc_method = 'AES-256-CTR';  // http://php.net/openssl_get_cipher_methods
         // https://www.xkcd.com/221/
         //----------------------------------------------------------------------------------
@@ -32,7 +32,7 @@
         return $encrypted_text;
     }
     
-    function Super_decrypt($encrypted_data, $password = 'kPU2RJ55VYOXL99L3Z3ZxEGOiUggYYXNxso7CW3WChUL5DejSQqT717xF1WrG8q', $iv = '', $enc_method = 'AES-256-CTR') {
+    function Super_decrypt($encrypted_data, $password = '', $iv = '', $enc_method = 'AES-256-CTR') {
         $encrypted_data = base64_decode($encrypted_data);
         if ($iv == '') {
             if(preg_match("/^(.*)::(.*)$/", $encrypted_data, $regs)) { // check if the iv is stored in the encrypted payload. if so, extract it, and use it for decryption
