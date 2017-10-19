@@ -23,7 +23,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2.2                             \r\n
+Version:  1.2.3                             \r\n
 Last Updated:  10/19/2017
 \r\n \r\n
 
