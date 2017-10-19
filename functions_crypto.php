@@ -1,10 +1,17 @@
 <?php
-    // Christopher Gray - Christophermjgray@gmail.com
-    // Version 0.5.1
-    // Updated 10/12/17
+    // Chreistopher Gray - Christophermjgray@gmail.com
+    // Version 0.6.0
+    // Updated 10/19/17
     // WARNING: ---- Make sure to change default passwords / salts. Use: https://www.grc.com/passwords.htm
+
+
+    ini_set('session.hash_function', 'sha256');
     
-    function gen_HMAC($Value, $Length = 64, $key = 'sbfXJToi1OBHLGQxGJwPDZOZk3HIk24OVvh8CO4Y8eUnOdpuWL2ClG1ipYA3mEj', $Cypher = 'sha512', $debug = 0) {
+    function gen_Salt($length = '64'){
+        return substr(strtr(base64_encode(hex2bin(RandomToken())), '+', '.'), 0, $length);
+    }
+    
+    function cryptoGenHMAC($Value, $Length = 64, $key = 'sbfXJToi1OBHLGQxGJwPDZOZk3HIk24OVvh8CO4Y8eUnOdpuWL2ClG1ipYA3mEj', $Cypher = 'sha512', $debug = 0) {
         // old. dont use, use gen_StrongHash
         $Output = substr(hash_hmac($Cypher, $Value, $key),0,$Length);
         return $Output;
@@ -17,14 +24,15 @@
     
     function Super_Encrypt($PlainText, $password = 'kPU2RJ55VYOXL99L3Z3ZxEGOiUggYYXNxso7CW3WChUL5DejSQqT717xF1WrG8q', $enc_method = 'AES-256-CTR') {
         //$enc_method = 'AES-256-CTR';  // http://php.net/openssl_get_cipher_methods
+        // https://www.xkcd.com/221/
         //----------------------------------------------------------------------------------
-        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($enc_method));  // initialization vector
+        $iv = RandomToken($enc_method);  // initialization vector
         $encrypted_text = base64_encode(openssl_encrypt($PlainText, $enc_method, $password, 0, $iv) . "::" . bin2hex($iv));  // encrypt data, append the IV to the end of the encypted data, and base64 encode all of it
         unset($PlainText, $password, $enc_method, $iv);
         return $encrypted_text;
     }
     
-    function Super_Decrypt($encrypted_data, $password = 'kPU2RJ55VYOXL99L3Z3ZxEGOiUggYYXNxso7CW3WChUL5DejSQqT717xF1WrG8q', $iv = '', $enc_method = 'AES-256-CTR') {
+    function Super_decrypt($encrypted_data, $password = 'kPU2RJ55VYOXL99L3Z3ZxEGOiUggYYXNxso7CW3WChUL5DejSQqT717xF1WrG8q', $iv = '', $enc_method = 'AES-256-CTR') {
         $encrypted_data = base64_decode($encrypted_data);
         if ($iv == '') {
             if(preg_match("/^(.*)::(.*)$/", $encrypted_data, $regs)) { // check if the iv is stored in the encrypted payload. if so, extract it, and use it for decryption
@@ -38,5 +46,24 @@
         }
         return $decrypted_token;
     }
+
+
+    function RandomToken($Cipher = 'AES-256-CTR'){
+        $length = openssl_cipher_iv_length($Cipher);
+        
+        if(!isset($length) || intval($length) <= 8 ){
+            $length = 32;
+        }
+        if (function_exists('random_bytes')) {
+            return bin2hex(random_bytes($length));
+        }
+        if (function_exists('mcrypt_create_iv')) {
+            return bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
+        }
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            return bin2hex(openssl_random_pseudo_bytes($length));
+        }
+    }
+    
 
 ?>
