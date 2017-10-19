@@ -40,13 +40,13 @@ sudo apt-get -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpa
 wait
 #sudo wget http://prdownloads.sourceforge.net/webadmin/webmin_1.860_all.deb 
 
-URL = "https://downloads.sourceforge.net/project/webadmin/webmin/"
+URL="https://downloads.sourceforge.net/project/webadmin/webmin/"
 URL+="$Version"
 URL+="/webmin_"
 URL+="$Version"
 URL+="_all.deb?r=http%3A%2F%2Fwww.webmin.com%2Fdownload.html&ts=1508439010&use_mirror=ayera"
 
-FileName = "webmin_"
+FileName="webmin_"
 FileName+="$Version"
 FileName+="_all.deb"
 
