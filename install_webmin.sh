@@ -39,7 +39,8 @@ echo "Downloading required dependencies...\r\n\r\n"
 sudo apt-get -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 wait
 #sudo wget http://prdownloads.sourceforge.net/webadmin/webmin_1.860_all.deb 
-sudo wget -O webmin_$Version_all.deb https://downloads.sourceforge.net/project/webadmin/webmin/$Version/webmin_$Version_all.deb?r=http%3A%2F%2Fwww.webmin.com%2Fdownload.html&ts=1508439010&use_mirror=ayera
+sudo wget -O "webmin_$Version_all.deb" "https://downloads.sourceforge.net/project/webadmin/webmin/$Version/webmin_$Version_all.deb?r=http%3A%2F%2Fwww.webmin.com%2Fdownload.html&ts=1508439010&use_mirror=ayera"
+
 wait
-sudo dpkg --install webmin_$Version_all.deb
+sudo dpkg --install "webmin_$Version_all.deb"
 echo "Done! \r\n \r\n"
