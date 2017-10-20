@@ -22,33 +22,28 @@ echo "
 
 https://www.elastic.co/guide/index.html
 
-https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash5.sh
+https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_beats.sh
+
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  10/20/2017
 \r\n \r\n"
 
 
-echo -e "Installing Packetbeat \r\n \r\n"
+echo -e "Installing Packetbeat \r\n  https://www.elastic.co/guide/en/beats/packetbeat/current/packetbeat-getting-started.html  \r\n \r\n"
 sudo apt-get -y install libpcap0.8
 curl -L -O https://artifacts.elastic.co/downloads/beats/packetbeat/packetbeat-5.6.3-amd64.deb
 sudo dpkg -i packetbeat-5.6.3-amd64.deb
 
 
-echo -e "Installing Filebeat \r\n \r\n"
-# https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html
-
+echo -e "Installing Filebeat \r\n https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-getting-started.html \r\n \r\n"
 curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.6.3-amd64.deb
 sudo dpkg -i filebeat-5.6.3-amd64.deb
 
 
-
-echo -e "Installing Metricbeat \r\n \r\n"
-# https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-installation.html
-
+echo -e "Installing Metricbeat \r\n https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-getting-started.html \r\n \r\n"
 curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-5.6.3-amd64.deb
 sudo dpkg -i metricbeat-5.6.3-amd64.deb
-
 
 echo "DONE! \r\n \r\n"
