@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  1.2                             \r\n
-Last Updated:  10/18/2017
+Version:  1.2.1                             \r\n
+Last Updated:  10/20/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -48,6 +48,10 @@ echo "\r\n Percona Config Download Complete \r\n"
 sudo /etc/init.d/mysql restart
 echo "\r\n \r\n \r\n \r\n"
 echo "To create a remote connection use the following: \r\n \r\n"
-echo " mysql --user=root --password=*** mysql  \r\n\r\n"
+echo " mysql --user=root --password=* mysql  \r\n\r\n"
 echo " GRANT ALL PRIVILEGES ON *.* TO 'user1'@'%' IDENTIFIED BY '***' WITH GRANT OPTION; \r\n\r\n"
+
+echo -e "info on how to migrate the data dir to another location is in the config \r\n \r\n"
+echo -e "Edit the config:  nano /etc/mysql/percona-server.conf.d/mysqld.cnf \r\n \r\n \r\n"
+
 echo " Done! \r\n\r\n"
