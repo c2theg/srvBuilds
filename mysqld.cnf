@@ -1,8 +1,8 @@
 # -------------- Custom MySQL / Percona config  -----------------------------------------------------------------
 #      By Christopher Gray
 #      christophermjgray@gmail.com
-#      10/17/2017
-#      Version 2.1.0
+#      10/21/2017
+#      Version 2.1.1
 #      Supported Versions: Percona 5.7
 #
 #      Path: /etc/mysql/percona-server.conf.d/mysqld.cnf
@@ -24,6 +24,9 @@
 #               sudo chmod -R 755 /media/data/mysql_logs/ && sudo chown -R mysql:mysql /media/data/mysql_logs/
 #   
 #   PLEASE GO OVER EACH LINE, and MAKE SURE the paths are correct for all directories, or mysql will FAIL to start!
+#
+#   Run the following if you have errors:
+#                  mysqld --initialize
 #---------------------------------------------------------------------------------------------------------------
 #8888888888888888888
 [client]
