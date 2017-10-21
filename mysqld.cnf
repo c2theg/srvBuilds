@@ -2,10 +2,12 @@
 #      By Christopher Gray
 #      christophermjgray@gmail.com
 #      10/21/2017
-#      Version 2.1.1
+#      Version 2.1.2
 #      Supported Versions: Percona 5.7
 #
 #      Path: /etc/mysql/percona-server.conf.d/mysqld.cnf
+#
+#      Password Reset: https://help.ubuntu.com/community/MysqlPasswordReset
 #---------------------------------------------------------------------------------------------------------------
 #   Setup the system correctly...
 #       Put the data in another partition, so you dont worry about running out of space on /
