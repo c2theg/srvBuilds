@@ -50,5 +50,8 @@ fi
 #-------------------------------------------------------------------------------------------------------------------------------
 echo -e "Sending key to remote server ($RemoteServer)... \r\n \r\n "
 
-cat ~/.ssh/id_rsa.pub | ssh $UserName@$RemoteServer "mkdir -p ~/.ssh && cat >>  ~/.ssh/authorized_keys"
+ssh-copy-id $UserName@$RemoteServer
 
+#cat ~/.ssh/id_rsa.pub | ssh $UserName@$RemoteServer "mkdir -p ~/.ssh && cat >>  ~/.ssh/authorized_keys"
+
+echo -e " DONE! \r\n "
