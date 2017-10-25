@@ -18,14 +18,15 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.6                            \r\n
-Last Updated:  10/24/2017
+Version:  0.0.7                            \r\n
+Last Updated:  10/25/2017
 \r\n \r\n"
 
 
 RemoteServer=''
 UserName='root'
 GenerateKey=0
+EmailAddress=''
 
 
 echo -e "\r\n \r\n"
@@ -41,7 +42,11 @@ read -p "Generate key?: 1= yes, 0 = no (default): "  GenerateKey
 
 
 if [ $GenerateKey == 1 ] ; then
-	ssh-keygen -t rsa
+	echo -e "\r\n \r\n"
+	read -p "Your email address: "  EmailAddress
+
+	ssh-keygen -t rsa -C EmailAddress
+	#ssh-keygen -t rsa
 else
   echo -e " Not generating SSH Key \r\n \r\n "
 fi
@@ -58,4 +63,3 @@ echo -e " DONE! \r\n \r\n  To Confirm, login to the remote server using: \r\n \r
 echo -e " ssh -i ~/.ssh/mykey $UserName@$RemoteServer  "
 
 echo -e " \r\n \r\n \r\n "
-
