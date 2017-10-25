@@ -22,12 +22,12 @@ Version:  0.1.1                            \r\n
 Last Updated:  10/25/2017
 \r\n \r\n"
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch5x.sh && sudo chmod u+x install_elasticsearch5x.sh && sudo install_elasticsearch5x.sh 
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch5x.sh && sudo chmod u+x install_elasticsearch5x.sh && sudo ./install_elasticsearch5x.sh 
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_beats.sh && sudo chmod u+x install_beats.sh && sudo install_beats.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_beats.sh && sudo chmod u+x install_beats.sh && sudo ./install_beats.sh
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash5.sh  && sudo chmod u+x install_logstash5.sh && sudo install_logstash5.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash5.sh  && sudo chmod u+x install_logstash5.sh && sudo ./install_logstash5.sh
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_kibana5.sh  && sudo chmod u+x install_kibana5.sh && sudo install_kibana5.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_kibana5.sh  && sudo chmod u+x install_kibana5.sh && sudo ./install_kibana5.sh
 
 echo "\r\n \r\n  Done installing ELK (b) \r\n \r\n "
