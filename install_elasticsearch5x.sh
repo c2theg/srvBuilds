@@ -25,8 +25,8 @@ https://www.elastic.co/guide/index.html
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch5x.sh
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
-Version:  0.0.2                             \r\n
-Last Updated:  10/24/2017
+Version:  0.1.3                             \r\n
+Last Updated:  10/25/2017
 \r\n \r\n"
 
 echo -e "Installing Elastic Search 5.X \r\n \r\n"
