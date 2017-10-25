@@ -37,7 +37,7 @@ read -p "Enter the server to send the key to: "  RemoteServer
 
 
 echo -e "\r\n \r\n"
-read -p "Generate key?: 1= yes, 0 = no"  GenerateKey
+read -p "Generate key?: 1= yes, 0 = no (default): "  GenerateKey
 
 
 if [ $GenerateKey == 1 ] ; then
