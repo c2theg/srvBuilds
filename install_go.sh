@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.1                             \r\n
+Version:  1.2                             \r\n
 Last Updated:  10/24/2017
 \r\n \r\n
 Updating system first..."
@@ -33,27 +33,22 @@ echo "Downloading required dependencies...
 
 https://tecadmin.net/install-go-on-ubuntu/
 
+\r\n \r\n
+https://www.digitalocean.com/community/tutorials/how-to-install-go-1-6-on-ubuntu-16-04
+
 \r\n \r\n 
 
-https://www.digitalocean.com/community/tutorials/how-to-install-go-1-6-on-ubuntu-16-04
+https://github.com/golang/go/wiki/Ubuntu
 
 \r\n \r\n
 "
 #--------------------------------------------------------------------------------------------
 # Step 1 — Install Go Language
 
-wget https://storage.googleapis.com/golang/go1.9.1.linux-amd64.tar.gz
-
-sudo tar -xvf go1.9.1.linux-amd64.tar.gz
-sudo mv go /usr/local
-
-# Step 2 — Setup Go Environment
-#sudo nano ~/.profile
-
-echo >> "export GOPATH=$HOME/work"
-echo >> "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin"
-
-# Step 3 — Verify Installation
+sudo add-apt-repository -y ppa:gophers/archive
+sudo apt update
+sudo apt-get install -y golang-1.9-go
+wait
 
 go version
 
