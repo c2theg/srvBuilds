@@ -40,8 +40,8 @@ sudo apt-get update
 
 sudo apt-get install -y elasticsearch
 
-#echo -e "Adding: ulimit -n 65536  \r\n \r\n "
-#ulimit -n 65536
+echo -e "Adding: ulimit -n 65536  \r\n \r\n "
+ulimit -n 65536
 echo "elasticsearch  -  nofile  65536" >> /etc/security/limits.conf 
 
 echo "DONE! \r\n \r\n"
