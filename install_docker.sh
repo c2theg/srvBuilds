@@ -65,7 +65,17 @@ apt-cache madison docker-ce
 wait
 echo "Done!"
 echo "\r\n \r\n"
-echo "----------------------------  "
+
+echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) "
+sudo add-apt-repository -y ppa:cockpit-project/cockpit
+wait
+apt-get install -y cockpit
+wait
+#--- start Cockpit ---
+sudo systemctl start cockpit 
+sudo systemctl enable cockpit
+echo "\r\n \r\n" 
+echo "----------------------------  \r\n \r\n"
 # from: https://github.com/hobby-kube/guide
 echo "Installing Kubernetes....  \r\n"
 echo "Learning more about it here: https://kubernetes.io/docs/tutorials/kubernetes-basics/" 
