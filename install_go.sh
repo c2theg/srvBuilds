@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2                             \r\n
+Version:  1.2.1                             \r\n
 Last Updated:  10/24/2017
 \r\n \r\n
 Updating system first..."
@@ -45,12 +45,17 @@ https://github.com/golang/go/wiki/Ubuntu
 #--------------------------------------------------------------------------------------------
 # Step 1 — Install Go Language
 
-sudo add-apt-repository -y ppa:gophers/archive
+#sudo add-apt-repository -y ppa:gophers/archive
+sudo add-apt-repository -y ppa:longsleep/golang-backports
+wait
+
 sudo apt update
+wait
+
 sudo apt-get install -y golang-1.9-go
 wait
 
+echo -e "\r\n \r\n "
 go version
 
 echo -e "Download site: https://golang.org/dl/  \r\n \r\n "
-
