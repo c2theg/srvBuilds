@@ -54,4 +54,8 @@ ssh-copy-id $UserName@$RemoteServer
 
 #cat ~/.ssh/id_rsa.pub | ssh $UserName@$RemoteServer "mkdir -p ~/.ssh && cat >>  ~/.ssh/authorized_keys"
 
-echo -e " DONE! \r\n "
+echo -e " DONE! \r\n \r\n  To Confirm, login to the remote server using: \r\n \r\n "
+echo -e " ssh -i ~/.ssh/mykey $UserName@$RemoteServer  "
+
+echo -e " \r\n \r\n \r\n "
+
