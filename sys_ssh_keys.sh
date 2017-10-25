@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.7                            \r\n
+Version:  0.1.1                            \r\n
 Last Updated:  10/25/2017
 \r\n \r\n"
 
@@ -51,15 +51,19 @@ else
   echo -e " Not generating SSH Key \r\n \r\n "
 fi
 
-
 #-------------------------------------------------------------------------------------------------------------------------------
-echo -e "Sending key to remote server ($RemoteServer)... \r\n \r\n "
 
-ssh-copy-id $UserName@$RemoteServer
-
-#cat ~/.ssh/id_rsa.pub | ssh $UserName@$RemoteServer "mkdir -p ~/.ssh && cat >>  ~/.ssh/authorized_keys"
+if [ ! -z "$RemoteServer" ] ; then
+	echo -e "Sending key to remote server ($RemoteServer)... \r\n \r\n "
+	ssh-copy-id $UserName@$RemoteServer
+	#cat ~/.ssh/id_rsa.pub | ssh $UserName@$RemoteServer "mkdir -p ~/.ssh && cat >>  ~/.ssh/authorized_keys"
+fi
 
 echo -e " DONE! \r\n \r\n  To Confirm, login to the remote server using: \r\n \r\n "
 echo -e " ssh -i ~/.ssh/mykey $UserName@$RemoteServer  "
-
 echo -e " \r\n \r\n \r\n "
+
+
+echo -e "To add my public key for remote automation issue the following on your server \r\n \r\n "
+echo -e "wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/pki_ssh_key_automation_2017.pub >> ~/.ssh/authorized_keys && echo >> ~/.ssh/authorized_keys   \r\n \r\n"
+echo -e "\r\n \r\n \r\n "
