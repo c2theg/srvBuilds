@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.0                             \r\n
-Last Updated:  5/7/2017
+Version:  1.3                             \r\n
+Last Updated:  10/24/2017
 \r\n \r\n
 Updating system first..."
 #sudo -E apt-get update
