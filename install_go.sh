@@ -47,17 +47,11 @@ wget https://storage.googleapis.com/golang/go1.9.1.linux-amd64.tar.gz
 sudo tar -xvf go1.9.1.linux-amd64.tar.gz
 sudo mv go /usr/local
 
-
-
 # Step 2 — Setup Go Environment
+#sudo nano ~/.profile
 
-export GOROOT=/usr/local/go
-
-export GOPATH=$HOME/Projects/Proj1
-
-export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-
-
+echo >> "export GOPATH=$HOME/work"
+echo >> "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin"
 
 # Step 3 — Verify Installation
 
