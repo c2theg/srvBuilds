@@ -34,6 +34,10 @@ echo "Downloading required dependencies...
 https://tecadmin.net/install-go-on-ubuntu/
 
 \r\n \r\n
+
+https://launchpad.net/~gophers/+archive/ubuntu/archive
+
+\r\n \r\n
 https://www.digitalocean.com/community/tutorials/how-to-install-go-1-6-on-ubuntu-16-04
 
 \r\n \r\n 
@@ -51,6 +55,9 @@ wait
 
 sudo apt update
 wait
+
+sudo apt-get install -y golang-go
+wait 
 
 sudo apt-get install -y golang-1.9-go
 wait
