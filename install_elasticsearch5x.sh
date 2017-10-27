@@ -50,7 +50,15 @@ echo -e "Adding: ulimit -n 65536  \r\n \r\n "
 ulimit -n 65536
 echo "elasticsearch  -  nofile  65536" >> /etc/security/limits.conf 
 
+
 echo "downloading optimized config...  \r\n \r\n "
+
+if [ -s "/etc/elasticsearch/logging.yml" ]
+then
+	echo "Deleting file  logging.yml "
+	rm /etc/elasticsearch/logging.yml
+fi
+
 mv /etc/elasticsearch/elasticsearch.yml  /etc/elasticsearch/elasticsearch_backup.yml
 wait
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/elasticsearch-5x.yml
@@ -59,5 +67,6 @@ cp elasticsearch-5x.yml /etc/elasticsearch/elasticsearch.yml
 wait
 echo " Restarting ElasticSearch... \r\n \r\n "
 sudo /etc/init.d/elasticsearch restart
+
 
 echo "DONE! \r\n \r\n"
