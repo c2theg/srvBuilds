@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.5                             \r\n
-Last Updated:  10/2/2017
+Version:  1.5.6                             \r\n
+Last Updated:  10/27/2017
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -78,6 +78,12 @@ rm /var/log/clamav/clamav.log.*
 rm /var/log/clamav/freshclam.log.*
 rm /var/log/fail2ban.log.*
 rm /var/log/redis/redis-server.log.*
+rm /var/log/letsencrypt/letsencrypt.log.*
+rm /var/log/apt/term.log.*
+rm /var/log/apt/history.log.*
+rm /var/log/unattended-upgrades/unattended-upgrades-dpkg_*
+rm /var/log/unattended-upgrades/unattended-upgrades.log.*
+rm /var/log/upstart/*
 rm /var/mail/root
 rm /var/mail/www-data
 rm /var/mail/ubuntu
