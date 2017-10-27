@@ -5,6 +5,8 @@
 #       chmod u+x <FILE>
 #
 clear
+now=$(date)
+echo "Running sys_cleanup.sh at $now 
 echo "
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
