@@ -25,8 +25,8 @@ https://www.elastic.co/guide/index.html
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch5x.sh
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
-Version:  0.1.4                             \r\n
-Last Updated:  10/25/2017
+Version:  0.1.5                             \r\n
+Last Updated:  10/27/2017
 \r\n \r\n"
 
 echo -e "Installing Java...  \r\n \r\n "
@@ -49,5 +49,15 @@ sudo apt-get install -y elasticsearch
 echo -e "Adding: ulimit -n 65536  \r\n \r\n "
 ulimit -n 65536
 echo "elasticsearch  -  nofile  65536" >> /etc/security/limits.conf 
+
+echo "downloading optimized config...  \r\n \r\n "
+mv /etc/elasticsearch/elasticsearch.yml  /etc/elasticsearch/elasticsearch_backup.yml
+wait
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/elasticsearch-5x.yml
+wait
+cp elasticsearch-5x.yml /etc/elasticsearch/elasticsearch.yml
+wait
+echo " Restarting ElasticSearch... \r\n \r\n "
+sudo /etc/init.d/elasticsearch restart
 
 echo "DONE! \r\n \r\n"
