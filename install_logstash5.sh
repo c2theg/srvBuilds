@@ -44,6 +44,8 @@ sudo -E apt-get update
 wait
 sudo -E apt-get install -y logstash
 
+sudo update-rc.d logstash defaults 95 10
+
 echo "\r\n \r\n DONE! \r\n \r\n"
 
 echo "To TEST it out!... \r\n \r\n "
