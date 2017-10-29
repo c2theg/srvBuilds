@@ -68,5 +68,6 @@ wait
 echo " Restarting ElasticSearch... \r\n \r\n "
 sudo /etc/init.d/elasticsearch restart
 
+sudo update-rc.d elasticsearch defaults 95 10
 
 echo "DONE! \r\n \r\n"
