@@ -89,7 +89,7 @@ echo "Starting Syncthing..."
 #-------------- Configure and start it -------------------------------
 if [ $VER = '14.04' ]; then
     #-------- Ubuntu 14.04 ------------------------
-    syncthing  >> /var/log/syncthing.log 2>&1
+    syncthing  >> /var/log/syncthing.log &
 elif [ $VER = '16.06' ]; then
     #-------- Ubuntu 16.04 ------------------------
     sudo systemctl enable syncthing@
