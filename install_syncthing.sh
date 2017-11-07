@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.4.2                             \r\n
+Version:  0.4.5                             \r\n
 Last Updated:  11/7/2017
 \r\n \r\n
 Updating system first..."
@@ -100,7 +100,20 @@ fi
 #----------------------------------------------------------------------
 echo "Done. Configure remote access via the config file. \r\n \r\n "
 echo "Config: /root/.config/syncthing/config.xml  \r\n \r\n "
-echo "Edit: \r\n \r\n <gui enabled="true" tls="false"> \r\n <address>127.0.0.1:8384</address>  \r\n to say: \r\n \r\n  <address>0.0.0.0:8384</address> "
+
+echo "
+    <gui enabled="true" tls="true" debugging="false">
+        <address>0.0.0.0:8384</address>
+        <user>admin</user>
+        <password>$2a$10$1jF10q.HDR6LdjHkizko5ugyrHIJI/wygD5xdyjFV8J6I1.ZRbKX.</password>
+        <apikey>JsSx5E1BXWMCqSgl6PMeppjP0teDo6k0</apikey>
+        <theme>dark</theme>
+    </gui>
+    
+"
+
+echo "Username: admin,  password: syncthing  \r\n \r\n "
+
 #nano ~/.config/syncthing/config.xml    
 
 echo "view: https://HOST:8384  to access SyncThing  \r\n \r\n ";
