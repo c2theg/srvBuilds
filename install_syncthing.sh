@@ -74,7 +74,7 @@ wait
 
 if [ $VER == '14.04' ]; then
     #-------- Ubuntu 14.04 ------------------------
-    sudo add-apt-repository ppa:ytvwld/syncthing
+    sudo add-apt-repository -y ppa:ytvwld/syncthing
 elif [ $VER == '16.06' ]; then
     #-------- Ubuntu 16.04 ------------------------
     curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
@@ -85,13 +85,12 @@ fi
 sudo -E apt-get update
 wait
 sudo -E apt-get install -y syncthing
+echo "Starting Syncthing..."
 #-------------- Configure and start it -------------------------------
-if [ $VER == '14.04' ]; then
+if [ $VER = '14.04' ]; then
     #-------- Ubuntu 14.04 ------------------------
-    echo "Config: ~/.config/syncthing/config.xml  \r\n \r\n "
-    nano ~/.config/syncthing/config.xml
-    syncthing
-elif [ $VER == '16.06' ]; then
+    syncthing  >> /var/log/syncthing.log 2>&1
+elif [ $VER = '16.06' ]; then
     #-------- Ubuntu 16.04 ------------------------
     sudo systemctl enable syncthing@
     ubuntu.service
@@ -99,6 +98,9 @@ elif [ $VER == '16.06' ]; then
     systemctl status syncthing@ubuntu.service
 fi
 #----------------------------------------------------------------------
+echo "Done. Configure remote access via the config file. \r\n \r\n "
+echo "Config: /root/.config/syncthing/config.xml  \r\n \r\n "
+echo "Edit: \r\n \r\n <gui enabled="true" tls="false"> \r\n <address>127.0.0.1:8384</address>  \r\n to say: \r\n \r\n  <address>0.0.0.0:8384</address> "
+#nano ~/.config/syncthing/config.xml    
 
-
-echo "view: 127.0.0.1:8384  to access SyncThing  \r\n \r\n ";
+echo "view: https://HOST:8384  to access SyncThing  \r\n \r\n ";
