@@ -72,10 +72,10 @@ echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
 sudo apt-get install curl apt-transport-https
 wait
 
-if [ $VER == '14.04' ]; then
+if [ $VER = '14.04' ]; then
     #-------- Ubuntu 14.04 ------------------------
     sudo add-apt-repository -y ppa:ytvwld/syncthing
-elif [ $VER == '16.06' ]; then
+elif [ $VER = '16.06' ]; then
     #-------- Ubuntu 16.04 ------------------------
     curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
     echo "deb http://apt.syncthing.net/ syncthing release" | sudo tee /etc/apt/sources.list.d/syncthing.list
