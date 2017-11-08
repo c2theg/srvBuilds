@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.4.5                             \r\n
-Last Updated:  11/7/2017
+Version:  0.4.6                             \r\n
+Last Updated:  11/8/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -116,4 +116,6 @@ echo "Username: admin,  password: syncthing  \r\n \r\n "
 
 #nano ~/.config/syncthing/config.xml    
 
+ifconfig
+echo "\r\n \r\n \r\n"
 echo "view: https://HOST:8384  to access SyncThing  \r\n \r\n ";
