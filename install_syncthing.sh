@@ -106,10 +106,9 @@ echo "
         <address>0.0.0.0:8384</address>
         <user>admin</user>
         <password>$2a$10$1jF10q.HDR6LdjHkizko5ugyrHIJI/wygD5xdyjFV8J6I1.ZRbKX.</password>
-        <apikey>JsSx5E1BXWMCqSgl6PMeppjP0teDo6k0</apikey>
         <theme>dark</theme>
+        <apikey>DONT REPLACE THIS LINE</apikey>        
     </gui>
-    
 "
 
 echo "Username: admin,  password: syncthing  \r\n \r\n "
