@@ -113,6 +113,7 @@ echo "
 
 echo "Username: admin,  password: syncthing  \r\n \r\n "
 
+echo "Then Restart the service:  \r\n \t  ps aux | grep syncthing  \r\n kill (ID) \r\n \r\n "
 #nano ~/.config/syncthing/config.xml    
 
 ifconfig
