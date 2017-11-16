@@ -21,8 +21,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP.sh
 
 \r\n \r\n
-Version:  1.3                             \r\n
-Last Updated:  10/2/2017
+Version:  1.3.1                             \r\n
+Last Updated:  11/15/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -71,7 +71,9 @@ echo "DONE! "
 
 #------- NGINX --------
 sudo add-apt-repository -y ppa:chris-lea/nginx-devel
-sudo apt-get -y update && apt-get -y install nginx nginx-common nginx-full fcgiwrap
+sudo apt-get -y update && apt-get -y install nginx nginx-common nginx-full fcgiwrap unzip gcc make libpcre3-dev zlib1g-dev
+sudo apt-get -y install nginx-pagespeed 
+
 
 #-- download php-fastcgi file ---
 #sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start  && update-rc.d php-fastcgi defaults
