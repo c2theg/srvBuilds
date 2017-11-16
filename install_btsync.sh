@@ -19,9 +19,11 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.0                             \r\n
-Last Updated:  5/7/2017
+Version:  1.1                             \r\n
+Last Updated:  11/16/2017
 \r\n \r\n
+This is really meant for Ubuntu 14.04.  (Doesn't work for 16.04 yet) \r\n \r\n
+
 Updating system first..."
 sudo -E apt-get update
 wait
@@ -29,10 +31,7 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo " Creating directories... \r\n"
-echo " "
-echo " "
-
+echo " Creating directories... \r\n \r\n"
 mkdir /media/data
 mkdir /media/data/btsync
 sudo chmod -R 755 /media/data/btsync/ && sudo chown -R www-data:www-data /media/data/btsync/
@@ -49,19 +48,14 @@ wait
 sudo apt-get -y update
 wait
 sudo apt-get install -y btsync
-
-echo " "
-echo " "
-echo " "
-echo "--------------------------------------"
+echo " \r\n \r\n \r\n -------------------------------------- \r\n \r\n"
 echo "If you want to reconfigure btsync enter the following command"
 echo "  sudo dpkg-reconfigure btsync  "
 echo " "
 echo "To set correct file and user permissions use the following: "
 echo "  sudo chmod -R 755 /media/data/btsync/ && sudo chown -R www-data:www-data /media/data/btsync/ "
-echo " "
-echo " "
-echo " "
-echo " "
-echo " "
-echo " "
+
+echo "#--- Troubleshooing --- \r\n \r\n"
+echo "#If it doesn't work, you might have to generate a new SSL key. Run the following: \r\n \r\n"
+echo "openssl req -newkey rsa:2048  -x509 -days 5652 -nodes -rand /dev/urandom -out /etc/btsync/debconf-default.crt -keyout /etc/btsync/debconf-default.key \r\n \r\n"
+echo "\r\n \r\n \r\n
