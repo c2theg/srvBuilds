@@ -86,7 +86,7 @@ wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
 echo "PHP Config Download Complete"
 
-
+#---------------------------------------------------------------------------------------------------------
 if [ -s "/etc/nginx/nginx.conf" ]
 then
 	echo "Deleting file  nginx config "
@@ -127,12 +127,21 @@ then
 	rm /etc/nginx/sites-available/site1_tls.conf*
 	rm site1_tls.conf
 fi
+#---------------------------------------------------------------------------------------------------------
 echo "SSL-TLS HTTP Website Config"
 wget "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1_tls.conf"
 wait
 sudo cp "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
 wait
 echo "SSL-TLS HTTP Website Config Download Complete"
+#---------------------------------------------------------------------------------------------------------
+echo "Pagespeed Config"
+wget "pagespeed.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/pagespeed.conf"
+wait
+sudo cp "pagespeed.conf" "/etc/nginx/conf.d/pagespeed.conf"
+wait
+echo " Download Complete"
+#---------------------------------------------------------------------------------------------------------
 wait
 echo "restarting nginx... "
 echo " "
