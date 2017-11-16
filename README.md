@@ -12,9 +12,10 @@ wget https://bit.ly/cgray-lemp && mv cgray-lemp install_lemp.sh && chmod u+x ins
 
 wget https://bit.ly/cgray-webmin && mv cgray-lemp install_lemp.sh && chmod u+x install_lemp.sh && ./install_lemp.sh
 
-NOT NEEDED ANYMORE. Just Run update_core.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_percona_5.7.sh && chmod u+x install_percona_5.7.sh && ./install_percona_5.7.sh
 
-wget https://bit.ly/cgray-common && mv cgray-common install_common.sh && chmod u+x install_common.sh && ./install_common.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_btsync.sh && chmod u+x install_btsync.sh && ./install_btsync.sh
+
 
 ------------------------------------------
 once downloaded do the following:
