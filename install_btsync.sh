@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.1                             \r\n
+Version:  1.2                             \r\n
 Last Updated:  11/16/2017
 \r\n \r\n
 This is really meant for Ubuntu 14.04.  (Doesn't work for 16.04 yet) \r\n \r\n
@@ -48,10 +48,28 @@ wait
 sudo apt-get -y update
 wait
 sudo apt-get install -y btsync
+wait
+#---------------------------------------------------------------------------------------------------------
+if [ -s "/etc/btsync/debconf-default.conf" ]
+then
+	echo "Deleting file btsync config "
+	rm /etc/btsync/debconf-default.conf
+	rm btsync.conf
+fi
+echo "Downloading BTSync Config"
+wget "btsync.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/btsync.conf"
+sudo cp "btsync.conf" "/etc/btsync/debconf-default.conf"
+wait
+echo "BTSync Config Download Complete"
+
 echo " \r\n \r\n \r\n -------------------------------------- \r\n \r\n"
 echo "If you want to reconfigure btsync enter the following command"
 echo "  sudo dpkg-reconfigure btsync  "
 echo " "
+
+
+
+
 echo "To set correct file and user permissions use the following: "
 echo "  sudo chmod -R 755 /media/data/btsync/ && sudo chown -R www-data:www-data /media/data/btsync/ "
 
