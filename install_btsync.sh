@@ -76,4 +76,4 @@ echo "  sudo chmod -R 755 /media/data/btsync/ && sudo chown -R www-data:www-data
 echo "#--- Troubleshooing --- \r\n \r\n"
 echo "#If it doesn't work, you might have to generate a new SSL key. Run the following: \r\n \r\n"
 echo "openssl req -newkey rsa:2048  -x509 -days 5652 -nodes -rand /dev/urandom -out /etc/btsync/debconf-default.crt -keyout /etc/btsync/debconf-default.key \r\n \r\n"
-echo "\r\n \r\n \r\n
+echo "\r\n \r\n \r\n"
