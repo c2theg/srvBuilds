@@ -4,7 +4,7 @@ pip install --upgrade pip
 pip install exabgp
 
 #------- Scanning & Info ---------------------
-apt-get install -y zmap nload traceroute htop whois 
+apt-get install -y zmap nload traceroute htop whois hping3 tcl8.6
 wait
 wget "install_nmap-git.sh" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_nmap-git.sh" && chmod u+x install_nmap-git.sh && ./install_nmap-git.sh
 wait
