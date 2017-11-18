@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.0                             \r\n
-Last Updated:  5/18/2017
+Version:  1.1                             \r\n
+Last Updated:  11/18/2017
 \r\n \r\n
 #Updating system first..."
 sudo -E apt-get update
@@ -31,7 +31,7 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 #  https://www.vultr.com/docs/how-to-install-modsecurity-for-nginx-on-centos-7-debian-8-and-ubuntu-16-04
 
-apt-get install -y git build-essential libpcre3 libpcre3-dev libssl-dev libtool autoconf apache2-dev libxml2-dev libcurl4-openssl-dev automake pkgconf
+apt-get install -y git build-essential libpcre3 libpcre3-dev libssl-dev libtool autoconf libxml2-dev libcurl4-openssl-dev automake pkgconf
 
 # Download the nginx_refactoring branch of ModSecurity for Nginx:
 cd /usr/src
@@ -45,11 +45,11 @@ make
 
 #Download and unarchive the latest stable release of Nginx
 cd /usr/src
-wget https://nginx.org/download/nginx-1.10.3.tar.gz
+wget https://nginx.org/download/nginx-1.13.6.tar.gz
 tar -zxvf nginx-1.10.3.tar.gz && rm -f nginx-1.10.3.tar.gz
 
 # compile Nginx while enabling ModSecurity and SSL modules
-cd nginx-1.10.3/
+cd nginx-1.13.6/
 ./configure --user=nginx --group=nginx --add-module=/usr/src/ModSecurity/nginx/modsecurity --with-http_ssl_module
 make
 make install
