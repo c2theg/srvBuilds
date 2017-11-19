@@ -46,7 +46,7 @@ make
 #Download and unarchive the latest stable release of Nginx
 cd /usr/src
 wget https://nginx.org/download/nginx-1.13.6.tar.gz
-tar -zxvf nginx-1.10.3.tar.gz && rm -f nginx-1.10.3.tar.gz
+tar -zxvf nginx-1.13.6.tar.gz && rm -f nginx-1.13.6.tar.gz
 
 # compile Nginx while enabling ModSecurity and SSL modules
 cd nginx-1.13.6/
