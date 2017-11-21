@@ -25,8 +25,8 @@ https://www.elastic.co/guide/index.html
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch5x.sh
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
-Version:  0.1.5                             \r\n
-Last Updated:  10/27/2017
+Version:  0.1.6                             \r\n
+Last Updated:  11/21/2017
 \r\n \r\n"
 
 echo -e "Installing Java...  \r\n \r\n "
