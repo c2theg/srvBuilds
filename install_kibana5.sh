@@ -31,12 +31,17 @@ sudo apt-get install -y apt-transport-https
 echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
 
 sudo apt-get update
-
 sudo apt-get install -y kibana
+wait 
+#--------------------------------------------------
+wget 'kibana.yml' 'https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/kibana.yml'
+mv /etc/kibana/kibana.yml /etc/kibana_backup.yml
+cp kibana.yml /etc/kibana/kibana.yml
 
+#--------------------------------------------------
 sudo update-rc.d kibana defaults 95 10
-
 sudo -i service kibana start
 sudo -i service kibana stop
 
+ps -ef | grep kibana
 echo "DONE! \r\n \r\n Point your browser to:  http://localhost:5601  to view it  \r\n \r\n "
