@@ -21,12 +21,12 @@ sudo apt-get install -y ethminer
 #tail -f geth.log
 
 #sudo apt-get install -y linux-headers-amd64 build-essential
-#ethminer -G -F http://us1.ethermine.org:14444/0x2acd4A4D3c71B9c81f5E48a76766c1860c650F6B --farm-recheck 200
+#ethminer -G -F http://us1.ethermine.org:14444/0x91F98b3309a4eE063370D0CA92900F6182a3Ab2d --farm-recheck 200
 
 #geth --mine --minerthreads=4
 #geth --etherbase 1 --mine  2>> geth.log // 1 is index: second account by creation order OR
-#geth --etherbase '0x2acd4A4D3c71B9c81f5E48a76766c1860c650F6B' --mine 2>> geth.log
+#geth --etherbase '0x91F98b3309a4eE063370D0CA92900F6182a3Ab2d' --mine 2>> geth.log
 
-#ethminer --farm-recheck 200 -G -S us1.ethermine.org:14444 -FS us1.ethermine.org:4444 -O 0x2acd4A4D3c71B9c81f5E48a76766c1860c650F6B.server1
+#ethminer --farm-recheck 200 -G -S us1.ethermine.org:14444 -FS us1.ethermine.org:4444 -O 0x91F98b3309a4eE063370D0CA92900F6182a3Ab2d.server1
 
 echo "\r\n Done \r\n \r\n"
