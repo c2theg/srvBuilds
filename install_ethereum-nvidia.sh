@@ -10,5 +10,5 @@ sudo apt-get install linux-headers-amd64 build-essential
 wget https://us.download.nvidia.com/XFree86/Linux-x86_64/384.90/NVIDIA-Linux-x86_64-384.90.run
 chmod +x NVIDIA-Linux-x86_64-384.90.run
 sudo ./NVIDIA-Linux-x86_64-384.90.run
-ethminer -G -F http://yolo.ethclassic.faith:9999/0x2acd4a4d3c71b9c81f5e48a76766c1860c650f6b --farm-recheck 200
+ethminer -G -F http://us1.ethermine.org:14444/0x2acd4A4D3c71B9c81f5E48a76766c1860c650F6B --farm-recheck 200
 echo done
