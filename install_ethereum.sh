@@ -17,5 +17,8 @@ sudo apt-get install -y ethereum ethminer
 geth account new
 
 sudo apt-get install -y linux-headers-amd64 build-essential
-ethminer -G -F http://us1.ethermine.org:14444/0x2acd4A4D3c71B9c81f5E48a76766c1860c650F6B --farm-recheck 200
-echo done
+#ethminer -G -F http://us1.ethermine.org:14444/0x2acd4A4D3c71B9c81f5E48a76766c1860c650F6B --farm-recheck 200
+
+ethminer --farm-recheck 200 -G -S us1.ethermine.org:14444 -FS us1.ethermine.org:4444 -O 0x2acd4A4D3c71B9c81f5E48a76766c1860c650F6B.server1
+
+echo "\r\n Done \r\n \r\n"
