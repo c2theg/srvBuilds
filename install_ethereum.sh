@@ -10,10 +10,15 @@
 # ethminer.exe --farm-recheck 200 -G -S eu1.ethpool.org:3333 -FS us1.ethpool.org:3333 -O <Your_Ethereum_Address>.<RigName>
 #------------------------------------------
 sudo apt-get install -y software-properties-common
-sudo add-apt-repository -y ppa:ethereum/ethereum
-sudo sed 's/jessie/vivid/' -i /etc/apt/sources.list.d/ethereum-ethereum-*.list
-sudo apt-get update
-sudo apt-get install -y ethereum ethminer
+#sudo add-apt-repository -y ppa:ethereum/ethereum
+#sudo sed 's/jessie/vivid/' -i /etc/apt/sources.list.d/ethereum-ethereum-*.list
+
+wget "ethminer" "https://github.com/ethereum-mining/ethminer/releases/download/v0.12.0/ethminer-0.12.0-Linux.tar.gz"
+
+
+
+#sudo apt-get update
+#sudo apt-get install -y ethereum ethminer
 geth account new
 
 sudo apt-get install -y linux-headers-amd64 build-essential
