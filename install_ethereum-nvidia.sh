@@ -20,6 +20,10 @@ geth account new
 # if you lose the passphrase, you lose your coins!
 
 sudo apt-get install -y linux-headers-amd64 build-essential
+
+sudo apt-get install -y nvidia-cuda-dev nvidia-cuda-toolkit nvidia-nsight
+
+
 wget https://us.download.nvidia.com/XFree86/Linux-x86_64/384.90/NVIDIA-Linux-x86_64-384.90.run
 chmod +x NVIDIA-Linux-x86_64-384.90.run
 sudo ./NVIDIA-Linux-x86_64-384.90.run
