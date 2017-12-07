@@ -136,12 +136,12 @@ sudo cp "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
 wait
 echo "SSL-TLS HTTP Website Config Download Complete"
 #---------------------------------------------------------------------------------------------------------
-echo "Pagespeed Config"
-wget "pagespeed.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/pagespeed.conf"
-wait
-sudo cp "pagespeed.conf" "/etc/nginx/conf.d/pagespeed.conf"
-wait
-echo " Download Complete"
+#echo "Pagespeed Config"
+#wget "pagespeed.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/pagespeed.conf"
+#wait
+#sudo cp "pagespeed.conf" "/etc/nginx/conf.d/pagespeed.conf"
+#wait
+#echo " Download Complete"
 #---------------------------------------------------------------------------------------------------------
 wait
 echo "restarting nginx... "
