@@ -33,7 +33,7 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo apt-get -y dist-upgrade
 wait
-sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute htop sysstat iptraf iftop speedometer ncdu
+sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute htop sysstat iptraf iftop speedometer ncdu nload
 #---------- PYTHON STUFF ----------------------------------
 #sudo apt-get install -y python2-virtualenv python3-virtualenv libicu-dev python-software-properties python python-pip python-dev python3-setuptools
 #wait
@@ -59,7 +59,7 @@ then
 	rm memcached.conf
 fi
 echo "Downloading Memcache Config"
-wget -O "memcached.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/memcached.conf"
+wget -O "memcached.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/memcached.conf"
 wait
 sudo cp "memcached.conf" "/etc/memcached.conf"
 wait
@@ -67,8 +67,6 @@ echo "Memcache Config Download Complete"
 wait
 echo "Restarting service..."
 /etc/init.d/memcached restart
-echo "DONE! "
-#----------------------
 
 #------- NGINX --------
 sudo add-apt-repository -y ppa:chris-lea/nginx-devel
@@ -79,7 +77,7 @@ sudo apt-get -y install nginx-pagespeed
 #sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start  && update-rc.d php-fastcgi defaults
 cd ~
 echo "Downloading PHP-Fastcgi Config"
-wget -O "php-fastcgi" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/php-fastcgi.sh"
+wget -O "php-fastcgi" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fastcgi.sh"
 wait
 sudo mv "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
@@ -117,7 +115,7 @@ then
 	rm nginx.conf
 fi
 echo "Downloading Nginx Config"
-wget -O "nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/nginx.conf"
+wget -O "nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx.conf"
 sudo mv "nginx.conf" "/etc/nginx/nginx.conf"
 wait
 echo "Nginx Config Download Complete"
@@ -130,7 +128,7 @@ then
 	rm site1.conf
 fi
 echo "Basic HTTP Website Config"
-wget -O "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1.conf"
+wget -O "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1.conf"
 wait
 sudo mv "site1.conf" "/etc/nginx/sites-enabled/site1.conf"
 wait
@@ -152,14 +150,14 @@ then
 fi
 #---------------------------------------------------------------------------------------------------------
 echo "SSL-TLS HTTP Website Config"
-wget -O "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1_tls.conf"
+wget -O "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1_tls.conf"
 wait
 sudo mv "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
 wait
 echo "SSL-TLS HTTP Website Config Download Complete"
 #---------------------------------------------------------------------------------------------------------
 #echo "Pagespeed Config"
-#wget "pagespeed.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/pagespeed.conf"
+#wget "pagespeed.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/configs/pagespeed.conf"
 #wait
 #sudo mv "pagespeed.conf" "/etc/nginx/conf.d/pagespeed.conf"
 #wait
