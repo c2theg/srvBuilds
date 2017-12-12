@@ -81,7 +81,7 @@ cd ~
 echo "Downloading PHP-Fastcgi Config"
 wget -O "php-fastcgi" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/php-fastcgi.sh"
 wait
-sudo cp "php-fastcgi" "/etc/init.d/php-fastcgi"
+sudo mv "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
 
@@ -96,15 +96,15 @@ fi
 wait
 echo "Downloading PHP-FPM Configs"
 wget -O  "php.ini" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php.ini"
-sudo cp "php.ini" "/etc/php/7.0/fpm/php.ini"
+sudo mv "php.ini" "/etc/php/7.0/fpm/php.ini"
 wait
 #--------------------------------------------------
 wget -O "php-fpm.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fpm.conf"
-sudo cp "php-fpm.conf" "/etc/php/7.0/fpm/php-fpm.conf"
+sudo mv "php-fpm.conf" "/etc/php/7.0/fpm/php-fpm.conf"
 wait
 #--------------------------------------------------
 wget -O "php_browscap.ini" "https://browscap.org/stream?q=PHP_BrowsCapINI"
-sudo cp "php_browscap.ini" "/media/data/php_browscap.ini"
+sudo mv "php_browscap.ini" "/media/data/php_browscap.ini"
 wait
 #--------------------------------------------------
 
@@ -118,7 +118,7 @@ then
 fi
 echo "Downloading Nginx Config"
 wget -O "nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/nginx.conf"
-sudo cp "nginx.conf" "/etc/nginx/nginx.conf"
+sudo mv "nginx.conf" "/etc/nginx/nginx.conf"
 wait
 echo "Nginx Config Download Complete"
 
@@ -132,7 +132,7 @@ fi
 echo "Basic HTTP Website Config"
 wget -O "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1.conf"
 wait
-sudo cp "site1.conf" "/etc/nginx/sites-enabled/site1.conf"
+sudo mv "site1.conf" "/etc/nginx/sites-enabled/site1.conf"
 wait
 
 if [ -s "/etc/nginx/sites-enabled/default" ]
@@ -154,20 +154,18 @@ fi
 echo "SSL-TLS HTTP Website Config"
 wget -O "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1_tls.conf"
 wait
-sudo cp "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
+sudo mv "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
 wait
 echo "SSL-TLS HTTP Website Config Download Complete"
 #---------------------------------------------------------------------------------------------------------
 #echo "Pagespeed Config"
 #wget "pagespeed.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/pagespeed.conf"
 #wait
-#sudo cp "pagespeed.conf" "/etc/nginx/conf.d/pagespeed.conf"
+#sudo mv "pagespeed.conf" "/etc/nginx/conf.d/pagespeed.conf"
 #wait
 #echo " Download Complete"
 #---------------------------------------------------------------------------------------------------------
-
 sudo chmod -R 755 /media/data/  && sudo chown -R www-data:www-data /media/data/
-
 
 wait
 echo "Restarting Nginx... "
