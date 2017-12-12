@@ -21,8 +21,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP.sh
 
 \r\n \r\n
-Version:  1.3.2                             \r\n
-Last Updated:  12/2/2017
+Version:  1.3.4                             \r\n
+Last Updated:  12/12/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -75,8 +75,7 @@ sudo add-apt-repository -y ppa:chris-lea/nginx-devel
 sudo apt-get -y update && apt-get -y install nginx nginx-common nginx-full fcgiwrap unzip gcc make libpcre3-dev zlib1g-dev
 sudo apt-get -y install nginx-pagespeed 
 
-
-#-- download php-fastcgi file ---
+#-- Download PHP Configs ---
 #sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start  && update-rc.d php-fastcgi defaults
 cd ~
 echo "Downloading PHP-Fastcgi Config"
@@ -85,8 +84,31 @@ wait
 sudo cp "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
-echo "PHP Config Download Complete"
 
+#---------------
+if [ -s "/etc/php/7.0/fpm/php.ini" ]
+then
+	echo "Deleting file: PHP.ini config "
+	rm /etc/php/7.0/fpm/php.ini
+	rm /etc/php/7.0/fpm/php-fpm.conf
+	rm /media/data/php_browscap.ini
+fi
+wait
+echo "Downloading PHP-FPM Configs"
+wget "php.ini" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php.ini"
+sudo cp "php.ini" "/etc/php/7.0/fpm/php-fpm.conf"
+wait
+#--------------------------------------------------
+wget "php-fpm.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fpm.conf"
+sudo cp "php-fpm.conf" "/etc/php/7.0/fpm/php-fpm.conf"
+wait
+#--------------------------------------------------
+wget "php_browscap.ini" "https://browscap.org/stream?q=PHP_BrowsCapINI"
+sudo cp "php_browscap.ini" "/media/data/php_browscap.ini"
+wait
+#--------------------------------------------------
+
+echo "PHP-FPM Configs download complete"
 #---------------------------------------------------------------------------------------------------------
 if [ -s "/etc/nginx/nginx.conf" ]
 then
