@@ -166,7 +166,9 @@ echo "SSL-TLS HTTP Website Config Download Complete"
 #echo " Download Complete"
 #---------------------------------------------------------------------------------------------------------
 wait
-echo "restarting nginx... "
-echo " "
+echo "Restarting Nginx... "
 /etc/init.d/nginx restart
+
+echo "Restarting PHP-FPM... "
+/etc/init.d/php7.0-fpm restart
 echo "Done all"
