@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  1.2.1                             \r\n
-Last Updated:  10/20/2017
+Version:  1.2.2                             \r\n
+Last Updated:  12/11/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -39,6 +39,10 @@ wait
 sudo apt-get install -y percona-server-server-5.7 libmecab2
 sudo apt-get install -y php7.0-mysql
 
+mkdir /var/log/mysql
+mkdir /var/log/mysql/replication/
+sudo chmod -R 755 /var/log/mysql/ && sudo chown -R mysql:mysql /var/log/mysql/
+
 echo "\r\n Downloading Config \r\n"
 wget "mysqld.cnf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/mysqld.cnf"
 wait
@@ -52,6 +56,7 @@ echo " mysql --user=root --password=* mysql  \r\n\r\n"
 echo " GRANT ALL PRIVILEGES ON *.* TO 'user1'@'%' IDENTIFIED BY '***' WITH GRANT OPTION; \r\n\r\n"
 
 echo -e "info on how to migrate the data dir to another location is in the config \r\n \r\n"
-echo -e "Edit the config:  nano /etc/mysql/percona-server.conf.d/mysqld.cnf \r\n \r\n \r\n"
+echo -e "Edit the config:  nano /etc/mysql/percona-server.conf.d/mysqld.cnf \r\n \r\n"
+echo -e "Logs are stored: /var/log/mysql/  \r\n \r\n";
 
 echo " Done! \r\n\r\n"
