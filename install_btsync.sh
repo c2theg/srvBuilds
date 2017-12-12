@@ -57,7 +57,7 @@ then
 	rm btsync.conf
 fi
 echo "Downloading BTSync Config"
-wget "btsync.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/btsync.conf"
+wget -O "btsync.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/btsync.conf"
 sudo cp "btsync.conf" "/etc/btsync/debconf-default.conf"
 wait
 echo "BTSync Config Download Complete"
@@ -66,9 +66,6 @@ echo " \r\n \r\n \r\n -------------------------------------- \r\n \r\n"
 echo "If you want to reconfigure btsync enter the following command"
 echo "  sudo dpkg-reconfigure btsync  "
 echo " "
-
-
-
 
 echo "To set correct file and user permissions use the following: "
 echo "  sudo chmod -R 755 /media/data/btsync/ && sudo chown -R www-data:www-data /media/data/btsync/ "
