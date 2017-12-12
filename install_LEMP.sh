@@ -96,7 +96,7 @@ fi
 wait
 echo "Downloading PHP-FPM Configs"
 wget "php.ini" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php.ini"
-sudo cp "php.ini" "/etc/php/7.0/fpm/php-fpm.conf"
+sudo cp "php.ini" "/etc/php/7.0/fpm/php.ini"
 wait
 #--------------------------------------------------
 wget "php-fpm.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fpm.conf"
