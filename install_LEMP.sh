@@ -21,7 +21,7 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP.sh
 
 \r\n \r\n
-Version:  1.3.4                             \r\n
+Version:  1.3.5                             \r\n
 Last Updated:  12/12/2017
 \r\n \r\n
 Updating system first..."
@@ -59,7 +59,7 @@ then
 	rm memcached.conf
 fi
 echo "Downloading Memcache Config"
-wget "memcached.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/memcached.conf"
+wget -O "memcached.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/memcached.conf"
 wait
 sudo cp "memcached.conf" "/etc/memcached.conf"
 wait
@@ -79,7 +79,7 @@ sudo apt-get -y install nginx-pagespeed
 #sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start  && update-rc.d php-fastcgi defaults
 cd ~
 echo "Downloading PHP-Fastcgi Config"
-wget "php-fastcgi" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/php-fastcgi.sh"
+wget -O "php-fastcgi" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/php-fastcgi.sh"
 wait
 sudo cp "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
@@ -95,15 +95,15 @@ then
 fi
 wait
 echo "Downloading PHP-FPM Configs"
-wget "php.ini" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php.ini"
+wget -O  "php.ini" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php.ini"
 sudo cp "php.ini" "/etc/php/7.0/fpm/php.ini"
 wait
 #--------------------------------------------------
-wget "php-fpm.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fpm.conf"
+wget -O "php-fpm.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fpm.conf"
 sudo cp "php-fpm.conf" "/etc/php/7.0/fpm/php-fpm.conf"
 wait
 #--------------------------------------------------
-wget "php_browscap.ini" "https://browscap.org/stream?q=PHP_BrowsCapINI"
+wget -O "php_browscap.ini" "https://browscap.org/stream?q=PHP_BrowsCapINI"
 sudo cp "php_browscap.ini" "/media/data/php_browscap.ini"
 wait
 #--------------------------------------------------
@@ -117,7 +117,7 @@ then
 	rm nginx.conf
 fi
 echo "Downloading Nginx Config"
-wget "nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/nginx.conf"
+wget -O "nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/nginx.conf"
 sudo cp "nginx.conf" "/etc/nginx/nginx.conf"
 wait
 echo "Nginx Config Download Complete"
@@ -130,7 +130,7 @@ then
 	rm site1.conf
 fi
 echo "Basic HTTP Website Config"
-wget "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1.conf"
+wget -O "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1.conf"
 wait
 sudo cp "site1.conf" "/etc/nginx/sites-enabled/site1.conf"
 wait
@@ -152,7 +152,7 @@ then
 fi
 #---------------------------------------------------------------------------------------------------------
 echo "SSL-TLS HTTP Website Config"
-wget "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1_tls.conf"
+wget -O "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/site1_tls.conf"
 wait
 sudo cp "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
 wait
@@ -165,6 +165,10 @@ echo "SSL-TLS HTTP Website Config Download Complete"
 #wait
 #echo " Download Complete"
 #---------------------------------------------------------------------------------------------------------
+
+sudo chmod -R 755 /media/data/  && sudo chown -R www-data:www-data /media/data/
+
+
 wait
 echo "Restarting Nginx... "
 /etc/init.d/nginx restart
