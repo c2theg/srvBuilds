@@ -1,7 +1,6 @@
 #ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@ssw0rd123$';
 
-
-#---- OR
+#---- OR -----
 
 # Stop MySQL
 sudo service mysql stop
@@ -10,10 +9,12 @@ sudo service mysql stop
 sudo mysqld_safe --skip-grant-tables --skip-networking &
 
 # Log in without a password.
-mysql -uroot mysql
+#mysql -uroot mysql
+#UPDATE mysql.user SET authentication_string=PASSWORD('C0mcast!'), plugin='mysql_native_password' WHERE User='root' AND Host='localhost';
+#UPDATE mysql.user SET authentication_string=PASSWORD('C0mcast!'), plugin='mysql_native_password' WHERE User='remote' AND Host='%';
+#exit
 
-
-
+#---- OR -----
 
 #UPDATE mysql.user
 #    SET authentication_string = PASSWORD('P@ssw0rd123$'), password_expired = 'N'
