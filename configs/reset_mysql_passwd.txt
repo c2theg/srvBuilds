@@ -1,4 +1,4 @@
-#ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@ssw0rd123$';
+#ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
 
 #---- OR -----
 
@@ -10,14 +10,14 @@ sudo mysqld_safe --skip-grant-tables --skip-networking &
 
 # Log in without a password.
 #mysql -uroot mysql
-#UPDATE mysql.user SET authentication_string=PASSWORD('C0mcast!'), plugin='mysql_native_password' WHERE User='root' AND Host='localhost';
-#UPDATE mysql.user SET authentication_string=PASSWORD('C0mcast!'), plugin='mysql_native_password' WHERE User='remote' AND Host='%';
+#UPDATE mysql.user SET authentication_string=PASSWORD('password'), plugin='mysql_native_password' WHERE User='root' AND Host='localhost';
+#UPDATE mysql.user SET authentication_string=PASSWORD('password'), plugin='mysql_native_password' WHERE User='remote' AND Host='%';
 #exit
 
 #---- OR -----
 
 #UPDATE mysql.user
-#    SET authentication_string = PASSWORD('P@ssw0rd123$'), password_expired = 'N'
+#    SET authentication_string = PASSWORD('password'), password_expired = 'N'
 #    WHERE User = 'root' AND Host = 'localhost';
 #FLUSH PRIVILEGES;
 
