@@ -46,7 +46,7 @@ sudo chmod -R 755 /var/log/mysql/ && sudo chown -R mysql:mysql /var/log/mysql/
 echo "\r\n Downloading Config \r\n"
 wget -O "mysqld.cnf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/mysqld.cnf"
 wait
-sudo cp "mysqld.cnf" "/etc/mysql/percona-server.conf.d/mysqld.cnf"
+sudo mv "mysqld.cnf" "/etc/mysql/percona-server.conf.d/mysqld.cnf"
 wait
 echo "\r\n Percona Config Download Complete \r\n"
 sudo /etc/init.d/mysql restart
