@@ -1,9 +1,15 @@
+#  FIRST Stop MySQL:  /etc/init.d/mysql stop
+#      OR
+#  sudo service mysql stop
+
+# Restart MySQL
+# mysqld --init-file=/home/ubuntu/reset_mysql_passwd.txt &
+
+#GRANT ALL PRIVILEGES ON *.* TO 'remote'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;
+#   - - OR - -
 #ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
 
 #---- OR -----
-
-# Stop MySQL
-sudo service mysql stop
 
 # Start MySQL manually, without permission checks or networking.
 sudo mysqld_safe --skip-grant-tables --skip-networking &
@@ -12,15 +18,3 @@ sudo mysqld_safe --skip-grant-tables --skip-networking &
 #mysql -uroot mysql
 #UPDATE mysql.user SET authentication_string=PASSWORD('password'), plugin='mysql_native_password' WHERE User='root' AND Host='localhost';
 #UPDATE mysql.user SET authentication_string=PASSWORD('password'), plugin='mysql_native_password' WHERE User='remote' AND Host='%';
-#exit
-
-#---- OR -----
-
-#UPDATE mysql.user
-#    SET authentication_string = PASSWORD('password'), password_expired = 'N'
-#    WHERE User = 'root' AND Host = 'localhost';
-#FLUSH PRIVILEGES;
-
-
-# Stopy MySQL:  /etc/init.d/mysql stop
-# mysqld --init-file=/home/ubuntu/reset_mysql_passwd.txt &
