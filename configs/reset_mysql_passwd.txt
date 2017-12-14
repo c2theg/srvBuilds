@@ -1,1 +1,6 @@
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@ssw0rd123$';
+
+
+# Stopy MySQL:  /etc/init.d/mysql stop
+# mysqld --init-file=/home/ubuntu/reset_mysql_passwd.txt &
+#
