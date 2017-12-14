@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  1.3.1                             \r\n
-Last Updated:  12/12/2017
+Version:  1.3.2                             \r\n
+Last Updated:  12/13/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -44,7 +44,7 @@ mkdir /var/log/mysql/replication/
 sudo chmod -R 755 /var/log/mysql/ && sudo chown -R mysql:mysql /var/log/mysql/
 
 echo "\r\n Downloading Config \r\n"
-wget -O "mysqld.cnf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/mysqld.cnf"
+wget -O "mysqld.cnf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/mysqld.cnf"
 wait
 sudo cp "mysqld.cnf" "/etc/mysql/percona-server.conf.d/mysqld.cnf"
 wait
