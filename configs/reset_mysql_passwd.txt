@@ -1,6 +1,12 @@
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@ssw0rd123$';
 
+#---- OR
+
+#UPDATE mysql.user
+#    SET authentication_string = PASSWORD('P@ssw0rd123$'), password_expired = 'N'
+#    WHERE User = 'root' AND Host = 'localhost';
+#FLUSH PRIVILEGES;
+
 
 # Stopy MySQL:  /etc/init.d/mysql stop
 # mysqld --init-file=/home/ubuntu/reset_mysql_passwd.txt &
-#
