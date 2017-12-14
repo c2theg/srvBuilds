@@ -1,6 +1,19 @@
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@ssw0rd123$';
+#ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@ssw0rd123$';
+
 
 #---- OR
+
+# Stop MySQL
+sudo service mysql stop
+
+# Start MySQL manually, without permission checks or networking.
+sudo mysqld_safe --skip-grant-tables --skip-networking &
+
+# Log in without a password.
+mysql -uroot mysql
+
+
+
 
 #UPDATE mysql.user
 #    SET authentication_string = PASSWORD('P@ssw0rd123$'), password_expired = 'N'
