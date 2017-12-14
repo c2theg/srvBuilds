@@ -1,8 +1,8 @@
 # -------------- Custom MySQL / Percona config  -----------------------------------------------------------------
 #      By Christopher Gray
 #      christophermjgray@gmail.com
-#      10/21/2017
-#      Version 2.1.2
+#      12/13/2017
+#      Version 2.1.3
 #      Supported Versions: Percona 5.7
 #
 #      Path: /etc/mysql/percona-server.conf.d/mysqld.cnf
@@ -79,13 +79,12 @@ log_error            = /var/log/mysql/mysql_error.log
 # Be aware that this log type is a performance killer.
 #long_query_time = 2
 #log-queries-not-using-indexes
-
 #-----------------------------------------
 skip-external-locking
 #bind-address           = 127.0.0.1
 #---- Fine Tuning --------
 #--- Optimizing InnoDB ----
-innodb_buffer_pool_size = 4G   # - Set this to 80% of system memory
+innodb_buffer_pool_size = 1G   # - Set this to 80% of system memory
 #  System Ram   |   MySQL Setting
 #     2Gb       |       1600Mb (Dont enter . )
 #     4Gb       |       3.2Gb
@@ -95,7 +94,7 @@ innodb_buffer_pool_size = 4G   # - Set this to 80% of system memory
 #     32Gb      |       25.6Gb
 #     64Gb      |       51.2Gb
 #     128Gb     |       102.4Gb
-
+#--------------------------------
 innodb_log_file_size = 128M
 # Set this to 1-2 hours worth of writes during your busiest time
 # How to find out the number to set it too:
@@ -141,7 +140,8 @@ server-id               = 2
 expire_logs_days        = 3
 max_binlog_size         = 256M
 #binlog_do_db           = main_db
-#binlog_ignore_db       = include_database_name
+#binlog_do_db           = main_db2
+#binlog_ignore_db       = mysql
 # --- Security Features ----
 # For generating SSL certificates I recommend the OpenSSL GUI "tinyca"
 # ssl-ca=/etc/mysql/cacert.pem
