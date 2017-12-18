@@ -21,8 +21,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP.sh
 
 \r\n \r\n
-Version:  1.3.5                             \r\n
-Last Updated:  12/12/2017
+Version:  1.3.6                             \r\n
+Last Updated:  12/18/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -33,7 +33,13 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo apt-get -y dist-upgrade
 wait
-sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute htop sysstat iptraf iftop speedometer ncdu nload postfix
+sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute htop sysstat iptraf iftop speedometer ncdu nload
+
+#---- Email -----
+wait
+sudo apt-get install -y postfix procmail postfix-mysql postfix-pcre sasl2-bin postfix-cdb postfix-doc
+# dovecot-core
+wait
 #---------- PYTHON STUFF ----------------------------------
 #sudo apt-get install -y python2-virtualenv python3-virtualenv libicu-dev python-software-properties python python-pip python-dev python3-setuptools
 #wait
