@@ -177,4 +177,7 @@ echo "Restarting Nginx... "
 
 echo "Restarting PHP-FPM... "
 /etc/init.d/php7.0-fpm restart
-echo "Done all"
+echo "Done All! \r\n \r\n"
+
+echo "Edit: nano /etc/postfix/main.cf  to configure postfix relay \r\n \r\n"
+
