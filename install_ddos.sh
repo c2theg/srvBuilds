@@ -47,7 +47,12 @@ sudo perl fastnetmon_install.pl
 #----------------------------------------------------------------------------------------------------------
 
 ### Examples ###
+# https://pentest.blog/how-to-perform-ddos-test-as-a-pentester/
+
 
 # hping3 -V -c 1000000 -d 120 -S -w 64 -p 443 -s 443 --flood --rand-source 10.1.1.1
 # hping3 -2 -c 1000000 -s 5151 -p 80  --rand-source 10.1.1.1
+# hping3 -S -P -U --flood -V --rand-source 10.1.1.1
+# hping3 -c 20000 -d 120 -S -w 64 -p 443 --flood --rand-source 10.1.1.1
+# hping3 --icmp --spoof 10.1.1.1 BROADCAST_IP
 
