@@ -25,8 +25,8 @@ https://www.elastic.co/guide/index.html
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch5x.sh
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
-Version:  0.1.6                             \r\n
-Last Updated:  11/21/2017
+Version:  0.1.7                             \r\n
+Last Updated:  12/23/2017
 \r\n \r\n"
 
 echo -e "Installing Java...  \r\n \r\n "
@@ -50,14 +50,22 @@ echo -e "Adding: ulimit -n 65536  \r\n \r\n "
 ulimit -n 65536
 echo "elasticsearch  -  nofile  65536" >> /etc/security/limits.conf 
 
-
-echo "downloading optimized config...  \r\n \r\n "
+echo "Downloading optimized config...  \r\n \r\n "
 
 if [ -s "/etc/elasticsearch/logging.yml" ]
 then
 	echo "Deleting file  logging.yml "
 	rm /etc/elasticsearch/logging.yml
 fi
+
+#---------------------------------
+mkdir /media/
+mkdir /media/data/
+mkdir /media/data/es/
+mkdir /media/data/es/data
+mkdir /media/data/es/logs
+chmod -R 755 /media/data/es/ && sudo chown -R elasticsearch:elasticsearch /media/data/es/
+#---------------------------------
 
 mv /etc/elasticsearch/elasticsearch.yml  /etc/elasticsearch/elasticsearch_backup.yml
 wait
@@ -69,7 +77,6 @@ echo " Restarting ElasticSearch... \r\n \r\n "
 sudo /etc/init.d/elasticsearch restart
 
 sudo update-rc.d elasticsearch defaults 95 10
-
 
 #----- Install Plugins ----
 sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu
