@@ -1,0 +1,47 @@
+# ======== Christopher Gray - ES v6.x - Custom Config v0.6.0 - 12/23/17 ========
+# ---------------------------------- Cluster -----------------------------------
+cluster.name: es_cluster1
+cluster.routing.allocation.awareness.attributes: rack_id,zone
+cluster.routing.allocation.awareness.force.zone.values: zone
+# ------------------------------------ Node ------------------------------------
+node.name: db_1
+#node.name:   ${HOSTNAME}   #-- Use Env variable --
+node.attr.rack: r1
+#node.zone: mobile
+node.master: true
+node.data: true
+node.ingest: true
+# tribe.*
+# ---------------------------------- Network -----------------------------------
+network.host: 0.0.0.0   # HAS to be set to 0.0.0.0 for Kibana to work
+#network.host: ${ES_NETWORK_HOST} #-- Use Env variable --
+http.port: 9200   # incoming HTTP requests
+transport.tcp.port: 9300 # for communication between nodes
+# ----------------------------------- Paths ------------------------------------
+path.data: /media/data/es/data
+path.logs: /media/data/es/logs
+#logs: /var/log/elasticsearch  # Default Path
+# ----------------------------------- Plugins ------------------------------------
+#Default Path: /usr/share/elasticsearch/plugins
+#plugin.mandatory: analysis-icu,lang-js
+# ----------------------------------- Memory -----------------------------------
+bootstrap.memory_lock: false
+# --------------------------------- Discovery ----------------------------------
+#discovery.zen.ping.multicast.enabled: false
+#discovery.zen.ping.unicast.hosts: ["10.1.1.2:9300","10.1.1.3","10.1.1.4"]
+#discovery.zen.ping_timeout: 10
+#discovery.zen.minimum_master_nodes: 2  ###-- import for master node failure
+# ---------------------------------- Gateway -----------------------------------
+#gateway.recover_after_nodes: 2
+# ---------------------------------- HTTP -----------------------------------
+#http.compression_level: 3
+#http.cors.allow-origin: "*"
+#http.cors.enabled: true
+#http.cors.allow-origin: /https?:\/\/localhost(:[0-9]+)?/
+#--- if using XPack ---
+#http.cors.allow-credentials: true
+#http.cors.allow-headers: X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization
+# ================== END CUSTOM CONFIG =========================
+
+# Allow to create logstash index
+action.auto_create_index: logstash-*
