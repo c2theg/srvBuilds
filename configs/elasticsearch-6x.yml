@@ -4,8 +4,8 @@ cluster.name: es_cluster1
 cluster.routing.allocation.awareness.attributes: rack_id,zone
 cluster.routing.allocation.awareness.force.zone.values: zone
 # ------------------------------------ Node ------------------------------------
-node.name: db_1
-#node.name:   ${HOSTNAME}   #-- Use Env variable --
+#node.name: db_1
+node.name: ${HOSTNAME}
 node.attr.rack: r1
 #node.zone: mobile
 node.master: true
