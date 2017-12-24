@@ -26,7 +26,7 @@ path.logs: /media/data/es/logs
 #Default Path: /usr/share/elasticsearch/plugins
 #plugin.mandatory: analysis-icu,lang-js
 # ----------------------------------- Memory -----------------------------------
-bootstrap.memory_lock: true
+bootstrap.memory_lock: false
 # --------------------------------- Discovery ----------------------------------
 #discovery.zen.ping.multicast.enabled: false
 #discovery.zen.ping.unicast.hosts: ["10.1.1.2:9300","10.1.1.3","10.1.1.4"]
