@@ -91,4 +91,6 @@ echo "\r\n \r\n "
 netstat -a -n | grep tcp | grep 9200
 ps -ef | grep elasticsearch
 
+curl 127.0.0.1:9200
+
 echo "DONE! \r\n \r\n"
