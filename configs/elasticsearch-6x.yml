@@ -1,4 +1,4 @@
-# ======== Christopher Gray - ES v6.x - Custom Config v0.6.0 - 12/23/17 ========
+# ======== Christopher Gray - ES v6.x - Custom Config v0.6.1 - 12/23/17 ========
 # https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html
 # ---------------------------------- Cluster -----------------------------------
 cluster.name: es_cluster1
@@ -9,15 +9,22 @@ cluster.routing.allocation.awareness.force.zone.values: zone
 node.name: ${HOSTNAME}
 node.attr.rack: r1
 #node.zone: mobile
+
 node.master: true
 node.data: true
 node.ingest: true
-# tribe.*
+search.remote.connect: false
+#-- XPack --
+#node.ml: true 
+#xpack.ml.enabled: true
 # ---------------------------------- Network -----------------------------------
 network.host: 0.0.0.0   # HAS to be set to 0.0.0.0 for Kibana to work
 #network.host: ${ES_NETWORK_HOST} #-- Use Env variable --
 http.port: 9200   # incoming HTTP requests
 transport.tcp.port: 9300 # for communication between nodes
+#network.tcp.send_buffer_size: 2048
+#network.tcp.receive_buffer_size: 2048
+
 # ----------------------------------- Paths ------------------------------------
 path.data: /media/data/es/data
 path.logs: /media/data/es/logs
