@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  1.3.2                             \r\n
-Last Updated:  12/13/2017
+Version:  1.3.3                             \r\n
+Last Updated:  12/28/2017
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -54,6 +54,8 @@ echo "\r\n \r\n \r\n \r\n"
 echo "To create a remote connection use the following: \r\n \r\n"
 echo " mysql --user=root --password=* mysql  \r\n\r\n"
 echo " GRANT ALL PRIVILEGES ON *.* TO 'user1'@'%' IDENTIFIED BY '***' WITH GRANT OPTION; \r\n\r\n"
+echo " for Replication - add the following user: \r\n "
+echo "GRANT REPLICATION SLAVE ON *.* TO 'Replication_user123'@'%' IDENTIFIED BY '***'; \r\n "
 
 echo -e "Info on how to migrate the data dir to another location is in the config \r\n \r\n"
 echo -e "Edit the config:  nano /etc/mysql/percona-server.conf.d/mysqld.cnf \r\n \r\n"
