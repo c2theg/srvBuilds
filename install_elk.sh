@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.1.2                            \r\n
-Last Updated:  10/25/2017
+Version:  0.1.3                            \r\n
+Last Updated:  12/30/2017
 \r\n \r\n"
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch6x.sh && sudo chmod u+x install_elasticsearch6x.sh && sudo ./install_elasticsearch6x.sh 
