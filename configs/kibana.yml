@@ -1,8 +1,12 @@
-# Kibana is served by a back end server. This controls which port to use.
-server.port: 5601
-
-# The host to bind the server to.
+# ======== Christopher Gray - Kibana v6.x - Custom Config v0.0.4 - 12/30/17 ========
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html
+# ---------------------------------- Settings --------------------------------------------
 server.host: "0.0.0.0"
+server.port: 5601
+elasticsearch.url: "http://localhost:9200"
+
+#----------------------------- Default config below --------------------------------------
+
 
 # If you are running kibana behind a proxy, and want to mount it at a path,
 # specify that path here. The basePath can't end in a slash.
@@ -10,9 +14,6 @@ server.host: "0.0.0.0"
 
 # The maximum payload size in bytes on incoming server requests.
 server.maxPayloadBytes: 1048576
-
-# The Elasticsearch instance to use for all your queries.
-elasticsearch.url: "http://localhost:9200"
 
 # preserve_elasticsearch_host true will send the hostname specified in `elasticsearch`. If you set it to false,
 # then the host you use to connect to *this* Kibana instance will be sent.
