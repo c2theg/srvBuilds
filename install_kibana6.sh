@@ -39,4 +39,8 @@ sudo update-rc.d kibana defaults 95 10
 #sudo -i service kibana start
 #sudo -i service kibana stop
 
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/kibana.yml
+
+
+
 echo "DONE! \r\n \r\n Point your browser to:  http://localhost:5601  to view it  \r\n \r\n "
