@@ -79,6 +79,8 @@ sudo /etc/init.d/elasticsearch restart
 sudo update-rc.d elasticsearch defaults 95 10
 
 #----- Install Plugins ----
+cd /usr/share/elasticsearch/
+
 #sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu
 # sudo bin/elasticsearch-plugin install file:///path/to/plugin.zip
 # sudo bin/elasticsearch-plugin install http://some.domain/path/to/plugin.zip
@@ -87,9 +89,11 @@ sudo bin/elasticsearch-plugin install ingest-user-agent
 sudo bin/elasticsearch-plugin install ingest-geoip
 
 # Show plugins 
-sudo /usr/share/elasticsearch/bin/elasticsearch-plugin list
+sudo bin/elasticsearch-plugin list
 
 #--------------------------------
+cd ~
+
 echo "\r\n \r\n "
 netstat -a -n | grep tcp | grep 9200
 ps -ef | grep elasticsearch
