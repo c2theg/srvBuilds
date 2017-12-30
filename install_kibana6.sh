@@ -37,17 +37,21 @@ sudo dpkg -i kibana-6.1.1-amd64.deb
 #sudo -i service kibana start
 #sudo -i service kibana stop
 
+#--- set permissions ---
+sudo chown -R kibana:kibana /usr/share/kibana/optimize/
+
+#------- use custom config --------------------------
 mv /etc/kibana/kibana.yml  /etc/kibana/kibana_backup.yml
 wait
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/kibana.yml
 wait
 cp kibana.yml /etc/kibana/kibana.yml
+
+
 wait
 echo " Restarting ElasticSearch... \r\n \r\n "
 sudo /etc/init.d/kibana restart
 
-
 sudo update-rc.d kibana defaults 95 10
-
 
 echo "DONE! \r\n \r\n Point your browser to:  http://localhost:5601  to view it  \r\n \r\n "
