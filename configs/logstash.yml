@@ -25,13 +25,9 @@
 # Which directory should be used by logstash and its plugins
 # for any persistent needs. Defaults to LOGSTASH_HOME/data
 #
-# path.data:
+path.data: /var/lib/logstash
 #
 # ------------ Pipeline Settings --------------
-#
-# The ID of the pipeline.
-#
-# pipeline.id: main
 #
 # Set the number of workers that will, in parallel, execute the filters+outputs
 # stage of the pipeline.
@@ -48,10 +44,10 @@
 #
 # pipeline.batch.size: 125
 #
-# How long to wait in milliseconds while polling for the next event
-# before dispatching an undersized batch to filters+outputs
+# How long to wait before dispatching an undersized batch to filters+workers
+# Value is in milliseconds.
 #
-# pipeline.batch.delay: 50
+# pipeline.batch.delay: 5
 #
 # Force Logstash to exit during shutdown even if there are still inflight
 # events in memory. By default, logstash will refuse to quit until all
@@ -65,7 +61,7 @@
 #
 # Where to fetch the pipeline configuration for the main pipeline
 #
-# path.config:
+path.config: /etc/logstash/conf.d
 #
 # Pipeline configuration string for the main pipeline
 #
@@ -82,7 +78,7 @@
 #
 # How often to check if the pipeline configuration has changed (in seconds)
 #
-# config.reload.interval: 3s
+# config.reload.interval: 3
 #
 # Show fully compiled configuration as debug log message
 # NOTE: --log.level must be 'debug'
@@ -113,19 +109,6 @@
 #
 # modules:
 #
-# ------------ Cloud Settings ---------------
-# Define Elastic Cloud settings here.
-# Format of cloud.id is a base64 value e.g. dXMtZWFzdC0xLmF3cy5mb3VuZC5pbyRub3RhcmVhbCRpZGVudGlmaWVy
-# and it may have an label prefix e.g. staging:dXMtZ...
-# This will overwrite 'var.elasticsearch.hosts' and 'var.kibana.host'
-# cloud.id: <identifier>
-#
-# Format of cloud.auth is: <user>:<pass>
-# This is optional
-# If supplied this will overwrite 'var.elasticsearch.username' and 'var.elasticsearch.password'
-# If supplied this will overwrite 'var.kibana.username' and 'var.kibana.password'
-# cloud.auth: elastic:<password>
-#
 # ------------ Queuing Settings --------------
 #
 # Internal queuing model, "memory" for legacy in-memory based queuing and
@@ -139,9 +122,9 @@
 # path.queue:
 #
 # If using queue.type: persisted, the page data files size. The queue data consists of
-# append-only data files separated into pages. Default is 64mb
+# append-only data files separated into pages. Default is 250mb
 #
-# queue.page_capacity: 64mb
+# queue.page_capacity: 250mb
 #
 # If using queue.type: persisted, the maximum number of unread events in the queue.
 # Default is 0 (unlimited)
@@ -209,7 +192,7 @@
 #   * trace
 #
 # log.level: info
-# path.logs:
+path.logs: /var/log/logstash
 #
 # ------------ Other Settings --------------
 #
