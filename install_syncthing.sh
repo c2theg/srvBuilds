@@ -81,8 +81,6 @@ elif [ $VER = '16.06' ]; then
     #-------- Ubuntu 16.04 ------------------------
     echo "deb http://apt.syncthing.net/ syncthing release" | sudo tee /etc/apt/sources.list.d/syncthing.list
 fi
-echo "deb http://apt.syncthing.net/syncthing release" | sudo tee /etc/apt/sources.list.d/syncthing.list
-
 #---------------------------------------------------------------------
 sudo -E apt-get update
 wait
