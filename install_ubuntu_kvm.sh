@@ -34,6 +34,8 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
+echo "Installing KVM... \r\n \r\n"
+
 sudo apt-get install qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
 
 sudo adduser `id -un` libvirtd
@@ -41,5 +43,24 @@ sudo adduser `id -un` libvirtd
 virsh -c qemu:///system list
 
 sudo apt-get install virt-manager
+
+wait
+sudo stop libvirt-bin
+wait
+sudo start libvirt-bin
+
+echo "Done installing KVM \r\n \r\n \r\n"
+
+echo "Installing Webbased GUI... \r\n \r\n "
+# https://github.com/kimchi-project/kimchi/releases/
+
+
+wget https://github.com/kimchi-project/kimchi/releases/download/2.5.0/wok-2.5.0-0.noarch.deb
+wait
+wget https://github.com/kimchi-project/kimchi/releases/download/2.5.0/kimchi-2.5.0-0.noarch.deb
+wait
+echo "Installing Kimchi... \r\n "
+sudo dpkg -i wok-2.5.0-0.noarch.deb <kimchi.deb>
+echo "Access it at https://<machine-ip>:8001  \r\n \r\n"
 
 
