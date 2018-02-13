@@ -52,6 +52,11 @@ sudo start libvirt-bin
 echo "Done installing KVM \r\n \r\n \r\n"
 
 echo "Installing Webbased GUI... \r\n \r\n "
+#http://cockpit-project.org/running#ubuntu
+sudo apt-get install cockpit
+wait
+echo " Access cockpit at: https://<machine-ip>:9090 \r\n \r\n"
+
 # https://github.com/kimchi-project/kimchi/releases/
 
 
