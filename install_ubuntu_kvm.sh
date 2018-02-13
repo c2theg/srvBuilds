@@ -49,13 +49,13 @@ sudo stop libvirt-bin
 wait
 sudo start libvirt-bin
 
-echo "Done installing KVM \r\n \r\n \r\n"
+echo "\r\n \r\n Done installing KVM \r\n \r\n \r\n"
 
 echo "Installing Webbased GUI... \r\n \r\n "
 #http://cockpit-project.org/running#ubuntu
 sudo apt-get install cockpit
 wait
-echo " Access cockpit at: https://<machine-ip>:9090 \r\n \r\n"
+echo "\r\n \r\n Access cockpit at: https://<machine-ip>:9090 \r\n \r\n"
 
 # https://github.com/kimchi-project/kimchi/releases/
 
@@ -64,8 +64,8 @@ wget https://github.com/kimchi-project/kimchi/releases/download/2.5.0/wok-2.5.0-
 wait
 wget https://github.com/kimchi-project/kimchi/releases/download/2.5.0/kimchi-2.5.0-0.noarch.deb
 wait
-echo "Installing Kimchi... \r\n "
-sudo dpkg -i wok-2.5.0-0.noarch.deb <kimchi.deb>
+echo "\r\n \r\n Installing Kimchi... \r\n "
+sudo dpkg -i wok-2.5.0-0.noarch.deb kimchi-2.5.0-0.noarch.deb
 echo "Access it at https://<machine-ip>:8001  \r\n \r\n"
 
 
