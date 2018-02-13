@@ -21,11 +21,9 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.4                             \r\n
 Last Updated:  2/13/2018
-\r\n \r\n
-
-This will install version  $Version of Webmin \r\n \r\n
+ \r\n \r\n
 Updating system first..."
 
 sudo -E apt-get update
