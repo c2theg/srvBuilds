@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1                             \r\n
+Version:  0.5                             \r\n
 Last Updated:  2/22/2018
 \r\n \r\n
 This is really meant for 16.04 \r\n \r\n
@@ -32,17 +32,24 @@ wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo " Creating directories... \r\n \r\n"
-
-deb http://linux-packages.getsync.com/btsync/deb btsync non-free
-
-
-wget http://linux-packages.getsync.com/btsync/key.asc
-
-sudo apt-key add key.asc
+sudo sh -c 'echo "deb http://linux-packages.getsync.com/btsync/deb btsync non-free" > /etc/apt/sources.list.d/btsync.list'
+sudo wget http://linux-packages.getsync.com/btsync/key.asc | sudo apt-key add key.asc
 sudo apt update && sudo apt install btsync
 
-
+wait
+#---------------------------------------------------------------------------------------------------------
+if [ -s "/etc/btsync/config.json" ]
+then
+	echo "Deleting file btsync config "
+	rm /etc/btsync/config.json
+	rm btsync_2.3_config.conf
+fi
+echo "Downloading BTSync Config"
+wget -O "btsync_2.3_config.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/btsync_2.3_config.conf"
+sudo cp "btsync_2.3_config.conf" "/etc/btsync/config.json"
+wait
+echo "BTSync Config Download Complete"
+#---------------------------------------------------------------------------------------------------------
 sudo systemctl start btsync
 sudo systemctl enable btsync
-
 systemctl status btsync
