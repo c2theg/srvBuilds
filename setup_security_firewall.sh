@@ -1,3 +1,7 @@
+sudo apt-get install wget git nano ufw
+sudo apt-get update
+
+#---------------------------------------------------------------------------------------------------------
 sudo ufw allow 80
 sudo ufw allow 443
 sudo ufw allow 8888
