@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.7                             \r\n
-Last Updated:  10/27/2017
+Version:  1.5.8                             \r\n
+Last Updated:  2/22/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -89,6 +89,8 @@ rm /var/log/upstart/*
 rm /var/mail/root
 rm /var/mail/www-data
 rm /var/mail/ubuntu
+rm /var/log/apache2/*
+#----------------------------------------------------------------
 /etc/init.d/sendmail restart
 
 echo "\r\n \r\n Removing Nginx and PHP logs, then restarting both services.. \r\n \r\n "
