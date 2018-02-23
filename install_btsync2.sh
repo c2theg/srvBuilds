@@ -30,6 +30,9 @@ wait
 sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
+
+# https://askubuntu.com/questions/284683/how-to-run-bittorrent-sync
+
 #--------------------------------------------------------------------------------------------
 echo " Creating directories... \r\n \r\n"
 sudo sh -c 'echo "deb http://linux-packages.getsync.com/btsync/deb btsync non-free" > /etc/apt/sources.list.d/btsync.list'
