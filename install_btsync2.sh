@@ -54,5 +54,9 @@ wait
 echo "BTSync Config Download Complete"
 #---------------------------------------------------------------------------------------------------------
 sudo systemctl start btsync
-sudo systemctl enable btsync
+#sudo systemctl --user enable btsync
+
+wait
 systemctl status btsync
+
+#sudo systemctl start btsync --identity www-data --storage "/media/data/btsync/" --config "/etc/btsync/config.json" --webui.listen 0.0.0.0:8888
