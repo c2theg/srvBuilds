@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.0                             \r\n
-Last Updated:  5/7/2017
+Version:  1.4                             \r\n
+Last Updated:  2/25/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -34,9 +34,17 @@ cd ~
 
 #OR V6
 #curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-#sudo apt-get install -y nodejs
-
 #OR V7
-curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+#curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+#OR V8
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+#OR V9
+#curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+
 wait
-sudo apt-get install -y nodejs
+sudo apt-get install -y nodejs npm
+#--------------------------------------------------------------------------------------------
+sudo apt-get install -y build-essential libssl-dev
+
+wait
+echo "Done installing Node.JS and NPM \r\n \r\n"
