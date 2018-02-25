@@ -46,17 +46,24 @@ wait
 sudo apt install -y resilio-sync
 wait
 #---------------------------------------------------------------------------------------------------------
-#if [ -s "/etc/btsync/config.json" ]
-#then
-#	echo "Deleting file btsync config "
-#	rm /etc/btsync/config.json
-#	rm btsync_2.3_config.conf
-#fi
-#echo "Downloading BTSync Config"
-#wget -O "btsync_2.3_config.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/btsync_2.3_config.conf"
-#sudo cp "btsync_2.3_config.conf" "/etc/btsync/config.json"
-#wait
-#echo "BTSync Config Download Complete"
+if [ -s "/etc/btsync/config.json" ]
+then
+	echo "Deleting file Resilio config "
+	rm /etc/resilio-sync/config.json
+	rm resilio_config.json
+ rm resilio-sync.service
+fi
+echo "Downloading Resilio Config"
+wget -O "resilio_config.json" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio_config.json"
+wget -O "resilio-sync.service" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio-sync.service"
+
+wait
+#----------- Copy Configs --------------------
+sudo cp "resilio_config.json" "/etc/resilio-sync/config.json"
+sudo cp "resilio-sync.service" "/lib/systemd/system/resilio-sync.service"
+
+wait
+echo "Resilio Config Download Complete"
 #---------------------------------------------------------------------------------------------------------
 sudo systemctl start resilio-sync
 wait
@@ -65,5 +72,11 @@ sudo systemctl enable resilio-sync
 
 wait
 systemctl status resilio-sync
+
+
+sudo systemctl daemon-reload
+sudo systemctl restart resilio-sync.service
+ps aux | grep rslsync
+
 
 #sudo systemctl start btsync --identity www-data --storage "/media/data/btsync/" --config "/etc/btsync/config.json" --webui.listen 0.0.0.0:8888
