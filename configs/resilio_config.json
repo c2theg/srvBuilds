@@ -1,0 +1,9 @@
+{
+    "storage_path" : "/var/lib/resilio-sync/",
+    "pid_file" : "/var/run/resilio-sync/sync.pid",
+
+    "webui" :
+    {
+        "listen" : "0.0.0.0:8888"
+    }
+}
