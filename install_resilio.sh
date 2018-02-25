@@ -60,6 +60,8 @@ wget -O "resilio-sync.service" "https://raw.githubusercontent.com/c2theg/srvBuil
 wait
 #----------- Copy Configs --------------------
 sudo cp "resilio_config.json" "/etc/resilio-sync/config.json"
+sudo cp "resilio_config.json" "/home/$USER/.config/resilio-sync/config.json"
+
 sudo cp "resilio-sync.service" "/lib/systemd/system/resilio-sync.service"
 
 wait
