@@ -29,6 +29,7 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
+sudo apt-get install -y build-essential libssl-dev
 
 cd ~
 
@@ -42,9 +43,26 @@ curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 #curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
 
 wait
-sudo apt-get install -y nodejs npm
+sudo apt-get install -y nodejs
 #--------------------------------------------------------------------------------------------
-sudo apt-get install -y build-essential libssl-dev
+
+
+echo "\r\n \r\n Installing NPM \r\n "
+
+sudo apt-get install -y npm
+
+wait
+
+sudo npm update npm -g
+
+#echo "Installing NPM modules... \r\n "
+
+#sudo npm install ws --ws:native
+#sudo npm install supervisor -g
+#sudo npm install express connect request emailjs mysql memcache colors md5 forever redis cluster
+#sudo npm install socket.io socket.io-redis socket.io-adapter socket.io-emitter socket.io-parser
+#sudo npm install socket.io --save
+
 
 wait
 echo "Done installing Node.JS and NPM \r\n \r\n"
