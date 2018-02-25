@@ -49,7 +49,11 @@ sudo apt-get install -y nodejs
 
 echo "\r\n \r\n Installing NPM \r\n "
 
-sudo apt-get install -y npm
+#sudo apt-get install -y npm
+
+curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh
+wait
+sudo bash nodesource_setup.sh
 
 wait
 
