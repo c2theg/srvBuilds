@@ -80,5 +80,14 @@ sudo systemctl daemon-reload
 sudo systemctl restart resilio-sync.service
 ps aux | grep rslsync
 
-
+#-----------------------
 #sudo systemctl start btsync --identity www-data --storage "/media/data/btsync/" --config "/etc/btsync/config.json" --webui.listen 0.0.0.0:8888
+
+
+
+# fixes http permissions
+# 640 or 755
+sudo chmod -R 755 /var/www/
+
+sudo chown -R www-data:www-data /var/www/
+sudo chown -R rslsync:rslsync /var/www/
