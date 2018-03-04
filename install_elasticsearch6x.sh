@@ -89,15 +89,15 @@ sudo bin/elasticsearch-plugin install ingest-user-agent
 sudo bin/elasticsearch-plugin install ingest-geoip
 
 #--- NPM Plugins ----
-npm install -g grunt
-npm install -g grunt-cli
+#npm install -g grunt
+#npm install -g grunt-cli
 #-------------------
-git clone git://github.com/mobz/elasticsearch-head.git
-cd elasticsearch-head
-npm install
-npm run start
+#git clone git://github.com/mobz/elasticsearch-head.git
+#cd elasticsearch-head
+#npm install
+#npm run start
 
-# Show plugins 
+#--- Show plugins ----
 sudo bin/elasticsearch-plugin list
 #--------------------------------
 cd ~
