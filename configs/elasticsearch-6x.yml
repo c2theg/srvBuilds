@@ -1,5 +1,8 @@
-# ======== Christopher Gray - ES v6.x - Custom Config v0.6.1 - 12/23/17 ========
+# ======== Christopher Gray - ES v6.x - Custom Config v0.6.2 - 3/3/18 ========
 # https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html
+#
+#   Set Permissions:
+#       sudo chmod -R 755 /media/data/es/ && sudo chown -R elasticsearch:elasticsearch /media/data/es/
 # ---------------------------------- Cluster -----------------------------------
 cluster.name: es_cluster1
 cluster.routing.allocation.awareness.attributes: rack_id,zone
@@ -9,7 +12,6 @@ cluster.routing.allocation.awareness.force.zone.values: zone
 node.name: ${HOSTNAME}
 node.attr.rack: r1
 #node.zone: mobile
-
 node.master: true
 node.data: true
 node.ingest: true
@@ -24,7 +26,6 @@ http.port: 9200   # incoming HTTP requests
 transport.tcp.port: 9300 # for communication between nodes
 #network.tcp.send_buffer_size: 2048
 #network.tcp.receive_buffer_size: 2048
-
 # ----------------------------------- Paths ------------------------------------
 path.data: /media/data/es/data
 path.logs: /media/data/es/logs
