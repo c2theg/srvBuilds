@@ -44,7 +44,7 @@ echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee 
 
 sudo apt-get update
 
-sudo apt-get install -y elasticsearch
+sudo apt-get install -y elasticsearch npm
 
 echo -e "Adding: ulimit -n 65536  \r\n \r\n "
 ulimit -n 65536
@@ -88,9 +88,17 @@ cd /usr/share/elasticsearch/
 sudo bin/elasticsearch-plugin install ingest-user-agent
 sudo bin/elasticsearch-plugin install ingest-geoip
 
+#--- NPM Plugins ----
+npm install -g grunt
+npm install -g grunt-cli
+#-------------------
+git clone git://github.com/mobz/elasticsearch-head.git
+cd elasticsearch-head
+npm install
+npm run start
+
 # Show plugins 
 sudo bin/elasticsearch-plugin list
-
 #--------------------------------
 cd ~
 
