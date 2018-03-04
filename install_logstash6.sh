@@ -21,8 +21,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash6.sh
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
-Version:  0.0.1                             \r\n
-Last Updated:  12/30/2017
+Version:  0.0.2                             \r\n
+Last Updated:  3/4/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -42,7 +42,7 @@ echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee 
 
 sudo -E apt-get update
 wait
-sudo -E apt-get install -y logstash
+sudo -E apt-get install -y logstash syslog-ng-core
 
 sudo update-rc.d logstash defaults 95 10
 
