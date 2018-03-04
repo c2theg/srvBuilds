@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  1.6.6                             \r\n
-Last Updated:  10/18/2017
+Version:  1.6.7                             \r\n
+Last Updated:  3/3/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
@@ -43,7 +43,8 @@ then
 	#--------------------------------------------------------------------------------------------
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
 	wait
-	sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties screen sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer nload
+	sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload 
+	# speedometer
 	wait
 	#----------------------------------------------------------------------------------------------
 	if [ -s "update_core.sh" ] 
@@ -70,6 +71,7 @@ then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/ntp.conf && chmod u ntp.conf
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/resolv.conf && mv resolv.conf /etc/resolv.conf
 	#---- NTP Time related ---------
 	cp ntp.conf /etc/ntp.conf
 	wait
@@ -94,14 +96,15 @@ then
 	echo " /etc/init.d/cron restart "
 	echo " \r\n \r\n"
 
-	echo "(display graph from speedometer) \r\n
-	speedometer -l -r eth0 -t eth0 -m $(( 1024 * 1024 * 3 / 2 ))  \r\n
-	or \r\n
-	speedometer -l -r p4p1 -t p4p1 -m $(( 1024 * 1024 * 3 / 2 )) \r\n
-	or \r\n
-	speedometer -l -r em3 -t em3 -m $(( 1024 * 1024 * 3 / 2 ))
-	 \r\n
-	"
+	#echo "(display graph from speedometer) \r\n
+	#speedometer -l -r eth0 -t eth0 -m $(( 1024 * 1024 * 3 / 2 ))  \r\n
+	#or \r\n
+	#speedometer -l -r p4p1 -t p4p1 -m $(( 1024 * 1024 * 3 / 2 )) \r\n
+	#or \r\n
+	#speedometer -l -r em3 -t em3 -m $(( 1024 * 1024 * 3 / 2 ))
+	# \r\n
+	#"
+	
 	echo " \r\n \r\n"
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
