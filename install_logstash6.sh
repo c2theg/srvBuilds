@@ -42,7 +42,8 @@ echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee 
 
 sudo -E apt-get update
 wait
-sudo -E apt-get install -y logstash syslog-ng-core
+sudo -E apt-get install -y logstash
+sudo -E apt-get install -y syslog-ng-core syslog-ng-mod-sql syslog-ng-mod-json syslog-ng-mod-geoip
 
 sudo update-rc.d logstash defaults 95 10
 
