@@ -28,8 +28,9 @@ Last Updated:  3/6/2017
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-
 sudo -E apt-get install -y mailutils postfix
+
+
+date | mailx -s "test email #1" christophermjgray@gmail.com
  
- 
- 
+echo "DONE \r\n \r\n "
