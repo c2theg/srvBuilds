@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0                             \r\n
+Version:  0.1                             \r\n
 Last Updated:  3/6/2017
 \r\n \r\n
 #Updating system first..."
@@ -29,3 +29,7 @@ wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 
+sudo -E apt-get install -y mailutils postfix
+ 
+ 
+ 
