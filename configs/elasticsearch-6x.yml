@@ -1,4 +1,4 @@
-# ======== Christopher Gray - ES v6.x - Custom Config v0.6.2 - 3/3/18 ========
+# ======== Christopher Gray - ES v6.x - Custom Config v0.6.3 - 3/9/18 ========
 # https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html
 #
 #   Set Permissions:
@@ -8,8 +8,8 @@ cluster.name: es_cluster1
 cluster.routing.allocation.awareness.attributes: rack_id,zone
 cluster.routing.allocation.awareness.force.zone.values: zone
 # ------------------------------------ Node ------------------------------------
-#node.name: db_1
-node.name: ${HOSTNAME}
+node.name: db_1
+#node.name: ${HOSTNAME}
 node.attr.rack: r1
 #node.zone: mobile
 node.master: true
@@ -52,4 +52,4 @@ bootstrap.memory_lock: false
 #http.cors.allow-headers: X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization
 # ================== END CUSTOM CONFIG =========================
 # Allow to create logstash index
-action.auto_create_index: logstash-*
+action.auto_create_index: logstash-*, http.logs-*, ddos.logs-*, bigip.logs-*
