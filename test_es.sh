@@ -1,3 +1,6 @@
+#!/bin/sh
+
+
 echo "\r\n \r\n  Stats \r\n \r\n"
 curl -XGET 'localhost:9200/_nodes/stats?pretty'
 #curl -XGET 'localhost:9200/_nodes/nodeId1,nodeId2/stats?pretty'
