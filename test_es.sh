@@ -1,6 +1,12 @@
 #!/bin/sh
-# - Christopher Gray - version 0.6 - 3/9/18
+# - Christopher Gray - version 0.7 - 3/9/18
+echo "\r\n \r\n "
+#netstat -a -n | grep tcp | grep 9200
+ps -ef | grep elasticsearch
 
+netstat -tulnp
+
+#----------------------------------------------------------------------
 echo "\r\n \r\n  Stats \r\n \r\n"
 curl -XGET 'localhost:9200/_nodes/stats?pretty'
 #curl -XGET 'localhost:9200/_nodes/nodeId1,nodeId2/stats?pretty'
