@@ -21,9 +21,12 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash6.sh
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
-Version:  0.0.2                             \r\n
-Last Updated:  3/4/2018
+Version:  0.0.3                             \r\n
+Last Updated:  3/12/2018
+
 \r\n \r\n
+
+
 Updating system first..."
 sudo -E apt-get update
 wait
@@ -51,8 +54,10 @@ echo "\r\n \r\n DONE! \r\n \r\n"
 
 echo "To TEST it out!... \r\n \r\n "
 
-echo "cd logstash-6.1.1 \r\n \r\"
+echo "cd /usr/share/logstash \r\n \r\"
 echo "bin/logstash -e 'input { stdin { } } output { stdout {} }' \r\n \r\n"
 
+echo "Running now... \r\n \r\n "
 
 
+/usr/share/logstash/bin/logstash -e 'input { stdin { } } output { stdout {} }'
