@@ -57,7 +57,9 @@ echo "To TEST it out!... \r\n \r\n "
 echo "cd /usr/share/logstash \r\n \r\"
 echo "bin/logstash -e 'input { stdin { } } output { stdout {} }' \r\n \r\n"
 
+echo "To start logstash with a file use: \r\n \r\n
+sudo -u logstash /usr/share/logstash/bin/logstash --path.settings=/etc/logstash -f /home/ubuntu/logstash/basic_syslog_2_es.conf
+\r\n \r\n"
+
 echo "Running now... \r\n \r\n "
-
-
 /usr/share/logstash/bin/logstash -e 'input { stdin { } } output { stdout {} }'
