@@ -36,11 +36,14 @@ wget -O "kafka_current.tgz" "http://mirror.cc.columbia.edu/pub/software/apache/k
 wait
 tar -xvf kafka_current.tgz
 
-cd kafka_current/
-echo "\r\n \r\n Starting Kafka... \r\n \r\n"
-sudo bin/kafka-server-start.sh config/server.properties
-wait
 
+
+echo "\r\n \r\n You can now start Kafka with the following: \r\n \r\n
+  cd kafka_current/  \r\n \r\n
+  sudo bin/kafka-server-start.sh config/server.properties
+
+\r\n \r\n"
+wait
 
 #----------------------------------------------------------
 echo " create Topic --> in another window, run the following: \r\n \r\n
