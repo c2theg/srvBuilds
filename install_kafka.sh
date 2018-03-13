@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.1                             \r\n
+Version:  0.1.1                             \r\n
 Last Updated:  3/13/2018
 \r\n \r\n
 This is meant for Ubuntu 14.04 \r\n \r\n
