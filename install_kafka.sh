@@ -21,7 +21,7 @@ echo "
 Version:  0.1.1                             \r\n
 Last Updated:  3/13/2018
 \r\n \r\n
-This is meant for Ubuntu 14.04 \r\n \r\n
+This is meant for Ubuntu 14.04+ \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
 wait
