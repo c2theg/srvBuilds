@@ -31,14 +31,21 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo apt-get install -y zookeeperd
 
+echo "\r\n \r\n Downloading Kafka... \r\n \r\n"
 wget -O "kafka_current.tgz" "http://mirror.cc.columbia.edu/pub/software/apache/kafka/1.0.1/kafka_2.11-1.0.1.tgz"
 wait
 tar -xvf kafka_current.tgz
 
 cd kafka_current/
+echo "\r\n \r\n Starting Kafka... \r\n \r\n"
 sudo bin/kafka-server-start.sh config/server.properties
+wait
+
 
 #----------------------------------------------------------
-# create Topic
-
+echo " create Topic --> in another window, run the following: \r\n \r\n
 sudo bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic kafka-logs
+
+\r\n \r\n"
+
+echo "Done! \r\n \r\n"
