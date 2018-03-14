@@ -1,4 +1,4 @@
-# ======== Christopher Gray - ES v6.x - Custom Config v0.6.3 - 3/9/18 ========
+# ======== Christopher Gray - ES v6.x - Custom Config v0.6.4 - 3/14/18 ========
 # https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html
 #
 #   Set Permissions:
@@ -7,6 +7,8 @@
 cluster.name: es_cluster1
 cluster.routing.allocation.awareness.attributes: rack_id,zone
 cluster.routing.allocation.awareness.force.zone.values: zone
+cluster.routing.allocation.enable: all
+#cluster.routing.allocation.allow_rebalance: always
 # ------------------------------------ Node ------------------------------------
 node.name: db_1
 #node.name: ${HOSTNAME}
@@ -36,7 +38,6 @@ path.logs: /media/data/es/logs
 # ----------------------------------- Memory -----------------------------------
 bootstrap.memory_lock: false
 # --------------------------------- Discovery ----------------------------------
-#discovery.zen.ping.multicast.enabled: false
 #discovery.zen.ping.unicast.hosts: ["10.1.1.2:9300","10.1.1.3","10.1.1.4"]
 #discovery.zen.ping_timeout: 10
 #discovery.zen.minimum_master_nodes: 2  ###-- import for master node failure
