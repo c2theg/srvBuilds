@@ -44,8 +44,17 @@ echo -e "Installing Filebeat \r\n https://www.elastic.co/guide/en/beats/filebeat
 curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-$version-amd64.deb
 sudo dpkg -i filebeat-$version-amd64.deb
 wait
-cd /usr/share/filebeat
-sudo scripts/import_dashboards
+
+#-----------------------------------
+wget -O "beats_kibana_dashboards.zip" "https://artifacts.elastic.co/downloads/beats/beats-dashboards/beats-dashboards-5.4.3.zip"
+unzip beats_kibana_dashboards.zip
+sudo ./beats-dashboards-5.4.3/scripts/import_dashboards
+#-----------------------------------
+curl -L -O http://download.elastic.co/beats/dashboards/beats-dashboards-1.3.1.zip
+unzip beats-dashboards-1.3.1.zip
+cd beats-dashboards-1.3.1/
+./load.sh
+#-----------------------------------
 sudo /bin/systemctl stop kibana.service
 sudo /bin/systemctl start kibana.service
 
