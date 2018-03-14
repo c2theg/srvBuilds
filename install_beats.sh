@@ -29,8 +29,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_beats.sh
 
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
-Version:  0.0.5                             \r\n
-Last Updated:  12/30/2017
+Version:  0.0.6                             \r\n
+Last Updated:  3/14/2018
 \r\n \r\n"
 
 
@@ -43,6 +43,11 @@ sudo dpkg -i packetbeat-$version-amd64.deb
 echo -e "Installing Filebeat \r\n https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-getting-started.html \r\n \r\n"
 curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-$version-amd64.deb
 sudo dpkg -i filebeat-$version-amd64.deb
+wait
+cd /usr/share/filebeat
+sudo scripts/import_dashboards
+sudo /bin/systemctl stop kibana.service
+sudo /bin/systemctl start kibana.service
 
 
 echo -e "Installing Metricbeat \r\n https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-getting-started.html \r\n \r\n"
