@@ -1,13 +1,14 @@
-# ======== Christopher Gray - ES v6.x - Custom Config v0.6.4 - 3/14/18 ========
+# ======== Christopher Gray - ES v6.x - Custom Config v0.6.5 - 3/16/18 ========
 # https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html
 #
 #   Set Permissions:
 #       sudo chmod -R 755 /media/data/es/ && sudo chown -R elasticsearch:elasticsearch /media/data/es/
 # ---------------------------------- Cluster -----------------------------------
 cluster.name: es_cluster1
-cluster.routing.allocation.awareness.attributes: rack_id,zone
-cluster.routing.allocation.awareness.force.zone.values: zone
-cluster.routing.allocation.enable: all
+#---- unrem the following only if running es in a cluster, OR ES wont work ----
+#cluster.routing.allocation.awareness.attributes: rack_id,zone
+#cluster.routing.allocation.awareness.force.zone.values: zone1
+#cluster.routing.allocation.enable: all
 #cluster.routing.allocation.allow_rebalance: always
 # ------------------------------------ Node ------------------------------------
 node.name: db_1
