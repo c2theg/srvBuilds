@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.1.3                            \r\n
-Last Updated:  3/12/2018
+Version:  0.1.4                            \r\n
+Last Updated:  3/16/2018
 \r\n \r\n"
 
 echo " Source: https://www.elastic.co/guide/en/kibana/current/deb.html \r\n \r\n "
@@ -30,9 +30,9 @@ sudo apt-get install -y apt-transport-https
 
 echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
 
-wget https://artifacts.elastic.co/downloads/kibana/kibana-6.1.1-amd64.deb
-#sha1sum kibana-6.1.1-amd64.deb 
-sudo dpkg -i kibana-6.1.1-amd64.deb
+wget https://artifacts.elastic.co/downloads/kibana/kibana-6.2.2-amd64.deb
+#sha1sum kibana-6.2.2-amd64.deb 
+sudo dpkg -i kibana-6.2.2-amd64.deb
 
 #sudo -i service kibana start
 #sudo -i service kibana stop
