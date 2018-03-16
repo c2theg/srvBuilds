@@ -49,7 +49,7 @@ cp kibana.yml /etc/kibana/kibana.yml
 
 
 wait
-echo " Restarting ElasticSearch... \r\n \r\n "
+echo " Restarting Kibana... \r\n \r\n "
 sudo /etc/init.d/kibana restart
 
 sudo update-rc.d kibana defaults 95 10
