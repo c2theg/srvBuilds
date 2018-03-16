@@ -19,8 +19,12 @@ echo "
                             |_|                                             |___|
 \r\n \r\n
 Version:  0.1.3                            \r\n
-Last Updated:  3/16/2018
-\r\n \r\n"
+Last Updated:  3/16/2018 .         \r\n
+
+Installing ElasticStack 5.x ...
+
+\r\n \r\n
+"
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch5x.sh && sudo chmod u+x install_elasticsearch5x.sh && sudo ./install_elasticsearch5x.sh 
 
@@ -30,4 +34,4 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash5
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_kibana5.sh  && sudo chmod u+x install_kibana5.sh && sudo ./install_kibana5.sh
 
-echo "\r\n \r\n  Done installing ELK(b) 6.x \r\n \r\n "
+echo "\r\n \r\n  Done installing ELK(b) 5.x \r\n \r\n "
