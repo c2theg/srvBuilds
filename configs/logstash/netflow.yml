@@ -1,0 +1,3 @@
+modules:
+  - name: netflow
+    var.input.udp.port: 4739
