@@ -1,9 +1,11 @@
-# ======== Christopher Gray - ES v5.x - Custom Config v0.7.2 - 10/28/17 ========
+# ======== Christopher Gray - ES v5.x - Custom Config v0.7.3 - 3/16/18 ========
 # ---------------------------------- Cluster -----------------------------------
 cluster.name: es_cluster1
-#---- unrem the following only if running es in a cluster ----
+#---- unrem the following only if running es in a cluster, OR ES wont work ----
 #cluster.routing.allocation.awareness.attributes: rack_id,zone
 #cluster.routing.allocation.awareness.force.zone.values: zone1
+#cluster.routing.allocation.enable: all
+#cluster.routing.allocation.allow_rebalance: always
 # ------------------------------------ Node ------------------------------------
 node.name: db_1
 #node.name:   ${HOSTNAME}   #-- Use Env variable --
