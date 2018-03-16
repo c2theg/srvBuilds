@@ -37,11 +37,11 @@ wait
 wget 'kibana.yml' 'https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/kibana.yml'
 mv /etc/kibana/kibana.yml /etc/kibana_backup.yml
 cp kibana.yml /etc/kibana/kibana.yml
-
 #--------------------------------------------------
+sudo -i service kibana stop
 sudo update-rc.d kibana defaults 95 10
 sudo -i service kibana start
-sudo -i service kibana stop
+wait
 
 ps -ef | grep kibana
 echo "DONE! \r\n \r\n Point your browser to:  http://localhost:5601  to view it  \r\n \r\n "
