@@ -46,6 +46,10 @@ sudo -E apt-get install -y logstash
 
 sudo update-rc.d logstash defaults 95 10
 
+#To mitigate dropped packets, make sure to increase the Linux kernel receive buffer limit
+sysctl -w net.core.rmem_max=$((1024*1024*16))
+
+
 echo "\r\n \r\n DONE! \r\n \r\n"
 
 echo "To TEST it out!... \r\n \r\n "
