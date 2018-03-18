@@ -49,7 +49,7 @@ sudo apt-get install -y elasticsearch
 
 echo "Setting Java Heap size to 2gb. -> MAX 32gb, DONT GO OVER 32GB even if you have 64gb+ of ram!!! \r\n \r\n"
 export ES_HEAP_SIZE=2g
-ES_JAVA_OPTS="-Xms2g -Xmx2g" ./bin/elasticsearch
+ES_JAVA_OPTS="-Xms2g -Xmx2g" /usr/share/elasticsearch/bin/elasticsearch
 #--------------------------------------------------
 
 echo -e "Adding: ulimit -n 65536  \r\n \r\n "
