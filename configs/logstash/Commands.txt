@@ -1,6 +1,30 @@
+Base Path:
+
+sudo  /usr/share/logstash/bin/logstash 
+or
+sudo /usr/share/logstash/
+or
+cd /usr/share/logstash/
+  sudo ./bin/logstash
+
+
+#--- custom configs
+sudo  /usr/share/logstash/bin/logstash --path.settings=/etc/logstash -f /home/ubuntu/logstash/f5_logging.conf
+
+./bin/logstash --configtest -f logstash-live-netflow.conf
+
+
+#-- auto gen
 sudo  /usr/share/logstash/bin/logstash --modules netflow --setup -M netflow.var.input.udp.port=2055
 
-
+sudo  /usr/share/logstash/bin/logstash --modules netflow --setup
 ./bin/logstash --modules netflow --setup -M netflow.var.input.udp.port=2055
 
+sudo  /usr/share/logstash/bin/logstash --modules netflow --setup -M netflow.var.input.udp.port=2055
+
+#------- Docker ----------
+
+sudo docker run --name logstash --expose 25826 -p 25826:25826 docker.elastic.co/logstash/logstash:5.4.0 --debug
+
+#--------------------------
 
