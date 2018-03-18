@@ -1,0 +1,6 @@
+sudo  /usr/share/logstash/bin/logstash --modules netflow --setup -M netflow.var.input.udp.port=2055
+
+
+./bin/logstash --modules netflow --setup -M netflow.var.input.udp.port=2055
+
+
