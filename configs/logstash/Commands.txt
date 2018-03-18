@@ -14,7 +14,11 @@ sudo  /usr/share/logstash/bin/logstash --path.settings=/etc/logstash -f /home/ub
 ./bin/logstash --configtest -f logstash-live-netflow.conf
 
 
-#-- auto gen
+#-- auto gen--
+#-- install Netflow in Logstash
+sudo ./bin/logstash-plugin install --no-verify
+
+
 sudo  /usr/share/logstash/bin/logstash --modules netflow --setup -M netflow.var.input.udp.port=2055
 
 sudo  /usr/share/logstash/bin/logstash --modules netflow --setup
