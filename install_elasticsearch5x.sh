@@ -25,8 +25,8 @@ https://www.elastic.co/guide/index.html
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch5x.sh
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
-Version:  0.1.7                             \r\n
-Last Updated:  12/23/2017
+Version:  0.1.8                             \r\n
+Last Updated:  3/18/2018
 \r\n \r\n"
 
 echo -e "Installing Java...  \r\n \r\n "
@@ -45,6 +45,12 @@ echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee 
 sudo apt-get update
 
 sudo apt-get install -y elasticsearch
+
+
+echo "Setting Java Heap size to 2gb. -> MAX 32gb, DONT GO OVER 32GB even if you have 64gb+ of ram!!! \r\n \r\n"
+export ES_HEAP_SIZE=2g
+ES_JAVA_OPTS="-Xms2g -Xmx2g" ./bin/elasticsearch
+#--------------------------------------------------
 
 echo -e "Adding: ulimit -n 65536  \r\n \r\n "
 ulimit -n 65536
