@@ -45,11 +45,15 @@ echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee 
 
 sudo -E apt-get update
 wait
-sudo -E apt-get install -y logstash ruby
-sudo -E apt-get install -y syslog-ng-core syslog-ng-mod-sql syslog-ng-mod-json syslog-ng-mod-geoip
-# sudo -E apt-get install -y syslog-ng-mod-mongodb syslog-ng-mod-smtp syslog-ng-mod-amqp syslog-ng-mod-redis syslog-ng-mod-stomp libdbd-mysql libdbd-pgsql libdbd-sqlite3
+sudo -E apt-get install -y logstash ruby ruby-bundler
 
 sudo update-rc.d logstash defaults 95 10
+
+#----- Install Plugins ----
+sudo /usr/share/logstash/bin/logstash-plugin install logstash-filter-geoip
+sudo /usr/share/logstash/bin/logstash-plugin install logstash-filter-dns
+#-------------------------- 
+
 
 echo "\r\n \r\n DONE! \r\n \r\n"
 
