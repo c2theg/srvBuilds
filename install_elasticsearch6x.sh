@@ -25,8 +25,8 @@ https://www.elastic.co/guide/index.html
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch6x.sh
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
-Version:  0.1.5                             \r\n
-Last Updated:  3/18/2018
+Version:  0.1.6                             \r\n
+Last Updated:  3/24/2018
 \r\n \r\n"
 
 echo -e "Installing Java...  \r\n \r\n "
@@ -40,7 +40,7 @@ echo -e "Installing Elastic Search 6.X \r\n \r\n"
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 
 sudo apt-get install -y apt-transport-https
-if [ -s "/etc/apt/sources.list.d/elastic-6.x.list" ]
+if [ ! -s "/etc/apt/sources.list.d/elastic-6.x.list" ]
 then
 	echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
 fi
