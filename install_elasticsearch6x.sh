@@ -33,7 +33,8 @@ echo -e "Installing Java...  \r\n \r\n "
 sudo add-apt-repository -y ppa:webupd8team/java
 sudo apt-get update
 sudo apt-get -y install oracle-java8-installer
-
+wait
+sudo apt -y install oracle-java8-set-default
 
 echo -e "Installing Elastic Search 6.X \r\n \r\n"
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
