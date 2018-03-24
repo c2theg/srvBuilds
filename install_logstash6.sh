@@ -61,9 +61,10 @@ echo "bin/logstash -e 'input { stdin { } } output { stdout {} }' \r\n \r\n"
 #To mitigate dropped packets, make sure to increase the Linux kernel receive buffer limit
 sysctl -w net.core.rmem_max=$((1024*1024*16))
 
-echo "To start logstash with a file use: \r\n \r\n
-sudo -u logstash /usr/share/logstash/bin/logstash --path.settings=/etc/logstash -f /home/ubuntu/logstash/basic_syslog_2_es.conf
-\r\n \r\n"
+echo "To start logstash with a file use:
+  sudo -u logstash /usr/share/logstash/bin/logstash --path.settings=/etc/logstash -f /home/ubuntu/logstash/basic_syslog_2_es.conf
+
+"
 
 echo "Running now... \r\n \r\n "
-/usr/share/logstash/bin/logstash -e 'input { stdin { } } output { stdout {} }'
+/usr/share/logstash/bin/logstash -e "input { stdin { } } output { stdout {} }"
