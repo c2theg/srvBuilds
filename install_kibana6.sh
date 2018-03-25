@@ -18,17 +18,19 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.1.4                            \r\n
-Last Updated:  3/16/2018
+Version:  0.1.5                            \r\n
+Last Updated:  3/24/2018
 \r\n \r\n"
 
 echo " Source: https://www.elastic.co/guide/en/kibana/current/deb.html \r\n \r\n "
 
-wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-
 sudo apt-get install -y apt-transport-https
 
-echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+if [ ! -s "/etc/apt/sources.list.d/elastic-6.x.list" ]
+then
+   wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+   echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+fi
 
 wget https://artifacts.elastic.co/downloads/kibana/kibana-6.2.2-amd64.deb
 #sha1sum kibana-6.2.2-amd64.deb 
@@ -45,15 +47,14 @@ mv /etc/kibana/kibana.yml  /etc/kibana/kibana_backup.yml
 wait
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/kibana.yml
 wait
-cp kibana.yml /etc/kibana/kibana.yml
-
-
+mv kibana.yml /etc/kibana/kibana.yml
 wait
+
 echo " Restarting Kibana... \r\n \r\n "
 sudo /etc/init.d/kibana restart
+wait
 
 sudo update-rc.d kibana defaults 95 10
-
 
 echo "DONE! \r\n \r\n Point your browser to:  http://localhost:5601  to view it  \r\n \r\n "
 
