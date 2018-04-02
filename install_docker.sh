@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4                             \r\n
+Version:  1.4.2                             \r\n
 Last Updated:  4/2/2018
 \r\n \r\n
 Updating system first..."
@@ -78,7 +78,7 @@ then
     sudo -E apt-get -y install docker.io
     wait
     apt-cache madison docker-ce
-elif [ $VER = '16.04' || $VER = '18.04' ]
+elif [ $VER = '16.04' ]
 then
     #-------- Ubuntu 16.04 ------------------------
     sudo apt-get update
