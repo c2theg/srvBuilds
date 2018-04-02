@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3                             \r\n
-Last Updated:  10/24/2017
+Version:  1.4                             \r\n
+Last Updated:  4/2/2018
 \r\n \r\n
 Updating system first..."
 #sudo -E apt-get update
@@ -29,7 +29,39 @@ Updating system first..."
 #wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "This installs docker to your ubuntu 14.04.5+ box..."
+
+#------------- Version Detection -------------
+if [ -f /etc/os-release ]; then
+    # freedesktop.org and systemd
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
+elif type lsb_release >/dev/null 2>&1; then
+    # linuxbase.org
+    OS=$(lsb_release -si)
+    VER=$(lsb_release -sr)
+elif [ -f /etc/lsb-release ]; then
+    # For some versions of Debian/Ubuntu without lsb_release command
+    . /etc/lsb-release
+    OS=$DISTRIB_ID
+    VER=$DISTRIB_RELEASE
+elif [ -f /etc/debian_version ]; then
+    # Older Debian/Ubuntu/etc.
+    OS=Debian
+    VER=$(cat /etc/debian_version)
+elif [ -f /etc/SuSe-release ]; then
+    # Older SuSE/etc.
+    ...
+elif [ -f /etc/redhat-release ]; then
+    # Older Red Hat, CentOS, etc.
+    ...
+else
+    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+    OS=$(uname -s)
+    VER=$(uname -r)
+fi
+echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
+#-----------------------------------------------
 # - from:  https://docs.docker.com/engine/installation/linux/ubuntu/#os-requirements
 
 #echo "Removing any old versions... \r\n"
@@ -57,41 +89,49 @@ sudo -E apt-get update
 wait
 sudo -E apt-get -y install apt-transport-https ca-certificates curl software-properties-common
 wait
-sudo -E apt-get -y install docker-ce
-wait
-sudo -E apt-get -y install docker.io
-wait
-apt-cache madison docker-ce
+
+if [ $VER = '14.04' ]; then
+    #-------- Ubuntu 14.04 ------------------------
+    sudo -E apt-get -y install docker-ce
+    wait
+    apt-cache madison docker-ce
+elif [ $VER = '16.04' || $VER = '18.04' ]; then
+    #-------- Ubuntu 16.04 ------------------------
+    sudo -E apt-get -y install docker.io
+    wait
+    echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) "
+    sudo add-apt-repository -y ppa:cockpit-project/cockpit
+    wait
+    apt-get install -y cockpit
+    wait
+    #--- start Cockpit ---
+    sudo systemctl start cockpit 
+    sudo systemctl enable cockpit
+    echo "\r\n \r\n" 
+    echo "----------------------------  \r\n \r\n"
+    # from: https://github.com/hobby-kube/guide
+    echo "Installing Kubernetes....  \r\n"
+    echo "Learning more about it here: https://kubernetes.io/docs/tutorials/kubernetes-basics/" 
+    echo "\r\n \r\n"
+    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+    cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
+    deb http://apt.kubernetes.io/ kubernetes-xenial-unstable main
+    EOF
+    sudo -E apt-get update
+    sudo -E apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+    wait
+    echo "\r\n \r\n Trying to use SNAP (Ubuntu 16.04+ to install Kubernetes... \r\n "
+    sudo snap install conjure-up --classic
+    sudo apt install -y conjure-up
+    wait
+    sudo conjure-up kubernetes
+
+fi
+
 wait
 echo "Done!"
 echo "\r\n \r\n"
 
-echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) "
-sudo add-apt-repository -y ppa:cockpit-project/cockpit
-wait
-apt-get install -y cockpit
-wait
-#--- start Cockpit ---
-sudo systemctl start cockpit 
-sudo systemctl enable cockpit
-echo "\r\n \r\n" 
-echo "----------------------------  \r\n \r\n"
-# from: https://github.com/hobby-kube/guide
-echo "Installing Kubernetes....  \r\n"
-echo "Learning more about it here: https://kubernetes.io/docs/tutorials/kubernetes-basics/" 
-echo "\r\n \r\n"
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
-deb http://apt.kubernetes.io/ kubernetes-xenial-unstable main
-EOF
-sudo -E apt-get update
-sudo -E apt-get install -y kubelet kubeadm kubectl kubernetes-cni
-wait
-echo "\r\n \r\n Trying to use SNAP (Ubuntu 16.04+ to install Kubernetes... \r\n "
-sudo snap install conjure-up --classic
-sudo apt install -y conjure-up
-wait
-sudo conjure-up kubernetes
 
 echo "\r\n \r\n \r\n"
 echo "Running sample container"
