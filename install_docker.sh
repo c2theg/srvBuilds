@@ -72,12 +72,14 @@ wait
 sudo -E apt-get -y install apt-transport-https ca-certificates curl software-properties-common
 wait
 
-if [ $VER = '14.04' ]; then
+if [ $VER = '14.04' ]
+then
     #-------- Ubuntu 14.04 ------------------------
     sudo -E apt-get -y install docker.io
     wait
     apt-cache madison docker-ce
-elif [ $VER = '16.04' || $VER = '18.04' ]; then
+elif [ $VER = '16.04' || $VER = '18.04' ]
+then
     #-------- Ubuntu 16.04 ------------------------
     sudo apt-get update
     sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
@@ -111,7 +113,6 @@ elif [ $VER = '16.04' || $VER = '18.04' ]; then
     sudo apt install -y conjure-up
     wait
     sudo conjure-up kubernetes
-
 fi
 
 wait
