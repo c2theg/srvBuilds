@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.3                             \r\n
+Version:  1.4.4                             \r\n
 Last Updated:  4/2/2018
 \r\n \r\n
 Updating system first..."
@@ -95,22 +95,6 @@ elif [ $VER = '16.04' ] || [ $VER = '18.04' ]; then
     sudo systemctl enable cockpit
     echo "\r\n \r\n" 
     echo "----------------------------  \r\n \r\n"
-    # from: https://github.com/hobby-kube/guide
-    echo "Installing Kubernetes....  \r\n"
-    echo "Learning more about it here: https://kubernetes.io/docs/tutorials/kubernetes-basics/" 
-    echo "\r\n \r\n"
-    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-    cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
-    deb http://apt.kubernetes.io/ kubernetes-xenial-unstable main
-    EOF
-    sudo -E apt-get update
-    sudo -E apt-get install -y kubelet kubeadm kubectl kubernetes-cni
-    wait
-    echo "\r\n \r\n Trying to use SNAP (Ubuntu 16.04+ to install Kubernetes... \r\n "
-    sudo snap install conjure-up --classic
-    sudo apt install -y conjure-up
-    wait
-    sudo conjure-up kubernetes
 fi
 
 wait
