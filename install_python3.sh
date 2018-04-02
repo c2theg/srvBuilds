@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.0                             \r\n
-Last Updated:  5/7/2017
+Version:  1.1                             \r\n
+Last Updated:  4/2/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -44,6 +44,7 @@ pip install python3-virtualenv
 #--------------------------------------------
 sudo pip3 install --upgrade requests
 #--------------------------------------------
+sudo -H apt install python-pip
 echo "\r\n \r\n "
 echo "Done installing Python3 "
 pip -V; pip3 -V
