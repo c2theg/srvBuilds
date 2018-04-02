@@ -64,26 +64,8 @@ echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
 #-----------------------------------------------
 # - from:  https://docs.docker.com/engine/installation/linux/ubuntu/#os-requirements
 
-#echo "Removing any old versions... \r\n"
-#sudo apt-get -y remove docker docker-engine
-#wait
-echo "DONE. Updating dependencies"
-#sudo apt-get -y update && sudo apt-get -y install linux-image-extra-$(uname -r) linux-image-extra-virtual
-#wait
-
-echo "\r\n \r\n"
 echo "\r\n Downloading keys... "
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key -y add -
-wait
-sudo apt-key -y fingerprint 0EBFCD88
-wait
-apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-wait 
-apt-key -y adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7EA0A9C3F273FCD8
-wait
-sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-wait
-echo "\r\n \r\n"
+
 echo "Installing Docker... \r\n \r\n"
 sudo -E apt-get update
 wait
@@ -92,12 +74,16 @@ wait
 
 if [ $VER = '14.04' ]; then
     #-------- Ubuntu 14.04 ------------------------
-    sudo -E apt-get -y install docker-ce
+    sudo -E apt-get -y install docker.io
     wait
     apt-cache madison docker-ce
 elif [ $VER = '16.04' || $VER = '18.04' ]; then
     #-------- Ubuntu 16.04 ------------------------
-    sudo -E apt-get -y install docker.io
+    sudo apt-get update
+    sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" 
+    #----------------------------------------
     wait
     echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) "
     sudo add-apt-repository -y ppa:cockpit-project/cockpit
