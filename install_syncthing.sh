@@ -77,7 +77,7 @@ curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
 if [ $VER = '14.04' ]; then
     #-------- Ubuntu 14.04 ------------------------
     sudo add-apt-repository -y ppa:ytvwld/syncthing
-elif [ $VER = '16.06' ]; then
+elif [ $VER = '16.04' || $VER = '18.04' ]; then
     #-------- Ubuntu 16.04 ------------------------
     echo "deb http://apt.syncthing.net/ syncthing release" | sudo tee /etc/apt/sources.list.d/syncthing.list
 fi
@@ -90,7 +90,7 @@ echo "Starting Syncthing..."
 if [ $VER = '14.04' ]; then
     #-------- Ubuntu 14.04 ------------------------
     syncthing  >> /var/log/syncthing.log &
-elif [ $VER = '16.06' ]; then
+elif [ $VER = '16.04' ]; then
     #-------- Ubuntu 16.04 ------------------------
     sudo systemctl enable syncthing@
     ubuntu.service
