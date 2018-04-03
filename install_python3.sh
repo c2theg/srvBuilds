@@ -45,6 +45,13 @@ pip install python3-virtualenv
 sudo pip3 install --upgrade requests
 #--------------------------------------------
 sudo -H apt install python-pip
+wait
+sudo pip install --upgrade pip
+#----- Install Flask ------------
+pip install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
+wait
+pip install requests
+wait
 echo "\r\n \r\n "
 echo "Done installing Python3 "
 pip -V; pip3 -V
