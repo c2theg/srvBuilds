@@ -43,6 +43,7 @@ sudo dpkg -i kibana-6.2.3-amd64.deb
 sudo chown -R kibana:kibana /usr/share/kibana/optimize/
 
 #------- use custom config --------------------------
+rm kibana.yml
 mv /etc/kibana/kibana.yml  /etc/kibana/kibana_backup.yml
 wait
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/kibana.yml
