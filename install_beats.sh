@@ -6,8 +6,6 @@
 #       chmod u+x <FILE>
 #
 
-version=6.2.2
-
 clear
 echo "
  _____             _         _    _          _                                   
@@ -32,6 +30,14 @@ This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 Version:  0.0.7                             \r\n
 Last Updated:  3/16/2018
 \r\n \r\n"
+
+if [ -z "$1" ]
+   then
+      version=6.2.3
+else
+      version=$1
+fi
+echo "Installing version: $version \r\n"
 
 
 echo -e "Installing Packetbeat \r\n  https://www.elastic.co/guide/en/beats/packetbeat/current/packetbeat-getting-started.html  \r\n \r\n"
