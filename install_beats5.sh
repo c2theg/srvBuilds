@@ -54,6 +54,8 @@ curl -L -O http://download.elastic.co/beats/dashboards/beats-dashboards-1.3.1.zi
 unzip beats-dashboards-1.3.1.zip
 cd beats-dashboards-1.3.1/
 ./load.sh
+
+./filebeat setup -E "setup.kibana.host=http://127.0.0.1:5601"
 #-----------------------------------
 wait
 sudo /bin/systemctl stop kibana.service
