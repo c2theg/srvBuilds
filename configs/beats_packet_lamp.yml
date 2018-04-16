@@ -1,24 +1,82 @@
-interfaces: device: any
+# https://www.elastic.co/guide/en/beats/packetbeat/current/configuration-interfaces.html
 
-dns:
-  ports: [53]
- 
-  include_authorities: true
-  include_additionals: true
- 
-http:
-  ports: [80, 8080, 8081, 5000, 8002]
- 
-mysql:
-  ports: [3306]
-  
+# device: any, eth0, en0, bridge0, fw0, p2p0, en4, lo0, etc.
+packetbeat.interfaces.device: any
 
-### File as output
+# only use on physical interfaces (MTU). if listening on virtual interface, use default
+packetbeat.interfaces.snaplen: 1514
+
+# pcap (default), or af_packet (which is linux only, but much faster then libpcap)
+packetbeat.interfaces.type: af_packet
+packetbeat.interfaces.buffer_size_mb: 128
+
+# for VLANs use a bpf_filter
+#packetbeat.interfaces.bpf_filter: "net 192.168.238.0/0 and port 80 and port 3306"
+
+# to prevent duplication transaction being logged
+packetbeat.ignore_outgoing
+
+packetbeat.flows:
+  timeout: 30s
+  period: 10s
+
+#-------------------------------------------------
+packetbeat.protocols:
+#- type: icmp
+#  enabled: true
+
+#- type: dns
+#  ports: [53]
+#  include_authorities: true
+#  include_additionals: true
+
+- type: http
+  ports: [80, 8080]
+
+- type: tls
+  ports: [443]
+
+#- type: amqp
+#  ports: [5672]
+
+#- type: cassandra
+#  ports: [9042]
+
+#- type: memcache
+#  ports: [11211]
+
+#- type: mysql
+#  ports: [3306]
+
+#- type: redis
+#  ports: [6379]
+
+#- type: pgsql
+#  ports: [5432]
+
+#- type: thrift
+#  ports: [9090]
+
+#--------------------------------  
+
+output:
+### Save to File
+
   file:
     path: "/tmp/packetbeat"
     filename: packetbeat
     rotate_every_kb: 10000
     number_of_files: 7
+
+logging:
+      files:
+           rotateeverybytes: 10485760
+
+
+#-----------------------------------------
     
-    
-    
+### forward to Elasticsearch 
+    elasticsearch:
+         hosts: ["127.0.0.1:9200"]
+
+
