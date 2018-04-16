@@ -38,6 +38,7 @@ else
       version=$1
 fi
 echo "Installing version: $version \r\n"
+sudo apt-get install -y libpcap0.8
 
 
 echo -e "Installing Packetbeat \r\n  https://www.elastic.co/guide/en/beats/packetbeat/current/packetbeat-getting-started.html  \r\n \r\n"
