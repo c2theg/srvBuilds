@@ -1,0 +1,24 @@
+interfaces: device: any
+
+dns:
+  ports: [53]
+ 
+  include_authorities: true
+  include_additionals: true
+ 
+http:
+  ports: [80, 8080, 8081, 5000, 8002]
+ 
+mysql:
+  ports: [3306]
+  
+
+### File as output
+  file:
+    path: "/tmp/packetbeat"
+    filename: packetbeat
+    rotate_every_kb: 10000
+    number_of_files: 7
+    
+    
+    
