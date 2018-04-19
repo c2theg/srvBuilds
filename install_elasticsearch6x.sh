@@ -86,13 +86,17 @@ sudo /etc/init.d/elasticsearch restart
 
 sudo update-rc.d elasticsearch defaults 95 10
 
-#----- Install Plugins ----
+#----- Install / Updates Plugins ----
 cd /usr/share/elasticsearch/
 
 #sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu
 # sudo bin/elasticsearch-plugin install file:///path/to/plugin.zip
 # sudo bin/elasticsearch-plugin install http://some.domain/path/to/plugin.zip
 
+#-- uninstall if already installed --
+sudo bin/elasticsearch-plugin remove ingest-user-agent
+sudo bin/elasticsearch-plugin remove ingest-geoip
+#-- install --
 sudo bin/elasticsearch-plugin install ingest-user-agent
 sudo bin/elasticsearch-plugin install ingest-geoip
 
