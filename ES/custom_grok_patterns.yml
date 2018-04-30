@@ -1,0 +1,46 @@
+# Custom Logstash Grok patterns - v0.0.4  - 4/30/18
+
+# Custom
+NASPORT [\w]{3}[0-9]+
+COMMAND (.*)
+PAMESSAGE .*,TRAFFIC,.*
+PADATETIME %{SYSLOGTIMESTAMP}|%{TIMESTAMP_ISO8601}
+
+# Network / Syslog / General
+FACILITY [A-Z0-9]+[^-]|[A-Z0-9]+[^-]-[A-Z0-9]+[^-]
+SEVERITY [0,1,2,3,4,5,6,7]
+IPPROTOCOL (tcp|udp|icmp)
+
+#-----------------------------------------------
+# F5 Custom
+HOSTNAMEUND \b(?:[_0-9A-Za-z][_0-9A-Za-z-]{0,62})(?:\.(?:[_0-9A-Za-z][_0-9A-Za-z-]{0,62}))*(\.?|\b)
+IPNA (?:%{IPV6}|%{IPV4}|N\/A)
+SCHEME (HTTPS?)
+F5SEQ ([0-9]*:[0-9])
+F5ID ([a-z0-9]*)
+
+# F5 Fields
+VHOST %{IPORHOST:url}:\s?%{POSINT:port}
+VIRTSERVER ((?:\/?[\w\.\-]+){2,4}(?:\s?\d*)?)
+F5DATE %{YEAR}/%{MONTHNUM}/%{MONTHDAY} %{TIME}
+SSL_CIPHER (?:[\w\-]*)
+SSL_VERSION (?:[\w\-\.]*)
+SSL_BITS (?:\d{2,4})
+SSL_DN (?:[\w]{1,2}=[\w\s]*,?)
+SSL_SERIAL (?:[\w]{1,2})
+
+# F5 Patterns
+F5_BASE %{VHOST:vhost} %{IP:clientip} %{WORD:httpmethod} '%{URIPATHPARAM:request}' HTTP/%{NUMBER:httpversion} %{QS:useragent} %{QS:referrer} %{F5DATE:requesttimestamp} %{NUMBER:requestsize} %{NUMBER:reqeustelapsedtime} %{IPORHOST:nodeip}:%{POSINT:nodeport} %{NUMBER:responsecode} %{F5DATE:responsetimestamp} %{NUMBER:responsesize} %{VIRTSERVER:virtualserver}
+F5_SSL %{SSL_CIPHER:sslcipher} %{SSL_VERSION:sslversion} %{SSL_BITS:sslbits}
+F5_SSL_CLIENT %{QS:ssldn} %{SSL_SERIAL:sslserial}
+#-----------------------------------------------
+
+# Cisco
+CISCOPROG (?:%[\w._/-]+)
+CISCOTIMESTAMP %{MONTH} +%{MONTHDAY}(?: %{YEAR})? %{TIME}(?: %{WORD})?
+CISCOBASE (?:%{NUMBER:counter})?: (?:%{SYSLOGHOST:logsource}: )?(:?\*)?%{CISCOTIMESTAMP:device_timestamp}: (?:%{CISCOPROG:program}:)?
+CISCOLINE %{CISCOBASE} %{GREEDYDATA:message}
+ASA %ASA-
+MNEMONIC [A-Z0-9]+[^:]
+CISCOFACSEVMNEM %%{FACILITY:facility}-%{SEVERITY:severity}-%{MNEMONIC:mnemonic}:
+
