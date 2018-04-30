@@ -29,7 +29,7 @@ This is meant for Ubuntu 16.04+  \r\n \r\n"
 
 #-- update self
 rm update_elk_plugins.sh
-wget -O "update_elk_plugins.sh" "https://raw.githubusercontent.com/c2theg/Vendor_code/master/F5/syslog-ng/update_elk_plugins.sh"
+wget -O "update_elk_plugins.sh" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_elk_plugins.sh"
 chmod u+x update_elk_plugins.sh
 
 #-- Update --
