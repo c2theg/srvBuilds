@@ -65,7 +65,8 @@ echo " Restarting Kibana... \r\n \r\n "
 sudo /etc/init.d/kibana restart
 wait
 
-sudo update-rc.d kibana defaults 95 10
+#sudo update-rc.d kibana defaults 95 10
+sudo update-rc.d kibana defaults 96 9
 
 echo "DONE! \r\n \r\n Point your browser to:  http://localhost:5601  to view it  \r\n \r\n "
 
