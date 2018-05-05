@@ -12,7 +12,11 @@ def cmd(command):
 	sudo(command)
 
 
-'''   How to use
+'''How to use
+
+	pip install fabric
+
+
 Enter the commands as follows:
 
 ubuntu@host:$  fab cmd:"echo pi:Secret! | chpasswd"
