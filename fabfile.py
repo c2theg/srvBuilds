@@ -13,6 +13,7 @@ def cmd(command):
 
 
 '''How to use
+	http://www.fabfile.org/
 
 	pip install fabric
 
