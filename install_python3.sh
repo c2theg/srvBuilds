@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.1                             \r\n
-Last Updated:  4/2/2018
+Version:  1.2                             \r\n
+Last Updated:  5/18/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -29,10 +29,63 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "Installing Python 3.+ latest.... "
-sudo apt-get install -y libicu-dev python-software-properties python python-pip python-dev python3-setuptools
+echo "Installing Python 3.6+ latest.... "
+
+
+#------------- Version Detection -------------
+if [ -f /etc/os-release ]; then
+    # freedesktop.org and systemd
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
+elif type lsb_release >/dev/null 2>&1; then
+    # linuxbase.org
+    OS=$(lsb_release -si)
+    VER=$(lsb_release -sr)
+elif [ -f /etc/lsb-release ]; then
+    # For some versions of Debian/Ubuntu without lsb_release command
+    . /etc/lsb-release
+    OS=$DISTRIB_ID
+    VER=$DISTRIB_RELEASE
+elif [ -f /etc/debian_version ]; then
+    # Older Debian/Ubuntu/etc.
+    OS=Debian
+    VER=$(cat /etc/debian_version)
+elif [ -f /etc/SuSe-release ]; then
+    # Older SuSE/etc.
+    ...
+elif [ -f /etc/redhat-release ]; then
+    # Older Red Hat, CentOS, etc.
+    ...
+else
+    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+    OS=$(uname -s)
+    VER=$(uname -r)
+fi
+echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
+#-----------------------------------------------
+if [ $VER = '14.04' ] || [ $VER = '16.04' ]; then
+    #-------- Ubuntu 14.04 ------------------------
+    sudo add-apt-repository ppa:deadsnakes/ppa
+    sudo apt-get update
+elif [ $VER = '16.10' ] || [ $VER = '17.04' ]; then
+    #-------- Ubuntu 16.04 ------------------------
+    sudo apt-get update
+    sudo apt-get install python3.6
+elif [ $VER = '17.10' ] || [ $VER = '18.04' ]; then
+    #-------- Ubuntu 16.04 ------------------------
+    echo "Python3 already installed"
+fi
+
+
+sudo -E apt-get install -y install python3.6
+sudo -E apt-get install -y install python-software-properties
+
 wait
-sudo apt install python3-pip
+#-------------
+sudo -E apt-get install -y install python3-pip python-dev python3-venv python3-setuptools
+#sudo -E apt-get install -y libicu-dev python-software-properties python python-pip
+
 wait
 sudo easy_install3 pip
 wait
