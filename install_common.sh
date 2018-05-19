@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  1.6.7                             \r\n
-Last Updated:  3/3/2018
+Version:  1.6.9                             \r\n
+Last Updated:  5/18/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
@@ -41,11 +41,13 @@ then
 	wait
 	echo "Downloading required dependencies...\r\n\r\n"
 	#--------------------------------------------------------------------------------------------
-	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop
+	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop sshguard build-essential libffi-dev
 	wait
-	sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload 
+	sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload 
 	# speedometer
 	wait
+	
+
 	#----------------------------------------------------------------------------------------------
 	if [ -s "update_core.sh" ] 
 	then
@@ -72,8 +74,13 @@ then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod u ntp.conf
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf && mv resolv_base.conf /etc/resolvconf/resolv.conf.d/base
+
+	#------ Python ------
+	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python2.sh && sudo chmod u+x install_python2.sh && ./install_python2.sh
+	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python3.sh && sudo chmod u+x install_python3.sh && ./install_python3.sh
+
 	#---- NTP Time related ---------
-	cp ntp.conf /etc/ntp.conf
+	mv ntp.conf /etc/ntp.conf
 	wait
 	#sudo systemctl reload ntp.service
 	sudo /etc/init.d/ntp restart
@@ -91,7 +98,9 @@ then
 	echo "10 3 * * * /home/ubuntu/update_core.sh >> /var/log/update_core.log 2>&1"
 	echo "40 4 * * * /home/ubuntu/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
 	echo "20 4 * * 7 /home/ubuntu/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
-
+	echo "@reboot /home/ubuntu/update_core.sh >> /var/log/update_core.log 2>&1"
+	
+	
 	echo "\r\n "
 	echo " /etc/init.d/cron restart "
 	echo " \r\n \r\n"
