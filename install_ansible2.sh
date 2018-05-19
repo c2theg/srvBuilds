@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.2                             \r\n
-Last Updated:  5/18/2018
+Version:  0.2.1                             \r\n
+Last Updated:  5/19/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -29,7 +29,7 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "Installing Ansible 2 "
+echo "Installing Ansible 2 (REPO) \r\n \r\n"
 
 #------------- Version Detection -------------
 if [ -f /etc/os-release ]; then
@@ -92,6 +92,16 @@ sudo -E apt-get update
 sudo -E apt-get install -y ansible
 #---- the rest ----
 wait
+echo "\r\n \r\n"
+
+which ansible
+echo "\r\n \r\n"
+ansible --version
+
+echo "\r\n \r\n"
+
+
+
 #-------------
 wait
 echo "\r\n Now you might want to run: ssh-keygen to generate your ssh key \r\n "
