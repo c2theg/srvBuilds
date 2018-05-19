@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1                             \r\n
+Version:  0.2                             \r\n
 Last Updated:  5/18/2018
 \r\n \r\n
 Updating system first..."
@@ -74,25 +74,26 @@ echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
 
 sudo -E apt-get install -y install python-jinja2 python-paramiko python-yaml sshpass
 
-
 #---- Latest from Git ----
-sudo -E apt-get install -y install git-core
-git clone https://github.com/ansible/ansible
-cd ansible/
-git submodule update --init --recursive
-
+#sudo -E apt-get install -y install git-core
+#git clone https://github.com/ansible/ansible
+#cd ansible/
+#git submodule update --init --recursive
 #-- then for updates ---
-  git pull
-  git submodule update --init --recursive
+#  git pull
+#  git submodule update --init --recursive
+#wait
+#source ./hacking/env-setup
 
+#---- Install using Repo -----
+sudo -E apt-get install -y software-properties-common
+sudo apt-add-repository -y ppa:ansible/ansible
+sudo -E apt-get update
+sudo -E apt-get install -y ansible
 #---- the rest ----
-wait
-
-source ./hacking/env-setup
-
 wait
 #-------------
 wait
-echo "\r\n \r\n "
+echo "\r\n Now you might want to run: ssh-keygen to generate your ssh key \r\n "
 echo "Done!"
 echo "\r\n \r\n "
