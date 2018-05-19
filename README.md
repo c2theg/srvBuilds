@@ -5,14 +5,21 @@ A set of shell scripts I use to deploy various ubuntu servers.
 <h2> wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && chmod u+x update_core.sh && ./update_core.sh </h2>
 
 
-Other Short URLs
----------- Installers ------------------
+Other Short URLs <br /><br />
+<b>---------- Installers ------------------</b>
+<br /><br />
+
+<b>Ansible Host </b><br />
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ansible-host.sh && chmod u+x install_ansible-host.sh && ./install_ansible-host.sh
+
+<br /><br />
 
 wget https://bit.ly/cgray-lemp && mv cgray-lemp install_lemp.sh && chmod u+x install_lemp.sh && ./install_lemp.sh
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_percona_5.7.sh && chmod u+x install_percona_5.7.sh && ./install_percona_5.7.sh
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_btsync.sh && chmod u+x install_btsync.sh && ./install_btsync.sh
+
 
 ------------------------------------------
 once downloaded do the following:
