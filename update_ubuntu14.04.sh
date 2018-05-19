@@ -6,7 +6,7 @@
 #
 clear
 now=$(date)
-echo "Running update_core.sh at $now 
+echo "Running update_ubuntu.sh at $now 
 
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
@@ -21,8 +21,8 @@ echo "Running update_core.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.2                             \r\n
-Last Updated:  12/12/2017
+Version:  1.6.3                             \r\n
+Last Updated:  5/19/2018
 \r\n \r\n"
 wait
 sudo -E apt-get update
@@ -34,7 +34,7 @@ sudo apt-get autoremove -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-sudo apt-get -y install unattended-upgrades
+sudo -E apt-get -y install unattended-upgrades
 wait
 apt-get dist-upgrade -y
 wait
