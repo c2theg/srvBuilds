@@ -31,7 +31,6 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Installing Python 3.6+ latest.... "
 
-
 #------------- Version Detection -------------
 if [ -f /etc/os-release ]; then
     # freedesktop.org and systemd
@@ -65,26 +64,21 @@ fi
 echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
 #-----------------------------------------------
 if [ $VER = '14.04' ] || [ $VER = '16.04' ]; then
-    #-------- Ubuntu 14.04 ------------------------
     sudo add-apt-repository ppa:deadsnakes/ppa
     sudo apt-get update
 elif [ $VER = '16.10' ] || [ $VER = '17.04' ]; then
-    #-------- Ubuntu 16.04 ------------------------
-    sudo apt-get update
     sudo apt-get install python3.6
 elif [ $VER = '17.10' ] || [ $VER = '18.04' ]; then
-    #-------- Ubuntu 16.04 ------------------------
     echo "Python3 already installed"
 fi
-
 
 sudo -E apt-get install -y install python3.6
 sudo -E apt-get install -y install python-software-properties
 
 wait
 #-------------
-sudo -E apt-get install -y install python3-pip python-dev python3-venv python3-setuptools
-#sudo -E apt-get install -y libicu-dev python-software-properties python python-pip
+sudo -E apt-get install -y install python3-pip python3-venv python3-setuptools
+#sudo -E apt-get install -y libicu-dev python-dev python-software-properties python python-pip
 
 wait
 sudo easy_install3 pip
