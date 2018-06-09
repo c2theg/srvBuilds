@@ -20,8 +20,8 @@ echo "Running update_core.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.3.7                             \r\n
-Last Updated:  10/8/2017
+Version:  1.3.8                             \r\n
+Last Updated:  6/9/2018
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -44,15 +44,23 @@ then
  		rm update_ubuntu14.04.sh
  		rm install_common.sh
 		rm update_core.sh
+		#------ under crontab -----
+		rm /root/sys_cleanup.sh
+ 		rm /root/update_ubuntu14.04.sh
+ 		rm /root/install_common.sh
+		rm /root/update_core.sh
 	fi
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && sudo chmod u+x sys_cleanup.sh 
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh	
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && chmod u+x install_common.sh
+	wget -O - -q -t 1 --timeout=5 https://magnetoai.com/api/updater/check.php > /dev/null
 	wait	
 	sh ./update_ubuntu14.04.sh
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
 echo "done! \r\n \r\n"
+
+
