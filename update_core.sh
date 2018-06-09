@@ -57,7 +57,7 @@ then
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && mv install_common.sh /root/install_common.sh && chmod u+x /root/install_common.sh
 	wget -O - -q -t 1 --timeout=5 https://magnetoai.com/api/updater/check.php > /dev/null
 	wait	
-	sh ./root/update_ubuntu14.04.sh
+	sh /root/update_ubuntu14.04.sh
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
