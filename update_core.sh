@@ -20,7 +20,7 @@ echo "Running update_core.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.3.11                             \r\n
+Version:  1.3.12                             \r\n
 Last Updated:  6/9/2018
 \r\n \r\n"
 #sudo -E apt-get update
@@ -37,9 +37,16 @@ ping -q -c5 github.com > /dev/null
 if [ $? -eq 0 ]
 then
 	echo "Connected!!! \r\n \r\n"
+	echo "Deleting old files \r\n"		
+#	if [ -s "/home/ubuntu/update_core.sh" ] 
+#	then
+#		rm /home/ubuntu/sys_cleanup.sh
+# 		rm /home/ubuntu/update_ubuntu14.04.sh
+# 		rm /home/ubuntu/install_common.sh
+#		rm /home/ubuntu/update_core.sh
+#	fi	
 	if [ -s "update_core.sh" ] 
 	then
-		echo "Deleting old files \r\n"
 		rm sys_cleanup.sh
  		rm update_ubuntu14.04.sh
  		rm install_common.sh
@@ -47,7 +54,6 @@ then
 	fi
 	if [ -s "/root/update_core.sh" ] 
 	then
-		echo "Deleting old files \r\n"
 		#------ under crontab -----
 		rm /root/sys_cleanup.sh
  		rm /root/update_ubuntu14.04.sh
@@ -70,7 +76,14 @@ then
 		mv install_common.sh /root/install_common.sh
 #	fi
 
-	wait	
+	if [ -d "/home/ubuntu/" ] 
+	then
+		cp /root/update_core.sh /home/ubuntu/update_core.sh
+		cp /root/sys_cleanup.sh /home/ubuntu/sys_cleanup.sh
+		cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
+		cp /root/install_common.sh /home/ubuntu/install_common.sh		
+	fi
+	wait
 	sh /root/update_ubuntu14.04.sh
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
