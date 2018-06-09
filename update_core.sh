@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #    If you update this from Windows, using Notepad ++, do the following:
 #       sudo apt-get -y install dos2unix
 #       dos2unix <FILE>
