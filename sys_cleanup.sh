@@ -91,6 +91,10 @@ rm /var/mail/www-data
 rm /var/mail/ubuntu
 rm /var/log/apache2/*
 rm /var/log/lighttpd/*
+#------
+rm /var/log/update_core.log
+rm /var/log/update_ubuntu.log
+
 #----------------------------------------------------------------
 /etc/init.d/sendmail restart
 
