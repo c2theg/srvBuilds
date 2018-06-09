@@ -20,7 +20,7 @@ echo "Running update_core.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.3.10                             \r\n
+Version:  1.3.11                             \r\n
 Last Updated:  6/9/2018
 \r\n \r\n"
 #sudo -E apt-get update
@@ -44,18 +44,32 @@ then
  		rm update_ubuntu14.04.sh
  		rm install_common.sh
 		rm update_core.sh
+	fi
+	if [ -s "/root/update_core.sh" ] 
+	then
+		echo "Deleting old files \r\n"
 		#------ under crontab -----
 		rm /root/sys_cleanup.sh
  		rm /root/update_ubuntu14.04.sh
  		rm /root/install_common.sh
 		rm /root/update_core.sh
 	fi
+
 	echo "Downloading latest versions... \r\n\r\n"	
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && mv sys_cleanup.sh /root/sys_cleanup.sh && sudo chmod u+x /root/sys_cleanup.sh 
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && mv update_ubuntu14.04.sh /root/update_ubuntu14.04.sh && chmod u+x /root/update_ubuntu14.04.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && mv update_core.sh /root/update_core.sh && chmod u+x /root/update_core.sh	
-	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && mv install_common.sh /root/install_common.sh && chmod u+x /root/install_common.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && sudo chmod u+x /root/sys_cleanup.sh 
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x /root/update_ubuntu14.04.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x /root/update_core.sh	
+	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && chmod u+x /root/install_common.sh
 	wget -O - -q -t 1 --timeout=3 https://magnetoai.com/api/updater/check.php?f=update_core > /dev/null
+
+#	if [ -s "update_core.sh" ]
+#	then
+		mv update_core.sh /root/update_core.sh
+		mv sys_cleanup.sh /root/sys_cleanup.sh
+		mv update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
+		mv install_common.sh /root/install_common.sh
+#	fi
+
 	wait	
 	sh /root/update_ubuntu14.04.sh
 else
