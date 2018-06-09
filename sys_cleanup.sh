@@ -75,6 +75,9 @@ rm /var/log/cron.log.*
 rm /var/log/messages.*
 rm /var/log/apport.log.*
 rm /var/log/aptitude.*
+rm /var/log/pihole.log.*
+rm /var/log/vmware-vmsvc.*
+rm /var/log/pihole-FTL.log.*
 rm /var/log/php5-fpm.log.*
 rm /var/log/clamav/clamav.log.*
 rm /var/log/clamav/freshclam.log.*
