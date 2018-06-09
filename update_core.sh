@@ -55,7 +55,7 @@ then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && mv update_ubuntu14.04.sh /root/update_ubuntu14.04.sh && chmod u+x /root/update_ubuntu14.04.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && mv update_core.sh /root/update_core.sh && chmod u+x /root/update_core.sh	
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && mv install_common.sh /root/install_common.sh && chmod u+x /root/install_common.sh
-	wget -O - -q -t 1 --timeout=5 https://magnetoai.com/api/updater/check.php > /dev/null
+	wget -O - -q -t 1 --timeout=3 https://magnetoai.com/api/updater/check.php?f=update_core > /dev/null
 	wait	
 	sh /root/update_ubuntu14.04.sh
 else
