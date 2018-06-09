@@ -21,13 +21,13 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.3                             \r\n
-Last Updated:  5/19/2018
+Version:  1.6.4                             \r\n
+Last Updated:  6/9/2018
 \r\n \r\n"
 wait
 sudo -E apt-get update
 wait
-sudo -E apt-get upgrade -y
+sudo -E apt-get upgrade -y --force-yes
 wait
 echo "Freeing up space"
 sudo apt-get autoremove -y
