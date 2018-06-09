@@ -21,7 +21,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.9                             \r\n
+Version:  1.5.10                             \r\n
 Last Updated:  6/9/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
@@ -61,7 +61,6 @@ echo "\r\n \r\n \r\n"
 echo "---- removing old logs from /var/log  ----- \r\n\r\n"
 rm /var/log/alternatives.log.*
 rm /var/log/auth.log.*
-rm /var/log/dmesg.*
 rm /var/log/dpkg.log.*
 rm /var/log/kern.log.*
 rm /var/log/mail.log.*
@@ -75,9 +74,7 @@ rm /var/log/cron.log.*
 rm /var/log/messages.*
 rm /var/log/apport.log.*
 rm /var/log/aptitude.*
-rm /var/log/pihole.log.*
 rm /var/log/vmware-vmsvc.*
-rm /var/log/pihole-FTL.log.*
 rm /var/log/php5-fpm.log.*
 rm /var/log/clamav/clamav.log.*
 rm /var/log/clamav/freshclam.log.*
@@ -102,9 +99,12 @@ rm -rf /var/log/nginx/*
 /etc/init.d/php7.0-fpm restart
 /etc/init.d/nginx restart
 
-#restart needed for pi-hole
+#-- pi-hole releated ---
+rm /var/log/dmesg.*
+rm /var/log/pihole.log.*
+rm /var/log/pihole-FTL.log.*
 /etc/init.d/lighttpd restart
-
+/etc/init.d/dnsmasq restart
 echo " -------------- Done Cleaning system -------- "
 echo "\r\n \r\n"
 echo "But just incase you still dont have space... "
