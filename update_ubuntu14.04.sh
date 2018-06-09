@@ -21,7 +21,7 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.4                             \r\n
+Version:  1.6.5                             \r\n
 Last Updated:  6/9/2018
 \r\n \r\n"
 wait
@@ -50,10 +50,10 @@ echo "Done "
 echo "\r\n \r\n "
 echo " To add to cron use the following: "
 echo " crontab -e \r\n"
-echo "10 3 * * * /home/ubuntu/update_core.sh >> /var/log/update_core.log 2>&1"
-echo "40 4 * * * /home/ubuntu/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
-echo "20 4 * * 7 /home/ubuntu/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
-echo "@reboot /home/ubuntu/update_core.sh >> /var/log/update_core.log 2>&1"
+echo "10 3 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
+echo "40 4 * * * /root/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
+echo "20 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
+echo "@reboot /root/update_core.sh >> /var/log/update_core.log 2>&1"
 
 echo "\r\n \r\n "
 echo " /etc/init.d/cron restart "
