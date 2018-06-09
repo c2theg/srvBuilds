@@ -68,9 +68,8 @@ then
 	  echo "Done setting up AutoUpdates! \r\n \r\n"
 	fi
 	echo "\r\n \r\n ---------------------------------------------- \r\n \r\n"
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && sudo chmod u+x sys_cleanup.sh 
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh
+	wget -O - -q -t 1 --timeout=3 https://magnetoai.com/api/updater/check.php?f=install_common > /dev/null
+	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod u ntp.conf
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf && mv resolv_base.conf /etc/resolvconf/resolv.conf.d/base
@@ -93,26 +92,13 @@ then
 	echo "\r\n \r\n"
 	echo "\r\n \r\n"
 
+	echo "\r\n \r\n "
 	echo " To add to cron use the following: "
 	echo " crontab -e \r\n"
-	echo "10 3 * * * /home/ubuntu/update_core.sh >> /var/log/update_core.log 2>&1"
-	echo "40 4 * * * /home/ubuntu/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
-	echo "20 4 * * 7 /home/ubuntu/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
-	echo "@reboot /home/ubuntu/update_core.sh >> /var/log/update_core.log 2>&1"
-	
-	
-	echo "\r\n "
-	echo " /etc/init.d/cron restart "
-	echo " \r\n \r\n"
-
-	#echo "(display graph from speedometer) \r\n
-	#speedometer -l -r eth0 -t eth0 -m $(( 1024 * 1024 * 3 / 2 ))  \r\n
-	#or \r\n
-	#speedometer -l -r p4p1 -t p4p1 -m $(( 1024 * 1024 * 3 / 2 )) \r\n
-	#or \r\n
-	#speedometer -l -r em3 -t em3 -m $(( 1024 * 1024 * 3 / 2 ))
-	# \r\n
-	#"
+	echo "10 3 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
+	echo "40 4 * * * /root/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
+	echo "20 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
+	echo "@reboot /root/update_core.sh >> /var/log/update_core.log 2>&1"
 	
 	echo " \r\n \r\n"
 else
