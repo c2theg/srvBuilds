@@ -20,7 +20,7 @@ echo "Running update_core.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.3.14                             \r\n
+Version:  1.3.15                             \r\n
 Last Updated:  6/9/2018
 \r\n \r\n"
 #sudo -E apt-get update
@@ -84,6 +84,11 @@ then
 		cp /root/sys_cleanup.sh /home/ubuntu/sys_cleanup.sh
 		cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
 		cp /root/install_common.sh /home/ubuntu/install_common.sh
+
+		chmod u+x /home/ubuntu/update_core.sh
+		chmod u+x /home/ubuntu/sys_cleanup.sh
+		chmod u+x /home/ubuntu/update_ubuntu14.04.sh
+		chmod u+x /home/ubuntu/install_common.sh
 	fi
 
 	wait
