@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.10                             \r\n
-Last Updated:  6/9/2018
+Version:  1.5.11                             \r\n
+Last Updated:  6/10/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -91,6 +91,7 @@ rm /var/mail/www-data
 rm /var/mail/ubuntu
 rm /var/log/apache2/*
 rm /var/log/lighttpd/*
+rm /var/log/kibana/*
 #------
 rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
