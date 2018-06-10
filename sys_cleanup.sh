@@ -21,7 +21,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.11                             \r\n
+Version:  1.5.12                             \r\n
 Last Updated:  6/10/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
@@ -92,6 +92,9 @@ rm /var/mail/ubuntu
 rm /var/log/apache2/*
 rm /var/log/lighttpd/*
 rm /var/log/kibana/*
+rm /var/log/mysql/*
+rm /var/log/pm-powersave.log*
+rm /var/log/cups/*
 #------
 rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
