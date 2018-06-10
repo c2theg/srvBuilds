@@ -20,7 +20,7 @@ echo "Running update_core.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.3.16                             \r\n
+Version:  1.3.16.1                             \r\n
 Last Updated:  6/10/2018
 \r\n \r\n"
 #sudo -E apt-get update
@@ -45,14 +45,14 @@ then
 # 		rm /home/ubuntu/install_common.sh
 #		rm /home/ubuntu/update_core.sh
 #	fi	
-	if [ -s "update_core.sh" ] 
+	if [ -s "update_core.sh" ]
 	then
 		rm sys_cleanup.sh
  		rm update_ubuntu14.04.sh
  		rm install_common.sh
 		rm update_core.sh
 	fi
-	if [ -s "/root/update_core.sh" ] 
+	if [ -s "/root/update_core.sh" ]
 	then
 		#------ under crontab -----
 		rm /root/sys_cleanup.sh
@@ -68,23 +68,25 @@ then
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 	wget -O - -q -t 1 --timeout=3 https://magnetoai.com/api/updater/check.php?f=update_core > /dev/null
 	#-----------------------------------------------
-	chmod u+x update_core.sh
-	chmod u+x sys_cleanup.sh
-	chmod u+x update_ubuntu14.04.sh
-	chmod u+x install_common.sh
-
+	wait
 	mv update_core.sh /root/update_core.sh
 	mv sys_cleanup.sh /root/sys_cleanup.sh
 	mv update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
 	mv install_common.sh /root/install_common.sh
 
-	if [ -d "/home/ubuntu/" ] 
+	chmod u+x /root/update_core.sh
+	chmod u+x /root/sys_cleanup.sh
+	chmod u+x /root/update_ubuntu14.04.sh
+	chmod u+x /root/install_common.sh
+	
+	wait
+	if [ -d "/home/ubuntu/" ]
 	then
 		cp /root/update_core.sh /home/ubuntu/update_core.sh
 		cp /root/sys_cleanup.sh /home/ubuntu/sys_cleanup.sh
 		cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
 		cp /root/install_common.sh /home/ubuntu/install_common.sh
-
+		wait
 		chmod u+x /home/ubuntu/update_core.sh
 		chmod u+x /home/ubuntu/sys_cleanup.sh
 		chmod u+x /home/ubuntu/update_ubuntu14.04.sh
@@ -92,13 +94,14 @@ then
 	fi
 
 	#--- for old script compatibility
-	if [ -d "/home/cgray/" ] 
+	if [ -d "/home/cgray/" ]
 	then
+		wait
 		cp /root/update_core.sh /home/cgray/update_core.sh
 		cp /root/sys_cleanup.sh /home/cgray/sys_cleanup.sh
 		cp /root/update_ubuntu14.04.sh /home/cgray/update_ubuntu14.04.sh
 		cp /root/install_common.sh /home/cgray/install_common.sh
-
+		wait
 		chmod u+x /home/cgray/update_core.sh
 		chmod u+x /home/cgray/sys_cleanup.sh
 		chmod u+x /home/cgray/update_ubuntu14.04.sh
