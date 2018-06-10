@@ -37,8 +37,8 @@ ping -q -c5 github.com > /dev/null
 if [ $? -eq 0 ]
 then
 	echo "Connected!!! \r\n \r\n"
-	echo "Deleting old files \r\n"		
-#	if [ -s "/home/ubuntu/update_core.sh" ] 
+	echo "Deleting old files \r\n"
+#	if [ -s "/home/ubuntu/update_core.sh" ]
 #	then
 #		rm /home/ubuntu/sys_cleanup.sh
 # 		rm /home/ubuntu/update_ubuntu14.04.sh
@@ -62,9 +62,9 @@ then
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && sudo chmod u+x /root/sys_cleanup.sh 
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && sudo chmod u+x /root/sys_cleanup.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x /root/update_ubuntu14.04.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x /root/update_core.sh	
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x /root/update_core.sh
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && chmod u+x /root/install_common.sh
 	wget -O - -q -t 1 --timeout=3 https://magnetoai.com/api/updater/check.php?f=update_core > /dev/null
 
@@ -81,14 +81,14 @@ then
 		cp /root/update_core.sh /home/ubuntu/update_core.sh
 		cp /root/sys_cleanup.sh /home/ubuntu/sys_cleanup.sh
 		cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
-		cp /root/install_common.sh /home/ubuntu/install_common.sh		
+		cp /root/install_common.sh /home/ubuntu/install_common.sh
 	fi
-	
+
 	chmod u+x /root/update_core.sh
 	chmod u+x /root/sys_cleanup.sh
 	chmod u+x /root/update_ubuntu14.04.sh
 	chmod u+x /root/install_common.sh
-	
+
 	wait
 	sh /root/update_ubuntu14.04.sh
 else
