@@ -5,8 +5,14 @@
 #       chmod u+x <FILE>
 #
 clear
+# Absolute path to this script, e.g. /home/user/bin/foo.sh
+SCRIPT=$(readlink -f "$0")
+# Absolute path this script is in, thus /home/user/bin
+SCRIPTPATH=$(dirname "$SCRIPT")
+
 now=$(date)
-echo "Running update_core.sh at $now 
+echo "Running update_core.sh at $now \r\n
+Current working dir: $SCRIPTPATH \r\n \r\n
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
@@ -20,7 +26,7 @@ echo "Running update_core.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.3.17                             \r\n
+Version:  1.3.17.1                             \r\n
 Last Updated:  6/10/2018
 \r\n \r\n"
 #sudo -E apt-get update
