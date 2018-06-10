@@ -20,7 +20,7 @@ echo "Running update_core.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.3.13                             \r\n
+Version:  1.3.14                             \r\n
 Last Updated:  6/9/2018
 \r\n \r\n"
 #sudo -E apt-get update
@@ -62,19 +62,21 @@ then
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && sudo chmod u+x /root/sys_cleanup.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x /root/update_ubuntu14.04.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x /root/update_core.sh
-	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && chmod u+x /root/install_common.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
+	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 	wget -O - -q -t 1 --timeout=3 https://magnetoai.com/api/updater/check.php?f=update_core > /dev/null
+	#-----------------------------------------------
+	chmod u+x update_core.sh
+	chmod u+x sys_cleanup.sh
+	chmod u+x update_ubuntu14.04.sh
+	chmod u+x install_common.sh
 
-#	if [ -s "update_core.sh" ]
-#	then
-		mv update_core.sh /root/update_core.sh
-		mv sys_cleanup.sh /root/sys_cleanup.sh
-		mv update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
-		mv install_common.sh /root/install_common.sh
-#	fi
+	mv update_core.sh /root/update_core.sh
+	mv sys_cleanup.sh /root/sys_cleanup.sh
+	mv update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
+	mv install_common.sh /root/install_common.sh
 
 	if [ -d "/home/ubuntu/" ] 
 	then
@@ -84,16 +86,9 @@ then
 		cp /root/install_common.sh /home/ubuntu/install_common.sh
 	fi
 
-	chmod u+x /root/update_core.sh
-	chmod u+x /root/sys_cleanup.sh
-	chmod u+x /root/update_ubuntu14.04.sh
-	chmod u+x /root/install_common.sh
-
 	wait
 	sh /root/update_ubuntu14.04.sh
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
 echo "done! \r\n \r\n"
-
-
