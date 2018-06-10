@@ -20,8 +20,8 @@ echo "Running update_core.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.3.15                             \r\n
-Last Updated:  6/9/2018
+Version:  1.3.16                             \r\n
+Last Updated:  6/10/2018
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -91,6 +91,19 @@ then
 		chmod u+x /home/ubuntu/install_common.sh
 	fi
 
+	#--- for old script compatibility
+	if [ -d "/home/cgray/" ] 
+	then
+		cp /root/update_core.sh /home/cgray/update_core.sh
+		cp /root/sys_cleanup.sh /home/cgray/sys_cleanup.sh
+		cp /root/update_ubuntu14.04.sh /home/cgray/update_ubuntu14.04.sh
+		cp /root/install_common.sh /home/cgray/install_common.sh
+
+		chmod u+x /home/cgray/update_core.sh
+		chmod u+x /home/cgray/sys_cleanup.sh
+		chmod u+x /home/cgray/update_ubuntu14.04.sh
+		chmod u+x /home/cgray/install_common.sh
+	fi
 	wait
 	sh /root/update_ubuntu14.04.sh
 else
