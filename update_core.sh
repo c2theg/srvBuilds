@@ -20,7 +20,7 @@ echo "Running update_core.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.3.16.1                             \r\n
+Version:  1.3.17                             \r\n
 Last Updated:  6/10/2018
 \r\n \r\n"
 #sudo -E apt-get update
@@ -33,7 +33,7 @@ wait
 #echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Checking Internet status...\r\n\r\n"
-ping -q -c5 github.com > /dev/null
+ping -q -c3 github.com > /dev/null
 if [ $? -eq 0 ]
 then
 	echo "Connected!!! \r\n \r\n"
@@ -106,6 +106,11 @@ then
 		chmod u+x /home/cgray/sys_cleanup.sh
 		chmod u+x /home/cgray/update_ubuntu14.04.sh
 		chmod u+x /home/cgray/install_common.sh
+		
+		chown cgray:cgray /home/cgray/update_core.sh
+		chown cgray:cgray /home/cgray/sys_cleanup.sh
+		chown cgray:cgray /home/cgray/update_ubuntu14.04.sh
+		chown cgray:cgray /home/cgray/install_common.sh		
 	fi
 	wait
 	sh /root/update_ubuntu14.04.sh
