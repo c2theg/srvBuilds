@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2                             \r\n
-Last Updated:  5/18/2018
+Version:  1.3                             \r\n
+Last Updated:  6/17/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -83,17 +83,17 @@ sudo -E apt-get install -y install python3-pip python3-venv python3-setuptools
 wait
 sudo easy_install3 pip
 wait
-sudo -H pip3 install --upgrade pip 
 sudo -H pip install --upgrade pip
 wait
 pip install virtualenv
 pip install python3-virtualenv
 #--------------------------------------------
+sudo -E apt-get install -y python3-pip
 sudo pip3 install --upgrade requests
 #--------------------------------------------
-sudo -H apt install python-pip
-wait
-sudo pip install --upgrade pip
+#sudo -H apt install python-pip
+#wait
+#sudo pip install --upgrade pip
 #----- Install Flask ------------
 pip install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
 wait
@@ -101,5 +101,6 @@ pip install requests
 wait
 echo "\r\n \r\n "
 echo "Done installing Python3 "
-pip -V; pip3 -V
+pip -V; 
+pip3 -V;
 echo "\r\n \r\n "
