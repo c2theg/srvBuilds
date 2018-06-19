@@ -29,7 +29,7 @@ wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 
-sudo apt-get install -y build-essential python-dev python-openssl git
+sudo apt-get install -y build-essential python-dev python-openssl git git-core
 
 #--------------- Temperature & Humidity Sensor DHT22 ----------------------------------------
 # Source: https://tutorials-raspberrypi.com/raspberry-pi-measure-humidity-temperature-dht11-dht22/
