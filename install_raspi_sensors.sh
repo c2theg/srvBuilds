@@ -28,7 +28,7 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-sudo apt-get update
+
 sudo apt-get install -y build-essential python-dev python-openssl git
 
 #--------------- Temperature & Humidity Sensor DHT22 ----------------------------------------
