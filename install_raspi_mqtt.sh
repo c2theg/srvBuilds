@@ -37,9 +37,9 @@ sudo apt-get install -y mosquitto mosquitto-clients
 wait
 wait
 
-mosquitto_sub -h localhost -v -t test_channel
+mosquitto_sub -h 192.168.1.10 -v -t test_channel
 
-mosquitto_pub -h localhost -t test_channel -m "Hello Raspberry Pi"
+mosquitto_pub -h 192.168.1.10 -t test_channel -m "Hello MQTT -> from Raspberry Pi"
 
 #--------------------------------------------------------------------------------------------
 echo " Done! \r\n\r\n"
