@@ -1,9 +1,10 @@
-import paho.mqtt.client as mqtt
-#
-# Original code: https://tutorials-raspberrypi.com/raspberry-pi-mqtt-broker-client-wireless-communication/
-#
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# Original code from: https://tutorials-raspberrypi.com/raspberry-pi-mqtt-broker-client-wireless-communication/
+# Christopher Gray - v0.0.1 - 6/19/2018
 
-MQTT_SERVER = "localhost"
+import paho.mqtt.client as mqtt
+MQTT_SERVER = "192.168.1.10"
 MQTT_PATH = "test_channel"
  
 # The callback for when the client receives a CONNACK response from the server.
@@ -30,3 +31,4 @@ client.connect(MQTT_SERVER, 1883, 60)
 # Other loop*() functions are available that give a threaded interface and a
 # manual interface.
 client.loop_forever()
+print ("Done")
