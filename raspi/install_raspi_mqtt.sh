@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.2                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  6/18/2018
 \r\n \r\n
 Updating system first..."
@@ -41,14 +41,13 @@ sudo pip install paho-mqtt
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/mqtt_sender.py
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/mqtt_subscriber.py
 wait
-wait
 
-mosquitto_sub -h 192.168.1.10 -v -t test_channel
-wait
+echo "Done installing. Sending first message... \r\n "
+#mosquitto_sub -h 192.168.1.10 -v -t test_channel
 mosquitto_pub -h 192.168.1.10 -t test_channel -m "Hello MQTT -> from Raspberry Pi"
 
 #--------------------------------------------------------------------------------------------
 #sudo python mqtt_subscriber.py
-sudo python mqtt_sender.py
+#sudo python mqtt_sender.py
 
 echo " Done! \r\n\r\n"
