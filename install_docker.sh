@@ -119,10 +119,10 @@ echo " PORTAINER! - https://github.com/portainer/portainer \r\n "
 echo "Running command: sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer"
 echo "\r\n \r\n"
 sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
-echo "Visit http://127.0.0.1:9000/ in chrome / firefox \r\n \r\n"
+
+echo "\r\n Local IP's: \r\n "
+hostname -I
+echo "Visit http://<Local IP>:9000 in Chrome or Firefox \r\n \r\n"
 
 docker --version
-
 echo "\r\n \r\n Docker deployment complete!!! \r\n \r\n"
-
-
