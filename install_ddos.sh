@@ -56,19 +56,3 @@ sudo perl fastnetmon_install.pl
 # hping3 -c 20000 -d 120 -S -w 64 -p 443 --flood --rand-source 10.1.1.1
 # hping3 --icmp --spoof 10.1.1.1 BROADCAST_IP
 
-### ---- DNS Tests --------------
-
-sudo apt-get install -y bind9utils libbind-dev libkrb5-dev libssl-dev libcap-dev libxml2-dev
-#curl ftp://ftp.nominum.com/pub/nominum/dnsperf/2.0.0.0/dnsperf-src-2.0.0.0-1.tar.gz -O
-curl ftp://ftp.nominum.com/pub/nominum/dnsperf/2.1.0.0/dnsperf-src-2.1.0.0-1.tar.gz -O
-
-tar xfvz dnsperf-src-2.1.0.0-1.tar.gz
-cd dnsperf-src-2.1.0.0-1
-./configure
-make
-sudo make install
-
-
-
-### -----
- 
