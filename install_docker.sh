@@ -112,18 +112,75 @@ echo "Running sample container"
 sudo docker run hello-world
 wait
 echo "\r\n \r\n -------------------------------------------------------------- \r\n \r\n"
+if [ ! -f ca-key.pem ]; then
+    HOST = hostname -I
+    
+    echo "Generating PKI key... \r\n \r\n"
+    # Source: https://docs.docker.com/engine/security/https/
 
+    openssl genrsa -aes256 -out ca-key.pem 4096
+    echo "Generating x509 certificate... \r\n \r\n "
+    openssl req -new -x509 -days 365 -key ca-key.pem -sha256 -out ca.pem
+    openssl genrsa -out server-key.pem 4096
+    openssl genrsa -out key.pem 4096
+
+    openssl req -subj "/CN=$HOST" -sha256 -new -key server-key.pem -out server.csr
+    echo "\r\n \r\n -------------------------------------------------------------- \r\n \r\n"
+    echo "Updating docker security to allow for remote connections for: $HOST \r\n"
+    echo subjectAltName = DNS:$HOST,IP:10.10.10.20,IP:127.0.0.1 >> extfile.cnf
+    echo extendedKeyUsage = serverAuth >> extfile.cnf
+
+    openssl x509 -req -days 3650 -sha256 -in server.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -extfile extfile.cnf
+
+    echo "\r\n \r\n ---- client info ---- \r\n \r\n"
+    openssl req -subj '/CN=client' -new -key key.pem -out client.csr
+
+    echo extendedKeyUsage = clientAuth >> extfile.cnf
+
+    openssl x509 -req -days 3650 -sha256 -in client.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out cert.pem -extfile extfile.cnf
+
+    rm -v client.csr server.csr
+    chmod -v 0400 ca-key.pem key.pem server-key.pem
+    chmod -v 0444 ca.pem server-cert.pem cert.pem
+fi
+
+echo "\r\n \r\n -------------------------------------------------------------- \r\n \r\n"
 echo "Downloading a better way to manage containers... \r\n.."
 echo " PORTAINER! - https://github.com/portainer/portainer \r\n "
 
 echo "Running command: sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer"
 echo "\r\n \r\n"
-sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
+sudo docker run -d -p 9000:9000 -v "/var/run/docker.sock:/var/run/docker.sock" portainer/portainer
 
 echo "\r\n Local IP's: "
 hostname -I
 echo "\r\n \r\n"
-echo "Visit http://<Local IP>:9000 in Chrome or Firefox \r\n \r\n"
+echo "Visit http://$HOST:9000 in Chrome or Firefox \r\n \r\n"
 
 docker --version
+docker ps
+
+echo "Allowing remote access to Docker API... \r\n"
+# Source: https://success.docker.com/article/how-do-i-enable-the-remote-api-for-dockerd
+
+mkdir /etc/systemd/system/docker.service.d/
+touch /etc/systemd/system/docker.service.d/startup_options.conf
+echo [Service] >> /etc/systemd/system/docker.service.d/startup_options.conf
+echo ExecStart= >> /etc/systemd/system/docker.service.d/startup_options.conf
+echo ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2376 >> /etc/systemd/system/docker.service.d/startup_options.conf
+
+sudo systemctl daemon-reload
+sudo systemctl restart docker.service
+wait
+wait
+#----------------------------
+echo "\r\n \r\n "
+ps aux | grep -i docker
+echo "\r\n \r\n "
+ss -ntl
+
+#dockerd --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem -H=0.0.0.0:2376
+#docker --tlsverify --tlscacert=ca.pem --tlscert=cert.pem --tlskey=key.pem -H=$HOST:2376 version
+  
+echo "View Docker commands here: https://docs.docker.com/engine/reference/commandline/container_ls/  \r\n \r\n"
 echo "\r\n \r\n Docker deployment complete!!! \r\n \r\n"
