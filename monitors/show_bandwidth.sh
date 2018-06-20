@@ -22,7 +22,6 @@ do
         R2=`cat /sys/class/net/$1/statistics/rx_packets`
         T2=`cat /sys/class/net/$1/statistics/tx_packets`
         #-------------------------------------------------
-
         TBPS=`expr $T2 - $T1`
         RBPS=`expr $R2 - $R1`
         TKBPS=`expr $TBPS / 1024`
@@ -30,6 +29,6 @@ do
         #-------------------------
         TXPPS=`expr $T2 - $T1`
         RXPPS=`expr $R2 - $R1`
-
-        echo "$1, TX $TKBPS kB/s / $TXPPS pkts/s  -  RX $RKBPS kB/s / $RXPPS pkts/s"
+      
+        echo "TX $TKBPS kB/s / $TXPPS pkts/s  -  RX $RKBPS kB/s / $RXPPS pkts/s"
 done
