@@ -83,20 +83,20 @@ else
         sudo -E apt-get update
         sudo apt-get install -y docker-ce
      elif [ $VER = '18.04' ]; then
-        sudo apt install docker.io
+        sudo apt install -y docker.io
      fi
      #----------------------------------------
-        wait
-        echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) "
-        sudo add-apt-repository -y ppa:cockpit-project/cockpit
-        wait
-        sudo apt-get install -y cockpit
-        wait
-        #--- start Cockpit ---
-        sudo systemctl start cockpit 
-        sudo systemctl enable cockpit
-        echo "\r\n \r\n" 
-        echo "----------------------------  \r\n \r\n"
+     wait
+     echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) "
+     sudo add-apt-repository -y ppa:cockpit-project/cockpit
+     wait
+     sudo apt-get install -y cockpit
+     wait
+     #--- start Cockpit ---
+     sudo systemctl start cockpit 
+     sudo systemctl enable cockpit
+     echo "\r\n \r\n" 
+     echo "----------------------------  \r\n \r\n"
 fi
 
 sudo systemctl start docker
