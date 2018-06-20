@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.7                             \r\n
+Version:  1.4.8                             \r\n
 Last Updated:  6/20/2018
 \r\n \r\n
 Updating system first..."
@@ -29,6 +29,7 @@ sudo -E apt-get upgrade -y
 #wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
+HOST = hostname -I
 
 #------------- Version Detection -------------
 if [ -f /etc/os-release ]; then
@@ -88,16 +89,17 @@ else
      fi
      #----------------------------------------
      wait
-     echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) "
+     echo "\r\n\r\n \r\n Adding Cockpit (Only for Ubuntu 16.04+) https://cockpit-project.org/  \r\n \r\n"
      sudo add-apt-repository -y ppa:cockpit-project/cockpit
      wait
-     sudo apt-get install -y cockpit
+     sudo -E apt-get install -y cockpit
      wait
      #--- start Cockpit ---
      sudo systemctl start cockpit 
      sudo systemctl enable cockpit
-     echo "\r\n \r\n" 
+     echo "\r\n \r\n"
      echo "----------------------------  \r\n \r\n"
+     echo "Visit: https://$HOST:9090  to access Cockpit! \r\n \r\n"
 fi
 
 sudo systemctl start docker
@@ -112,9 +114,7 @@ echo "Running sample container"
 sudo docker run hello-world
 wait
 echo "\r\n \r\n -------------------------------------------------------------- \r\n \r\n"
-if [ ! -f ca-key.pem ]; then
-    HOST = hostname -I
-    
+if [ ! -f ca-key.pem ]; then    
     echo "Generating PKI key... \r\n \r\n"
     # Source: https://docs.docker.com/engine/security/https/
 
