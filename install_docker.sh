@@ -81,9 +81,10 @@ else
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
         wait
         sudo -E apt-get update
-        sudo apt-get install -y docker-ce
+        sudo -E apt-get install -y docker-ce
      elif [ $VER = '18.04' ]; then
-        sudo apt install -y docker.io
+        sudo -E apt-get install -y ifupdown aufs-tools debootstrap docker-doc
+        sudo -E apt install -y docker.io
      fi
      #----------------------------------------
      wait
