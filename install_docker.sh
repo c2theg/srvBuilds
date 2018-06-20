@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.5                             \r\n
+Version:  1.4.6                             \r\n
 Last Updated:  6/20/2018
 \r\n \r\n
 Updating system first..."
@@ -73,28 +73,35 @@ if [ $VER = '14.04' ]; then
     sudo -E apt-get -y install docker.io
     wait
     apt-cache madison docker-ce
-elif [ $VER = '16.04' ] || [ $VER = '18.04' ]; then
-    #-------- Ubuntu 16.04 ------------------------
-    sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    wait
-    sudo -E apt-get update
-    sudo apt-get install -y docker-ce
-    #----------------------------------------
-    wait
-    echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) "
-    sudo add-apt-repository -y ppa:cockpit-project/cockpit
-    wait
-    sudo apt-get install -y cockpit
-    wait
-    #--- start Cockpit ---
-    sudo systemctl start cockpit 
-    sudo systemctl enable cockpit
-    echo "\r\n \r\n" 
-    echo "----------------------------  \r\n \r\n"
+else
+    if [ $VER = '16.04' ]; then
+        #-------- Ubuntu 16.04 ------------------------
+        sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        wait
+        sudo -E apt-get update
+        sudo apt-get install -y docker-ce
+     elif [ $VER = '18.04' ]; then
+        sudo apt install docker.io
+     fi
+     #----------------------------------------
+        wait
+        echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) "
+        sudo add-apt-repository -y ppa:cockpit-project/cockpit
+        wait
+        sudo apt-get install -y cockpit
+        wait
+        #--- start Cockpit ---
+        sudo systemctl start cockpit 
+        sudo systemctl enable cockpit
+        echo "\r\n \r\n" 
+        echo "----------------------------  \r\n \r\n"
 fi
 
+sudo systemctl start docker
+sudo systemctl enable docker
+        
 wait
 echo "Done!"
 echo "\r\n \r\n"
@@ -111,5 +118,10 @@ echo " PORTAINER! - https://github.com/portainer/portainer \r\n "
 echo "Running command: sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer"
 echo "\r\n \r\n"
 sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
-echo "Visit http://127.0.0.1:9000/ in chrome / firefox"
+echo "Visit http://127.0.0.1:9000/ in chrome / firefox \r\n \r\n"
+
+docker --version
+
 echo "\r\n \r\n Docker deployment complete!!! \r\n \r\n"
+
+
