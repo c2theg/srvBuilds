@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.4                             \r\n
-Last Updated:  4/2/2018
+Version:  1.4.5                             \r\n
+Last Updated:  6/20/2018
 \r\n \r\n
 Updating system first..."
 #sudo -E apt-get update
@@ -82,7 +82,10 @@ elif [ $VER = '16.04' ] || [ $VER = '18.04' ]; then
     sudo apt-get update
     sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" 
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    wait
+    apt-get update
+    apt-get install -y docker-ce
     #----------------------------------------
     wait
     echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) "
