@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.6                             \r\n
+Version:  1.4.7                             \r\n
 Last Updated:  6/20/2018
 \r\n \r\n
 Updating system first..."
@@ -120,8 +120,9 @@ echo "Running command: sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/
 echo "\r\n \r\n"
 sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
 
-echo "\r\n Local IP's: \r\n "
+echo "\r\n Local IP's: "
 hostname -I
+echo "\r\n \r\n"
 echo "Visit http://<Local IP>:9000 in Chrome or Firefox \r\n \r\n"
 
 docker --version
