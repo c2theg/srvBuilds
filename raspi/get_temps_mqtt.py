@@ -26,14 +26,14 @@ var_Human_Output = "Temperature: " + Fahrenheit + "°F / " + Celsius + "°C, Hum
 print str(var_Human_Output)
 
 if str(LogToFileName) != '':
-	print("\r\n updated log \r\n")
-  var_File_Output = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "," + Fahrenheit + "," + Humidity + "," + LocationInfo + "," + HostName + "," + IPAddress
-	file = open(LogToFileName,"a")
-	file.write("\r\n" + var_File_Output) 
-	file.close()
+    print("\r\n updated log \r\n")
+    var_File_Output = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "," + Fahrenheit + "," + Humidity + "," + LocationInfo + "," + HostName + "," + IPAddress
+    file = open(LogToFileName,"a")
+    file.write("\r\n" + var_File_Output) 
+    file.close()
 
 if str(MQTT_SERVER) != '':
-  #var_M2M_Output_MySQL = Fahrenheit + "," + Humidity + "," + datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-  var_M2M_Output_EPOCH = Fahrenheit + "," + Humidity + "," + str(int(time.time())) + "," + LocationInfo + "," + HostName + "," + IPAddress
-  print str("Sending to MQTT server (" + MQTT_SERVER + "): " + var_M2M_Output_EPOCH)
-  publish.single(MQTT_PATH, var_M2M_Output_EPOCH, hostname=MQTT_SERVER)
+    #var_M2M_Output_MySQL = Fahrenheit + "," + Humidity + "," + datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    var_M2M_Output_EPOCH = Fahrenheit + "," + Humidity + "," + str(int(time.time())) + "," + LocationInfo + "," + HostName + "," + IPAddress
+    print str("Sending to MQTT server (" + MQTT_SERVER + "): " + var_M2M_Output_EPOCH)
+    publish.single(MQTT_PATH, var_M2M_Output_EPOCH, hostname=MQTT_SERVER)
