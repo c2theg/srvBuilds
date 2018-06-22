@@ -66,7 +66,7 @@ then
     wait
     /etc/init.d/cron restart  > /dev/null
 else
-    #echo "Script was found in crontab. skipping addition"
+    echo "Script was found in crontab. skipping addition"
 fi
 
 echo "Done "
