@@ -21,8 +21,8 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.5                             \r\n
-Last Updated:  6/9/2018
+Version:  1.6.6                             \r\n
+Last Updated:  6/22/2018
 \r\n \r\n"
 wait
 sudo -E apt-get update
@@ -45,16 +45,29 @@ sudo apt-get autoclean
 wait
 sudo apt-get autoremove -y
 wait
+
+Cron_output=$(crontab -l | grep "update_core.log")
+#echo "The output is: [ $Cron_output ]"
+if [ -z "$Cron_output" ]
+then
+    echo "Script not in crontab. Adding."
+    line="10 3 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+
+    line="40 4 * * * /root/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+    
+    line="20 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+    
+    line="@reboot /root/update_core.sh >> /var/log/update_core.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+    
+    wait
+    /etc/init.d/cron restart  > /dev/null
+else
+    #echo "Script was found in crontab. skipping addition"
+fi
+
 echo "Done "
-
 echo "\r\n \r\n "
-echo " To add to cron use the following: "
-echo " crontab -e \r\n"
-echo "10 3 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
-echo "40 4 * * * /root/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
-echo "20 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
-echo "@reboot /root/update_core.sh >> /var/log/update_core.log 2>&1"
-
-echo "\r\n \r\n "
-echo " /etc/init.d/cron restart "
-echo " \r\n \r\n"
