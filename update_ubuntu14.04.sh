@@ -29,6 +29,8 @@ sudo -E apt-get update
 wait
 sudo -E apt-get upgrade -y --force-yes
 wait
+sudo -E apt-get install -f -y
+wait
 echo "Freeing up space"
 sudo apt-get autoremove -y
 wait
