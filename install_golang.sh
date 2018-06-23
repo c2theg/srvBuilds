@@ -68,4 +68,7 @@ wait
 echo -e "\r\n \r\n "
 go version
 
+echo -e "\r\n \r\n "
+go env
+
 echo " \r\n \r\n Done! \r\n \r\n"
