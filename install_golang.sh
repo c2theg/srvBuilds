@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2.2                             \r\n
-Last Updated:  6/22/2018
+Version:  1.2.3                             \r\n
+Last Updated:  6/23/2018
 \r\n \r\n
 Updating system first..."
 #sudo -E apt-get update
@@ -47,26 +47,25 @@ https://github.com/golang/go/wiki/Ubuntu
 \r\n \r\n
 "
 #--------------------------------------------------------------------------------------------
-# Step 1 — Install Go Language
+# Install Go Language
 
-#sudo add-apt-repository -y ppa:gophers/archive
 sudo add-apt-repository -y ppa:longsleep/golang-backports
 wait
 
-sudo apt update
+#sudo apt update
+sudo apt-get update
 wait
 
-#sudo apt-get install -y golang-go
-#wait 
+sudo apt-get install golang-go
+#sudo apt-get install -y golang-1.10-go
+#sudo apt install golang-1.10
+wait
 
-sudo apt-get install -y golang-1.10-go
+echo ‘PATH=”/usr/lib/go-1.10/bin:$PATH”‘ >> ~/.profile
+source ~/.profile
 wait
 
 echo -e "\r\n \r\n "
 go version
 
-echo -e "Download site: https://golang.org/dl/  \r\n \r\n "
-
-# go1.10.3.linux-amd64.tar
-
-
+echo " \r\n \r\n Done! \r\n \r\n"
