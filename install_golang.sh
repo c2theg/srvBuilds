@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2.1                             \r\n
-Last Updated:  10/24/2017
+Version:  1.2.2                             \r\n
+Last Updated:  6/22/2018
 \r\n \r\n
 Updating system first..."
 #sudo -E apt-get update
@@ -56,13 +56,17 @@ wait
 sudo apt update
 wait
 
-sudo apt-get install -y golang-go
-wait 
+#sudo apt-get install -y golang-go
+#wait 
 
-sudo apt-get install -y golang-1.9-go
+sudo apt-get install -y golang-1.10-go
 wait
 
 echo -e "\r\n \r\n "
 go version
 
 echo -e "Download site: https://golang.org/dl/  \r\n \r\n "
+
+# go1.10.3.linux-amd64.tar
+
+
