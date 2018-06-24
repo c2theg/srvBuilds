@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2.3                             \r\n
-Last Updated:  6/23/2018
+Version:  1.2.4                             \r\n
+Last Updated:  6/24/2018
 \r\n \r\n
 Updating system first..."
 #sudo -E apt-get update
@@ -74,7 +74,9 @@ echo -e "\r\n \r\n "
 go env
 #-----------------------------------
 cd ~
-mkdir go
+if [ ! -d "go" ]
+    mkdir go
+fi
 cd go/
 #-----------------------------------
 # --- Make Sample File ---
