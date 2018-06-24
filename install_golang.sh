@@ -73,6 +73,10 @@ go version
 echo -e "\r\n \r\n "
 go env
 #-----------------------------------
+cd ~
+mkdir go
+cd go/
+#-----------------------------------
 # --- Make Sample File ---
 echo "package main" >> helloworld.go
 echo "import \"fmt\"" >> helloworld.go
