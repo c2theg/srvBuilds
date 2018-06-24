@@ -53,12 +53,14 @@ sudo add-apt-repository -y ppa:longsleep/golang-backports
 wait
 
 #sudo apt update
-sudo apt-get update
+sudo -E apt-get update
 wait
 
-sudo apt-get install golang-go
+sudo -E apt-get install -y golang-go
 #sudo apt-get install -y golang-1.10-go
 #sudo apt install golang-1.10
+wait
+sudo -E apt-get install -y golang-go.tools
 wait
 
 echo ‘PATH=”/usr/lib/go-1.10/bin:$PATH”‘ >> ~/.profile
