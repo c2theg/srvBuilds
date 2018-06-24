@@ -72,5 +72,16 @@ go version
 
 echo -e "\r\n \r\n "
 go env
+#-----------------------------------
+# --- Make Sample File ---
+echo "package main" >> helloworld.go
+echo "import \"fmt\"" >> helloworld.go
+echo "func main() {" >> helloworld.go
+echo "        fmt.Printf(\"hello, world\n\")" >> helloworld.go
+echo "}" >> helloworld.go
 
+#-------------------------
+chmod u+x helloworld.go
+go run helloworld.go
+#-----------------------------------
 echo " \r\n \r\n Done! \r\n \r\n"
