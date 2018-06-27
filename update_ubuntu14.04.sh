@@ -48,7 +48,7 @@ wait
 sudo apt-get autoremove -y
 wait
 
-Cron_output=$(crontab -l | grep "update_core.sh")
+Cron_output=$(crontab -l | grep "sys_restart.sh")
 #echo "The output is: [ $Cron_output ]"
 if [ -z "$Cron_output" ]
 then
@@ -65,6 +65,10 @@ then
     line="@reboot /root/update_core.sh >> /var/log/update_core.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
     
+    #-- Restart Server “At 03:13 on day-of-month 7.”
+    line="13 3 7 * * /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+
     wait
     /etc/init.d/cron restart  > /dev/null
 else
