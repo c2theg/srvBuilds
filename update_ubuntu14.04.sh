@@ -48,7 +48,7 @@ wait
 sudo apt-get autoremove -y
 wait
 
-Cron_output=$(crontab -l | grep "update_core.log")
+Cron_output=$(crontab -l | grep "update_core.sh")
 #echo "The output is: [ $Cron_output ]"
 if [ -z "$Cron_output" ]
 then
