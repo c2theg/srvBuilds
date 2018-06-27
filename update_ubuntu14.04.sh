@@ -21,8 +21,8 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.6                             \r\n
-Last Updated:  6/22/2018
+Version:  1.6.7                             \r\n
+Last Updated:  6/27/2018
 \r\n \r\n"
 wait
 sudo -E apt-get update
