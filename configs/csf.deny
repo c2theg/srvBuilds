@@ -1,5 +1,22 @@
-1.2.3.4
-2.3.0.0/16
+###############################################################################
+# Copyright 2006-2018, Christopher Gray
+# Version 0.0.1 - Updated: 6/26/18
+# URL: https://
+# Email: 
+###############################################################################
+# The following IP addresses will be blocked in iptables
+# One IP address per line
+# CIDR addressing allowed with a quaded IP (e.g. 192.168.254.0/24)
+# Only list IP addresses, not domain names (they will be ignored)
+#
+# Note: If you add the text "do not delete" to the comments of an entry then
+# DENY_IP_LIMIT will ignore those entries and not remove them
+#
+# Advanced port+ip filtering allowed with the following format
+# tcp/udp|in/out|s/d=port,port,...|s/d=ip
+#
+# See readme.txt for more information regarding advanced port filtering
+#
 121.14.64.227
 60.190.2.90
 66.128.148.125
