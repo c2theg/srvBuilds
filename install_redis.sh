@@ -8,11 +8,11 @@ clear
 echo "This installs redis-server to your box..."
 sudo add-apt-repository -y ppa:chris-lea/redis-server
 wait
-sudo apt-get update
+sudo -E apt-get update
 wait
-sudo apt-get install -y tcl8.5
+sudo -E apt-get install -y tcl8.5
 wait
-sudo apt-get install -y redis-server
+sudo -E apt-get install -y redis-server
 #pip install redis-trib
 wait
 clear
@@ -60,11 +60,11 @@ echo " "
 echo " "
 echo "Downloading latest custom config's "
 wait
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/redis_custom.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_custom.conf
 wait
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/redis_master.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_master.conf
 wait
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/redis_slave.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_slave.conf
 wait
 
 echo "Making backups and copies.."
@@ -92,7 +92,6 @@ echo " "
 echo " "
 echo " "
 echo "--------------------------------------------------------------------"
-
 echo "To test, issue the following commands: "
 echo " redis-benchmark -q -n 1000 -c 10 -P 5 -p 46378 -a password "
 echo " "
@@ -100,5 +99,10 @@ echo " redis-cli -p 46378 -a <password>"
 echo "      >  info"
 echo " "
 echo " /usr/bin/redis-server /etc/redis/redis_slave.conf"
-echo " "
+echo "\r\n \r\n"
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ruby.sh && chmod u+x install_ruby.sh && ./install_ruby.sh
+gem install redis
+
+wget http://download.redis.io/redis-stable/src/redis-trib.rb && chmod u+x redis-trib.rb && ./redis-trib.rb
+
 echo "Done!"
