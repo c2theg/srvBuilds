@@ -26,7 +26,7 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.3.18                             \r\n
+Version:  1.3.19                             \r\n
 Last Updated:  6/27/2018
 \r\n \r\n"
 #sudo -E apt-get update
@@ -132,31 +132,38 @@ else
 fi
 
 
-Cron_output=$(crontab -l | grep "sys_restart.sh")
+Cron_output=$(crontab -l | grep "update_core.sh")
 #echo "The output is: [ $Cron_output ]"
 if [ -z "$Cron_output" ]
 then
     echo "Script not in crontab. Adding."
-    line="10 3 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
-    (crontab -u root -l; echo "$line" ) | crontab -u root -
 
-    line="40 4 * * * /root/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
+    # run “At 04:20.” everyday
+    line="20 4 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
     
-    line="20 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
+    # run “At 04:50 on Sunday.”
+    line="50 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
     
     line="@reboot /root/update_core.sh >> /var/log/update_core.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
     
-    #-- Restart Server “At 03:13 on day-of-month 7.”
-    line="13 3 7 * * /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1"
-    (crontab -u root -l; echo "$line" ) | crontab -u root -
-
     wait
     /etc/init.d/cron restart  > /dev/null
 else
     echo "Script was found in crontab. skipping addition"
 fi
+
+
+Cron_output=$(crontab -l | grep "sys_restart.sh")
+#echo "The output is: [ $Cron_output ]"
+if [ -z "$Cron_output" ]
+then
+    #-- Restart Server “At 03:13 on day-of-month 7.”
+    line="13 3 7 * * /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+fi
+
 
 echo "Done! \r\n \r\n"
