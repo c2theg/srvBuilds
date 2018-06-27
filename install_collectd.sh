@@ -21,12 +21,9 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_collectd.sh
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
-Version:  0.0.1                             \r\n
-Last Updated:  10/28/2017
+Version:  0.0.2                             \r\n
+Last Updated:  6/26/2018
 \r\n \r\n
 Installing CollectD"
 
-sudo apt-get install collectd collectd-utils
-
-
-
+sudo -E apt-get install -y collectd collectd-utils
