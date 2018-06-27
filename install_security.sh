@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.2                             \r\n
-Last Updated:  6/26/2018
+Version:  0.6.2                             \r\n
+Last Updated:  6/27/2018
 \r\n \r\n"
 sudo -E apt-get update
 sudo -E apt-get upgrade -y
@@ -42,26 +42,7 @@ wait
 perl /usr/local/csf/bin/csftest.pl
 cd ..
 #-------------------------------------
-#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.conf
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.allow
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.deny
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.ignore
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_csf.sh && chmod u+x update_csf.sh && ./update_csf.sh
 
-#    rm /etc/csf/csf.conf
-rm /etc/csf/csf.allow
-rm /etc/csf/csf.deny
-rm /etc/csf/csf.ignore
-
-#mv csf.conf /etc/csf/csf.conf
-mv csf.allow /etc/csf/csf.allow
-mv csf.deny /etc/csf/csf.deny
-mv csf.ignore /etc/csf/csf.ignore
-
-# reload rules on firewall
-csf -r
-# list all ports in firewall
-csf -l
-# Start server
-csf -s
 #------------------------------------
 echo "Done"
