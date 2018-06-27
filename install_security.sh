@@ -47,12 +47,10 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.allow
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.deny
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.ignore
 
-if [ -f /etc/csf/csf.allow ]; then 
 #    rm /etc/csf/csf.conf
-    rm /etc/csf/csf.allow
-    rm /etc/csf/csf.deny
-    rm /etc/csf/csf.ignore
-fi
+rm /etc/csf/csf.allow
+rm /etc/csf/csf.deny
+rm /etc/csf/csf.ignore
 
 #mv csf.conf /etc/csf/csf.conf
 mv csf.allow /etc/csf/csf.allow
