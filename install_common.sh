@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  1.6.10                             \r\n
-Last Updated:  6/9/2018
+Version:  1.6.11                             \r\n
+Last Updated:  6/27/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
@@ -90,17 +90,6 @@ then
 	#--- start Cockpit ---
 	echo "sudo systemctl start cockpit && sudo systemctl enable cockpit"
 	echo "\r\n \r\n"
-	echo "\r\n \r\n"
-
-	echo "\r\n \r\n "
-	echo " To add to cron use the following: "
-	echo " crontab -e \r\n"
-	echo "10 3 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
-	echo "40 4 * * * /root/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
-	echo "20 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
-	echo "@reboot /root/update_core.sh >> /var/log/update_core.log 2>&1"
-	
-	echo " \r\n \r\n"
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
