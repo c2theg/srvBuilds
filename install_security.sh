@@ -37,9 +37,24 @@ chmod u+x install.sh
 sh install.sh
 wait
 perl /usr/local/csf/bin/csftest.pl
-#------------------------------------
-wget https://github.com/c2theg/srvBuilds/blob/master/configs/csf.conf
+#-------------------------------------
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.allow
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.deny
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.ignore
+
+if [ -f /etc/csf/csf.conf ]; then 
+    rm /etc/csf/csf.conf
+    rm /etc/csf/csf.allow
+    rm /etc/csf/csf.deny
+    rm /etc/csf/csf.ignore
+fi
+
 mv csf.conf /etc/csf/csf.conf
+mv csf.allow /etc/csf/csf.allow
+mv csf.deny /etc/csf/csf.deny
+mv csf.ignore /etc/csf/csf.ignore
+
 csf -r
 #------------------------------------
 echo "Done"
