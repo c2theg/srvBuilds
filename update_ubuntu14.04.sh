@@ -53,16 +53,13 @@ Cron_output=$(crontab -l | grep "update_core.sh")
 if [ -z "$Cron_output" ]
 then
     echo "Script not in crontab. Adding."
-    # run “At 03:10.” everyday
-    line="10 3 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
-    (crontab -u root -l; echo "$line" ) | crontab -u root -
 
-    # run “At 04:40.” everyday
-    line="40 4 * * * /root/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
+    # run “At 04:20.” everyday
+    line="20 4 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
     
-    # run “At 04:20 on Sunday.”
-    line="20 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
+    # run “At 04:50 on Sunday.”
+    line="50 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
     
     line="@reboot /root/update_core.sh >> /var/log/update_core.log 2>&1"
@@ -73,7 +70,6 @@ then
 else
     echo "Script was found in crontab. skipping addition"
 fi
-
 
 Cron_output=$(crontab -l | grep "sys_restart.sh")
 #echo "The output is: [ $Cron_output ]"
