@@ -130,4 +130,33 @@ then
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
-echo "done! \r\n \r\n"
+
+
+Cron_output=$(crontab -l | grep "sys_restart.sh")
+#echo "The output is: [ $Cron_output ]"
+if [ -z "$Cron_output" ]
+then
+    echo "Script not in crontab. Adding."
+    line="10 3 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+
+    line="40 4 * * * /root/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+    
+    line="20 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+    
+    line="@reboot /root/update_core.sh >> /var/log/update_core.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+    
+    #-- Restart Server “At 03:13 on day-of-month 7.”
+    line="13 3 7 * * /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+
+    wait
+    /etc/init.d/cron restart  > /dev/null
+else
+    echo "Script was found in crontab. skipping addition"
+fi
+
+echo "Done! \r\n \r\n"
