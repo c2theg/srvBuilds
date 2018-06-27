@@ -59,6 +59,11 @@ mv csf.allow /etc/csf/csf.allow
 mv csf.deny /etc/csf/csf.deny
 mv csf.ignore /etc/csf/csf.ignore
 
+# reload rules on firewall
 csf -r
+# list all ports in firewall
+csf -l
+# Start server
+csf -s
 #------------------------------------
 echo "Done"
