@@ -29,6 +29,9 @@ sudo -E apt-get install -y rkhunter fail2ban clamav clamav-daemon clamav-freshcl
 sudo freshclam
 
 #----- CSF Config Server Firewall ---------
+if [ -f csf.tgz ]; then 
+    rm csf.tgz
+fi
 wget http://download.configserver.com/csf.tgz
 tar -xzf csf.tgz
 sudo ufw disable
@@ -37,6 +40,7 @@ chmod u+x install.sh
 sh install.sh
 wait
 perl /usr/local/csf/bin/csftest.pl
+cd ..
 #-------------------------------------
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.conf
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/csf.allow
