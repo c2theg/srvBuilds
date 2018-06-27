@@ -19,8 +19,11 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.1                             \r\n
+Version:  0.5                             \r\n
 Last Updated:  6/27/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
+# wait a random time, less then 10 minutes before restarting
+sleep .$[ ( $RANDOM % 300 ) + 1 ]s
+
 sudo shutdown now -r
