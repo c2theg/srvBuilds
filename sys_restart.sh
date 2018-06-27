@@ -19,17 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.0                             \r\n
-Last Updated:  5/18/2017
-\r\n \r\n
-#Updating system first..."
-#sudo -E apt-get update
-#wait
-#sudo -E apt-get upgrade -y
-#wait
-#echo "Freeing up space"
-#sudo apt-get autoremove -y
-wait
-#echo "Downloading required dependencies...\r\n\r\n"
+Version:  1.1                             \r\n
+Last Updated:  6/27/2018
+\r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo shutdown now -r
