@@ -44,5 +44,19 @@ cd ..
 #-------------------------------------
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_csf.sh && chmod u+x update_csf.sh && ./update_csf.sh
 
+Cron_output=$(crontab -l | grep "update_csf.sh")
+#echo "The output is: [ $Cron_output ]"
+if [ -z "$Cron_output" ]
+then
+    echo "Script not in crontab. Adding."
+    line="40 3 * * * /root/update_csf.sh >> /var/log/update_csf.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+    
+    wait
+    /etc/init.d/cron restart  > /dev/null
+else
+    echo "Script was found in crontab. skipping addition"
+fi
+
 #------------------------------------
 echo "Done"
