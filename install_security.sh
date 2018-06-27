@@ -18,12 +18,28 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.1                             \r\n
-Last Updated:  10/22/2017
+Version:  0.2                             \r\n
+Last Updated:  6/26/2018
 \r\n \r\n"
+sudo -E apt-get update
+sudo -E apt-get upgrade -y
+#-------------------------------
 
-sudo apt-get install -y rkhunter fail2ban clamav clamav-daemon clamav-freshclam openssl-blacklist
-
+sudo -E apt-get install -y rkhunter fail2ban clamav clamav-daemon clamav-freshclam openssl-blacklist sshguard
 sudo freshclam
 
+#----- CSF Config Server Firewall ---------
+wget http://download.configserver.com/csf.tgz
+tar -xzf csf.tgz
+sudo ufw disable
+cd csf
+chmod u+x install.sh
+sh install.sh
+wait
+perl /usr/local/csf/bin/csftest.pl
+#------------------------------------
+wget https://github.com/c2theg/srvBuilds/blob/master/configs/csf.conf
+mv csf.conf /etc/csf/csf.conf
+csf -r
+#------------------------------------
 echo "Done"
