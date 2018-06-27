@@ -21,7 +21,7 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.8                             \r\n
+Version:  1.6.9                             \r\n
 Last Updated:  6/27/2018
 \r\n \r\n"
 wait
@@ -53,12 +53,15 @@ Cron_output=$(crontab -l | grep "update_core.sh")
 if [ -z "$Cron_output" ]
 then
     echo "Script not in crontab. Adding."
+    # run “At 03:10.” everyday
     line="10 3 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
 
+    # run “At 04:40.” everyday
     line="40 4 * * * /root/update_ubuntu14.04.sh >> /var/log/update_ubuntu.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
     
+    # run “At 04:20 on Sunday.”
     line="20 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
     
