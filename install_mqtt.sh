@@ -36,6 +36,11 @@ sudo pip install paho-mqtt
 
 #-------------------- info ----------------------------------------------------
 # https://tutorials-raspberrypi.com/raspberry-pi-mqtt-broker-client-wireless-communication/
+# https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-the-mosquitto-mqtt-messaging-broker-on-ubuntu-16-04
+
+wait
+
+sudo mosquitto_passwd -c /etc/mosquitto/passwd P@ssw0rd123!
 
 
 echo " Done! \r\n\r\n"
