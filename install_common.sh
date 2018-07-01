@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  1.6.11                             \r\n
-Last Updated:  6/27/2018
+Version:  1.6.12                             \r\n
+Last Updated:  7/1/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
@@ -85,10 +85,44 @@ then
 	sudo /etc/init.d/ntp restart
 	wait
 	sudo timedatectl set-timezone America/New_York
-	#-----------------------------------------------------
-	echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) sudo add-apt-repository -y ppa:cockpit-project/cockpit && apt-get install -y cockpit \r\n \r\n"
-	#--- start Cockpit ---
-	echo "sudo systemctl start cockpit && sudo systemctl enable cockpit"
+	#------------- OS Version Detection -------------
+	if [ -f /etc/os-release ]; then
+	    # freedesktop.org and systemd
+	    . /etc/os-release
+	    OS=$NAME
+	    VER=$VERSION_ID
+	elif type lsb_release >/dev/null 2>&1; then
+	    # linuxbase.org
+	    OS=$(lsb_release -si)
+	    VER=$(lsb_release -sr)
+	elif [ -f /etc/lsb-release ]; then
+	    # For some versions of Debian/Ubuntu without lsb_release command
+	    . /etc/lsb-release
+	    OS=$DISTRIB_ID
+	    VER=$DISTRIB_RELEASE
+	elif [ -f /etc/debian_version ]; then
+	    # Older Debian/Ubuntu/etc.
+	    OS=Debian
+	    VER=$(cat /etc/debian_version)
+	elif [ -f /etc/SuSe-release ]; then
+	    # Older SuSE/etc.
+	    ...
+	elif [ -f /etc/redhat-release ]; then
+	    # Older Red Hat, CentOS, etc.
+	    ...
+	else
+	    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+	    OS=$(uname -s)
+	    VER=$(uname -r)
+	fi
+	echo " Detected OS: $OS, Version: $VER \r\n \r\n"
+	#-----------------------------------------------
+	if [ $VER = '16.04' ] || [ $VER = '16.10' ] || [ $VER = '17.04' ] || [ $VER = '18.04' ]; then
+	    echo "\r\n\r\n \r\n Add Cockpit! (Only for Ubuntu 16.04+) \r\n \r\n"	
+	    sudo add-apt-repository -y ppa:cockpit-project/cockpit && sudo -E apt-get install -y cockpit
+	    sudo systemctl start cockpit && sudo systemctl enable cockpit
+	fi
+	#-----------------------
 	echo "\r\n \r\n"
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
