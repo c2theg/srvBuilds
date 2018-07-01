@@ -21,8 +21,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP.sh
 
 \r\n \r\n
-Version:  1.3.7                             \r\n
-Last Updated:  2/22/2018
+Version:  1.3.8                             \r\n
+Last Updated:  7/1/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -40,13 +40,15 @@ wait
 sudo apt-get install -y postfix procmail postfix-mysql postfix-pcre sasl2-bin postfix-cdb postfix-doc
 # dovecot-core
 wait
+wget -O "main.cf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/main.cf"
+mv main.cf /etc/postfix/main.cf
+/etc/init.d/postfix restart
 #---------- PYTHON STUFF ----------------------------------
 #sudo apt-get install -y python2-virtualenv python3-virtualenv libicu-dev python-software-properties python python-pip python-dev python3-setuptools
 #wait
 #--- PHP 7.0 ---
 sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 wait
-
 sudo apt-get -y update && sudo apt-get -y install php7.0 php7.0-fpm php7.0-common php7.0-cli php7.0-json php7.0-gd php7.0-opcache php7.0-readline php7.0-mysql php7.0-curl php7.0-mcrypt php7.0-soap php7.0-ldap php-pear openssl-blacklist ssl-cert php-xdebug php-apcu php7.0-mbstring php-ssh2 php-geoip php7.0-zip php7.0-xml php-mailparse php7.0-bz2 php7.0-xmlrpc libmcrypt-dev mcrypt php7.0-bcmath
 wait
 
