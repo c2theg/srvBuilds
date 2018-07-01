@@ -17,9 +17,9 @@ echo "
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ddos.sh
+https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh
 \r\n \r\n
-Version:  0.0.1                            \r\n
+Version:  0.0.2                            \r\n
 Last Updated:  7/1/2018
 \r\n \r\n
 Updating system first..."
