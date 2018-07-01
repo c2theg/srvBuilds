@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.1                             \r\n
-Last Updated:  6/19/2018
+Version:  0.0.2                            \r\n
+Last Updated:  7/1/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -28,11 +28,19 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-
 sudo -E apt-get install -y build-essential python-dev python-openssl git git-core python-pip
 
-
 #--------------------------------------------------------------------------------------------
+echo "Downloading files which can be ran to setup the read... "
+
+rm setup_wifi.sh install_raspi_docker.sh install_raspi_mqtt.sh install_raspi_sensors.sh
+
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/setup_wifi.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/install_raspi_docker.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/install_raspi_mqtt.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/install_raspi_sensors.sh
+
+chmod u+x setup_wifi.sh install_raspi_docker.sh install_raspi_mqtt.sh install_raspi_sensors.sh
 
 
 echo " Done! \r\n\r\n"
