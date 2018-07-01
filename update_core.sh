@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.3.19                             \r\n
-Last Updated:  6/27/2018
+Version:  1.3.20                             \r\n
+Last Updated:  7/1/2018
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -65,6 +65,7 @@ then
  		rm /root/update_ubuntu14.04.sh
  		rm /root/install_common.sh
 		rm /root/update_core.sh
+		rm /root/install_monitoring.sh
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
@@ -73,19 +74,22 @@ then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_restart.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
-	wget -O - -q -t 1 --timeout=3 https://magnetoai.com/api/updater/check.php?f=update_core > /dev/null
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh
+	wget -O - -q -t 1 --timeout=2 https://magnetoai.com/api/updater/check.php?f=update_core > /dev/null
 	#-----------------------------------------------
 	wait
 	mv update_core.sh /root/update_core.sh
 	mv sys_cleanup.sh /root/sys_cleanup.sh
 	mv update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
 	mv install_common.sh /root/install_common.sh
-
+	mv install_monitoring.sh /root/install_monitoring.sh
+	
 	chmod u+x /root/update_core.sh
 	chmod u+x /root/sys_cleanup.sh
 	chmod u+x /root/update_ubuntu14.04.sh
 	chmod u+x /root/install_common.sh
 	chmod u+x /root/sys_restart.sh
+	chmod u+x /root/install_monitoring.sh
 	
 	wait
 	if [ -d "/home/ubuntu/" ]
@@ -95,14 +99,9 @@ then
 		cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
 		cp /root/install_common.sh /home/ubuntu/install_common.sh
 		cp /root/sys_restart.sh /home/ubuntu/sys_restart.sh
-		wait
-		chmod u+x /home/ubuntu/update_core.sh
-		chmod u+x /home/ubuntu/sys_cleanup.sh
-		chmod u+x /home/ubuntu/update_ubuntu14.04.sh
-		chmod u+x /home/ubuntu/install_common.sh
-		chmod u+x /home/ubuntu/sys_restart.sh
+		cp /root/install_monitoring.sh /home/ubuntu/install_monitoring.sh
 	fi
-
+	
 	#--- for old script compatibility
 	if [ -d "/home/cgray/" ]
 	then
@@ -112,13 +111,8 @@ then
 		cp /root/update_ubuntu14.04.sh /home/cgray/update_ubuntu14.04.sh
 		cp /root/install_common.sh /home/cgray/install_common.sh
 		cp /root/sys_restart.sh /home/cgray/sys_restart.sh
+		cp /root/install_monitoring.sh /home/cgray/install_monitoring.sh
 		wait
-		chmod u+x /home/cgray/update_core.sh
-		chmod u+x /home/cgray/sys_cleanup.sh
-		chmod u+x /home/cgray/update_ubuntu14.04.sh
-		chmod u+x /home/cgray/install_common.sh
-		chmod u+x /home/ubuntu/sys_restart.sh
-
 		chown cgray:cgray /home/cgray/update_core.sh
 		chown cgray:cgray /home/cgray/sys_cleanup.sh
 		chown cgray:cgray /home/cgray/update_ubuntu14.04.sh
