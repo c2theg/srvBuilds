@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.12                             \r\n
-Last Updated:  6/10/2018
+Version:  1.6.1                             \r\n
+Last Updated:  7/1/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -59,15 +59,12 @@ wait
 #sudo -E apt-get upgrade -y
 echo "\r\n \r\n \r\n"
 echo "---- removing old logs from /var/log  ----- \r\n\r\n"
+#------ Core ----------------------------------------------------------
+rm /var/log/pm-powersave.log*
+rm /var/log/cups/*
 rm /var/log/alternatives.log.*
-rm /var/log/auth.log.*
 rm /var/log/dpkg.log.*
 rm /var/log/kern.log.*
-rm /var/log/mail.log.*
-rm /var/log/mail.err.*
-rm /var/log/mysql.log.*
-rm /var/log/syslog.*
-rm /var/log/user.log.*
 rm /var/log/debug.*
 rm /var/log/daemon.log.*
 rm /var/log/cron.log.*
@@ -75,35 +72,44 @@ rm /var/log/messages.*
 rm /var/log/apport.log.*
 rm /var/log/aptitude.*
 rm /var/log/vmware-vmsvc.*
-rm /var/log/php5-fpm.log.*
-rm /var/log/clamav/clamav.log.*
-rm /var/log/clamav/freshclam.log.*
-rm /var/log/fail2ban.log.*
-rm /var/log/redis/redis-server.log.*
-rm /var/log/letsencrypt/letsencrypt.log.*
 rm /var/log/apt/term.log.*
 rm /var/log/apt/history.log.*
 rm /var/log/unattended-upgrades/unattended-upgrades-dpkg_*
 rm /var/log/unattended-upgrades/unattended-upgrades.log.*
 rm /var/log/upstart/*
+#------ Security ----------------------------------------------------------
+rm /var/log/syslog.*
+rm /var/log/user.log.*
+rm /var/log/auth.log.*
+rm /var/log/clamav/clamav.log.*
+rm /var/log/clamav/freshclam.log.*
+rm /var/log/fail2ban.log.*
+rm /var/log/letsencrypt/letsencrypt.log.*
+#------ DBs ----------------------------------------------------------
+#rm /var/log/mysql/*
+rm /var/log/mysql.log.*
+rm /var/log/redis/redis-server.log.*
+#------ ELK ----------------------------------------------------------
+rm /var/log/kibana/*
+
+#------ Mail ----------------------------------------------------------
+rm /var/log/mail.log.*
+rm /var/log/mail.err.*
 rm /var/mail/root
 rm /var/mail/www-data
 rm /var/mail/ubuntu
+
+/etc/init.d/sendmail restart
+#------ Web / HTTP -------------------------------------------------------
 rm /var/log/apache2/*
 rm /var/log/lighttpd/*
-rm /var/log/kibana/*
-rm /var/log/mysql/*
-rm /var/log/pm-powersave.log*
-rm /var/log/cups/*
-#------
-rm /var/log/update_core.log
-rm /var/log/update_ubuntu.log
 
 #----------------------------------------------------------------
-/etc/init.d/sendmail restart
-
 echo "\r\n \r\n Removing Nginx and PHP logs, then restarting both services.. \r\n \r\n "
 rm -rf /var/log/nginx/*
+rm /var/log/php5-fpm.log.*
+rm /var/log/php7.0-fpm.log.*
+
 /etc/init.d/php7.0-fpm restart
 /etc/init.d/nginx restart
 
@@ -113,6 +119,11 @@ rm /var/log/pihole.log.*
 rm /var/log/pihole-FTL.log.*
 /etc/init.d/lighttpd restart
 /etc/init.d/dnsmasq restart
+
+#---------- MISC ------------------------------------------------------
+rm /var/log/update_core.log
+rm /var/log/update_ubuntu.log
+
 echo " -------------- Done Cleaning system -------- "
 echo "\r\n \r\n"
 echo "But just incase you still dont have space... "
