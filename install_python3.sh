@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3                             \r\n
-Last Updated:  6/17/2018
+Version:  1.3.1                             \r\n
+Last Updated:  7/1/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -64,10 +64,10 @@ fi
 echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
 #-----------------------------------------------
 if [ $VER = '14.04' ] || [ $VER = '16.04' ]; then
-    sudo add-apt-repository ppa:deadsnakes/ppa
-    sudo apt-get update
+    sudo -E add-apt-repository ppa:deadsnakes/ppa
+    sudo -E apt-get update
 elif [ $VER = '16.10' ] || [ $VER = '17.04' ]; then
-    sudo apt-get install python3.6
+#    sudo -E apt-get install -y python3.6
 elif [ $VER = '17.10' ] || [ $VER = '18.04' ]; then
     echo "Python3 already installed"
 fi
@@ -101,6 +101,6 @@ pip install requests
 wait
 echo "\r\n \r\n "
 echo "Done installing Python3 "
-pip -V; 
+pip -V;
 pip3 -V;
 echo "\r\n \r\n "
