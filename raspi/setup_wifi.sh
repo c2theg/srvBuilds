@@ -12,7 +12,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.2                             \r\n
+Version:  0.2.1                             \r\n
 Last Updated:  7/1/2018
 \r\n \r\n"
 
@@ -47,6 +47,10 @@ wpa_cli -i wlan0 reconfigure
 #}
 
 #------------------------------------------------------
+wait
+sleep .$[ ( 10 % 300 ) + 1 ]s
+wait
+
 echo "Testing wlan0 connection.... \r\n \r\n"
 echo "Sending: ifconfig wlan0    \r\n \r\n "
 ifconfig wlan0
