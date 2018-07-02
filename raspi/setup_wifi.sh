@@ -48,7 +48,7 @@ wpa_cli -i wlan0 reconfigure
 
 #------------------------------------------------------
 wait
-sleep .$[ ( 10 % 300 ) + 1 ]s
+sleep 10s
 wait
 
 echo "Testing wlan0 connection.... \r\n \r\n"
