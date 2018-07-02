@@ -58,3 +58,17 @@ ifconfig wlan0
 echo "Sending: iwconfig wlan0    \r\n \r\n "
 iwconfig wlan0
 
+echo "Sending: echo "Sending: iwconfig wlan0     (Getting Signal Strength)  \r\n \r\n "
+iwconfig wlan0 | grep -i --color quality
+
+
+echo "Signal Strength: cat /proc/net/wireless \r\n "
+cat /proc/net/wireless
+
+echo "\r\n \r\n To KEEP watching signal strength: watch -n 1 cat /proc/net/wireless  \r\n \r\n"
+
+
+echo "run 'wavemon' to see a nice CLI for wifi-stats \r\n \r\n"
+echo "Just install with:  sudo -E apt install -y wavemon \r\n \r\n"
+
+echo "DONE! \r\n \r\n "
