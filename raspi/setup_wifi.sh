@@ -12,7 +12,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.2.2                             \r\n
+Version:  0.2.3                             \r\n
 Last Updated:  7/1/2018
 \r\n \r\n"
 
@@ -53,21 +53,19 @@ sleep 5s
 wait
 
 echo "Testing wlan0 connection.... \r\n \r\n"
-echo "Sending: ifconfig wlan0    \r\n \r\n "
+echo "Sending: ifconfig wlan0      \r\n \r\n "
 ifconfig wlan0
 
 echo "Sending: iwconfig wlan0    \r\n \r\n "
 iwconfig wlan0
 
-echo "Sending: echo "Sending: iwconfig wlan0  \r\n \r\n "
+echo "Sending: iwconfig wlan0 | grep -i --color quality .    \r\n \r\n "
 iwconfig wlan0 | grep -i --color quality
 
 
-echo "Signal Strength: cat /proc/net/wireless \r\n "
+echo "Signal Strength: cat /proc/net/wireless    \r\n "
 cat /proc/net/wireless
-
 echo "\r\n \r\n To KEEP watching signal strength: watch -n 1 cat /proc/net/wireless  \r\n \r\n"
-
 
 echo "run 'wavemon' to see a nice CLI for wifi-stats \r\n \r\n"
 echo "Just install with:  sudo -E apt install -y wavemon \r\n \r\n"
