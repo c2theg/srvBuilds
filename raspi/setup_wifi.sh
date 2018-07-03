@@ -19,8 +19,8 @@ Last Updated:  7/3/2018
 # Source: https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md
 
 # -- Delete config file, and set Country to US so wifi wont disable automatically at startup.
-rm /etc/wpa_supplicant/wpa_supplicant.conf
-touch /etc/wpa_supplicant/wpa_supplicant.conf
+sudo rm /etc/wpa_supplicant/wpa_supplicant.conf
+sudo touch /etc/wpa_supplicant/wpa_supplicant.conf
 echo 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev' >> /etc/wpa_supplicant/wpa_supplicant.conf
 echo 'update_config=1' >> /etc/wpa_supplicant/wpa_supplicant.conf
 echo 'country=US' >> /etc/wpa_supplicant/wpa_supplicant.conf
