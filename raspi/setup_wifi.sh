@@ -12,7 +12,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.2.5                             \r\n
+Version:  0.2.6                             \r\n
 Last Updated:  7/3/2018
 \r\n \r\n"
 
@@ -42,7 +42,7 @@ wpa_passphrase "$txt_ssid" "$txt_passwd" | sudo tee -a /etc/wpa_supplicant/wpa_s
 
 echo "   DONE!  \r\n \r\n"
 
-echo "Reconfiging the wifi interface... \r\n \r\n "
+echo "Reconfiging the wifi interface (this may take a few seconds)... \r\n \r\n "
 wpa_cli -i wlan0 reconfigure
 
 #------------------------------------------------------
@@ -74,8 +74,13 @@ echo "Signal Strength: cat /proc/net/wireless    \r\n "
 cat /proc/net/wireless
 echo "\r\n \r\n To KEEP watching signal strength: watch -n 1 cat /proc/net/wireless  \r\n \r\n"
 
-echo "run 'wavemon' to see a nice CLI for wifi-stats \r\n \r\n"
-echo "Just install with:  sudo -E apt install -y wavemon \r\n \r\n"
+echo "Pinging Google DNS via IP... \r\n "
+ping -c 5 8.8.8.8
 
+echo "Pinging Google DNS via DNS... \r\n "
+ping -c 5 google.com
+
+echo "\r\n \r\n Run 'wavemon' to see a nice CLI - UI for wifi-stats \r\n"
+echo "Just install with: sudo -E apt install -y wavemon \r\n \r\n"
 echo "DONE! \r\n \r\n "
 echo "You may want to remove the plain-text password in the wifi config: \r\n \r\n    sudo nano /etc/wpa_supplicant/wpa_supplicant.conf \r\n \r\n"
