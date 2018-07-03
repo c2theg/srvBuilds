@@ -12,15 +12,19 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.2.4                             \r\n
+Version:  0.2.5                             \r\n
 Last Updated:  7/3/2018
 \r\n \r\n"
 
 # Source: https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md
 
-# -- Set Country to US so wifi wont disable automatically at startup.
+# -- Delete config file, and set Country to US so wifi wont disable automatically at startup.
+rm /etc/wpa_supplicant/wpa_supplicant.conf
+touch /etc/wpa_supplicant/wpa_supplicant.conf
+echo 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev' >> /etc/wpa_supplicant/wpa_supplicant.conf
+echo 'update_config=1' >> /etc/wpa_supplicant/wpa_supplicant.conf
 echo 'country=US' >> /etc/wpa_supplicant/wpa_supplicant.conf
-
+#--------------------------------------------------------------------------
 
 echo "Scanning for Wifi Networks... \r\n \r\n \r\n "
 sudo iwlist wlan0 scan
@@ -47,7 +51,7 @@ wpa_cli -i wlan0 reconfigure
 #network={
 #    ssid="<SSID>"
 #    #psk="<PASSWORD>"
-#    psk=131e1e221f6e06e3911a2d11ff2fac9182665c004de85300f9cac208a6a80531
+#    psk=1e1e221f6re06e3911a2d11ff2fac9182665c004de85300f9cac208a6a80531
 #}
 
 #------------------------------------------------------
