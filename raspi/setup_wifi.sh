@@ -12,11 +12,15 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.2.3                             \r\n
-Last Updated:  7/1/2018
+Version:  0.2.4                             \r\n
+Last Updated:  7/3/2018
 \r\n \r\n"
 
 # Source: https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md
+
+# -- Set Country to US so wifi wont disable automatically at startup.
+echo 'country=US' >> /etc/wpa_supplicant/wpa_supplicant.conf
+
 
 echo "Scanning for Wifi Networks... \r\n \r\n \r\n "
 sudo iwlist wlan0 scan
@@ -53,15 +57,14 @@ sleep 5s
 wait
 
 echo "Testing wlan0 connection.... \r\n \r\n"
-echo "Sending: ifconfig wlan0      \r\n \r\n "
-ifconfig wlan0
+echo "Sending: ifconfig  \r\n \r\n "
+ifconfig
 
 echo "Sending: iwconfig wlan0    \r\n \r\n "
 iwconfig wlan0
 
 echo "Sending: iwconfig wlan0 | grep -i --color quality .    \r\n \r\n "
 iwconfig wlan0 | grep -i --color quality
-
 
 echo "Signal Strength: cat /proc/net/wireless    \r\n "
 cat /proc/net/wireless
@@ -71,3 +74,4 @@ echo "run 'wavemon' to see a nice CLI for wifi-stats \r\n \r\n"
 echo "Just install with:  sudo -E apt install -y wavemon \r\n \r\n"
 
 echo "DONE! \r\n \r\n "
+echo "You may want to remove the plain-text password in the wifi config: \r\n \r\n    sudo nano /etc/wpa_supplicant/wpa_supplicant.conf \r\n \r\n"
