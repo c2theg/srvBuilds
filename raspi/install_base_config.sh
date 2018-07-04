@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.5                            \r\n
+Version:  0.0.6                            \r\n
 Last Updated:  7/4/2018
 \r\n \r\n
 Updating system first..."
@@ -30,6 +30,9 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo -E apt-get install -y build-essential python-dev python-openssl git git-core python-pip
 
+# RPi specific
+sudo -E apt-get install -y libmodbus5 libmodbus-dev
+yes | pip install w1thermsensor
 #--------------------------------------------------------------------------------------------
 echo "Downloading files which can be ran to setup the read... "
 
