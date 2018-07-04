@@ -29,7 +29,15 @@ wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo 'dtoverlay=w1-gpio' >> /boot/config.txt
+#--------------------------
+rm get_temps_dht22.py  get_temps_ds18b20.py  get_temps_mqtt.py
 
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/get_temps_dht22.py
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/get_temps_ds18b20.py
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/get_temps_mqtt.py
+
+chmod u+x get_temps_dht22.py  get_temps_ds18b20.py  get_temps_mqtt.py
+#-------------------------------------------------------------------------------
 sudo apt-get install -y build-essential python-dev python-openssl git git-core
 
 #--------------- Temperature & Humidity Sensor DHT22 ----------------------------------------
@@ -42,7 +50,6 @@ echo " sudo ./AdafruitDHT.py 22 4"
 #--------------------------------------------------------------------------------------------
 # Source: https://pimylifeup.com/raspberry-pi-temperature-sensor/
 #git clone https://github.com/pimylifeup/temperature_sensor.git
-
 
 #----------------------------------------
 Cron_output=$(crontab -l | grep "startup_temp_sensors.sh")
