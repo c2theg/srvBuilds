@@ -28,6 +28,7 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
+echo 'dtoverlay=w1-gpio' >> /boot/config.txt
 
 sudo apt-get install -y build-essential python-dev python-openssl git git-core
 
@@ -38,9 +39,13 @@ git clone https://github.com/adafruit/Adafruit_Python_DHT.git && cd Adafruit_Pyt
 sudo python setup.py install
 echo " cd examples \r\n"
 echo " sudo ./AdafruitDHT.py 22 4"
+#--------------------------------------------------------------------------------------------
+# Source: https://pimylifeup.com/raspberry-pi-temperature-sensor/
+#git clone https://github.com/pimylifeup/temperature_sensor.git
+
+
 
 
 #--------------------------------------------------------------------------------------------
-
-
+echo "You will need to REBOOT the pi before using any sensors!!! \r\n "
 echo " Done! \r\n\r\n"
