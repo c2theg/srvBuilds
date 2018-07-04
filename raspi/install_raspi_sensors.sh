@@ -47,6 +47,7 @@ git clone https://github.com/adafruit/Adafruit_Python_DHT.git && cd Adafruit_Pyt
 sudo python setup.py install
 echo " cd examples \r\n"
 echo " sudo ./AdafruitDHT.py 22 4"
+cd ..
 #--------------------------------------------------------------------------------------------
 # Source: https://pimylifeup.com/raspberry-pi-temperature-sensor/
 #git clone https://github.com/pimylifeup/temperature_sensor.git
