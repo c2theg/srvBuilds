@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # Original code from: https://tutorials-raspberrypi.com/raspberry-pi-measure-humidity-temperature-dht11-dht22/
-# Christopher Gray - v0.0.4 - 6/21/2018
+# Christopher Gray - v0.0.5 - 7/4/2018
 import sys, os, time
 from datetime import datetime
 #import glob
 import Adafruit_DHT
 #------ vars -----------------
-LogToFileName = "temps.txt" # leave empty if you dont want to log to a file
+LogToFileName = "temps_dht22.txt" # leave empty if you dont want to log to a file
 LocationInfo = "attic"
 sensor = Adafruit_DHT.DHT22
 pin = 4
@@ -25,4 +25,3 @@ if str(LogToFileName) != '':
 	file.write("\r\n" + var_File_Output) 
 	file.close()
 	print("\r\n updated log \r\n")
-  
