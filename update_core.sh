@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.3.20                             \r\n
-Last Updated:  7/1/2018
+Version:  1.3.21                             \r\n
+Last Updated:  7/5/2018
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -43,20 +43,15 @@ ping -q -c3 github.com > /dev/null
 if [ $? -eq 0 ]
 then
 	echo "Connected!!! \r\n \r\n"
-	echo "Deleting old files \r\n"
-#	if [ -s "/home/ubuntu/update_core.sh" ]
-#	then
-#		rm /home/ubuntu/sys_cleanup.sh
-# 		rm /home/ubuntu/update_ubuntu14.04.sh
-# 		rm /home/ubuntu/install_common.sh
-#		rm /home/ubuntu/update_core.sh
-#	fi	
+	echo "Deleting old files \r\n"	
 	if [ -s "update_core.sh" ]
 	then
 		rm sys_cleanup.sh
  		rm update_ubuntu14.04.sh
  		rm install_common.sh
 		rm update_core.sh
+		rm sys_restart.*
+		rm install_monitoring.*
 	fi
 	if [ -s "/root/update_core.sh" ]
 	then
@@ -65,7 +60,8 @@ then
  		rm /root/update_ubuntu14.04.sh
  		rm /root/install_common.sh
 		rm /root/update_core.sh
-		rm /root/install_monitoring.sh
+		rm /root/install_monitoring.*
+		rm /root/sys_restart.*
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
@@ -78,18 +74,20 @@ then
 	wget -O - -q -t 1 --timeout=2 https://magnetoai.com/api/updater/check.php?f=update_core > /dev/null
 	#-----------------------------------------------
 	wait
+	chmod u+x update_core.sh
+	chmod u+x sys_cleanup.sh
+	chmod u+x update_ubuntu14.04.sh
+	chmod u+x install_common.sh
+	chmod u+x sys_restart.sh
+	chmod u+x install_monitoring.sh
+	wait
+	
 	mv update_core.sh /root/update_core.sh
 	mv sys_cleanup.sh /root/sys_cleanup.sh
 	mv update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
 	mv install_common.sh /root/install_common.sh
+	mv sys_restart.sh /root/sys_restart.sh
 	mv install_monitoring.sh /root/install_monitoring.sh
-	
-	chmod u+x /root/update_core.sh
-	chmod u+x /root/sys_cleanup.sh
-	chmod u+x /root/update_ubuntu14.04.sh
-	chmod u+x /root/install_common.sh
-	chmod u+x /root/sys_restart.sh
-	chmod u+x /root/install_monitoring.sh
 	
 	wait
 	if [ -d "/home/ubuntu/" ]
