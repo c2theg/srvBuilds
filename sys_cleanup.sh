@@ -123,6 +123,7 @@ rm /var/log/pihole-FTL.log.*
 #---------- MISC ------------------------------------------------------
 rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
+rm /root/sys_restart.sh.*
 
 echo " -------------- Done Cleaning system -------- "
 echo "\r\n \r\n"
