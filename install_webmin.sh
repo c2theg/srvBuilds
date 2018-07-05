@@ -6,7 +6,7 @@
 #
 clear
 
-Version='1.860'
+Version='1.881'
 
 
 echo "
@@ -38,8 +38,6 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo apt-get -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 wait
-
-Version = '1.881'
 
 sudo wget -O "webmin.deb" "https://downloads.sourceforge.net/project/webadmin/webmin/$Version/webmin_$Version_all.deb?r=&ts=1508441364&use_mirror=phoenixnap"
 #wget http://prdownloads.sourceforge.net/webadmin/webmin_1.881_all.deb
