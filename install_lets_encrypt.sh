@@ -1,6 +1,13 @@
 #!/bin/bash
 fqdn='cloud.site.com'
 #----------------------------------------------------------------------------
+wget https://dl.eff.org/certbot-auto && chmod a+x certbot-auto
+wait
+chmod u+x certbox-auto
+wait
+#./certbox-auto
+
+#--------------- Old below ------------------------------------
 clear
 sudo add-apt-repository -y ppa:certbot/certbot
 wait
