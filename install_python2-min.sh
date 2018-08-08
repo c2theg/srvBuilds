@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1                             \r\n
-Last Updated:  5/19/2018
+Version:  0.2                             \r\n
+Last Updated:  8/8/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -35,8 +35,10 @@ sudo -E add-apt-repository -y ppa:fkrull/deadsnakes-python2.7
 wait
 sudo -E apt-get update
 wait
-sudo -E apt-get install -y python-minimal -no-install-recommends python-pip
+sudo -E apt-get install -y python-minimal --no-install-recommends
 wait
+sudo -E apt-get install -y python-pip openssh
+
 #---- install python dependancies ----
 sudo -E apt install -y python-pip
 sudo pip install --upgrade virtualenv
