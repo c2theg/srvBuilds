@@ -29,7 +29,7 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "Installing Python 2.7 latest.... "
+echo "Installing Python 2.7 min latest.... "
 wget -O "install_python2-min.sh" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python2-min.sh"
 chmod u+x install_python2-min.sh
 sudo ./install_python2-min.sh
