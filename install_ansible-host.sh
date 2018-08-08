@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1                             \r\n
-Last Updated:  5/19/2018
+Version:  0.2                             \r\n
+Last Updated:  8/8/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -30,16 +30,7 @@ wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Installing Python 2.7 latest.... "
-# -- add newer python 2.7.x repo --
-sudo -E add-apt-repository -y ppa:fkrull/deadsnakes-python2.7
-wait
-sudo -E apt-get update
-wait
-sudo -E apt-get install -y python-minimal --no-install-recommends
-wait
-sudo -E apt-get install -y python-pip openssh
-wait
-#---- install python dependancies ----
-sudo -E apt install -y python-pip
-sudo pip install --upgrade virtualenv
-echo "DONE installing Python 2.7 min \r\n \r\n "
+wget -O "install_python2-min.sh" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python2-min.sh"
+chmod u+x install_python2-min.sh
+sudo ./install_python2-min.sh
+
