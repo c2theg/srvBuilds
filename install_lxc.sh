@@ -24,11 +24,13 @@ echo "
 
 This really is meant to be run under Ubuntu 16.04 LTS +
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.2                             \r\n
 Last Updated:  8/8/2018
 \r\n \r\n"
 
-sudo -E apt-get update && apt-get upgrade
+sudo -E apt-get update
+wait
+sudo -E apt-get upgrade -y
 wait
 
 sudo -E apt-get -y install lxc
@@ -37,11 +39,10 @@ echo "Creating LXC Container (ubuntu) for web... \r\n \r\n "
 lxc-create -t ubuntu -n web1
 
 lxc-start -n web1 -d
-lxc-attach -n web1
-
+#lxc-attach -n web1
 wait
 #-------------------------
-lxc-ls --fancy
+lxc-ls -f
 
 
 echo "DONE! \r\n \r\n"
