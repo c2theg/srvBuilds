@@ -50,7 +50,7 @@ echo "\r\n \r\n Downloading Kafka... (https://www.apache.org/dyn/closer.cgi?path
 wget -O "kafka_current.tgz" "https://www.apache.org/dyn/closer.cgi?path=/kafka/2.0.0/kafka_2.11-2.0.0.tgz"
 wait
 sudo tar xvzf kafka_current.tgz -C kafka/
-
+wait
 
 echo "\r\n \r\n You can now start Kafka with the following: \r\n \r\n  \r\n \r\n
   sudo bin/kafka-server-start.sh config/server.properties
