@@ -47,7 +47,7 @@ sudo -E apt-get install -y net-tools
 sudo mkdir kafka
 echo "\r\n \r\n Downloading Kafka... (https://www.apache.org/dyn/closer.cgi?path=/kafka/2.0.0/kafka_2.11-2.0.0.tgz)  \r\n \r\n"
 #wget -O "kafka_current.tgz" "http://mirror.cc.columbia.edu/pub/software/apache/kafka/1.0.1/kafka_2.11-1.0.1.tgz"
-wget -O "kafka_current.tgz" "https://www.apache.org/dyn/closer.cgi?path=/kafka/2.0.0/kafka_2.11-2.0.0.tgz"
+wget -O "kafka_current.tgz" "http://apache.cs.utah.edu/kafka/2.0.0/kafka_2.11-2.0.0.tgz"
 wait
 sudo tar xvzf kafka_current.tgz -C kafka/
 wait
