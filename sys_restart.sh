@@ -23,7 +23,6 @@ Version:  0.7                             \r\n
 Last Updated:  8/11/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
-# wait a random time, less then 10 minutes before restarting
 echo "\r\n \r\n Waiting a random time before restarting... \r\n \r\n"
 sleep 10$(( RANDOM \% 2000 ))s;
 echo "See you soon!!!  Bye-Bye! \r\n "
