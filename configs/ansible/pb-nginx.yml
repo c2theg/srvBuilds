@@ -62,5 +62,14 @@
       template:
         src: "templates/index.html"
         dest: "/var/www/{{ site_name }}/index.html"
+
+    - name: Remove default nginx vhost configuration
+      file: path=/etc/nginx/sites-enabled/default state-absent
       notify:
       - restart nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+          name: nginx
+          state: restarted
