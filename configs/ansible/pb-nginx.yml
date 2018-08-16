@@ -23,11 +23,11 @@
 
 #------------------------------------------
 - hosts: all
-  gather_facts: False
-  remote_user: ubuntu
-  become: yes
-  become_user: root
-  become_method: sudo
+#  gather_facts: False
+#  remote_user: ubuntu
+#  become: yes
+#  become_user: root
+#  become_method: sudo
 #------------------------------------------
   vars:
     # used for filepaths
