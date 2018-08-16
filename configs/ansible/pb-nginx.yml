@@ -21,21 +21,22 @@
 #    Version: 0.0.1
 #    Updated: 8/15/18
 
+#------------------------------------------
 - hosts: all
   gather_facts: False
   remote_user: ubuntu
   become: yes
   become_user: root
   become_method: sudo
-
+#------------------------------------------
   vars:
     # used for filepaths
     site_name: "chrisgray"
     # used in the website's markup
-    site_title: "Hope"
+    site_title: "Test 1"
     # used in the web server config file
-    site_url: "www.github.com"
-
+    site_url: "testsite1.com"
+#------------------------------------------
 
   tasks:
     - name: Install Nginx
