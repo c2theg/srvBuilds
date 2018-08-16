@@ -18,9 +18,9 @@
                       exclusive=no
                       key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
-    - name: Create /root/.ssh
-      file: path=/root/.ssh state=directory mode=0700
+    #-- If you dont want to use the module 'authorized_key', then run the lines below --
+    #- name: Create /root/.ssh
+    #  file: path=/root/.ssh state=directory mode=0700
 
-    - name: Create /root/.ssh/authorized_keys from our local ssh pubkey
-      lineinfile: dest=/root/.ssh/authorized_keys line="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-       
+    #- name: Create /root/.ssh/authorized_keys from our local ssh pubkey
+    #  lineinfile: dest=/root/.ssh/authorized_keys line="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
