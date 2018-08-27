@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.8                             \r\n
-Last Updated:  6/20/2018
+Version:  1.4.9                             \r\n
+Last Updated:  8/27/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -183,4 +183,5 @@ ss -ntl
 #docker --tlsverify --tlscacert=ca.pem --tlscert=cert.pem --tlskey=key.pem -H=$HOST:2376 version
   
 echo "View Docker commands here: https://docs.docker.com/engine/reference/commandline/container_ls/  \r\n \r\n"
+echo " Hello World Container:  sudo docker run -p 3000:80 tutum/hello-world  \r\n \r\n"
 echo "\r\n \r\n Docker deployment complete!!! \r\n \r\n"
