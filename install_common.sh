@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  1.6.12                             \r\n
-Last Updated:  7/1/2018
+Version:  1.6.13                             \r\n
+Last Updated:  8/28/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
@@ -57,6 +57,7 @@ then
 		rm install_snmp.sh
 		rm update_core.sh
 		rm ntp.conf
+		rm update_blocklists_local_servers.sh
 	fi
 	echo "\r\n \r\n \r\n \r\n"
 	if [ -s "50unattended-upgrades" ]
@@ -73,6 +74,8 @@ then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod u ntp.conf
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf && mv resolv_base.conf /etc/resolvconf/resolv.conf.d/base
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
+	sudo ./update_blocklists_local_servers.sh
 
 	#------ Python ------
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python2.sh && sudo chmod u+x install_python2.sh && ./install_python2.sh
