@@ -1,0 +1,66 @@
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+
+---
+# Install server packages
+- name: Install a list of packages
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - ssh
+    - openssh-server 
+    - openssl
+    - libssl-dev
+    - libssl1.0.0
+    - whois
+    - traceroute
+    - htop
+    - sshguard
+    - build-essential
+    - libffi-dev
+    - ntp
+    - ntpdate
+    - libicu-dev
+    - screen
+    - sysstat
+    - iptraf
+    - iftop
+    - slurm
+    - tcptrack
+    - bmon
+    - nethogs
+    - nload
+    
+#------ Dowload Config files ---------
+
+- name: Download install_snmp.sh
+  get_url:
+    url: https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh
+    dest: /root/install_snmp.sh
+    mode: 0440
+    timeout: 5
+
+- name: Download ntp.conf
+  get_url:
+    url: https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf
+    dest: /etc/ntp.conf
+    mode: 0440
+    
+- name: Download resolv.conf
+  get_url:
+    url: https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf
+    dest: /etc/resolvconf/resolv.conf.d/base
+    mode: 0440
+    
+- name: updater check
+  get_url:
+    url: https://magnetoai.com/api/updater/check.php?f=install_common_ansible
+    dest: /dev/null
+    timeout: 2
