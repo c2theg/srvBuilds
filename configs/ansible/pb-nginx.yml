@@ -38,6 +38,9 @@
     # used in the web server config file
     site_url: "testsite1.com"
 #------------------------------------------
+#sudo add-apt-repository -y ppa:chris-lea/nginx-devel
+#sudo apt-get -y update && apt-get -y install nginx nginx-common nginx-full fcgiwrap unzip gcc make libpcre3-dev zlib1g-dev
+
 
   tasks:
     - name: Install Nginx
