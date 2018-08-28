@@ -1,0 +1,25 @@
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+
+---
+# Update all repositories
+#- name: Update the repository cache and update package "nginx" to latest version using default release squeeze-backport
+#  apt:
+#    name: nginx
+#    state: latest
+#    default_release: Xenial-backports
+#    update_cache: yes    
+    
+---
+# file: group_vars/atlanta
+#- name: Install latest version of "openjdk-6-jdk" ignoring "install-recommends"
+#  apt:
+#    name: openjdk-6-jdk
+#    state: latest
+#    install_recommends: no
