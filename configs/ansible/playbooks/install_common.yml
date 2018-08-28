@@ -52,12 +52,18 @@
     url: https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf
     dest: /etc/ntp.conf
     mode: 0440
+  service:
+    name: ntpd
+    state: restarted
     
 - name: Download resolv.conf
   get_url:
     url: https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf
     dest: /etc/resolvconf/resolv.conf.d/base
     mode: 0440
+  service:
+    name: ntpd
+    state: restarted
     
 - name: updater check
   get_url:
