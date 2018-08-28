@@ -1,5 +1,6 @@
 ---
 # Run with ansible-playbook <filename> -k
+# # ansible-playbook -i k8s_hosts-all.yml pb-nginx.yml -b
 # make sure to add IPaddress of machines you want to manage to /etc/ansible/hosts first
 #
 #  Make sure to run the pb-init.yml file before running any other playbooks.
