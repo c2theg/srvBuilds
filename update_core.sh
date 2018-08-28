@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.3.21                             \r\n
-Last Updated:  7/5/2018
+Version:  1.3.22                             \r\n
+Last Updated:  8/28/2018
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -71,6 +71,7 @@ then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_restart.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh
 	wget -O - -q -t 1 --timeout=2 https://magnetoai.com/api/updater/check.php?f=update_core > /dev/null
 	#-----------------------------------------------
 	wait
@@ -80,6 +81,7 @@ then
 	chmod u+x install_common.sh
 	chmod u+x sys_restart.sh
 	chmod u+x install_monitoring.sh
+	chmod u+x update_blocklists_local_servers.sh
 	wait
 	
 	mv update_core.sh /root/update_core.sh
@@ -88,6 +90,7 @@ then
 	mv install_common.sh /root/install_common.sh
 	mv sys_restart.sh /root/sys_restart.sh
 	mv install_monitoring.sh /root/install_monitoring.sh
+	mv update_blocklists_local_servers.sh /root/update_blocklists_local_servers.sh
 	
 	wait
 	if [ -d "/home/ubuntu/" ]
@@ -154,6 +157,15 @@ if [ -z "$Cron_output" ]
 then
     #-- Restart Server “At 03:13 on day-of-month 7.”
     line="13 3 7 * * /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+fi
+
+Cron_output=$(crontab -l | grep "update_blocklists_local_servers.sh")
+#echo "The output is: [ $Cron_output ]"
+if [ -z "$Cron_output" ]
+then
+    #-- Restart Server “At 03:13 on day-of-month 7.”
+    line="5 1 * * 6 /root/update_blocklists_local_servers.sh >> /var/log/update_blocklists_local_servers.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
 fi
 
