@@ -66,3 +66,8 @@ cat hosts.txt >> /etc/resolvconf/resolv.conf.d/tail
 
 sudo wget https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt
 cat adservers.txt >> /etc/resolvconf/resolv.conf.d/tail
+
+#-----------
+sudo /etc/init.d/networking restart
+
+echo "All done blocking everything bad in the world! \r\n \r\n
