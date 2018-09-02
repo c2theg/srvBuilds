@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.3                             \r\n
-Last Updated:  6/26/2018
+Version:  0.0.4                             \r\n
+Last Updated:  9/2/2018
 \r\n \r\n
 Updating system first..."
 wait
@@ -30,7 +30,7 @@ wait
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_kubernetes.sh && chmod u+x install_kubernetes.sh && ./install_kubernetes.sh
 wait
 
-echo "\r\n\r\n \r\n Cockpit! (Only for Ubuntu 16.04+) \r\n \r\n"
-sudo -E add-apt-repository -y ppa:cockpit-project/cockpit
-sudo -E apt-get install -y cockpit
-sudo systemctl start cockpit && sudo systemctl enable cockpit
+#echo "\r\n\r\n \r\n Cockpit! (Only for Ubuntu 16.04+) \r\n \r\n"
+#sudo -E add-apt-repository -y ppa:cockpit-project/cockpit
+#sudo -E apt-get install -y cockpit
+#sudo systemctl start cockpit && sudo systemctl enable cockpit
