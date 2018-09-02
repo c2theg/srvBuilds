@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.2                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  9/2/2018
 \r\n \r\n
 Updating system first..."
@@ -26,20 +26,26 @@ sudo -E apt-get update
 wait
 sudo -E apt-get upgrade -y
 wait
-  
-    # from: https://github.com/hobby-kube/guide
-    echo "Installing Kubernetes....  \r\n"
-    echo "Learning more about it here: https://kubernetes.io/docs/tutorials/kubernetes-basics/" 
-    echo "\r\n \r\n"
-    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-    cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
-    deb http://apt.kubernetes.io/ kubernetes-xenial-unstable main
-    wait
-    sudo -E apt-get update
-    sudo -E apt-get install -y kubelet kubeadm kubectl kubernetes-cni
-    wait
-    echo "\r\n \r\n Trying to use SNAP (Ubuntu 16.04+ to install Kubernetes... \r\n "
-    sudo snap install conjure-up --classic
-    sudo apt install -y conjure-up
-    wait
-    sudo conjure-up kubernetes
+
+# from: https://github.com/hobby-kube/guide
+echo "Installing Kubernetes....  \r\n"
+echo "Learning more about it here: https://kubernetes.io/docs/tutorials/kubernetes-basics/" 
+echo "\r\n \r\n"
+sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add 
+wait
+wait
+echo 'deb http://apt.kubernetes.io/ kubernetes-xenial-unstable main' >> /etc/apt/sources.list.d/kubernetes.list
+wait
+wait
+sudo -E apt-get update
+sudo -E apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+wait
+echo "\r\n \r\n Trying to use SNAP (Ubuntu 16.04+ to install Kubernetes... \r\n "
+sudo snap install conjure-up --classic
+sudo apt install -y conjure-up
+wait
+sudo conjure-up kubernetes
+wait
+wait
+echo "Initialize your master
+With everything installed, go to the machine that will serve as the Kubernetes master and issue the command:  sudo kubeadm init \r\n \r\n "
