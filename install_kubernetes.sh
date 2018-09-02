@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.1                             \r\n
-Last Updated:  4/2/2018
+Version:  0.0.2                             \r\n
+Last Updated:  9/2/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -34,7 +34,7 @@ wait
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
     cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
     deb http://apt.kubernetes.io/ kubernetes-xenial-unstable main
-    EOF
+    wait
     sudo -E apt-get update
     sudo -E apt-get install -y kubelet kubeadm kubectl kubernetes-cni
     wait
