@@ -24,7 +24,7 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_loca
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.7                            \r\n
+Version:  0.0.8                            \r\n
 Last Updated:  9/5/2018
 \r\n \r\n"
 now="$(date +'%d/%m/%Y %H:%M:%S')"
@@ -139,21 +139,22 @@ fi
 echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
 #------------------------------------------------------
 if [ $VER = '14.04' ]; then
-    #14.04 and below, use the following
     ifdown eth0 && ifup eth0
+    # or 
+    ifdown ens160 && ifup ens160
 else
     if [ $VER = '16.04' ]; then
         #-------- Ubuntu 16.04 ------------------------
-        # 16.04 and above
         ip addr flush eth0 && systemctl restart networking.service
+        
+        ip addr flush ens160 && systemctl restart networking.service
      elif [ $VER = '18.04' ]; then
-        # 16.04 and above
         ip addr flush eth0 && systemctl restart networking.service
+        
+        ip addr flush ens160 && systemctl restart networking.service
      elif [ $VER = '12.04' ]; then
-         12.04 is good for this one
          sudo /etc/init.d/networking restart
      fi
-
 fi
 
 
