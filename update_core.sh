@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.3.22                             \r\n
-Last Updated:  8/28/2018
+Version:  1.4.1                             \r\n
+Last Updated:  9/5/2018
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -52,6 +52,7 @@ then
 		rm update_core.sh
 		rm sys_restart.*
 		rm install_monitoring.*
+		rm update_blocklists_local_servers.sh.*
 	fi
 	if [ -s "/root/update_core.sh" ]
 	then
@@ -62,6 +63,7 @@ then
 		rm /root/update_core.sh
 		rm /root/install_monitoring.*
 		rm /root/sys_restart.*
+		rm /root/update_blocklists_local_servers.sh.*
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
