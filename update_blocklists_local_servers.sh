@@ -34,6 +34,7 @@ now="$(date +'%d/%m/%Y %H:%M:%S')"
 #-- only run this every 2-3 days max. not more frequent!
 
 #-- Deleting files (1) --
+rm update_blocklists_local_servers.sh.*
 rm /etc/resolvconf/resolv.conf.d/tail
 rm emd.txt.*
 rm exp.txt.*
