@@ -24,7 +24,7 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_loca
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.4                             \r\n
+Version:  0.0.5                             \r\n
 Last Updated:  9/5/2018
 \r\n \r\n"
 now="$(date +'%d/%m/%Y %H:%M:%S')"
@@ -42,6 +42,14 @@ rm grm.txt.*
 rm hjk.txt.*
 rm hosts.txt.*
 rm adservers.txt.*
+
+rm emd.txt
+rm exp.txt
+rm psh.txt
+rm grm.txt
+rm hjk.txt
+rm hosts.txt
+rm adservers.txt
 #-- Creating files
 touch /etc/resolvconf/resolv.conf.d/tail
 
@@ -86,13 +94,13 @@ cat adservers.txt >> /etc/resolvconf/resolv.conf.d/tail
 
 #---------------------------------------
 #-- Delete files (2) --
-rm emd.txt.*
-rm exp.txt.*
-rm psh.txt.*
-rm grm.txt.*
-rm hjk.txt.*
-rm hosts.txt.*
-rm adservers.txt.*
+rm emd.txt
+rm exp.txt
+rm psh.txt
+rm grm.txt
+rm hjk.txt
+rm hosts.txt
+rm adservers.txt
 #---------------------------------------
 sudo /etc/init.d/networking restart
 
