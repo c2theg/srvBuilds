@@ -24,7 +24,7 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_loca
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.5                             \r\n
+Version:  0.0.6                             \r\n
 Last Updated:  9/5/2018
 \r\n \r\n"
 now="$(date +'%d/%m/%Y %H:%M:%S')"
@@ -41,6 +41,7 @@ rm exp.txt.*
 rm psh.txt.*
 rm grm.txt.*
 rm hjk.txt.*
+rm pup.txt.*
 rm hosts.txt.*
 rm adservers.txt.*
 
@@ -49,6 +50,7 @@ rm exp.txt
 rm psh.txt
 rm grm.txt
 rm hjk.txt
+rm pup.txt
 rm hosts.txt
 rm adservers.txt
 #-- Creating files
@@ -100,9 +102,17 @@ rm exp.txt
 rm psh.txt
 rm grm.txt
 rm hjk.txt
+rm pup.txt
 rm hosts.txt
 rm adservers.txt
 #---------------------------------------
-sudo /etc/init.d/networking restart
+# 16.04 and above
+ip addr flush eth0 && systemctl restart networking.service
+
+#14.04 and below, use the following
+ifdown eth0 && ifup eth0
+
+#12.04 is good for this one
+#sudo /etc/init.d/networking restart
 
 echo "All done blocking everything bad in the world! \r\n \r\n"
