@@ -24,7 +24,7 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_loca
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.6                             \r\n
+Version:  0.0.7                            \r\n
 Last Updated:  9/5/2018
 \r\n \r\n"
 now="$(date +'%d/%m/%Y %H:%M:%S')"
@@ -106,13 +106,57 @@ rm pup.txt
 rm hosts.txt
 rm adservers.txt
 #---------------------------------------
-# 16.04 and above
-ip addr flush eth0 && systemctl restart networking.service
+#------------- Version Detection -------------
+if [ -f /etc/os-release ]; then
+    # freedesktop.org and systemd
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
+elif type lsb_release >/dev/null 2>&1; then
+    # linuxbase.org
+    OS=$(lsb_release -si)
+    VER=$(lsb_release -sr)
+elif [ -f /etc/lsb-release ]; then
+    # For some versions of Debian/Ubuntu without lsb_release command
+    . /etc/lsb-release
+    OS=$DISTRIB_ID
+    VER=$DISTRIB_RELEASE
+elif [ -f /etc/debian_version ]; then
+    # Older Debian/Ubuntu/etc.
+    OS=Debian
+    VER=$(cat /etc/debian_version)
+elif [ -f /etc/SuSe-release ]; then
+    # Older SuSE/etc.
+    ...
+elif [ -f /etc/redhat-release ]; then
+    # Older Red Hat, CentOS, etc.
+    ...
+else
+    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+    OS=$(uname -s)
+    VER=$(uname -r)
+fi
+echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
+#------------------------------------------------------
+if [ $VER = '14.04' ]; then
+    #14.04 and below, use the following
+    ifdown eth0 && ifup eth0
+else
+    if [ $VER = '16.04' ]; then
+        #-------- Ubuntu 16.04 ------------------------
+        # 16.04 and above
+        ip addr flush eth0 && systemctl restart networking.service
+     elif [ $VER = '18.04' ]; then
+        # 16.04 and above
+        ip addr flush eth0 && systemctl restart networking.service
+     elif [ $VER = '12.04' ]; then
+         12.04 is good for this one
+         sudo /etc/init.d/networking restart
+     fi
 
-#14.04 and below, use the following
-ifdown eth0 && ifup eth0
+fi
 
-#12.04 is good for this one
-#sudo /etc/init.d/networking restart
+
+
 
 echo "All done blocking everything bad in the world! \r\n \r\n"
