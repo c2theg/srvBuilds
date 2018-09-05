@@ -24,9 +24,12 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_loca
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.1                             \r\n
-Last Updated:  8/28/2018
+Version:  0.0.3                             \r\n
+Last Updated:  9/5/2018
 \r\n \r\n"
+now="$(date +'%d/%m/%Y')"
+
+
 
 #-- only run this every 2-3 days max. not more frequent!
 
@@ -34,6 +37,11 @@ rm /etc/resolvconf/resolv.conf.d/tail
 touch /etc/resolvconf/resolv.conf.d/tail
 
 #-- Sources: https://firebog.net/
+HeaderText="Custom DNS blocklist config by: Christopher Gray \r\n \r\n https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh \r\n \r\n
+List updated at $now   \r\n \r\n
+"
+echo "$HeaderText" >> /etc/resolvconf/resolv.conf.d/tail
+
 
 #-- https://hosts-file.net/?s=classifications
 # EMD - Sites engaged in malware distribution
