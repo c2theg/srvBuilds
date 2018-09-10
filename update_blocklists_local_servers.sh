@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_loca
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.8                            \r\n
-Last Updated:  9/5/2018
+Version:  0.0.9                            \r\n
+Last Updated:  9/10/2018
 \r\n \r\n"
 now="$(date +'%d/%m/%Y %H:%M:%S')"
 
@@ -36,15 +36,6 @@ now="$(date +'%d/%m/%Y %H:%M:%S')"
 #-- Deleting files (1) --
 rm update_blocklists_local_servers.sh.*
 rm /etc/resolvconf/resolv.conf.d/tail
-rm emd.txt.*
-rm exp.txt.*
-rm psh.txt.*
-rm grm.txt.*
-rm hjk.txt.*
-rm pup.txt.*
-rm hosts.txt.*
-rm adservers.txt.*
-
 rm emd.txt
 rm exp.txt
 rm psh.txt
