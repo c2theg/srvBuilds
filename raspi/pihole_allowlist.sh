@@ -26,16 +26,17 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.2                            \r\n
+Version:  0.0.3                            \r\n
 Last Updated:  9/12/2018
 \r\n \r\n"
 #--------------------------
 pihole -w github.com raw.githubusercontent.com
 
 #--- Google
-pihole -w clients4.google.com clients2.google.com dl.google.com android.clients.google.com 
+pihole -w clients2.google.com clients3.google.com clients4.google.com dl.google.com android.clients.google.com 
 pihole -w s.youtube.com video-stats.l.google.com
-pihole -w connectivitycheck.android.com android.clients.google.com clients3.google.com  connectivitycheck.gstatic.com 
+pihole -w connectivitycheck.android.com connectivitycheck.gstatic.com
+pihole -w ajax.googleapis.com
 
 #--- Microsoft - Windows uses this to verify connectivity to Internet
 pihole -w www.msftncsi.com
