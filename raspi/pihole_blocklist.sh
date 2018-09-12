@@ -70,7 +70,7 @@ https://easylist.to/easylist/easyprivacy.txt
 https://easylist.to/easylist/fanboy-annoyance.txt
 https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt
 https://www.spamhaus.org/drop/drop.txt
-
+https://zerodot1.gitlab.io/CoinBlockerLists/hosts
 \n\n
 "
 
