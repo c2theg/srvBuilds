@@ -1,0 +1,9 @@
+# Chris Gray Allow list - 
+#
+amazon.com
+apiservices.krxd.net
+fls-na.amazon.com
+go.redirectingat.com
+highcharts.com
+medium.com
+weeklyad.target.com
