@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_loca
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.9                            \r\n
-Last Updated:  9/10/2018
+Version:  0.0.10                            \r\n
+Last Updated:  9/11/2018
 \r\n \r\n"
 now="$(date +'%d/%m/%Y %H:%M:%S')"
 
@@ -44,6 +44,16 @@ rm hjk.txt
 rm pup.txt
 rm hosts.txt
 rm adservers.txt
+
+rm emd.txt.*
+rm exp.txt.*
+rm psh.txt.*
+rm grm.txt.*
+rm hjk.txt.*
+rm pup.txt.*
+rm hosts.txt.*
+rm adservers.txt.*
+
 #-- Creating files
 touch /etc/resolvconf/resolv.conf.d/tail
 
