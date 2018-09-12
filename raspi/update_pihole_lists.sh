@@ -26,7 +26,7 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.0.1                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  9/12/2018
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
@@ -45,28 +45,30 @@ echo "Checking Internet status...\r\n\r\n"
 ping -q -c3 github.com > /dev/null
 if [ $? -eq 0 ]
 then
-	echo "Connected!!! \r\n \r\n"
-	echo "Deleting old files \r\n"	
-	
-	if [ -s "/root/update_pihole_whitelist.sh" ]
+	echo "Connected!!! \r\n \r\n  Deleting old files \r\n"
+	if [ -s "/root/update_pihole_lists.sh" ]
 	then
 		#------ under crontab -----
 		rm /root/update_pihole_whitelist.sh
 		rm /root/pihole_allowlist.sh
+		rm /root/pihole_blocklist.sh
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh	
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh	
 	wget -O - -q -t 1 --timeout=2 https://magnetoai.com/api/updater/check.php?f=update_pihole_lists > /dev/null
 	#-----------------------------------------------
 	wait
 	chmod u+x update_pihole_lists.sh
 	chmod u+x pihole_allowlist.sh
+	chmod u+x pihole_blocklist.sh
 	wait
 	
 	mv update_pihole_whitelist.sh /root/update_pihole_lists.sh
 	mv pihole_allowlist.sh /root/pihole_allowlist.sh
+	mv pihole_blocklist.sh /root/pihole_blocklist.sh
 	wait
 	#if [ -d "/home/pi/" ]
 	#then
@@ -76,10 +78,11 @@ then
 	
 	wait
 	sh /root/pihole_allowlist.sh
+	wait
+	sh /root/pihole_blocklist.sh
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
-
 
 Cron_output=$(crontab -l | grep "update_pihole_lists.sh")
 #echo "The output is: [ $Cron_output ]"
