@@ -18,4 +18,4 @@ Install pi-hole as usual ( <b> curl -sSL https://install.pi-hole.net | bash </b>
 <b>To configure it to maintain extra block and white lists, use the following script </b>
 <br /><br />
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh && chmod u+x update_pihole_lists.sh.sh && sudo ./update_pihole_lists.sh.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh && chmod u+x update_pihole_lists.sh && sudo ./update_pihole_lists.sh
