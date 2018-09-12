@@ -26,7 +26,7 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.0.4                             \r\n
+Version:  0.0.5                             \r\n
 Last Updated:  9/12/2018
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists-porn.sh
@@ -49,11 +49,8 @@ then
 	if [ -s "/root/update_pihole_lists.sh" ]
 	then
 		#------ under crontab -----
-		rm /root/update_pihole_lists-porn.sh
-		rm /root/pihole_blocklist-porn.sh
-    
-		rm /root/update_pihole_lists-porn.sh.*
-		rm /root/pihole_blocklist-porn.sh.*
+		rm /root/update_pihole_lists-porn.sh*
+		rm /root/pihole_blocklist-porn.sh*
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
@@ -70,14 +67,7 @@ then
 	mv update_pihole_lists-porn.sh /root/update_pihole_lists-porn.sh
 	mv pihole_blocklist-porn.sh /root/pihole_blocklist-porn.sh
 	wait
-	#if [ -d "/home/pi/" ]
-	#then
-	#	cp /root/update_pihole_lists-porn.sh /home/pi/update_pihole_lists-porn.sh
-	#	cp /root/pihole_blocklist-porn.sh /home/pi/pihole_blocklist-porn.sh
-	#fi
-	
 
-	wait
 	sh /root/pihole_blocklist-porn.sh
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
