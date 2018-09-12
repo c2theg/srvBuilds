@@ -54,14 +54,13 @@ then
 		rm /root/pihole_blocklist.sh
 		rm /root/update_pihole_whitelist.sh.*
 		rm /root/pihole_allowlist.sh.*
-		rm /root/pihole_blocklist.sh.*		
+		rm /root/pihole_blocklist.sh.*
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh	
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh	
-	wget -O - -q -t 1 --timeout=2 https://magnetoai.com/api/updater/check.php?f=update_pihole_lists > /dev/null
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 	#-----------------------------------------------
 	wait
 	chmod u+x update_pihole_lists.sh
