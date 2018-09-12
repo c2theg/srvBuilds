@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_loca
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.11                            \r\n
-Last Updated:  9/11/2018
+Version:  0.0.13                            \r\n
+Last Updated:  9/12/2018
 \r\n \r\n"
 now="$(date +'%m/%d/%Y %H:%M:%S')"
 
@@ -59,7 +59,16 @@ touch /etc/resolvconf/resolv.conf.d/tail
 
 #-- Sources: https://firebog.net/
 HeaderText="#Custom DNS blocklist config by: Christopher Gray \r\n#\r\n #https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh \r\n #\r\n
-#List updated at $now \r\n ##----------------------------------------------- \r\n# \r\n#
+#List updated at $now \r\n ##-----------------------------------------------\r\n \r\n
+nameserver 208.67.222.222\r\n
+nameserver 208.67.220.220\r\n
+nameserver 2620:0:ccc::2\r\n
+nameserver 8.8.8.8\r\n
+nameserver 8.8.4.4\r\n
+nameserver 2001:4860:4860::8844\r\n
+nameserver 1.1.1.1\r\n
+nameserver 9.9.9.9\r\n
+\r\n\r\n
 "
 echo "$HeaderText" >> /etc/resolvconf/resolv.conf.d/tail
 
