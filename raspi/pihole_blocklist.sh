@@ -20,8 +20,8 @@ echo "
 
 \r\n \r\n
 
- https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.txt
- https://discourse.pi-hole.net/t/commonly-whitelisted-domains/212/12
+ https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
+ https://firebog.net/
 
 This really is meant to be run under Ubuntu 16.04 LTS + or Pi-Hole
 
@@ -34,7 +34,7 @@ Last Updated:  9/12/2018
 rm /etc/pihole/adlists.list
 
 #-- Sources: https://firebog.net/
-FileText="#Additional blocklists config by: Christopher Gray\n\n#https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh \n
+FileText="#Additional blocklists config by: Christopher Gray\n\n#https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh \n
 ##-----------------------------------------------\n
 # The below list amalgamates several lists we used previously.
 # See https://github.com/StevenBlack/hosts for details
@@ -74,3 +74,5 @@ https://www.spamhaus.org/drop/drop.txt
 \n\n
 "
 echo "$FileText" >> nano /etc/pihole/adlists.list
+
+pihole -g
