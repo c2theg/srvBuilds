@@ -29,7 +29,7 @@ Current working dir: $SCRIPTPATH \r\n \r\n
 Version:  0.0.1                             \r\n
 Last Updated:  9/12/2018
 
-location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_whitelist.sh
+location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
 \r\n \r\n"
 #sudo -E apt-get update
@@ -57,20 +57,20 @@ then
 
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_whitelist.sh
-	wget -O - -q -t 1 --timeout=2 https://magnetoai.com/api/updater/check.php?f=update_pihole_whitelist > /dev/null
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
+	wget -O - -q -t 1 --timeout=2 https://magnetoai.com/api/updater/check.php?f=update_pihole_lists > /dev/null
 	#-----------------------------------------------
 	wait
-	chmod u+x update_pihole_whitelist.sh
+	chmod u+x update_pihole_lists.sh
 	chmod u+x pihole_allowlist.sh
 	wait
 	
-	mv update_pihole_whitelist.sh /root/update_pihole_whitelist.sh
+	mv update_pihole_whitelist.sh /root/update_pihole_lists.sh
 	mv pihole_allowlist.sh /root/pihole_allowlist.sh
 	wait
 	#if [ -d "/home/pi/" ]
 	#then
-	#	cp /root/update_pihole_whitelist.sh /home/pi/update_pihole_whitelist.sh
+	#	cp /root/update_pihole_whitelist.sh /home/pi/update_pihole_lists.sh
 	#	cp /root/pihole_allowlist.sh /home/pi/pihole_allowlist.sh
 	#fi
 	
@@ -81,20 +81,20 @@ else
 fi
 
 
-Cron_output=$(crontab -l | grep "update_pihole_whitelist.sh")
+Cron_output=$(crontab -l | grep "update_pihole_lists.sh")
 #echo "The output is: [ $Cron_output ]"
 if [ -z "$Cron_output" ]
 then
-    echo "update_pihole_whitelist.sh not in crontab. Adding."
+    echo "update_pihole_lists.sh not in crontab. Adding."
 
     # run “At 04:20.” everyday
-    line="50 4 * * * /root/update_pihole_whitelist.sh >> /var/log/update_pihole_whitelist.log 2>&1"
+    line="50 4 * * * /root/update_pihole_lists.sh >> /var/log/update_pihole_lists.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
 
     wait
     /etc/init.d/cron restart  > /dev/null
 else
-    echo "update_pihole_whitelist.sh was found in crontab. skipping addition"
+    echo "update_pihole_lists.sh was found in crontab. skipping addition"
 fi
 
 echo "Done! \r\n \r\n"
