@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.1                             \r\n
-Last Updated:  7/1/2018
+Version:  1.6.2                             \r\n
+Last Updated:  9/11/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -113,12 +113,16 @@ rm /var/log/php7.0-fpm.log.*
 /etc/init.d/php7.0-fpm restart
 /etc/init.d/nginx restart
 
-#-- pi-hole releated ---
+#-- PI-Hole / DNS releated ---
+sudo service pihole-FTL stop
 rm /var/log/dmesg.*
 rm /var/log/pihole.log.*
 rm /var/log/pihole-FTL.log.*
+pihole -f
+wait
 /etc/init.d/lighttpd restart
 /etc/init.d/dnsmasq restart
+sudo service pihole-FTL start
 
 #---------- MISC ------------------------------------------------------
 rm /var/log/update_core.log
