@@ -58,21 +58,22 @@ then
 
 	echo "Downloading latest versions... \r\n\r\n"	
 
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist-porn.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists-porn.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist-porn.sh
+	
 	#-----------------------------------------------
 	wait
-	chmod u+x update_pihole_lists.sh
+	chmod u+x update_pihole_lists-porn.sh
 	chmod u+x pihole_blocklist-porn.sh
 	wait
 	
-	mv update_pihole_whitelist.sh /root/update_pihole_lists.sh
-	mv pihole_blocklist.sh /root/pihole_blocklist-porn.sh
+	mv update_pihole_lists-porn.sh /root/update_pihole_lists-porn.sh
+	mv pihole_blocklist-porn.sh /root/pihole_blocklist-porn.sh
 	wait
 	#if [ -d "/home/pi/" ]
 	#then
-	#	cp /root/update_pihole_whitelist.sh /home/pi/update_pihole_lists.sh
-	#	cp /root/pihole_allowlist.sh /home/pi/pihole_allowlist.sh
+	#	cp /root/update_pihole_lists-porn.sh /home/pi/update_pihole_lists-porn.sh
+	#	cp /root/pihole_blocklist-porn.sh /home/pi/pihole_blocklist-porn.sh
 	#fi
 	
 
