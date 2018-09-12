@@ -26,7 +26,7 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS + or Pi-Hole
 
 \r\n \r\n
-Version:  0.0.1                            \r\n
+Version:  0.0.2                            \r\n
 Last Updated:  9/12/2018
 \r\n \r\n"
 
@@ -36,8 +36,8 @@ rm /etc/pihole/adlists.list
 #-- Sources: https://firebog.net/
 FileText="#Additional blocklists config by: Christopher Gray\n\n#https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh \n
 ##-----------------------------------------------\n
-
-
+https://raw.githubusercontent.com/chadmayfield/my-pihole-blocklists/master/lists/pi_blocklist_porn_all.list
+https://raw.githubusercontent.com/chadmayfield/pihole-blocklists/master/lists/pi_blocklist_porn_top1m.list
 \n\n
 "
 
