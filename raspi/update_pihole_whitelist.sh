@@ -28,6 +28,9 @@ Current working dir: $SCRIPTPATH \r\n \r\n
 
 Version:  0.0.1                             \r\n
 Last Updated:  9/12/2018
+
+location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_whitelist.sh
+
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -54,7 +57,7 @@ then
 
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_pihole_whitelist.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_whitelist.sh
 	wget -O - -q -t 1 --timeout=2 https://magnetoai.com/api/updater/check.php?f=update_pihole_whitelist > /dev/null
 	#-----------------------------------------------
 	wait
