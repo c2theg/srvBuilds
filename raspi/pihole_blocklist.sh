@@ -26,7 +26,7 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS + or Pi-Hole
 
 \r\n \r\n
-Version:  0.0.3                            \r\n
+Version:  0.1.3                            \r\n
 Last Updated:  9/12/2018
 \r\n \r\n"
 
