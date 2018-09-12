@@ -26,7 +26,7 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.1.4                             \r\n
+Version:  0.1.5                             \r\n
 Last Updated:  9/12/2018
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
@@ -49,15 +49,10 @@ then
 	if [ -s "/root/update_pihole_lists.sh" ]
 	then
 		#------ under crontab -----
-		rm /root/update_pihole_whitelist.sh
-		rm /root/pihole_allowlist.sh
-		rm /root/pihole_blocklist.sh
-		rm /root/pihole_blocklist-porn.sh
-		
-		rm /root/update_pihole_whitelist.sh.*
-		rm /root/pihole_allowlist.sh.*
-		rm /root/pihole_blocklist.sh.*
-		rm /root/pihole_blocklist-porn.sh.*
+		rm /root/pihole_allowlist.sh*
+		rm /root/pihole_blocklist.sh*
+		rm /root/update_pihole_lists.sh*
+		rm /root/update_pihole_lists-porn.sh*
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
@@ -67,25 +62,18 @@ then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists-porn.sh
 	#-----------------------------------------------
 	wait
-	chmod u+x update_pihole_lists.sh
 	chmod u+x pihole_allowlist.sh
 	chmod u+x pihole_blocklist.sh
+	chmod u+x update_pihole_lists.sh
 	chmod u+x update_pihole_lists-porn.sh
 	wait
 	
-	mv update_pihole_whitelist.sh /root/update_pihole_lists.sh
 	mv pihole_allowlist.sh /root/pihole_allowlist.sh
 	mv pihole_blocklist.sh /root/pihole_blocklist.sh
-	mv update_pihole_lists-porn /root/update_pihole_lists-porn.sh
+	mv update_pihole_lists.sh /root/update_pihole_lists.sh	
+	mv update_pihole_lists-porn.sh /root/update_pihole_lists-porn.sh
 	wait
 	
-	#if [ -d "/home/pi/" ]
-	#then
-	#	cp /root/update_pihole_whitelist.sh /home/pi/update_pihole_lists.sh
-	#	cp /root/pihole_allowlist.sh /home/pi/pihole_allowlist.sh
-	#fi
-	
-	wait
 	sh /root/pihole_allowlist.sh
 	wait
 	sh /root/pihole_blocklist.sh
