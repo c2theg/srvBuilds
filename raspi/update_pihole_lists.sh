@@ -52,6 +52,9 @@ then
 		rm /root/update_pihole_whitelist.sh
 		rm /root/pihole_allowlist.sh
 		rm /root/pihole_blocklist.sh
+		rm /root/update_pihole_whitelist.sh.*
+		rm /root/pihole_allowlist.sh.*
+		rm /root/pihole_blocklist.sh.*		
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
