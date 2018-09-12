@@ -26,10 +26,11 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.1                            \r\n
-Last Updated:  9/11/2018
+Version:  0.0.2                            \r\n
+Last Updated:  9/12/2018
 \r\n \r\n"
 #--------------------------
+pihole -w github.com raw.githubusercontent.com
 
 #--- Google
 pihole -w clients4.google.com clients2.google.com dl.google.com android.clients.google.com 
