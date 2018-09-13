@@ -26,7 +26,7 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.3                            \r\n
+Version:  0.0.4                            \r\n
 Last Updated:  9/12/2018
 \r\n \r\n"
 #--------------------------
@@ -71,6 +71,6 @@ pihole -w captive.apple.com gsp1.apple.com www.apple.com www.appleiphonecell.com
 pihole -w app-analytics.snapchat.com sc-analytics.appspot.com cf-st.sc-cdn.net
 
 #--- Ads that are good
-pihole -w weeklyad.target.com m.weeklyad.target.com weeklyad.target.com.edgesuite.net
+pihole -w weeklyad.target.com m.weeklyad.target.com weeklyad.target.com.edgesuite.net api.target.com redsky.target.com profile.target.com 
 pihole -w amazon.com fls-na.amazon.com
 
