@@ -28,8 +28,8 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "Install Pi-Hole \r\n"
-sudo curl -sSL https://install.pi-hole.net | bash
+#echo "Install Pi-Hole \r\n"
+#sudo curl -sSL https://install.pi-hole.net | bash
 
 clear
 #--------------------------------------------------------------------------------------------
