@@ -36,7 +36,7 @@ clear
 # install OpenDNS IP Updater client
 # https://support.opendns.com/hc/en-us/articles/227987727
 
-sudo apt-get install ddclient
+sudo apt-get install -y ddclient
 
 FileText="
 #------------ Config -----------------------
