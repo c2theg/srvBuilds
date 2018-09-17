@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  9/16/2018
 \r\n \r\n
 Updating system first..."
@@ -38,6 +38,9 @@ clear
 
 sudo apt-get install -y ddclient
 
+wait
+wait
+
 FileText="
 #------------ Config -----------------------
 ##
@@ -52,10 +55,11 @@ password=‘opendns_password’
 opendns_network_label
 #-----------------------------------------
 "
-
 touch /etc/ddclient.conf
 echo -n "$FileText" >> /etc/ddclient.conf
 
+echo "\r\n \r\n"
+echo "Edit the config file here: nano /etc/ddclient.conf \r\n \r\n"
 echo "Start the service: sudo service ddclient start \r\n "
 echo "Get the current status: sudo service ddclient status \r\n \r\n"
 
