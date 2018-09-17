@@ -1,0 +1,40 @@
+# Chris Gray 
+# Custom blocklist
+#
+# Date: September 16 2018
+# Number of unique domains: 11
+#
+# Fetch the latest version of this file: https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+#
+# ===============================================================
+
+127.0.0.1 localhost
+127.0.0.1 localhost.localdomain
+127.0.0.1 local
+255.255.255.255 broadcasthost
+::1 localhost
+::1 ip6-localhost
+::1 ip6-loopback
+fe80::1%lo0 localhost
+ff00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
+0.0.0.0 0.0.0.0
+
+# Start Chris Gray
+#=====================================
+# Hosts contributed by Chris Gray
+
+0.0.0.0 ad.bidfluence.com	
+0.0.0.0 ak.ssl.imgfarm.com	
+0.0.0.0 ak.staticimgfarm.com	
+0.0.0.0 auth.gfx.ms	
+0.0.0.0 e.serverbid.com	
+0.0.0.0 pixel.s3xified.com	
+0.0.0.0 softwareupdate.vmware.com	
+0.0.0.0 static.cmptch.com	
+0.0.0.0 us-u.openx.net	
+0.0.0.0 www.spine.host	
+0.0.0.0 ytdownloaet353.ovh
