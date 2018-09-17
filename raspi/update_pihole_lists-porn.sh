@@ -79,8 +79,8 @@ if [ -z "$Cron_output" ]
 then
     echo "update_pihole_lists-porn.sh not in crontab. Adding."
 
-    # run “At 04:20.” everyday
-    line="55 4 * * * /root/update_pihole_lists-porn.sh >> /var/log/update_pihole_lists-porn.log 2>&1"
+    # run “At 04:25” everyday
+    line="25 4 * * * /root/update_pihole_lists-porn.sh >> /var/log/update_pihole_lists-porn.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
 
     wait
