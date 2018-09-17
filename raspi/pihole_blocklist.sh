@@ -58,19 +58,22 @@ https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 
 ##Hosts-file.net
 https://hosts-file.net/ad_servers.txt
-
 https://hosts-file.net/emd.txt
 https://hosts-file.net/exp.txt
 https://hosts-file.net/hjk.txt
 https://hosts-file.net/pup.txt
+
+## uBlock Origin lists
 https://www.malwaredomainlist.com/hostslist/hosts.txt
 https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt
 https://easylist.to/easylist/easylist.txt
 https://easylist.to/easylist/easyprivacy.txt
 https://easylist.to/easylist/fanboy-annoyance.txt
 https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt
+
 https://www.spamhaus.org/drop/drop.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts
+https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
 \n\n
 "
 
