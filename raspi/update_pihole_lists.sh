@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.1.5                             \r\n
-Last Updated:  9/12/2018
+Version:  0.1.6                             \r\n
+Last Updated:  9/16/2018
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
@@ -88,7 +88,7 @@ then
     echo "update_pihole_lists.sh not in crontab. Adding."
 
     # run “At 04:20.” everyday
-    line="50 4 * * * /root/update_pihole_lists.sh >> /var/log/update_pihole_lists.log 2>&1"
+    line="20 4 * * * /root/update_pihole_lists.sh >> /var/log/update_pihole_lists.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
 
     wait
