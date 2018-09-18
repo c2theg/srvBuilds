@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.2                             \r\n
-Last Updated:  9/11/2018
+Version:  1.6.3                             \r\n
+Last Updated:  9/18/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -122,7 +122,15 @@ pihole -f
 wait
 /etc/init.d/lighttpd restart
 /etc/init.d/dnsmasq restart
+wait
+wait
+
 sudo service pihole-FTL start
+#sudo service pihole-FTL restart
+#-------
+sudo service lighttpd status
+sudo service dnsmasq status
+sudo service pihole-FTL status
 
 #---------- MISC ------------------------------------------------------
 rm /var/log/update_core.log
