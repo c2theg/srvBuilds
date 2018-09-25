@@ -1,3 +1,11 @@
+#!/bin/sh
+#    If you update this from Windows, using Notepad ++, do the following:
+#       sudo apt-get -y install dos2unix
+#       dos2unix <FILE>
+#       chmod u+x <FILE>
+#
+clear
+
 echo "\r\n \r\n Docker Tests \r\n \r\n"
 
 
