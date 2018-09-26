@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.3                             \r\n
-Last Updated:  9/18/2018
+Version:  1.6.4                             \r\n
+Last Updated:  9/26/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -109,29 +109,34 @@ echo "\r\n \r\n Removing Nginx and PHP logs, then restarting both services.. \r\
 rm -rf /var/log/nginx/*
 rm /var/log/php5-fpm.log.*
 rm /var/log/php7.0-fpm.log.*
+#rm /var/log/php7.1-fpm.log.*
+#rm /var/log/php7.2-fpm.log.*
 
 /etc/init.d/php7.0-fpm restart
 /etc/init.d/nginx restart
 
-#-- PI-Hole / DNS releated ---
+#------- PI-Hole / DNS releated ----------
+pihole -f
+wait
 sudo service pihole-FTL stop
+wait
 rm /var/log/dmesg.*
 rm /var/log/pihole.log.*
 rm /var/log/pihole-FTL.log.*
-pihole -f
+kill $(lsof -t -i:53)
 wait
 /etc/init.d/lighttpd restart
 /etc/init.d/dnsmasq restart
 wait
-wait
-
 sudo service pihole-FTL start
-#sudo service pihole-FTL restart
+sudo systemctl restart pihole-FTL
 #-------
 sudo service lighttpd status
 sudo service dnsmasq status
 sudo service pihole-FTL status
 
+rm /var/log/update_blocklists_local_servers.log
+rm /var/log/update_pihole_lists.log
 #---------- MISC ------------------------------------------------------
 rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
