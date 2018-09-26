@@ -21,7 +21,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.5                             \r\n
+Version:  1.6.6                             \r\n
 Last Updated:  9/26/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
@@ -119,6 +119,7 @@ rm /var/log/php7.0-fpm.log.*
 pihole -f
 wait
 sudo service pihole-FTL stop
+sudo service dnsmasq stop
 wait
 rm /var/log/dmesg.*
 rm /var/log/pihole.log.*
@@ -126,10 +127,11 @@ rm /var/log/pihole-FTL.log.*
 kill $(lsof -t -i:53)
 wait
 /etc/init.d/lighttpd restart
-/etc/init.d/dnsmasq restart
+#/etc/init.d/dnsmasq restart
+sudo service dnsmasq start
 wait
 sudo service pihole-FTL start
-#sudo systemctl restart pihole-FTL
+sudo systemctl restart pihole-FTL
 #-------
 #sudo service lighttpd status
 #sudo service dnsmasq status
