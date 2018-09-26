@@ -21,7 +21,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.4                             \r\n
+Version:  1.6.5                             \r\n
 Last Updated:  9/26/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
@@ -129,10 +129,10 @@ wait
 /etc/init.d/dnsmasq restart
 wait
 sudo service pihole-FTL start
-sudo systemctl restart pihole-FTL
+#sudo systemctl restart pihole-FTL
 #-------
-sudo service lighttpd status
-sudo service dnsmasq status
+#sudo service lighttpd status
+#sudo service dnsmasq status
 sudo service pihole-FTL status
 
 rm /var/log/update_blocklists_local_servers.log
