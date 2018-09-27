@@ -7,30 +7,31 @@
 #   This file is meant for Mac OSX or Linux (Ubuntu / CentOS)
 clear
 
-echo "Checking LOCAL directory structure. (/ContainerVolumes/data/sql/mysql).. \r\n \r\n "
+echo "Checking LOCAL directory structure. (./ContainerVolumes/data/sql/mysql).. \r\n \r\n "
 
-if [ ! -d "/ContainerVolumes" ];
+if [ ! -d "./ContainerVolumes" ];
 then
-  mkdir /ContainerVolumes
+  sudo mkdir ./ContainerVolumes
 fi
 
-if [ ! -d "/ContainerVolumes/data" ];
+if [ ! -d "./ContainerVolumes/data" ];
 then
-  mkdir /ContainerVolumes/data
+  sudo mkdir ./ContainerVolumes/data
 fi
 
-if [ ! -d "/ContainerVolumes/data/sql" ];
+if [ ! -d "./ContainerVolumes/data/sql" ];
 then
-  mkdir /ContainerVolumes/data/sql
+  sudo mkdir ./ContainerVolumes/data/sql
 fi
 
-if [ ! -d "/ContainerVolumes/data/sql/mysql" ];
+if [ ! -d "./ContainerVolumes/data/sql/mysql" ];
 then
-  mkdir /ContainerVolumes/data/sql/mysql
+  sudo mkdir ./ContainerVolumes/data/sql/mysql
 fi
+echo "\r\n Done. \r\n"
 
 echo "\r\n Downloading config... \r\n \r\n"
-wget -O "/ContainerVolumes/data/sql/mysql/mysqld.cnf" "https://github.com/c2theg/srvBuilds/blob/master/configs/mysqld-container.cnf"
+sudo curl -o "./ContainerVolumes/data/sql/mysql/mysqld.cnf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/mysqld-container.cnf"
 
 echo "Starting container... \r\n \r\n "
 
@@ -43,7 +44,7 @@ docker run -it \
   -v /ContainerVolumes/data/sql/mysql:/etc/mysql/conf.d \
   -e MYSQL_ROOT_PASSWORD=SecretP@ssw0rd!@# \
   percona:5-stretch \
-  --skip-symbolic-links --initialize-insecure --skip-name-resolve
+  --skip-symbolic-links --initialize-insecure --skip-name-resolve --ignore-db-dir
 
 
 echo "\r\n \r\n DONE! \r\n \r\n"
