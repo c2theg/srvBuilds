@@ -21,4 +21,7 @@ docker images -a
 echo "\r\n Docker Containers running: (docker ps -a) \r\n "
 docker ps -a
 
+echo "\r\n Docker Volumes: (docker volume ls) \r\n "
+docker volume ls
+
 echo "\r\n \r\n"
