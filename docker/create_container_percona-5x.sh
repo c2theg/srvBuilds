@@ -1,8 +1,8 @@
 #!/bin/sh
 #
 #   Christopher Gray
-#     Version 0.1.4
-#     Updated: 9/27/18
+#     Version 0.1.5
+#     Updated: 9/29/18
 #
 #   This file is meant for Mac OSX or Linux (Ubuntu / CentOS)
 clear
@@ -42,15 +42,21 @@ echo "Starting container... \r\n \r\n "
 
 docker run -it \
   --hostname MySQL \
-  --name=MySQL \
-  --net=bridge \
-  --expose=3306 \
+  --name MySQL \
+  --net bridge \
+  --expose 3306 \
   -p 3306:3306 \
-  -v ContainerVolumes/data/sql/mysql:/etc/mysql/conf.d \
-  -e MYSQL_ROOT_PASSWORD=SecretP@ssw0rd!@# \
+  -v ~/ContainerVolumes/data/sql/mysql:/etc/mysql/conf.d \
+  -e MYSQL_ROOT_PASSWORD="SecretP@ssw0rd1" \
   percona:5-stretch \
-  --skip-symbolic-links --initialize-insecure --skip-name-resolve --ignore-db-dir
+  --skip-symbolic-links  --skip-name-resolve  --skip-name-resolve
 
+
+#docker run -it --hostname MySQL --name MySQL --net bridge --expose 3306 -p 3306:3306 -v ~/ContainerVolumes/data/sql/mysql:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD="SecretP@ssw0rd" percona:5-stretch --skip-symbolic-links  --skip-name-resolve
+#--initialize-insecure
+
+
+docker run --name some-percona -v /my/custom:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=my-secret-pw -d percona:tag
 
 echo "\r\n \r\n DONE! \r\n \r\n"
 docker images
