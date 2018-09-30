@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.9                             \r\n
-Last Updated:  8/27/2018
+Version:  1.5.0                             \r\n
+Last Updated:  9/30/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -88,6 +88,12 @@ else
         sudo -E apt install -y docker.io
      fi
      #----------------------------------------
+     #--- Install Docker Compose ---
+     # Get Latest from: https://github.com/docker/compose/releases
+     sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+     sudo chmod +x /usr/local/bin/docker-compose
+     docker-compose --version
+     #------------------------------------
      wait
      echo "\r\n\r\n \r\n Adding Cockpit (Only for Ubuntu 16.04+) https://cockpit-project.org/  \r\n \r\n"
      sudo add-apt-repository -y ppa:cockpit-project/cockpit
