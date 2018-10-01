@@ -1,6 +1,6 @@
 #  Docker compose file which creates a Nginx & PHP container, and sets resource limits
 #  By: Christopher MJ Gray
-#  version: 0.0.3
+#  version: 0.0.4
 #  10/1/18
 #  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-nginx_php.yml
 #
@@ -11,11 +11,13 @@ services:
         image: nginx:latest
         ports:
             - "80:80"
-            - "443:443"
+#            - "443:443"
         volumes:
             - ./container-nginx.conf:/etc/nginx/nginx.conf
-            - ./site1.conf:/etc/nginx/conf.d/site1.conf
-            - ./site1_tls.conf:/etc/nginx/conf.d/site1_tls.conf
+            - ./site1.conf:/etc/nginx/conf.d/site1.conf            
+#       *** If you include the TLS Config, make sure to define an ssl key ***
+#           - ./site1_tls.conf:/etc/nginx/conf.d/site1_tls.conf
+        *********************************************************************
             - ./code:/var/www/html
         networks:
             - code-network
