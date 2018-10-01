@@ -6,24 +6,41 @@
 #
 clear
 now=$(date)
-echo "Running .sh at $now 
- _____             _         _    _          _                                   
-|     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
-|   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
-|_____|_| |___|__,|_| |___|___|  |___|_  |  |_|                                  
-                                     |___|                                       
-                                                                                 
+echo "Running deploy_nginx-php.sh at $now 
+
+
+ /$$$$$$$   /$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$$$$$$ 
+| $$__  $$ /$$__  $$ /$$__  $$| $$  /$$/| $$_____/| $$__  $$
+| $$  \ $$| $$  \ $$| $$  \__/| $$ /$$/ | $$      | $$  \ $$
+| $$  | $$| $$  | $$| $$      | $$$$$/  | $$$$$   | $$$$$$$/
+| $$  | $$| $$  | $$| $$      | $$  $$  | $$__/   | $$__  $$
+| $$  | $$| $$  | $$| $$    $$| $$\  $$ | $$      | $$  \ $$
+| $$$$$$$/|  $$$$$$/|  $$$$$$/| $$ \  $$| $$$$$$$$| $$  | $$
+|_______/  \______/  \______/ |__/  \__/|________/|__/  |__/
+                                                            
+                                                            
+Created By:                                                                                 
  _____ _       _     _           _              _____    __    _____             
 |     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _ 
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.2                             \r\n
+Version:  0.0.4                             \r\n
 Last Updated:  10/1/2018
 \r\n \r\n"
 wait
 #---------- Download config files ----------------
+if [ -s "container-nginx.conf" ]
+then
+    echo "Deleting old files \r\n"
+    rm container-nginx.conf
+    rm site1.conf
+    rm site1_tls.conf
+    rm container-php-fpm.ini
+    rm docker-compose-nginx_php.yml
+    rm sysinfo.php
+fi
 #--- Nginx Configs
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-nginx.conf
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1.conf
