@@ -1,19 +1,21 @@
 #  Docker compose file which creates a Nginx & PHP container, and sets resource limits
 #  By: Christopher MJ Gray
-#  version: 0.0.1
+#  version: 0.0.2
 #  10/1/18
 #  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-nginx_php.yml
 #
 version: '3'
 services:
     web:
+        container_name: nginx
         image: nginx:latest
         ports:
-            - "8080:80"
+            - "80:80"
+            - "443:443"
         volumes:
             - ./container-nginx.conf:/etc/nginx/nginx.conf
             - ./site1.conf:/etc/nginx/conf.d/site1.conf
-            - ./code:/code
+            - ./code:/var/www/html
         networks:
             - code-network
         deploy:
@@ -29,11 +31,16 @@ services:
                 delay: 5s
                 max_attempts: 3
                 window: 120s
+#        logging:
+#            driver: syslog
+#            options:
+#                syslog-address: "tcp://192.168.0.42:1514"                
     php:
+        container_name: php7.2
         image: php:fpm
         volumes:
-            - ./container-php-fpm.ini:/etc/php/7.2/fpm/php.ini        
-            - ./code:/code
+            - ./container-php-fpm.ini:/usr/local/etc/php/conf.d/php.ini        
+            - ./code:/var/www/html
         networks:
             - code-network
         deploy:
@@ -49,6 +56,8 @@ services:
                 delay: 5s
                 max_attempts: 3
                 window: 120s
+                
+                
 networks:
     code-network:
         driver: bridge
