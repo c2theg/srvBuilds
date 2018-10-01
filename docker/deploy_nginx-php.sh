@@ -6,7 +6,7 @@
 #
 clear
 now=$(date)
-echo "Running deploy_nginx-php.sh at $now 
+echo "Running .sh at $now 
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
@@ -19,7 +19,7 @@ echo "Running deploy_nginx-php.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.2                             \r\n
 Last Updated:  10/1/2018
 \r\n \r\n"
 wait
@@ -27,6 +27,7 @@ wait
 #--- Nginx Configs
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-nginx.conf
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1_tls.conf
 #--- PHP Config
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-php-fpm.ini
 
