@@ -1,12 +1,21 @@
 version: '3'
 services:
-  redis:
-    image: redis:alpine
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 128M
-        reservations:
-          cpus: '0.25'
-          memory: 20M
+    redis:
+        image: redis:alpine
+        ports:
+            - "6379:6379"
+        volumes:
+            - ./container-redis.conf:/etc/redis/redis_6379.conf
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 128M
+                reservations:
+                    cpus: '0.25'
+                    memory: 20M
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
