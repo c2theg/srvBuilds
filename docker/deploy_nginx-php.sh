@@ -26,7 +26,7 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.6                             \r\n
+Version:  0.0.8                             \r\n
 Last Updated:  10/1/2018
 \r\n \r\n"
 wait
@@ -56,13 +56,11 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-co
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/sysinfo.php
 #-----------------------------------------------------------------------------------------------------------------
 # create code dir and move code
-if [ -s "code" ]
+if [ ! -d "code" ]
 then
 	sudo mkdir code
 fi
-
 cp sysinfo.php ./code/index.php
-
 #--- rename config file to "docker-compose.yml"
 mv docker-compose-nginx_php.yml docker-compose.yml
 #--- start up container
