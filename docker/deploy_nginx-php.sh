@@ -26,7 +26,7 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.4                             \r\n
+Version:  0.0.5                             \r\n
 Last Updated:  10/1/2018
 \r\n \r\n"
 wait
@@ -34,6 +34,7 @@ wait
 if [ -s "container-nginx.conf" ]
 then
     echo "Deleting old files \r\n"
+    rm docker-compose.yml
     rm container-nginx.conf
     rm site1.conf
     rm site1_tls.conf
@@ -59,8 +60,8 @@ sudo mkdir code
 cp sysinfo.php ./code/index.php
 
 #--- rename config file to "docker-compose.yml"
-#mv docker-compose-nginx_php.yml docker-compose.yml
+mv docker-compose-nginx_php.yml docker-compose.yml
 #--- start up container
-#docker-compose up
-docker-compose -f docker-compose-nginx_php.yml -p Webapp-Nginx-PHP
+#docker-compose -f docker-compose-nginx_php.yml -p Webapp-Nginx-PHP
+docker-compose up
 echo "Done! \r\n \r\n"
