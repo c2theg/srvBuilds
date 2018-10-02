@@ -1,5 +1,14 @@
+  mysql:
+    image: mysql:5.7
     environment:
-      DATABASE_HOST: 'mysql'
-      DATABASE_NAME: 'mysql_database'
-      DATABASE_USER: 'mysql_user'
-      DATABASE_PASSWORD: 'mysql_pw'
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mysql_database
+      MYSQL_USER: mysql_user
+      MYSQL_PASSWORD: mysql_pw
+    ports:
+      - "13306:3306"
+    volumes_from:
+      - data
+    volumes:
+      - ../application/initial.sql:/docker-entrypoint-initdb.d/initial.sql
+    container_name: mysql
