@@ -1,7 +1,7 @@
 #  Docker compose file which creates a Nginx & PHP container, and sets resource limits
 #  By: Christopher MJ Gray
-#  version: 0.0.5
-#  10/1/18
+#  version: 0.0.6
+#  10/2/18
 #  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-nginx_php.yml
 #
 version: '3'
@@ -43,7 +43,7 @@ services:
         container_name: php7.2
         image: php:fpm
         volumes:
-            - container-php-fpm.ini:/usr/local/etc/php/conf.d/php.ini
+            - ./container-php-fpm.ini:/usr/local/etc/php/conf.d/php.ini
             - ./code:/var/www/html
         networks:
             - code-network
