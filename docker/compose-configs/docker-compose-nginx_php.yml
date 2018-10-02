@@ -63,7 +63,7 @@ services:
 # ==============
 
     php:
-        container_name: php7.2
+        container_name: php_latest_prod
         image: php:fpm
         volumes:
             - ./container-php-fpm.ini:/usr/local/etc/php/conf.d/php.ini:ro
