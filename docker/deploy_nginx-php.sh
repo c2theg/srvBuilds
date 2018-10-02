@@ -26,8 +26,8 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.9                             \r\n
-Last Updated:  10/1/2018
+Version:  0.0.10                             \r\n
+Last Updated:  10/2/2018
 \r\n \r\n"
 wait
 #---------- Download config files ----------------
@@ -44,7 +44,7 @@ then
 fi
 #--- Nginx Configs
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-nginx.conf
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-site1.conf
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1_tls.conf
 #--- PHP Config
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-php-fpm.ini
