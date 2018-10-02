@@ -13,7 +13,7 @@ services:
 # =   NGINX    =
 # ==============
     web:
-        container_name: nginx_site1.com
+        container_name: nginx_site1
         image: nginx:latest
         ports:
             - "80:80"
@@ -60,7 +60,6 @@ services:
 # ==============
 # =    PHP     =
 # ==============
-
     php:
         container_name: php_latest_prod
         image: php:fpm
