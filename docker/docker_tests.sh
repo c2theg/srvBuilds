@@ -29,4 +29,8 @@ docker volume ls
 echo "\r\n Docker Networking: (docker network inspect bridge) \r\n "
 docker network inspect bridge
 
+
+echo "\r\n---------------- DEBUG Commands ---------------------------- \r\n \r\n"
+echo "SSH into nginx container: docker exec -it nginx /bin/bash \r\n "
+
 echo "\r\n \r\n"
