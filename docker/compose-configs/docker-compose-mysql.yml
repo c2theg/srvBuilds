@@ -1,0 +1,5 @@
+    environment:
+      DATABASE_HOST: 'mysql'
+      DATABASE_NAME: 'mysql_database'
+      DATABASE_USER: 'mysql_user'
+      DATABASE_PASSWORD: 'mysql_pw'
