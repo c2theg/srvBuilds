@@ -1,9 +1,11 @@
 #  Docker compose file which creates a Nginx & PHP container, and sets resource limits
 #  By: Christopher MJ Gray
-#  version: 0.0.6
+#  version: 0.0.8
 #  10/2/18
 #  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-nginx_php.yml
 #
+#---------------------------------------------------------------------------------------------------------------------------
+
 version: '3'
 services:
     web:
@@ -13,29 +15,41 @@ services:
             - "80:80"
 #            - "443:443"
         volumes:
-            - ./container-nginx.conf:/etc/nginx/nginx.conf
-            - ./site1.conf:/etc/nginx/conf.d/site1.conf            
+            - ./container-nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./site1.conf:/etc/nginx/conf.d/site1.conf:ro
 #       *** If you include the TLS Config, make sure to define an ssl key first ***
-#           - ./site1_tls.conf:/etc/nginx/conf.d/site1_tls.conf
+#           - ./site1_tls.conf:/etc/nginx/conf.d/site1_tls.conf:ro
+#           - ./ssl_certs:/opt/ssl/:ro
 #       ***************************************************************************
-            - ./code:/var/www/html
+            - ./code:/var/www/html:ro
         networks:
             - code-network
-        deploy:
-            replicas: 1
-            resources:
-                limits:
-                    cpus: '0.50'
-                    memory: 128M
-                reservations:
-                    cpus: '0.25'
-                    memory: 20M
-            restart_policy:
-                condition: on-failure
-                delay: 5s
-                max_attempts: 3
-                window: 120s
-#        logging:
+#       ***************************************************************************
+        environment:
+            - NGINX_HOST=example.com
+            - NGINX_PORT=80
+#       ***************************************************************************            
+#        deploy:
+#            replicas: 1
+#            resources:
+#                limits:
+#                    cpus: '0.50'
+#                    memory: 128M
+#                reservations:
+#                    cpus: '0.25'
+#                    memory: 20M
+#            restart_policy:
+#                condition: on-failure
+#                delay: 5s
+#                max_attempts: 3
+#                window: 120s
+#       ***************************************************************************
+#       command: [nginx-debug, '-g', 'daemon off;'
+#
+#       - Bellow will make a dynamic config file site1.conf using the site1.template = https://docs.docker.com/samples/library/nginx/#using-environment-variables-in-nginx-configuration
+#       command: /bin/bash -c "envsubst < /etc/nginx/conf.d/site1.template > /etc/nginx/conf.d/site1.conf && exec nginx -g 'daemon off;'"
+#       ***************************************************************************
+#       logging:
 #            driver: syslog
 #            options:
 #                syslog-address: "tcp://10.1.1.110:1514"
@@ -43,24 +57,28 @@ services:
         container_name: php7.2
         image: php:fpm
         volumes:
-            - ./container-php-fpm.ini:/usr/local/etc/php/conf.d/php.ini
-            - ./code:/var/www/html
+            - ./container-php-fpm.ini:/usr/local/etc/php/conf.d/php.ini:ro
+            - ./code:/var/www/html:ro
         networks:
             - code-network
-        deploy:
+#       ***************************************************************************            
+#        deploy:
 #            replicas: 1
-            resources:
-                limits:
-                    cpus: '0.50'
-                    memory: 128M
-                reservations:
-                    cpus: '0.25'
-                    memory: 20M
-            restart_policy:
-                condition: on-failure
-                delay: 5s
-                max_attempts: 3
-                window: 120s
+#            resources:
+#                limits:
+#                    cpus: '0.50'
+#                   memory: 128M
+#                reservations:
+#                    cpus: '0.25'
+#                    memory: 20M
+#            restart_policy:
+#                condition: on-failure
+#                delay: 5s
+#                max_attempts: 3
+#                window: 120s
+
+
+#***************************************************************************
 networks:
     code-network:
         driver: bridge
