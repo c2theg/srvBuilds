@@ -1,6 +1,6 @@
 #  Docker compose file which creates a Nginx & PHP container, and sets resource limits
 #  By: Christopher MJ Gray
-#  version: 0.0.12
+#  version: 0.0.13
 #  10/2/18
 #  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-nginx_php.yml
 #
@@ -17,7 +17,7 @@ services:
         image: nginx:latest
         ports:
             - "80:80"
-#            - "443:443"
+#           - "443:443"
         volumes:
             - ./container-nginx.conf:/etc/nginx/nginx.conf:ro
             - ./container-site1.conf:/etc/nginx/conf.d/site1.conf:ro
@@ -25,14 +25,14 @@ services:
 #           - ./site1_tls.conf:/etc/nginx/conf.d/site1_tls.conf:ro
 #           - ./ssl_certs:/etc/nginx/certs/:ro
 #       ***************************************************************************
-#            - ./code:/usr/share/nginx/html:ro
+#           - ./code:/usr/share/nginx/html:ro
             - ./code:/code:ro
         networks:
             - code-network
 #       ***************************************************************************
 #        environment:
-#            - NGINX_HOST=example.com
-#            - NGINX_PORT=80
+#           - NGINX_HOST=example.com
+#           - NGINX_PORT=80
 #       ***************************************************************************
 #        deploy:
 #            replicas: 1
@@ -67,7 +67,7 @@ services:
             - ./container-php-fpm.ini:/usr/local/etc/php/php.ini:ro
 #           - ./code:/var/www/html:ro
 #           - ./code:/usr/share/nginx/html:ro
-           - ./code:/code:ro
+            - ./code:/code:ro
         networks:
             - code-network
 #       ***************************************************************************
