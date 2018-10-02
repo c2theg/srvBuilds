@@ -1,0 +1,7 @@
+memcached:
+    image: memcached:1.4
+
+  data:
+    image: busybox
+    volumes:
+      - ./misc/data:/var/lib/mysql
