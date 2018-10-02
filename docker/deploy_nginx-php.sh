@@ -36,7 +36,7 @@ then
     echo "Deleting old files \r\n"
     rm docker-compose.yml
     rm container-nginx.conf
-    rm site1.conf
+    rm container-site1.conf
     rm site1_tls.conf
     rm container-php-fpm.ini
     rm docker-compose-nginx_php.yml
