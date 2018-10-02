@@ -13,7 +13,7 @@ services:
 # =   NGINX    =
 # ==============
     web:
-        container_name: nginx
+        container_name: nginx_site1.com
         image: nginx:latest
         ports:
             - "80:80"
@@ -65,10 +65,10 @@ services:
         container_name: php_latest_prod
         image: php:fpm
         volumes:
-            - ./container-php-fpm.ini:/usr/local/etc/php/conf.d/php.ini:ro
+            - ./container-php-fpm.ini:/usr/local/etc/php/php.ini:ro
 #           - ./code:/var/www/html:ro
 #           - ./code:/usr/share/nginx/html:ro
-           - ./code:/code:ro            
+           - ./code:/code:ro
         networks:
             - code-network
 #       ***************************************************************************
