@@ -21,7 +21,7 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.2                             \r\n
 Last Updated:  10/2/2018
 \r\n \r\n"
 wait
@@ -30,11 +30,11 @@ if [ -s "docker-compose.yml" ]
 then
     echo "Deleting old files \r\n"
     rm docker-compose.yml
-    rm container-memcached.conf
+#    rm container-memcached.conf
     rm docker-compose-memcache.yml
 fi
 #--- Memcached Config
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-memcached.conf
+#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-memcached.conf
 #--- Docker Deployment Config
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-memcache.yml
 #-----------------------------------------------------------------------------------------------------------------
