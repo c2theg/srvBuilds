@@ -1,2 +1,19 @@
-memcached:
-    image: memcached:latest
+#  Docker compose file which creates a Memcached container, and sets resource limits
+#  By: Christopher MJ Gray
+#  version: 0.0.1
+#  10/2/18
+#  Source: 
+#
+#---------------------------------------------------------------------------------------------------------------------------
+version: '3'
+services:
+# ==============
+# =  Memcached =
+# ==============
+    memcached:
+        container_name: memcached    
+        image: memcached:latest
+        ports:
+            - "11211:11211"
+#       volumes:
+#            - ./container-memcached.conf:/usr/local/etc/memcached/memcached.conf:ro
