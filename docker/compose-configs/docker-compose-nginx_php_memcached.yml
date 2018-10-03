@@ -1,6 +1,6 @@
 #  Docker compose file which creates a Nginx & PHP container, and sets resource limits
 #  By: Christopher MJ Gray
-#  version: 0.1.1
+#  version: 0.1.2
 #  10/2/18
 #  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-nginx_php.yml
 #
@@ -45,7 +45,11 @@ services:
 #       volumes:
 #            - ./container-memcached.conf:/usr/local/etc/memcached/memcached.conf:ro
         networks:
-            - code-network            
+            - code-network   
+        environment:
+            - MEMCACHED_CACHE_SIZE=128
+#            - MEMCACHED_USERNAME=my_user
+#            - MEMCACHED_PASSWORD=my_password            
 #***************************************************************************
 networks:
     code-network:
