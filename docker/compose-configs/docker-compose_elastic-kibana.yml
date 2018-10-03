@@ -1,6 +1,6 @@
 #  Docker compose file which creates a ElasticSearch container
 #  By: Christopher MJ Gray
-#  version: 0.0.1
+#  version: 0.0.2
 #  10/3/18
 #  Source:
 #
@@ -17,8 +17,8 @@ services:
     ports:
         - 9200:9200
     volumes:
-#            - ./container-memcached.conf:/usr/local/etc/memcached/memcached.conf:ro
         - esdata1:/usr/share/elasticsearch/data
+        - ./custom_elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     environment:
         - cluster.name=docker-cluster
         - bootstrap.memory_lock=true
@@ -38,12 +38,11 @@ services:
     container_name: kibana
     image: kibana
     ports:
-      - 5601:5601
-#       volumes:
-#            - ./container-memcached.conf:/usr/local/etc/memcached/memcached.conf:ro
-        environment:
-            - MEMCACHED_CACHE_SIZE=128
-            
+        - 5601:5601
+    volumes:
+        - ./custom_elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+#    environment:
+           
 #-------------------------------------------------------------------        
 volumes:
   esdata1:
