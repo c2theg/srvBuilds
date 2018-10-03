@@ -1,0 +1,52 @@
+#  Docker compose file which creates a Nginx & PHP container, and sets resource limits
+#  By: Christopher MJ Gray
+#  version: 0.1.1
+#  10/2/18
+#  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-nginx_php.yml
+#
+#---------------------------------------------------------------------------------------------------------------------------
+version: '3'
+services:
+# ==============
+# =   NGINX    =
+# ==============
+    web:
+        container_name: nginx_site1
+        image: nginx:latest
+        ports:
+            - "80:80"
+        volumes:
+            - ./container-nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./container-site1.conf:/etc/nginx/conf.d/default.conf:ro
+            - ./code:/code:ro
+        networks:
+            - code-network
+
+# ==============
+# =    PHP     =
+# ==============
+    php:
+        container_name: php_latest_prod
+        image: php:fpm
+        volumes:
+            - ./container-php-fpm.ini:/usr/local/etc/php/php.ini:ro
+            - ./code:/code:ro
+        networks:
+            - code-network
+
+# ==============
+# =  Memcached =
+# ==============
+    memcached:
+        container_name: memcached    
+        image: memcached:latest
+        ports:
+            - "11211:11211"
+#       volumes:
+#            - ./container-memcached.conf:/usr/local/etc/memcached/memcached.conf:ro
+        networks:
+            - code-network            
+#***************************************************************************
+networks:
+    code-network:
+        driver: bridge
