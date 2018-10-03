@@ -1,0 +1,74 @@
+#  Docker compose file which creates a ElasticSearch container
+#  By: Christopher MJ Gray
+#  version: 0.0.2
+#  10/3/18
+#  Source:
+#
+#---------------------------------------------------------------------------------------------------------------------------
+version: '3.1'
+
+services:
+# =================
+# = ElasticSearch =
+# =================
+  elasticsearch1:
+    container_name: elasticsearch1
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    ports:
+        - 9200:9200
+    volumes:
+        - esdata1:/usr/share/elasticsearch1/data
+        - ./custom_elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    environment:
+        - cluster.name=docker-cluster
+        - bootstrap.memory_lock=true
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+        memlock:
+            soft: -1
+            hard: -1
+    networks:
+        - esnet
+
+
+  elasticsearch2:
+    container_name: elasticsearch2
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    ports:
+        - 9200:9200
+    volumes:
+        - esdata2:/usr/share/elasticsearch2/data
+        - ./custom_elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    environment:
+        - cluster.name=docker-cluster
+        - bootstrap.memory_lock=true
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+        memlock:
+            soft: -1
+            hard: -1
+    networks:
+        - esnet
+
+# =================
+# =    Kibana     =
+# =================
+  kibana:
+    container_name: kibana-cluster
+    image: kibana
+    ports:
+        - 5601:5601
+    volumes:
+        - ./custom_elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+#    environment:
+           
+#-------------------------------------------------------------------        
+volumes:
+  esdata1:
+    driver: local
+   esdata2:
+    driver: local   
+networks:
+  esnet:
