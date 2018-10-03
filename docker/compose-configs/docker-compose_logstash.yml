@@ -1,0 +1,30 @@
+#  Docker compose file which creates a ElasticSearch container
+#  By: Christopher MJ Gray
+#  version: 0.0.1
+#  10/3/18
+#  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-ES-cluster.yml
+#  References: https://github.com/elastic/stack-docker/blob/master/docker-compose.yml
+#              https://www.docker.elastic.co/
+#---------------------------------------------------------------------------------------------------------------------------
+version: '3.6'
+services:
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:${TAG}
+    container_name: logstash
+    secrets:
+      - source: logstash.conf
+        target: /usr/share/logstash/pipeline/logstash.conf
+      - source: logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+      - source: logstash.keystore
+        target: /usr/share/logstash/config/logstash.keystore
+      - source: ca.crt
+        target: /usr/share/logstash/config/certs/ca/ca.crt
+    networks: ['stack']
+    depends_on: ['elasticsearch']
+    healthcheck:
+      test: bin/logstash -t
+      interval: 60s
+      timeout: 50s
+      retries: 5
