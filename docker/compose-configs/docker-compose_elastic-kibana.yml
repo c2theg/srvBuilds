@@ -6,7 +6,7 @@
 #  References: https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
 #              https://www.docker.elastic.co/
 #---------------------------------------------------------------------------------------------------------------------------
-version: '3.1'
+version: '3.6'
 
 services:
 # =================
@@ -15,11 +15,6 @@ services:
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
-    ports:
-        - 9200:9200
-    volumes:
-        - esdata1:/usr/share/elasticsearch/data
-        - ./custom_elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     environment:
         - cluster.name=docker-cluster
         - bootstrap.memory_lock=true
@@ -29,9 +24,29 @@ services:
         memlock:
             soft: -1
             hard: -1
-    networks:
-        - esnet
-
+    secrets:
+      - source: ca.crt
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+      - source: elasticsearch.yml
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+      - source: elasticsearch.keystore
+        target: /usr/share/elasticsearch/config/elasticsearch.keystore
+      - source: elasticsearch.key
+        target: /usr/share/elasticsearch/config/certs/elasticsearch/elasticsearch.key
+      - source: elasticsearch.crt
+        target: /usr/share/elasticsearch/config/certs/elasticsearch/elasticsearch.crt
+    ports: ['9200:9200']
+    networks: ['esnet']
+    volumes:
+      - 'es_data:/usr/share/elasticsearch/data'
+      - './scripts/setup-users.sh:/usr/local/bin/setup-users.sh:ro'
+      - ./custom_elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    healthcheck:
+#      test: curl --cacert /usr/share/elasticsearch/config/certs/ca/ca.crt -s https://localhost:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      
 # =================
 # =    Kibana     =
 # =================
@@ -46,7 +61,7 @@ services:
            
 #-------------------------------------------------------------------        
 volumes:
-  esdata1:
+  es_data:
     driver: local
     
 networks:
