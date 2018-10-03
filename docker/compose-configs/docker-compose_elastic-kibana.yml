@@ -2,7 +2,7 @@
 #  By: Christopher MJ Gray
 #  version: 0.0.2
 #  10/3/18
-#  Source:
+#  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose_elastic-kibana.yml
 #  References: https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
 #---------------------------------------------------------------------------------------------------------------------------
 version: '3.1'
