@@ -29,8 +29,13 @@ docker volume ls
 echo "\r\n Docker Networking: (docker network inspect bridge) \r\n "
 docker network inspect bridge
 
+echo "\r\n Cheat sheet for deleting a container: https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes  \r\n \r\n "
+
 
 echo "\r\n---------------- DEBUG Commands ---------------------------- \r\n \r\n"
 echo "SSH into nginx container: docker exec -it nginx /bin/bash \r\n "
+
+
+
 
 echo "\r\n \r\n"
