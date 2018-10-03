@@ -3,7 +3,7 @@
 #  version: 0.0.2
 #  10/3/18
 #  Source:
-#
+#  References: https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
 #---------------------------------------------------------------------------------------------------------------------------
 version: '3.1'
 
