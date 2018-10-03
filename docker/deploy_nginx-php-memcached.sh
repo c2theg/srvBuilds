@@ -35,7 +35,7 @@ then
     rm site1_tls.conf
     rm container-php-fpm.ini
     rm container-memcached.conf
-    rm docker-compose-nginx_php.yml
+    rm docker-compose-nginx_php_memcached.yml
     rm sysinfo.php
 fi
 #--- Nginx Configs
