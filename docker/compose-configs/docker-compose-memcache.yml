@@ -1,8 +1,8 @@
-#  Docker compose file which creates a Memcached container, and sets resource limits
+#  Docker compose file which creates a Memcached container
 #  By: Christopher MJ Gray
-#  version: 0.0.1
-#  10/2/18
-#  Source: 
+#  version: 0.1.4
+#  10/3/18
+#  Source:
 #
 #---------------------------------------------------------------------------------------------------------------------------
 version: '3'
@@ -17,8 +17,6 @@ services:
             - "11211:11211"
 #       volumes:
 #            - ./container-memcached.conf:/usr/local/etc/memcached/memcached.conf:ro
-        networks:
-            - code-network
         environment:
             - MEMCACHED_CACHE_SIZE=128
 #            - MEMCACHED_USERNAME=my_user
