@@ -47,7 +47,7 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container
 #--- Memcached Config
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-memcached.conf
 #--- Docker Deployment Config
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-nginx_php.yml
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-nginx_php_memcached.yml
 #--- App Code
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/sysinfo.php
 
@@ -59,8 +59,7 @@ then
 fi
 cp sysinfo.php ./code/index.php
 #--- rename config file to "docker-compose.yml"
-mv docker-compose-nginx_php.yml docker-compose.yml
+mv docker-compose-nginx_php_memcached.yml docker-compose.yml
 #--- start up container
 docker-compose up
-#docker-compose -f docker-compose-nginx_php.yml -p Webapp-Nginx-PHP
 echo "Done! \r\n \r\n"
