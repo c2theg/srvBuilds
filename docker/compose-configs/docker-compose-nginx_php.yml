@@ -32,20 +32,7 @@ services:
             - ./container-php-fpm.ini:/usr/local/etc/php/php.ini:ro
             - ./code:/code:ro
         networks:
-            - code-network
-
-# ==============
-# =  Memcached =
-# ==============
-    memcached:
-        container_name: memcached    
-        image: memcached:latest
-        ports:
-            - "11211:11211"
-#       volumes:
-#            - ./container-memcached.conf:/usr/local/etc/memcached/memcached.conf:ro
-        networks:
-            - code-network            
+            - code-network         
 #***************************************************************************
 networks:
     code-network:
