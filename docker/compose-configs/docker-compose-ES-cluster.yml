@@ -4,6 +4,7 @@
 #  10/3/18
 #  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-ES-cluster.yml
 #  References: https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
+#              https://www.docker.elastic.co/
 #---------------------------------------------------------------------------------------------------------------------------
 version: '3.1'
 
