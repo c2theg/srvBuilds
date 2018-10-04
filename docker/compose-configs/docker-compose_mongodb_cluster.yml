@@ -1,0 +1,99 @@
+#  Docker compose file which creates a MongoDB container
+#  By: Christopher MJ Gray
+#  version: 0.0.1
+#  10/3/18
+#  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose_mongodb_cluster.yml
+#  References: https://hub.docker.com/r/bitnami/mongodb/
+#---------------------------------------------------------------------------------------------------------------------------
+version: '3'
+services:
+# ==============
+# =  MongoDB   =
+# ==============
+    mongodb-primary:
+        image: mongo:latest
+        container_name: "mongodb"
+        environment:
+            - MONGO_DATA_DIR=/data/nosql/mongodb/primary/
+            - MONGO_LOG_DIR=/var/log/mongodb
+            - MONGODB_EXTRA_FLAGS=--wiredTigerCacheSizeGB=2
+            - ALLOW_EMPTY_PASSWORD=no
+
+            - MONGODB_USERNAME=my_user
+            - MONGODB_PASSWORD=password123
+            - MONGODB_DATABASE=my_database            
+            #----------- Replication -------------------
+            - MONGODB_REPLICA_SET_MODE=primary
+            - MONGODB_ROOT_PASSWORD=password123
+            - MONGODB_REPLICA_SET_KEY=replicasetkey123
+        volumes:
+            - 'mongodb_master_data:/data/db'
+        ports:
+            - 27017:27017
+        command: mongod --smallfiles --logpath=/dev/null # --quiet
+        networks:
+            - app-tier
+    #====================================================================
+    mongodb-secondary:
+        image: mongo:latest
+        depends_on:
+            - mongodb-primary
+        environment:
+            - MONGO_DATA_DIR=/data/nosql/mongodb/secondary/
+            - MONGO_LOG_DIR=/var/log/mongodb1
+            - MONGODB_EXTRA_FLAGS=--wiredTigerCacheSizeGB=2
+            - ALLOW_EMPTY_PASSWORD=no
+
+            - MONGODB_USERNAME=my_user
+            - MONGODB_PASSWORD=password123
+            - MONGODB_DATABASE=my_database 
+            #----------- Replication -------------------
+            - MONGODB_REPLICA_SET_MODE=secondary
+            - MONGODB_PRIMARY_HOST=mongodb-primary
+            - MONGODB_PRIMARY_PORT_NUMBER=27017
+            - MONGODB_PRIMARY_ROOT_PASSWORD=password123
+            - MONGODB_REPLICA_SET_KEY=replicasetkey123
+        volumes:
+            - 'mongodb_master_data:/data/db'
+        ports:
+            - 27017:27017
+        command: mongod --smallfiles --logpath=/dev/null # --quiet
+        networks:
+            - app-tier
+    #====================================================================
+    mongodb-arbiter:
+        image: mongo:latest
+        depends_on:
+            - mongodb-primary
+        environment:
+            - MONGO_DATA_DIR=/data/nosql/mongodb/secondary/
+            - MONGO_LOG_DIR=/var/log/mongodb1
+            - MONGODB_EXTRA_FLAGS=--wiredTigerCacheSizeGB=2
+            - ALLOW_EMPTY_PASSWORD=no
+
+            - MONGODB_USERNAME=my_user
+            - MONGODB_PASSWORD=password123
+            - MONGODB_DATABASE=my_database 
+            #----------- Replication -------------------
+            - MONGODB_REPLICA_SET_MODE=arbiter
+            - MONGODB_PRIMARY_HOST=mongodb-primary
+            - MONGODB_PRIMARY_PORT_NUMBER=27017
+            - MONGODB_PRIMARY_ROOT_PASSWORD=password123
+            - MONGODB_REPLICA_SET_KEY=replicasetkey123
+#        volumes:
+#            - 'mongodb_master_data:/data/db'
+        ports:
+            - 27017:27017
+        command: mongod --smallfiles --logpath=/dev/null # --quiet
+        networks:
+            - app-tier
+            
+#====================================================================            
+volumes:
+  mongodb_master_data:
+    driver: local
+
+#====================================================================
+networks:
+  app-tier:
+    driver: bridge
