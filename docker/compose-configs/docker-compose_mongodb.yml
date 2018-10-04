@@ -16,8 +16,13 @@ services:
         environment:
             - MONGO_DATA_DIR=/data/db
             - MONGO_LOG_DIR=/var/log/mongodb
-            - ALLOW_EMPTY_PASSWORD=yes
             - MONGODB_EXTRA_FLAGS=--wiredTigerCacheSizeGB=2
+            - ALLOW_EMPTY_PASSWORD=yes
+
+            - MONGODB_USERNAME=my_user
+            - MONGODB_PASSWORD=password123
+            - MONGODB_DATABASE=my_database            
+      
         volumes:
             - ./data/db:/data/db
         ports:
