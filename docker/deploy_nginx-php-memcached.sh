@@ -21,7 +21,7 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.1.1                             \r\n
+Version:  0.1.2                             \r\n
 Last Updated:  10/2/2018
 \r\n \r\n"
 wait
@@ -34,7 +34,7 @@ then
     rm container-site1.conf
     rm site1_tls.conf
     rm container-php-fpm.ini
-    rm container-memcached.conf
+#    rm container-memcached.conf
     rm docker-compose-nginx_php_memcached.yml
     rm sysinfo.php
 fi
@@ -45,7 +45,7 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1_tls
 #--- PHP Config
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-php-fpm.ini
 #--- Memcached Config
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-memcached.conf
+#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-memcached.conf
 #--- Docker Deployment Config
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-nginx_php_memcached.yml
 #--- App Code
