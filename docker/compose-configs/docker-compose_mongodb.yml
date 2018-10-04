@@ -21,7 +21,7 @@ services:
 
             - MONGODB_USERNAME=my_user
             - MONGODB_PASSWORD=password123
-            - MONGODB_DATABASE=my_database            
+            - MONGODB_DATABASE=my_database
       
         volumes:
             - ./data/db:/data/db
