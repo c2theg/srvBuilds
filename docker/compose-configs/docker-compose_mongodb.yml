@@ -1,5 +1,15 @@
+#  Docker compose file which creates a MongoDB container
+#  By: Christopher MJ Gray
+#  version: 0.0.1
+#  10/3/18
+#  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-mongodb.yml
+#
+#---------------------------------------------------------------------------------------------------------------------------
 version: '3'
 services:
+# ==============
+# =  MongoDB   =
+# ==============
     mongodb:
         image: mongo:latest
         container_name: "mongodb"
