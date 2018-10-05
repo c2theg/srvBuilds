@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.3                             \r\n
-Last Updated:  9/2/2018
+Version:  0.0.6                             \r\n
+Last Updated:  10/5/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -34,14 +34,14 @@ echo "\r\n \r\n"
 sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add 
 wait
 wait
-echo 'deb http://apt.kubernetes.io/ kubernetes-xenial-unstable main' >> /etc/apt/sources.list.d/kubernetes.list
-wait
+#echo 'deb http://apt.kubernetes.io/ kubernetes-xenial-unstable main' >> /etc/apt/sources.list.d/kubernetes.list
+echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
 wait
 sudo -E apt-get update
 sudo -E apt-get install -y kubelet kubeadm kubectl kubernetes-cni
 wait
 echo "\r\n \r\n Trying to use SNAP (Ubuntu 16.04+ to install Kubernetes... \r\n "
-sudo snap install conjure-up --classic
+#sudo snap install conjure-up --classic
 sudo apt install -y conjure-up
 wait
 sudo conjure-up kubernetes
