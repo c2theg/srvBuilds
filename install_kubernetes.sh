@@ -49,3 +49,20 @@ wait
 wait
 echo "Initialize your master
 With everything installed, go to the machine that will serve as the Kubernetes master and issue the command:  sudo kubeadm init \r\n \r\n "
+#sudo kubeadm init
+
+# https://kubernetes.io/docs/tasks/access-application-cluster/service-access-application-cluster/
+kubectl version
+
+echo "Creating Hello World Cluster \r\n \r\n "
+kubectl run hello-world --replicas=2 --labels="run=load-balancer-example" --image=gcr.io/google-samples/node-hello:1.0  --port=8080
+
+echo "\r\n "
+kubectl get deployments hello-world
+echo "\r\n "
+kubectl describe deployments hello-world
+echo "\r\n "
+kubectl get replicasets
+echo "\r\n "
+kubectl describe replicasets
+
