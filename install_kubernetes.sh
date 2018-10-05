@@ -41,7 +41,8 @@ sudo -E apt-get update
 sudo -E apt-get install -y kubelet kubeadm kubectl kubernetes-cni
 wait
 echo "\r\n \r\n Trying to use SNAP (Ubuntu 16.04+ to install Kubernetes... \r\n "
-#sudo snap install conjure-up --classic
+sudo snap install kubectl --classic
+sudo snap install conjure-up --classic
 sudo apt install -y conjure-up
 wait
 sudo conjure-up kubernetes
