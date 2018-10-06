@@ -79,11 +79,12 @@ then
 	sh /root/pihole_allowlist.sh
 	wait
 	sh /root/pihole_blocklist.sh
-	#----------------------------------------------------------------
-
-	#API_EXCLUDE_DOMAINS_list=nist-time-server.eoni.com,auth.gfx.ms,softwareupdate.vmware.com,*.apple.com,*.opera.com,*.microsoft.com,*.google.com,google.com,*.googleuserc
-	#sed -i '/API_EXCLUDE_DOMAINS=/c\$API_EXCLUDE_DOMAINS_list' /etc/pihole/setupVars.conf
 	
+	#----------------------------------------------------------------
+	#---- Update exclude Top Domain, list. to Ignore popular sites, in a effort to expose sites that shouldn't be loaded
+	API_EXCLUDE_DOMAINS_list=$(paste -s -d ',' pihole_exclude_list.txt)
+	sed -i '/API_EXCLUDE_DOMAINS=/c\'API_EXCLUDE_DOMAINS="$API_EXCLUDE_DOMAINS_list" /etc/pihole/setupVars.conf
+	#----------------------------------------------------------------
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
