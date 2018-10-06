@@ -3,6 +3,8 @@ auth.gfx.ms
 softwareupdate.vmware.com
 *.amazon.com
 *.apple.com
+*.icloud.com
+apple.com
 *.opera.com
 *.microsoft.com
 *.google.com
@@ -62,6 +64,7 @@ live.com
 wikipedia.org
 *.reddit.com
 *.office365.com
+*.outlook.com
 *.dropbox.com
 *.azure-devices.net
 *.akamaiedge.net
