@@ -38,6 +38,7 @@ github.com
 *.tplinkcloud.com
 *.lastpass.com
 *.avg.com
+*.nflxext.com
 *.eset.com
 *.digicert.com
 *.secureserver.net
