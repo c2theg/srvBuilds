@@ -57,3 +57,6 @@ yahoo.com
 linkedin.com
 amazon.com
 live.com
+wikipedia.org
+reddit.com
+*.f5.com
