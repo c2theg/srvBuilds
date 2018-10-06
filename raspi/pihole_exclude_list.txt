@@ -54,3 +54,6 @@ api-global.netflix.com
 ebay.com
 netflix.com
 yahoo.com
+linkedin.com
+amazon.com
+live.com
