@@ -77,3 +77,4 @@ wikipedia.org
 *.nflxso.net
 *.twimg.com
 *.amazonaws.com
+*.nest.com
