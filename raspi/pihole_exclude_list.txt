@@ -62,6 +62,7 @@ amazon.com
 live.com
 *.f5.com
 wikipedia.org
+.reddit.com
 *.reddit.com
 *.office365.com
 *.outlook.com
