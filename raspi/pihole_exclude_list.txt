@@ -1,4 +1,5 @@
-nist-time-server.eoni.com,auth.gfx.ms
+nist-time-server.eoni.com
+auth.gfx.ms
 softwareupdate.vmware.com
 *.amazon.com
 *.apple.com
@@ -57,5 +58,13 @@ yahoo.com
 linkedin.com
 amazon.com
 live.com
+*.f5.com
 wikipedia.org
-reddit.com
+*.reddit.com
+*.office365.com
+*.dropbox.com
+*.azure-devices.net
+*.akamaiedge.net
+*.nflxso.net
+*.twimg.com
+*.amazonaws.com
