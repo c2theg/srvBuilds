@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.1.6                             \r\n
-Last Updated:  9/16/2018
+Version:  0.2.0                             \r\n
+Last Updated:  10/6/2018
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
@@ -80,7 +80,12 @@ then
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
+#-----------------------------------------------------------------------------------------
 
+
+
+
+#-----------------------------------------------------------------------------------------
 Cron_output=$(crontab -l | grep "update_pihole_lists.sh")
 #echo "The output is: [ $Cron_output ]"
 if [ -z "$Cron_output" ]
