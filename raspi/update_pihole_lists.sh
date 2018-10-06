@@ -53,7 +53,7 @@ then
 		rm /root/pihole_blocklist.sh*
 		rm /root/update_pihole_lists.sh*
 		rm /root/update_pihole_lists-porn.sh*
-		rm /etc/pihole/pihole_exclude_list.txt*
+		rm /root/pihole/pihole_exclude_list.txt*
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
