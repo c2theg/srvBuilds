@@ -49,3 +49,8 @@ unifi
 *.brightcloud.com
 *.cloudfront.net
 *.akadns.net
+bing.com
+api-global.netflix.com
+ebay.com
+netflix.com
+yahoo.com
