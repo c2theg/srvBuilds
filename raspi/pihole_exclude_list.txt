@@ -1,3 +1,7 @@
+comcast.net
+comcast.com
+*.comcast.net
+*.comcast.com
 nist-time-server.eoni.com
 auth.gfx.ms
 softwareupdate.vmware.com
