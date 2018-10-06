@@ -82,8 +82,8 @@ else
 fi
 #-----------------------------------------------------------------------------------------
 
-
-
+#API_EXCLUDE_DOMAINS_list=nist-time-server.eoni.com,auth.gfx.ms,softwareupdate.vmware.com,*.apple.com,*.opera.com,*.microsoft.com,*.google.com,google.com,*.googleuserc
+#sed -i '/API_EXCLUDE_DOMAINS=/c\$API_EXCLUDE_DOMAINS_list' /etc/pihole/setupVars.conf
 
 #-----------------------------------------------------------------------------------------
 Cron_output=$(crontab -l | grep "update_pihole_lists.sh")
