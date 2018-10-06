@@ -9,13 +9,18 @@ softwareupdate.vmware.com
 *.apple.com
 *.icloud.com
 apple.com
+*.apple-dns.net
+*.icloud-content.com
 *.opera.com
 *.microsoft.com
+*.azurewebsites.net
 *.google.com
 google.com
 *.googleusercontent.com
 *.googleapis.com
 *.gstatic.com
+*.googlevideo.com
+*.gvt2.com
 *.facebook.com
 *.fbcdn.net
 *.bing.com
@@ -79,3 +84,4 @@ wikipedia.org
 *.twimg.com
 *.amazonaws.com
 *.nest.com
+*.mozilla.com
