@@ -53,6 +53,7 @@ then
 		rm /root/pihole_blocklist.sh*
 		rm /root/update_pihole_lists.sh*
 		rm /root/update_pihole_lists-porn.sh*
+		rm /etc/pihole/pihole_exclude_list.txt*
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
@@ -60,7 +61,8 @@ then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists-porn.sh
-	#-----------------------------------------------
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_exclude_list.txt
+	#--------------------------------------------------------------------------------------------------------
 	wait
 	chmod u+x pihole_allowlist.sh
 	chmod u+x pihole_blocklist.sh
@@ -77,14 +79,14 @@ then
 	sh /root/pihole_allowlist.sh
 	wait
 	sh /root/pihole_blocklist.sh
+	#----------------------------------------------------------------
+
+	#API_EXCLUDE_DOMAINS_list=nist-time-server.eoni.com,auth.gfx.ms,softwareupdate.vmware.com,*.apple.com,*.opera.com,*.microsoft.com,*.google.com,google.com,*.googleuserc
+	#sed -i '/API_EXCLUDE_DOMAINS=/c\$API_EXCLUDE_DOMAINS_list' /etc/pihole/setupVars.conf
+	
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
-#-----------------------------------------------------------------------------------------
-
-#API_EXCLUDE_DOMAINS_list=nist-time-server.eoni.com,auth.gfx.ms,softwareupdate.vmware.com,*.apple.com,*.opera.com,*.microsoft.com,*.google.com,google.com,*.googleuserc
-#sed -i '/API_EXCLUDE_DOMAINS=/c\$API_EXCLUDE_DOMAINS_list' /etc/pihole/setupVars.conf
-
 #-----------------------------------------------------------------------------------------
 Cron_output=$(crontab -l | grep "update_pihole_lists.sh")
 #echo "The output is: [ $Cron_output ]"
