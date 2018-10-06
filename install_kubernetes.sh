@@ -66,4 +66,5 @@ echo "\r\n "
 kubectl get replicasets
 echo "\r\n "
 kubectl describe replicasets
-
+echo "\r\n "
+kubectl cluster-info
