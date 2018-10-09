@@ -38,3 +38,8 @@ ff02::3 ip6-allhosts
 0.0.0.0 us-u.openx.net	
 0.0.0.0 www.spine.host	
 0.0.0.0 ytdownloaet353.ovh
+0.0.0.0 upload1tv.systemmonitor.eu.com
+0.0.0.0 upload2tv.systemmonitor.eu.com
+0.0.0.0 upload3tv.systemmonitor.eu.com
+0.0.0.0 upload4tv.systemmonitor.eu.com
+0.0.0.0 usyncapp.com
