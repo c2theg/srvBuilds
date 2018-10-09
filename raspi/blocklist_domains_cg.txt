@@ -1,9 +1,7 @@
 # Chris Gray 
 # Custom blocklist
 #
-# Date: September 16 2018
-# Number of unique domains: 11
-#
+# Date:  10/9/2018
 # Fetch the latest version of this file: https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
 #
 # ===============================================================
