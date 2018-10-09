@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.2.0                             \r\n
-Last Updated:  10/6/2018
+Version:  0.2.1                             \r\n
+Last Updated:  10/8/2018
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
@@ -53,7 +53,7 @@ then
 		rm /root/pihole_blocklist.sh*
 		rm /root/update_pihole_lists.sh*
 		rm /root/update_pihole_lists-porn.sh*
-		rm /root/pihole/pihole_exclude_list.txt*
+		rm /root/pihole_exclude_list.txt*
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
