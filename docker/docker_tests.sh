@@ -4,6 +4,9 @@
 #       dos2unix <FILE>
 #       chmod u+x <FILE>
 #
+#   Christopher Gray
+#     version 0.0.6
+#    10/13/2018
 clear
 
 echo "\r\n \r\n Docker Tests \r\n \r\n"
