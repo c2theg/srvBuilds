@@ -1,0 +1,34 @@
+#  Docker compose file which creates a Cisco Trex load generator
+#  By: Christopher MJ Gray / Brian Lawrence
+#  version: 0.0.1
+#  10/17/18
+#  Source: https://hub.docker.com/r/trexcisco/trex/
+#          https://hub.docker.com/r/trexcisco/trex/
+#
+#
+#  from example:
+# docker run --rm -it --privileged --cap-add=ALL -p 4500:4500 -p 4501:4501 -p 4507:4507 trexcisco/trex:latest  
+# docker run -it --privileged --cap-add=ALL -v /mnt/huge:/mnt/huge -v /sys/bus/pci/devices:/sys/bus/pci/devices 
+#    -v /sys/devices/system/node:/sys/devices/system/node -v /dev:/dev trex-dev-ubuntu:16.10
+
+#---------------------------------------------------------------------------------------------------------------------------
+version: '3'
+services:
+# ==============
+# =   TREX    =
+# ==============
+    web:
+        container_name: trex_core
+        image: trexcisco/trex:latest
+        cap_add:
+            - ALL
+        privileged: true
+        ports:
+            - "4500:4500"
+            - "4501:4501"
+            - "4507:4507"
+        volumes:
+            - /mnt/huge:/mnt/huge
+            - /sys/bus/pci/devices:/sys/bus/pci/devices
+            - /sys/devices/system/node:/sys/devices/system/node
+            - /dev:/dev
