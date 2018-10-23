@@ -29,10 +29,11 @@ sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
+# if this doesn't work, then run this script
+#sudo -E apt-get install -y install nload
 
-sudo -E apt-get install -y install python-software-properties make
+sudo -E apt-get install -y install build-dep python-software-properties make 
 wait
-
 mkdir nload
 cd nload
 wget http://www.roland-riegel.de/nload/nload-0.7.4.tar.gz
