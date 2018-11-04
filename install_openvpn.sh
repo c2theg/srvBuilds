@@ -25,34 +25,30 @@ https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.1                             \r\n
-Last Updated:  10/10/2018
+Version:  0.0.2                             \r\n
+Last Updated:  11/3/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
 if [ $? -eq 0 ]
 then
-	echo "Connected \r\n \r\n"
-	sudo -E apt-get update
-	wait
-	sudo -E apt-get upgrade -y
-	wait
-	echo "Freeing up space"
-	sudo apt-get autoremove -y
-	wait
-	echo "Downloading required dependencies...\r\n\r\n"
-	#--------------------------------------------------------------------------------------------
-	sudo -E apt-get install -y openvpn easy-rsa
-	
-  
-  make-cadir ~/openvpn-ca
-  
-  cd ~/openvpn-ca
-
-
+    echo "Connected \r\n \r\n"
+    sudo -E apt-get update
+    wait
+    sudo -E apt-get upgrade -y
+    wait
+    echo "Freeing up space"
+    sudo apt-get autoremove -y
+    wait
+    echo "Downloading required dependencies...\r\n\r\n"
+    #--------------------------------------------------------------------------------------------
+    sudo -E apt-get install -y openvpn easy-rsa
+    wait
+    
+    make-cadir ~/openvpn-ca
+    cd ~/openvpn-ca
     # Update Vars file
     #nano ~/openvpn-ca/vars
-
     HeaderText='
     export KEY_COUNTRY="US"\n
     export KEY_PROVINCE="PA"\n
@@ -62,23 +58,44 @@ then
     export KEY_OU="HQ-OU"\n
     export KEY_NAME="server"\n
     "
-    echo "$HeaderText" >> ~/openvpn-ca/vars
-
-    #======================================================
-    # Step 4: Build the Certificate Authority
+    echo "$HeaderText" >> ~/openvpn-ca/vars    
+    # ----------------------------------------------------
+    #     Build the Certificate Authority
+    # ----------------------------------------------------     
     source vars
     ./clean-all
     ./build-ca
-
     wait
 
     ./build-key-server server
+    ./build-dh
+    wait
+    
+    mkdir keys
+    openvpn --genkey --secret keys/ta.key
+    
+    # ----------------------------------------------------
+    #     Generate a Client Certificate and Key Pair
+    # ----------------------------------------------------    
+    ./build-key client1
+    ./build-key-pass client1
+
+    # ----------------------------------------------------
+    #     Configure the OpenVPN Service
+    # ---------------------------------------------------- 
+    cd ~/openvpn-ca/keys
+    sudo cp ca.crt server.crt server.key ta.key dh2048.pem /etc/openvpn
+    
+    # wget config server from github
+    
 
 
 
 
-	echo "\r\n \r\n"
+
+
+    echo "\r\n \r\n"
 else
-	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
+    echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
 echo "Done! \r\n \r\n"
