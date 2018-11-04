@@ -25,7 +25,7 @@ https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.3                             \r\n
+Version:  0.0.5                             \r\n
 Last Updated:  11/3/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
@@ -42,8 +42,8 @@ then
     wait
     echo "Downloading required dependencies...\r\n\r\n"
     #--------------------------------------------------------------------------------------------
-    sudo -E apt-get install -y openvpn easy-rsa
-    wait
+#    sudo -E apt-get install -y openvpn easy-rsa
+#    wait
     
     make-cadir ~/openvpn-ca
     cd ~/openvpn-ca
@@ -58,40 +58,42 @@ then
     export KEY_OU="HQ-OU"\n
     export KEY_NAME="server"\n'
     
-    echo "$HeaderText" >> ~/openvpn-ca/vars    
+#    echo "$HeaderText" >> ~/openvpn-ca/vars    
     # ----------------------------------------------------
     #     Build the Certificate Authority
     # ----------------------------------------------------     
-    source vars
-    ./clean-all
-    ./build-ca
+#    source vars
+#    ./clean-all
+#    ./build-ca
     wait
 
-    ./build-key-server server
-    ./build-dh
+#   ./build-key-server server
+#    ./build-dh
     wait
     
-    mkdir keys
-    openvpn --genkey --secret keys/ta.key
+    #mkdir keys
+    #openvpn --genkey --secret keys/ta.key
+#    openvpn --genkey --secret ta.key
     
     # ----------------------------------------------------
     #     Generate a Client Certificate and Key Pair
     # ----------------------------------------------------    
-    ./build-key client1
-    ./build-key-pass client1
+#    ./build-key client1
+#    ./build-key-pass client1
 
     # ----------------------------------------------------
     #     Configure the OpenVPN Service
     # ---------------------------------------------------- 
-    cd ~/openvpn-ca/keys
-    sudo cp ca.crt server.crt server.key ta.key dh2048.pem /etc/openvpn
+    #cd ~/openvpn-ca/keys
+#   sudo cp ca.crt server.crt server.key ta.key dh2048.pem /etc/openvpn
     
-    # wget config server from github
-    
+    # wget configs server from github
+    # wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/openvpn-server.conf
 
-
-
-
+    #-----------------------
+    #  Easy Script 
+    #-----------------------
+    wget https://git.io/vpn -O openvpn-install.sh  &&  sudo bash openvpn-install.sh
 
 
     echo "\r\n \r\n"
