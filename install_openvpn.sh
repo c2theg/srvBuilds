@@ -25,7 +25,7 @@ https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.2                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  11/3/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
@@ -56,8 +56,8 @@ then
     export KEY_ORG="Company"\n
     export KEY_EMAIL="me@myhost.mydomain"\n
     export KEY_OU="HQ-OU"\n
-    export KEY_NAME="server"\n
-    "
+    export KEY_NAME="server"\n'
+    
     echo "$HeaderText" >> ~/openvpn-ca/vars    
     # ----------------------------------------------------
     #     Build the Certificate Authority
