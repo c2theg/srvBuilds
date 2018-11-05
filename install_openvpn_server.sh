@@ -88,7 +88,7 @@ then
 #   sudo cp ca.crt server.crt server.key ta.key dh2048.pem /etc/openvpn
     
     # wget configs server from github
-    # wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/openvpn-server.conf
+    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/openvpn-server.conf
 
     #-----------------------
     #  Easy Script 
