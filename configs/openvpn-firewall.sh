@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# Customer Chris Gray -  OpenVPN-aware firewall.
+#   Chris Gray -  11/4/18 - V 0.0.2 
+#        OpenVPN-aware firewall.
 
 # eth0 is connected to the internet.
 # eth1 is connected to a private subnet.
