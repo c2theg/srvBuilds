@@ -62,24 +62,24 @@ then
     # ----------------------------------------------------
     #     Build the Certificate Authority
     # ----------------------------------------------------     
-#    source vars
-#    ./clean-all
-#    ./build-ca
+#   source vars
+#   ./clean-all
+#   ./build-ca
     wait
 
 #   ./build-key-server server
-#    ./build-dh
+#   ./build-dh
     wait
     
     #mkdir keys
     #openvpn --genkey --secret keys/ta.key
-#    openvpn --genkey --secret ta.key
+#   openvpn --genkey --secret ta.key
     
     # ----------------------------------------------------
     #     Generate a Client Certificate and Key Pair
     # ----------------------------------------------------    
-#    ./build-key client1
-#    ./build-key-pass client1
+#   ./build-key client1
+#   ./build-key-pass client1
 
     # ----------------------------------------------------
     #     Configure the OpenVPN Service
@@ -88,12 +88,9 @@ then
 #   sudo cp ca.crt server.crt server.key ta.key dh2048.pem /etc/openvpn
     
     # wget configs server from github
-    # wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/openvpn-server.conf
+    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/openvpn-client.conf
 
-    #-----------------------
-    #  Easy Script 
-    #-----------------------
-    #wget https://git.io/vpn -O openvpn-install.sh  &&  sudo bash openvpn-install.sh
+    sudo openvpn --config openvpn-client.conf
 
 
     echo "\r\n \r\n"
