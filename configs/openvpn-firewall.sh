@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# A Sample OpenVPN-aware firewall.
+# Customer Chris Gray -  OpenVPN-aware firewall.
 
 # eth0 is connected to the internet.
 # eth1 is connected to a private subnet.
@@ -8,7 +8,7 @@
 # Change this subnet to correspond to your private
 # ethernet subnet.  Home will use HOME_NET/24 and
 # Office will use OFFICE_NET/24.
-PRIVATE=10.0.0.0/24
+PRIVATE=10.13.3.0/24
 
 # Loopback address
 LOOP=127.0.0.1
@@ -77,7 +77,7 @@ iptables -A INPUT -p tcp --dport ssh -j ACCEPT
 # approach (see the OpenVPN HOWTO),
 # then comment out the line below.
 
-iptables -A INPUT -p udp --dport 1194 -j ACCEPT
+iptables -A INPUT -p udp --dport 31194 -j ACCEPT
 
 # Allow packets from TUN/TAP devices.
 # When OpenVPN is run in a secure mode,
