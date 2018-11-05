@@ -25,8 +25,8 @@ https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.5                             \r\n
-Last Updated:  11/3/2018
+Version:  0.0.6                             \r\n
+Last Updated:  11/4/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
@@ -96,6 +96,8 @@ then
     wget https://git.io/vpn -O openvpn-install.sh  &&  sudo bash openvpn-install.sh
 
 
+    openvpn --version
+    
     echo "\r\n \r\n"
 else
     echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
