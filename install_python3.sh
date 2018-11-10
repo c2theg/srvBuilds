@@ -44,22 +44,28 @@ python3 -m venv myenv
 wait
 #--------------------------------------------------------------------------------------------
 #----- Install Flask ------------
+echo "Installing Flask... \r\n "
 pip install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
 wait
 #---- Requests -------
+echo "Installing requests... \r\n "
 pip install requests
 pipenv install requests
 #sudo pip3 install --upgrade requests
 #-----------------------
+echo "Installing pexpect... \r\n "
 pip install pexpect
 #-- MongoDB
+echo "Installing pymongo... \r\n "
 python -m pip install pymongo
 python3 -m pip install pymongo
 #python -m pip install --upgrade pymongo
 #-- MySQL
+echo "Installing mysql... \r\n "
 pip install mysql-connector-python
 #pip install mysql-connector-python-rf
 #-----------------------
+echo "Installing protobuf... \r\n "
 pip install protobuf
 pip install websockets
 pip install mqtt-client
