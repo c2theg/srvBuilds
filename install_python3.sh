@@ -19,77 +19,36 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3.1                             \r\n
-Last Updated:  7/1/2018
-\r\n \r\n
-Updating system first..."
-sudo -E apt-get update
-wait
-sudo -E apt-get upgrade -y
-wait
-echo "Downloading required dependencies...\r\n\r\n"
+Version:  1.4.1                             \r\n
+Last Updated:  11/9/2018
+\r\n \r\n"
+#sudo -E apt-get update
+#wait
+#sudo -E apt-get upgrade -y
+#wait
+#echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "Installing Python 3.6+ latest.... "
+echo "Installing Python 3.7+ latest.... "
 
-#------------- Version Detection -------------
-if [ -f /etc/os-release ]; then
-    # freedesktop.org and systemd
-    . /etc/os-release
-    OS=$NAME
-    VER=$VERSION_ID
-elif type lsb_release >/dev/null 2>&1; then
-    # linuxbase.org
-    OS=$(lsb_release -si)
-    VER=$(lsb_release -sr)
-elif [ -f /etc/lsb-release ]; then
-    # For some versions of Debian/Ubuntu without lsb_release command
-    . /etc/lsb-release
-    OS=$DISTRIB_ID
-    VER=$DISTRIB_RELEASE
-elif [ -f /etc/debian_version ]; then
-    # Older Debian/Ubuntu/etc.
-    OS=Debian
-    VER=$(cat /etc/debian_version)
-elif [ -f /etc/SuSe-release ]; then
-    # Older SuSE/etc.
-    ...
-elif [ -f /etc/redhat-release ]; then
-    # Older Red Hat, CentOS, etc.
-    ...
-else
-    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
-    OS=$(uname -s)
-    VER=$(uname -r)
-fi
-echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
-#-----------------------------------------------
-if [ $VER = '14.04' ] || [ $VER = '16.04' ]; then
-    sudo -E add-apt-repository ppa:deadsnakes/ppa
-    sudo -E apt-get update
-elif [ $VER = '16.10' ] || [ $VER = '17.04' ]; then
-#    sudo -E apt-get install -y python3.6
-elif [ $VER = '17.10' ] || [ $VER = '18.04' ]; then
-    echo "Python3 already installed"
-fi
-
-sudo -E apt-get install -y install python3.6
-sudo -E apt-get install -y install python-software-properties
-
+sudo -E add-apt-repository ppa:deadsnakes/ppa
+sudo -E apt-get update
+#--------------------------------------------------------------------------------------------
+sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties
+sudo -E apt-get install -y python3-dev
+sudo -E apt install -y python3.7
 wait
-#-------------
-sudo -E apt-get install -y install python3-pip python3-venv python3-setuptools
-#sudo -E apt-get install -y libicu-dev python-dev python-software-properties python python-pip
-
+#--------------------------------------------------------------------------------------------
+sudo -E apt-get install -y install python3-pip python3-venv python3-setuptools python-virtualenv python3-virtualenv
 wait
 sudo easy_install3 pip
 wait
 sudo -H pip install --upgrade pip
 wait
 pip install virtualenv
-pip install python3-virtualenv
-#--------------------------------------------
+#--------------------------------------------------------------------------------------------
 sudo -E apt-get install -y python3-pip
-sudo pip3 install --upgrade requests
+pip install --user pipenv
 #--------------------------------------------
 #sudo -H apt install python-pip
 #wait
@@ -97,10 +56,45 @@ sudo pip3 install --upgrade requests
 #----- Install Flask ------------
 pip install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
 wait
+#---- Requests -------
 pip install requests
+pipenv install requests
+#sudo pip3 install --upgrade requests
+#-----------------------
+pip install pexpect
+#-- MongoDB
+python -m pip install pymongo
+python3 -m pip install pymongo
+#python -m pip install --upgrade pymongo
+#-- MySQL
+pip install mysql-connector-python
+#pip install mysql-connector-python-rf
+#-----------------------
+pip install protobuf
+pip install websockets
+pip install mqtt-client
+pip install redis
+pip install python-memcached
+#pip install soap2py
+pip install ansible
+pip install -U exabgp
+pip install simplegeoip
+pip install GeoIP
+pip install scapy
+pip install Twisted
+pip install cbor2
+# pip install pysflow
+pip install simp-AES
+
+#-----------------------
 wait
 echo "\r\n \r\n "
 echo "Done installing Python3 "
-pip -V;
-pip3 -V;
+pip -V
+
+
+python3 --version
+pip3 --version
+virtualenv --version
+
 echo "\r\n \r\n "
