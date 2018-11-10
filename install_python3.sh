@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.1                             \r\n
+Version:  1.3.2                             \r\n
 Last Updated:  11/9/2018
 \r\n \r\n"
 #sudo -E apt-get update
@@ -37,18 +37,18 @@ sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev lib
 sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties
 sudo -E apt-get install -y python3-dev
 sudo -E apt install -y python3.7
+sudo -E apt-get install -y python3-pip
 wait
 #--------------------------------------------------------------------------------------------
 sudo -E apt-get install -y install python3-pip python3-venv python3-setuptools python-virtualenv python3-virtualenv
 wait
-sudo easy_install3 pip
+#sudo easy_install3 pip
 wait
-sudo -H pip install --upgrade pip
+#sudo -H pip install --upgrade pip
 wait
 pip install virtualenv
 #--------------------------------------------------------------------------------------------
-sudo -E apt-get install -y python3-pip
-pip install --user pipenv
+#pip install --user pipenv
 #--------------------------------------------
 #sudo -H apt install python-pip
 #wait
@@ -86,12 +86,10 @@ pip install cbor2
 # pip install pysflow
 pip install simp-AES
 
-#-----------------------
+#--------------------------------------------------
 wait
 echo "\r\n \r\n "
-echo "Done installing Python3 "
-pip -V
-
+echo "Done installing Python3 \r\n \r\n"
 
 python3 --version
 pip3 --version
