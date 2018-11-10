@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3.2                             \r\n
+Version:  1.4.1                             \r\n
 Last Updated:  11/9/2018
 \r\n \r\n"
 #sudo -E apt-get update
@@ -30,29 +30,19 @@ Last Updated:  11/9/2018
 #--------------------------------------------------------------------------------------------
 echo "Installing Python 3.7+ latest.... "
 
-sudo -E add-apt-repository ppa:deadsnakes/ppa
+sudo -E add-apt-repository -y ppa:deadsnakes/ppa
 sudo -E apt-get update
 #--------------------------------------------------------------------------------------------
 sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties
 sudo -E apt-get install -y python3-dev
 sudo -E apt install -y python3.7
-sudo -E apt-get install -y python3-pip
+sudo -E apt-get install -y python3-pip python3-venv python3-setuptools python-virtualenv python3-virtualenv
+sudo -E pip3 install virtualenv
+virtualenv venv
+python3 -m venv myenv
 wait
 #--------------------------------------------------------------------------------------------
-sudo -E apt-get install -y install python3-pip python3-venv python3-setuptools python-virtualenv python3-virtualenv
-wait
-#sudo easy_install3 pip
-wait
-#sudo -H pip install --upgrade pip
-wait
-pip install virtualenv
-#--------------------------------------------------------------------------------------------
-#pip install --user pipenv
-#--------------------------------------------
-#sudo -H apt install python-pip
-#wait
-#sudo pip install --upgrade pip
 #----- Install Flask ------------
 pip install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
 wait
