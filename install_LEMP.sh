@@ -21,8 +21,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP.sh
 
 \r\n \r\n
-Version:  1.3.8                             \r\n
-Last Updated:  7/1/2018
+Version:  1.3.9                             \r\n
+Last Updated:  11/10/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -49,7 +49,12 @@ mv main.cf /etc/postfix/main.cf
 #--- PHP 7.0 ---
 sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 wait
-sudo apt-get -y update && sudo apt-get -y install php7.0 php7.0-fpm php7.0-common php7.0-cli php7.0-json php7.0-gd php7.0-opcache php7.0-readline php7.0-mysql php7.0-curl php7.0-mcrypt php7.0-soap php7.0-ldap php-pear openssl-blacklist ssl-cert php-xdebug php-apcu php7.0-mbstring php-ssh2 php-geoip php7.0-zip php7.0-xml php-mailparse php7.0-bz2 php7.0-xmlrpc libmcrypt-dev mcrypt php7.0-bcmath
+sudo apt-get -y update
+wait
+sudo apt-get install -y openssl-blacklist ssl-cert libmcrypt-dev mcrypt 
+sudo apt-get install -y php7.2 php7.2-cli php7.2-fpm php7.2-curl php7.2-json php7.2-gd php7.2-mysql php7.2-mbstring zip unzip
+sudo apt-get install -y php7.2-common php7.2-opcache php7.2-readline php7.2-soap php7.2-ldap php-pear php-xdebug php-apcu php7.2-mbstring php-ssh2 php-geoip php7.2-bcmath php7.2-zip php7.2-xml php-mailparse php7.2-bz2 php7.2-xmlrpc php7.2-mcrypt
+
 wait
 
 sudo pear channel-update pear.php.net
@@ -57,7 +62,7 @@ sudo pear install mail Net_SMTP Auth_SASL2-0.1.0 mail_mime
 sudo pecl channel-update pecl.php.net
 
 #--- PHP Memcached ----
-sudo apt-get install -y php7.0-memcached memcached
+sudo apt-get install -y php-memcached memcached
 wait
 
 cd ~
