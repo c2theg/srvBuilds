@@ -27,8 +27,21 @@ Last Updated:  11/10/2018
 #wait
 #echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "Installing Python Networking PIPs "
+echo "Updating PIP \r\n \r\n "
+pip install --upgrade pip
 
+echo "Update all already installed PIPs' \r\n \r\n"
+pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+
+echo "Installing Python Networking PIPs  \r\n \r\n"
+pip install protobuf
+pip install websockets
+pip install redis
+pip install python-memcached
+pip install scapy
+pip install Twisted
+pip install cbor2
+pip install simp-AES
 #--- Specify projects - optional --
 #pip install GeoIP
 pip install simplegeoip
