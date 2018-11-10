@@ -43,12 +43,12 @@ sudo -E apt install -y python3.7
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 sudo python3 get-pip.py --force-reinstall
 #----------------------------------------------------------
-
 sudo -E apt-get install -y python3-pip python3-venv python3-setuptools python-virtualenv python3-virtualenv
 sudo -E pip3 install virtualenv
 virtualenv venv
 python3 -m venv myenv
 wait
+pip install --upgrade pip
 #--------------------------------------------------------------------------------------------
 #----- Install Flask ------------
 echo "Installing Flask... \r\n "
@@ -75,20 +75,29 @@ pip install mysql-connector-python
 echo "Installing protobuf... \r\n "
 pip install protobuf
 pip install websockets
-pip install mqtt-client
 pip install redis
 pip install python-memcached
-#pip install soap2py
-pip install ansible
-pip install -U exabgp
-pip install simplegeoip
-pip install GeoIP
 pip install scapy
 pip install Twisted
 pip install cbor2
-# pip install pysflow
 pip install simp-AES
-
+#--- Specify projects - optional --
+#pip install GeoIP
+#pip install simplegeoip
+#pip install pysflow
+#pip install mqtt-client
+#pip install zmq
+#pip install rabbitmq
+#pip install kafka-python
+#pip install soap2py
+#pip install ansible
+#pip install -U exabgp
+#pip install yabgp==0.1.7
+#pip install pysnmp
+#pip install ping
+#pip install pytraceroute
+#pip install pyang
+#pip install netconf
 #--------------------------------------------------
 wait
 echo "\r\n \r\n "
