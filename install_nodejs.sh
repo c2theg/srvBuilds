@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5                             \r\n
-Last Updated:  6/26/2018
+Version:  1.5.1                            \r\n
+Last Updated:  11/11/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -35,18 +35,10 @@ cd ~
 
 # https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
 
-#--- OLD versions -----
-#OR V6
-#curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-#OR V7
-#curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
-
-#-------- Current ----------
-#V8 - LTS
-curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-# V10
-#curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-
+# LTS
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+# Latest
+#curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
 #--------------------------------------------------------------------------------------------
 
 wait
