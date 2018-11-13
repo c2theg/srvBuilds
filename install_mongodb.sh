@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.2                             \r\n
 Last Updated:  8/11/2018
 \r\n \r\n
 Updating system first..."
@@ -36,7 +36,7 @@ echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" 
 
 sudo -E apt-get update
 
-sudo apt-get install -y mongodb-org
+sudo apt-get install -y mongodb-org --allow-unauthenticated
 
 systemctl start mongod
 systemctl enable mongod
