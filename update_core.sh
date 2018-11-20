@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.4.2                             \r\n
-Last Updated:  9/11/2018
+Version:  1.4.3                             \r\n
+Last Updated:  11/20/2018
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -39,9 +39,9 @@ wait
 #echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Checking Internet status...\r\n\r\n"
-ping -q -c3 github.com > /dev/null
-if [ $? -eq 0 ]
-then
+#ping -q -c3 github.com > /dev/null
+#if [ $? -eq 0 ]
+if nc -zw1 google.com 443; then
 	echo "Connected!!! \r\n \r\n"
 	echo "Deleting old files \r\n"	
 	if [ -s "update_core.sh" ]
