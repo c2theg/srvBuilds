@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.1                             \r\n
-Last Updated:  11/18/2017
+Version:  1.1.1                             \r\n
+Last Updated:  11/20/2018
 \r\n \r\n
 #Updating system first..."
 sudo -E apt-get update
@@ -45,8 +45,8 @@ make
 
 #Download and unarchive the latest stable release of Nginx
 cd /usr/src
-wget https://nginx.org/download/nginx-1.13.6.tar.gz
-tar -zxvf nginx-1.13.6.tar.gz && rm -f nginx-1.13.6.tar.gz
+wget https://nginx.org/download/nginx-1.15.6.tar.gz
+tar -zxvf nginx-1.15.6.tar.gz && rm -f nginx-1.15.6.tar.gz
 
 # compile Nginx while enabling ModSecurity and SSL modules
 cd nginx-1.13.6/
@@ -123,6 +123,7 @@ systemctl start nginx.service
 
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 iptables -P INPUT DROP
@@ -133,6 +134,8 @@ iptables-save > /etc/iptables
 
 ufw allow OpenSSH
 ufw allow 80
+ufw allow 443
+ufw allow 22
 ufw default deny
 ufw enable  
 
