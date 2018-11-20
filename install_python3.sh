@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.1                             \r\n
-Last Updated:  11/10/2018
+Version:  1.4.2                             \r\n
+Last Updated:  11/20/2018
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -37,7 +37,7 @@ sudo -E apt-get update
 sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties
 sudo -E apt-get install -y python3-dev
-sudo -E apt install -y python3.7
+sudo -E apt-get install -y python3.7
 
 #----------- if issues with PIP install -------------------
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
@@ -72,16 +72,17 @@ echo "Installing mysql... \r\n "
 pip install mysql-connector-python
 #pip install mysql-connector-python-rf
 #-----------------------
-echo "Installing protobuf... \r\n "
-pip install protobuf
-pip install websockets
-pip install redis
-pip install python-memcached
+echo "Installing PIP modules... \r\n "
 pip install scapy
 pip install Twisted
 pip install cbor2
 pip install simp-AES
 #--- Specify projects - optional --
+#pip install protobuf
+#pip install websockets
+#pip install redis
+#pip install python-memcached
+
 #pip install GeoIP
 #pip install simplegeoip
 #pip install pysflow
@@ -107,6 +108,4 @@ python3 --version
 pip3 --version
 virtualenv --version
 python3 -m pip --version
-
-
-echo "\r\n \r\n "
+echo "\r\n \r\n"
