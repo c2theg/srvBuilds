@@ -28,9 +28,9 @@ Version:  1.6.14                             \r\n
 Last Updated:  11/10/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
-ping -q -c5 github.com > /dev/null
-if [ $? -eq 0 ]
-then
+#ping -q -c5 github.com > /dev/null
+#if [ $? -eq 0 ]; then
+if nc -zw1 google.com 443; then
 	echo "Connected \r\n \r\n"
 	sudo -E apt-get update
 	wait
@@ -44,11 +44,7 @@ then
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop sshguard build-essential libffi-dev
 	wait
 	sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel
-	
-	
 	wait
-	
-
 	#----------------------------------------------------------------------------------------------
 	if [ -s "update_core.sh" ] 
 	then
