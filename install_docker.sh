@@ -84,6 +84,9 @@ else
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
         wait
         sudo -E apt-get update
+        wait
+        apt-cache policy docker-ce
+        wait
         sudo -E apt-get install -y docker-ce
      elif [ $VER = '18.04' ]; then
         sudo -E apt-get install -y ifupdown aufs-tools debootstrap docker-doc
@@ -109,10 +112,11 @@ else
      echo "----------------------------  \r\n \r\n"
      echo "Visit: https://$HOST:9090  to access Cockpit! \r\n \r\n"
 fi
-
 sudo systemctl start docker
 sudo systemctl enable docker
-        
+
+sudo systemctl status docker
+
 wait
 echo "Done!"
 echo "\r\n \r\n"
@@ -162,3 +166,9 @@ ss -ntl
 echo "View Docker commands here: https://docs.docker.com/engine/reference/commandline/container_ls/  \r\n \r\n"
 echo " Hello World Container:  sudo docker run -p 3000:80 tutum/hello-world  \r\n \r\n"
 echo "\r\n \r\n Docker deployment complete!!! \r\n \r\n"
+
+docker images
+
+docker ps
+
+
