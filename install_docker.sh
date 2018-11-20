@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.0                             \r\n
-Last Updated:  9/30/2018
+Version:  1.5.1                             \r\n
+Last Updated:  11/20/2018
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -77,8 +77,10 @@ if [ $VER = '14.04' ]; then
 else
     if [ $VER = '16.04' ]; then
         #-------- Ubuntu 16.04 ------------------------
-        sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        wait
+        sudo apt-key fingerprint 0EBFCD88
+        wait
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
         wait
         sudo -E apt-get update
@@ -119,37 +121,6 @@ echo "\r\n \r\n \r\n"
 echo "Running sample container"
 sudo docker run hello-world
 wait
-echo "\r\n \r\n -------------------------------------------------------------- \r\n \r\n"
-if [ ! -f ca-key.pem ]; then    
-    echo "Generating PKI key... \r\n \r\n"
-    # Source: https://docs.docker.com/engine/security/https/
-
-    openssl genrsa -aes256 -out ca-key.pem 4096
-    echo "Generating x509 certificate... \r\n \r\n "
-    openssl req -new -x509 -days 365 -key ca-key.pem -sha256 -out ca.pem
-    openssl genrsa -out server-key.pem 4096
-    openssl genrsa -out key.pem 4096
-
-    openssl req -subj "/CN=$HOST" -sha256 -new -key server-key.pem -out server.csr
-    echo "\r\n \r\n -------------------------------------------------------------- \r\n \r\n"
-    echo "Updating docker security to allow for remote connections for: $HOST \r\n"
-    echo subjectAltName = DNS:$HOST,IP:10.10.10.20,IP:127.0.0.1 >> extfile.cnf
-    echo extendedKeyUsage = serverAuth >> extfile.cnf
-
-    openssl x509 -req -days 3650 -sha256 -in server.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -extfile extfile.cnf
-
-    echo "\r\n \r\n ---- client info ---- \r\n \r\n"
-    openssl req -subj '/CN=client' -new -key key.pem -out client.csr
-
-    echo extendedKeyUsage = clientAuth >> extfile.cnf
-
-    openssl x509 -req -days 3650 -sha256 -in client.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out cert.pem -extfile extfile.cnf
-
-    rm -v client.csr server.csr
-    chmod -v 0400 ca-key.pem key.pem server-key.pem
-    chmod -v 0444 ca.pem server-cert.pem cert.pem
-fi
-
 echo "\r\n \r\n -------------------------------------------------------------- \r\n \r\n"
 echo "Downloading a better way to manage containers... \r\n.."
 echo " PORTAINER! - https://github.com/portainer/portainer \r\n "
