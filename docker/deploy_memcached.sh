@@ -21,8 +21,8 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.2                             \r\n
-Last Updated:  10/2/2018
+Version:  0.0.3                             \r\n
+Last Updated:  11/20/2018
 \r\n \r\n"
 wait
 #---------- Download config files ----------------
@@ -39,7 +39,9 @@ fi
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-memcache.yml
 #-----------------------------------------------------------------------------------------------------------------
 #--- rename config file to "docker-compose.yml"
-mv docker-compose-memcache.yml docker-compose.yml
+mkdir /media/data/containers/memcached
+mv docker-compose-memcache.yml /media/data/containers/memcached/docker-compose.yml
 #--- start up container
+cd /media/data/containers/memcached
 docker-compose up
 echo "Done! \r\n \r\n"
