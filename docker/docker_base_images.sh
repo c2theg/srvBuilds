@@ -1,6 +1,6 @@
 #!/bin/sh
 #   Christopher Gray
-#     version 0.0.1
+#     version 0.0.3
 #    11/20/2018
 clear
 
@@ -27,7 +27,7 @@ docker pull buildpack-deps:stretch-scm
 #docker pull mcr.microsoft.com/windows/nanoserver:latest
 #-----------------------------------------------------------------------
 echo "\r\n \r\n"
-docker images |grep -v REPOSITORY|awk '{print $1}'|xargs -L1 docker pull
+#docker images |grep -v REPOSITORY|awk '{print $1}'|xargs -L1 docker pull
 
 echo "\r\n \r\n"
 docker images -a
