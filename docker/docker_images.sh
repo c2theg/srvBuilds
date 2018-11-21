@@ -1,20 +1,12 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
-#
 #   Christopher Gray
 #     version 0.0.1
 #    11/20/2018
 clear
 
-echo "\r\n \r\n Download base images \r\n \r\n"
-
 echo "\r\n Docker Images downloaded.. (docker images -a) \r\n "
 docker images -a
 #-----------------------------------------------------------------------
-
 #-- Ubuntu
 #---- 16.04
 docker pull ubuntu:xenial
