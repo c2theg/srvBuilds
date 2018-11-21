@@ -25,7 +25,7 @@ fi
 
 echo "Starting container... \r\n \r\n "
 
-docker run -d -p 27017:27107 -v ~/data:/media/data/nosql/mongo1 mongo:4.0
+docker run -d -p 27017:27107 -v ~/data:/media/data/nosql/mongo1 mongo:4-xenial
 
 echo "\r\n \r\n DONE! \r\n \r\n"
 docker images
