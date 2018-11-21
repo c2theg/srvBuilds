@@ -21,7 +21,7 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.3                             \r\n
+Version:  0.0.4                             \r\n
 Last Updated:  11/20/2018
 \r\n \r\n"
 wait
@@ -37,11 +37,22 @@ fi
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container-memcached.conf
 #--- Docker Deployment Config
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-memcache.yml
-#-----------------------------------------------------------------------------------------------------------------
-#--- rename config file to "docker-compose.yml"
-mkdir /media/data/containers/memcached
+#--------- Create Directory Structure ------------------------------------------------------------------------------
+if [ ! -d "/media/data" ]; then
+     mkdir /media/data 
+fi
+
+if [ ! -d "/media/data/containers" ]; then
+     mkdir /media/data/containers/
+fi
+
+if [ ! -d "/media/data/containers/memcached" ]; then
+     mkdir /media/data/containers/memcached
+fi
+
+#--- rename config file to "docker-compose.yml" -----
 mv docker-compose-memcache.yml /media/data/containers/memcached/docker-compose.yml
-#--- start up container
+#--- start up container ---
 cd /media/data/containers/memcached
 docker-compose up
 echo "Done! \r\n \r\n"
