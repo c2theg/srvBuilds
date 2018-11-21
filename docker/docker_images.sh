@@ -19,17 +19,24 @@ docker images -a
 #---- 16.04
 docker pull ubuntu:xenial
 #---- 18.04
-#docker pull ubuntu:bionic
+docker pull ubuntu:bionic
 
 #-- Debian
 docker pull debian:scratch
 docker pull debian:stretch-slim
 docker pull debian:jessie
 #----
+docker pull busybox:latest
 docker pull alpine:3.8
 docker pull buildpack-deps:stretch-scm
 
+#---- Microsoft
+#docker pull mcr.microsoft.com/windows/servercore:latest
+#docker pull mcr.microsoft.com/windows/nanoserver:latest
 #-----------------------------------------------------------------------
+echo "\r\n \r\n"
+docker images |grep -v REPOSITORY|awk '{print $1}'|xargs -L1 docker pull
+
 echo "\r\n \r\n"
 docker images -a
 
