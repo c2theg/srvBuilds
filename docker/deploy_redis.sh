@@ -30,7 +30,7 @@ fi
 #--- Config ---
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis.conf
 #--- Docker Deployment Config ---
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose_redis.yml
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-redis.yml
 #--------- Create Directory Structure -------------------------------------------------------------------------
 if [ ! -d "/media/data" ]; then
      mkdir /media/data 
