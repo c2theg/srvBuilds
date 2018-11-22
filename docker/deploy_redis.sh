@@ -16,7 +16,7 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.4                             \r\n
 Last Updated:  11/21/2018
 \r\n \r\n"
 wait
@@ -31,6 +31,8 @@ fi
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis.conf
 #--- Docker Deployment Config ---
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-redis.yml
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_master.conf
+
 #--------- Create Directory Structure -------------------------------------------------------------------------
 if [ ! -d "/media/data" ]; then
      mkdir /media/data 
@@ -53,6 +55,7 @@ docker volume inspect redis1
 #--- rename config file to "docker-compose.yml" -----
 mv docker-compose_redis.yml /media/data/containers/redis1/docker-compose.yml
 
+mv redis_master.conf /media/data/containers/redis1/container-redis.conf
 #--- start up container ---
 cd /media/data/containers/redis1/
 docker-compose up
