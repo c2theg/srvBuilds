@@ -1,13 +1,13 @@
 #  Docker compose file which creates a redis container, and sets resource limits
 #  By: Christopher MJ Gray
-#  version: 0.0.1
+#  version: 0.0.2
 #  10/1/18
 #  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-redis.yml
 #
 version: '3'
 services:
     redis:
-        image: redis:stretch
+        image: redis:latest
         ports:
             - "6379:6379"
         volumes:
