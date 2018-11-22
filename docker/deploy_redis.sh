@@ -50,6 +50,12 @@ if [ ! -d "/media/data/containers/redis1" ]; then
      mkdir /media/data/containers/redis1/
 fi
 
+#--- Create Logs directory if not already existing ---
+if [ ! -d "/media/data/containers/logs" ]; then
+     mkdir /media/data/containers/logs/
+fi
+#-----------------------------------------------------
+
 #-- Delete redis image if exists
 docker rmi redis --force
 
