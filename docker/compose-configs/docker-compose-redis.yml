@@ -10,10 +10,10 @@ services:
     redis:
         container_name: redis-server1
         image: redis:latest
-        user: '1001'
-        restart: on-failure
-        security_opt:
-            -  apparmor=unconfined
+#        user: '1001'
+#        restart: on-failure
+#        security_opt:
+#            -  apparmor=unconfined
         ports:
             - "46379:46379"
         volumes:
@@ -27,10 +27,9 @@ services:
             - REDIS_MAXMEMORY=256m
             - REDIS_PASSWORD=P@ssw0rd123!
             - REDIS_LOGFILE=/var/log/redis.log
-#        privileged: true
+        privileged: true
         sysctls:
             net.core.somaxcomm: '511'
-            
 #            --tcp-backlog 128
 #            - slaveof 10.0.0.2 6379
 #            - requirepass secret 
