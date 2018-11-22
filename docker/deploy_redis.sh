@@ -19,6 +19,10 @@ Created By:
 Version:  0.0.6                             \r\n
 Last Updated:  11/21/2018
 \r\n \r\n"
+
+# Quick Start command:
+# wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/deploy_redis.sh && chmod u+x deploy_redis.sh && ./deploy_redis.sh
+
 wait
 #---------- Download config files ----------------
 if [ -s "docker-compose.yml" ]; then
