@@ -9,22 +9,26 @@ docker images -a
 #-----------------------------------------------------------------------
 #-- Ubuntu
 #---- 16.04
-#-- mongodb
+#-- Used By: mongodb
 docker pull ubuntu:xenial
+
 #---- 18.04
 #docker pull ubuntu:bionic
 #-- Debian
 #docker pull debian:scratch
 #docker pull debian:jessie
-#-- Redis & MySQL & Nginx & PHP 7.2 FPM
+
+#-- Used By: Redis & MySQL & Nginx & PHP 7.2 FPM
 docker pull debian:stretch-slim
-#----
+
+#---- Other popular base images ---
 #docker pull busybox:latest
 #docker pull alpine:3.8
 
-#-- Golang
+#-- Used By: Golang
 docker pull buildpack-deps:stretch-scm
-#-- Python3.7 & NodeJS Latest
+
+#-- Used By: Python3.7 & NodeJS Latest
 docker pull buildpack-deps:stretch
 
 #---- Microsoft
@@ -32,6 +36,7 @@ docker pull buildpack-deps:stretch
 #docker pull mcr.microsoft.com/windows/nanoserver:latest
 #-----------------------------------------------------------------------
 echo "\r\n \r\n"
+#-- Update all images to latest
 #docker images |grep -v REPOSITORY|awk '{print $1}'|xargs -L1 docker pull
 
 echo "\r\n \r\n"
