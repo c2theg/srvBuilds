@@ -12,7 +12,9 @@ services:
         ports:
             - "46379:46379"
         volumes:
-            - ./container-redis.conf:/usr/local/etc/redis/redis_46379.conf         
+            - ./container-redis.conf:/usr/local/etc/redis/redis_46379.conf
+        command:
+            - /usr/local/etc/redis/redis_46379.conf
         deploy:
             resources:
                 limits:
