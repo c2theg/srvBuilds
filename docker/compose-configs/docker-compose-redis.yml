@@ -1,6 +1,6 @@
 #  Docker compose file which creates a redis container, and sets resource limits
 #  By: Christopher MJ Gray
-#  version: 0.0.4
+#  version: 0.0.5
 #  11/22/18
 #  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-redis.yml
 #          https://docs.docksal.io/tools/redis/
@@ -14,8 +14,8 @@ services:
             - "46379:46379"
         volumes:
             - ./container-redis.conf:/usr/local/etc/redis/redis_46379.conf
-        #command:
-        #    - /usr/local/etc/redis/redis_46379.conf
+        command:
+            - /usr/local/etc/redis/redis_46379.conf
         environment:
             - REDIS_MAXMEMORY=256m
             - REDIS_PASSWORD=P@ssw0rd123!
