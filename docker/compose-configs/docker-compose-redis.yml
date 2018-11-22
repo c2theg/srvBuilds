@@ -9,9 +9,9 @@ services:
     redis:
         image: redis:latest
         ports:
-            - "6379:6379"
+            - "46379:46379"
         volumes:
-            - ./container-redis.conf:/usr/local/etc/redis/redis_6379.conf
+            - ./container-redis.conf:/usr/local/etc/redis/redis_46379.conf
         deploy:
             resources:
                 limits:
