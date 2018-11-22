@@ -14,9 +14,11 @@ services:
             - "46379:46379"
         volumes:
             - ./container-redis.conf:/usr/local/etc/redis/redis_46379.conf
-        command:
-            - /usr/local/etc/redis/redis_46379.conf
+        #command:
+        #    - /usr/local/etc/redis/redis_46379.conf
         environment:
             - REDIS_MAXMEMORY=256m
             - REDIS_PASSWORD=P@ssw0rd123!
             - REDIS_LOGFILE=/var/log/redis.log
+#            - slaveof 10.0.0.2 6379
+#            - requirepass secret 
