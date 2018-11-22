@@ -16,7 +16,7 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.5                             \r\n
+Version:  0.0.6                             \r\n
 Last Updated:  11/21/2018
 \r\n \r\n"
 wait
@@ -45,6 +45,9 @@ fi
 if [ ! -d "/media/data/containers/redis1" ]; then
      mkdir /media/data/containers/redis1/
 fi
+
+#-- Delete redis image if exists
+docker rmi redis --force
 
 #--- Create Docker Volume ---
 docker volume create redis1
