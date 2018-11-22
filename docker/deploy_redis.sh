@@ -53,7 +53,7 @@ echo "Inspect volume \r\n "
 docker volume inspect redis1
 
 #--- rename config file to "docker-compose.yml" -----
-mv docker-compose_redis.yml /media/data/containers/redis1/docker-compose.yml
+mv docker-compose-redis.yml /media/data/containers/redis1/docker-compose.yml
 
 mv redis_master.conf /media/data/containers/redis1/container-redis.conf
 #--- start up container ---
