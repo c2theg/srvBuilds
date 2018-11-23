@@ -1,6 +1,6 @@
 #  Docker compose file which creates a redis container, and sets resource limits
 #  By: Christopher MJ Gray
-#  version: 0.0.7
+#  version: 0.0.8
 #  11/22/18
 #  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-redis.yml
 #          https://docs.docksal.io/tools/redis/
@@ -33,3 +33,4 @@ services:
 #            --tcp-backlog 128
 #            - slaveof 10.0.0.2 6379
 #            - requirepass secret 
+        network_mode: "host"
