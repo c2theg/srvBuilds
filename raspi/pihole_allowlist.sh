@@ -26,8 +26,8 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.5                            \r\n
-Last Updated:  9/12/2018
+Version:  0.0.6                            \r\n
+Last Updated:  11/23/2018
 \r\n \r\n"
 #--------------------------
 pihole -w github.com raw.githubusercontent.com
@@ -73,3 +73,5 @@ pihole -w medium.com
 pihole -w highcharts.com www.highcharts.com code.highcharts.com
 pihole -w spclient.wg.spotify.com apresolve.spotify.com
 pihole -w cloudflare.com www.cloudflare.com cdnjs.cloudflare.com
+#-- Charters.com
+pihole -w yottaa.net
