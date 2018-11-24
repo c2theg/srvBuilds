@@ -16,8 +16,8 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.6                             \r\n
-Last Updated:  11/21/2018
+Version:  0.0.7                             \r\n
+Last Updated:  11/23/2018
 \r\n \r\n"
 
 # Quick Start command:
@@ -36,6 +36,7 @@ fi
 #--- Docker Deployment Config ---
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-redis.yml
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_master.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis-init.sh
 
 #--------- Create Directory Structure -------------------------------------------------------------------------
 if [ ! -d "/media/data" ]; then
@@ -67,8 +68,8 @@ docker volume inspect redis1
 
 #--- rename config file to "docker-compose.yml" -----
 mv docker-compose-redis.yml /media/data/containers/redis1/docker-compose.yml
-
 mv redis_master.conf /media/data/containers/redis1/container-redis.conf
+mv redis-init.sh /media/data/containers/redis1/redis-init.sh
 #--- start up container ---
 cd /media/data/containers/redis1/
 docker-compose up
