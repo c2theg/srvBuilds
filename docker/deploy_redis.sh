@@ -75,3 +75,4 @@ cd /media/data/containers/redis1/
 docker-compose up -d
 
 echo "Done! \r\n \r\n"
+docker ps
