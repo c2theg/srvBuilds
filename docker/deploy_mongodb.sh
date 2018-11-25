@@ -16,9 +16,12 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.2                             \r\n
-Last Updated:  11/20/2018
+Version:  0.0.3                             \r\n
+Last Updated:  11/24/2018
 \r\n \r\n"
+
+# wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/deploy_mongodb.sh && chmod u+x deploy_mongodb.sh && ./deploy_mongodb.sh
+
 wait
 #---------- Download config files ----------------
 if [ -s "docker-compose.yml" ]; then
@@ -51,7 +54,7 @@ echo "Inspect volume \r\n "
 docker volume inspect mongodb1
 
 #--- rename config file to "docker-compose.yml" -----
-mv docker-compose_mongodb.yml /media/data/containers/memcached/docker-compose.yml
+mv docker-compose_mongodb.yml /media/data/containers/mongodb1/docker-compose.yml
 
 #--- start up container ---
 cd /media/data/containers/mongodb1/
