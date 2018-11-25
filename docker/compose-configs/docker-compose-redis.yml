@@ -35,4 +35,4 @@ services:
 #            --tcp-backlog 128
 #            - slaveof 10.0.0.2 6379
 #            - requirepass secret 
-        network_mode: "host"
+#        network_mode: "host"
