@@ -61,5 +61,15 @@ cd /media/data/containers/mongodb1/
 docker-compose up
 
 echo "\r\n \r\n"
-echo "Access Container with the following:  \r\n \r\n docker exec -it mongodb /bin/bash
+echo "Access Container with the following:  \r\n \r\n docker exec -it mongodb /bin/bash   \r\n \r\n"
+
+echo "----------------------------------------- \r\n \r\n"
+echo "A few Mongodb commands: \r\n \r\n"
+
+echo "Start client: mongo  \r\n \r\n"
+echo "Info: db.help() \r\n \r\n"
+echo "Info: db.stats() \r\n \r\n"
+echo "More info: https://www.tutorialspoint.com/mongodb/mongodb_create_database.htm "
+
+
 echo "\r\n \r\n Done! \r\n \r\n"
