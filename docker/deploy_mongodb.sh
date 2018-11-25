@@ -16,7 +16,7 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.4                             \r\n
+Version:  0.0.5                             \r\n
 Last Updated:  11/24/2018
 \r\n \r\n"
 
@@ -58,7 +58,6 @@ mv docker-compose_mongodb.yml /media/data/containers/mongodb1/docker-compose.yml
 
 #--- start up container ---
 cd /media/data/containers/mongodb1/
-docker-compose up
 
 echo "\r\n \r\n"
 echo "Access Container with the following:  \r\n \r\n docker exec -it mongodb /bin/bash   \r\n \r\n"
@@ -71,5 +70,6 @@ echo "Info: db.help() \r\n \r\n"
 echo "Info: db.stats() \r\n \r\n"
 echo "More info: https://www.tutorialspoint.com/mongodb/mongodb_create_database.htm "
 
-
 echo "\r\n \r\n Done! \r\n \r\n"
+
+docker-compose up -d
