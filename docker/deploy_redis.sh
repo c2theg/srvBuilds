@@ -16,8 +16,8 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.7                             \r\n
-Last Updated:  11/23/2018
+Version:  0.0.8                             \r\n
+Last Updated:  11/24/2018
 \r\n \r\n"
 
 # Quick Start command:
@@ -72,6 +72,6 @@ mv redis_master.conf /media/data/containers/redis1/container-redis.conf
 mv redis-init.sh /media/data/containers/redis1/redis-init.sh
 #--- start up container ---
 cd /media/data/containers/redis1/
-docker-compose up
+docker-compose up -d
 
 echo "Done! \r\n \r\n"
