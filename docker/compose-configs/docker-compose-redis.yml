@@ -1,6 +1,6 @@
 #  Docker compose file which creates a redis container, and sets resource limits
 #  By: Christopher MJ Gray
-#  version: 0.0.9
+#  version: 0.0.10
 #  11/23/18
 #  Source: https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-redis.yml
 #          https://docs.docksal.io/tools/redis/
@@ -15,7 +15,7 @@ services:
 #        security_opt:
 #            -  apparmor=unconfined
         ports:
-            - "46379:46379"
+            - 46379:46379
         volumes:
             - ./container-redis.conf:/usr/local/etc/redis/redis_46379.conf
             - "./redis-init.sh:/usr/local/etc/redis/redis-init.sh"
