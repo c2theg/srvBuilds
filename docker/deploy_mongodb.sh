@@ -16,7 +16,7 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.3                             \r\n
+Version:  0.0.4                             \r\n
 Last Updated:  11/24/2018
 \r\n \r\n"
 
@@ -60,4 +60,6 @@ mv docker-compose_mongodb.yml /media/data/containers/mongodb1/docker-compose.yml
 cd /media/data/containers/mongodb1/
 docker-compose up
 
-echo "Done! \r\n \r\n"
+echo "\r\n \r\n"
+echo "Access Container with the following:  \r\n \r\n docker exec -it mongodb /bin/bash
+echo "\r\n \r\n Done! \r\n \r\n"
