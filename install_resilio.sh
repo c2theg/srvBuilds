@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.6.1                             \r\n
+Version:  0.6.2                             \r\n
 Last Updated:  11/28/2018
 \r\n \r\n
 This is really meant for 16.04 \r\n \r\n
@@ -46,23 +46,21 @@ wait
 sudo apt install -y resilio-sync
 wait
 #---------------------------------------------------------------------------------------------------------
-if [ -s "/etc/btsync/config.json" ]
-then
-	echo "Deleting file Resilio config "
-	rm /etc/resilio-sync/config.json
-	rm resilio_config.json
- rm resilio-sync.service
-fi
+#if [ -s "/etc/resilio-sync/config.json" ]
+#then
+#     echo "Deleting file Resilio config "
+#     rm /etc/resilio-sync/config.json
+#     rm resilio_config.json
+#     rm resilio-sync.service
+#fi
 echo "Downloading Resilio Config"
 wget -O "resilio_config.json" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio_config.json"
 wget -O "resilio-sync.service" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio-sync.service"
-
 wait
 #----------- Copy Configs --------------------
 #sudo mv"resilio_config.json" "/etc/resilio-sync/config.json"
-sudo mv "resilio_config.json" "/home/$USER/.config/resilio-sync/config.json"
-sudo mv "resilio-sync.service" "/lib/systemd/system/resilio-sync.service"
-
+#sudo mv "resilio_config.json" "/home/$USER/.config/resilio-sync/config.json"
+#sudo mv "resilio-sync.service" "/lib/systemd/system/resilio-sync.service"
 wait
 echo "Resilio Config Download Complete"
 #---------------------------------------------------------------------------------------------------------
