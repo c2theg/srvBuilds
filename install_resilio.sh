@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.6                             \r\n
-Last Updated:  2/25/2018
+Version:  0.6.1                             \r\n
+Last Updated:  11/28/2018
 \r\n \r\n
 This is really meant for 16.04 \r\n \r\n
 
@@ -59,10 +59,9 @@ wget -O "resilio-sync.service" "https://raw.githubusercontent.com/c2theg/srvBuil
 
 wait
 #----------- Copy Configs --------------------
-sudo cp "resilio_config.json" "/etc/resilio-sync/config.json"
-sudo cp "resilio_config.json" "/home/$USER/.config/resilio-sync/config.json"
-
-sudo cp "resilio-sync.service" "/lib/systemd/system/resilio-sync.service"
+#sudo mv"resilio_config.json" "/etc/resilio-sync/config.json"
+sudo mv "resilio_config.json" "/home/$USER/.config/resilio-sync/config.json"
+sudo mv "resilio-sync.service" "/lib/systemd/system/resilio-sync.service"
 
 wait
 echo "Resilio Config Download Complete"
@@ -71,10 +70,8 @@ sudo systemctl start resilio-sync
 wait
 sudo systemctl enable resilio-sync
 #sudo systemctl --user enable btsync
-
 wait
 systemctl status resilio-sync
-
 
 sudo systemctl daemon-reload
 sudo systemctl restart resilio-sync.service
@@ -82,9 +79,6 @@ ps aux | grep rslsync
 
 #-----------------------
 #sudo systemctl start btsync --identity www-data --storage "/media/data/btsync/" --config "/etc/btsync/config.json" --webui.listen 0.0.0.0:8888
-
-
-
 # fixes http permissions
 # 640 or 755
 sudo chmod -R 755 /var/www/
