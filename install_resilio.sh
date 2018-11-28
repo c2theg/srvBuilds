@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.6.2                             \r\n
+Version:  0.6.3                             \r\n
 Last Updated:  11/28/2018
 \r\n \r\n
 This is really meant for 16.04 \r\n \r\n
@@ -85,3 +85,14 @@ sudo chown -R www-data:www-data /var/www/
 sudo chown -R rslsync:rslsync /var/www/
 
 sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
+
+
+echo "DONE. Now visit the server in your webbrowser at https://<SERVERIP>:8888"
+echo "\r\n \r\n"
+echo "To fix permissions use: sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/  \r\n \r\n"
+
+
+
+
+
+
