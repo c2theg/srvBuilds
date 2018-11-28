@@ -18,8 +18,7 @@ wget https://bit.ly/cgray-lemp && mv cgray-lemp install_lemp.sh && chmod u+x ins
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_percona_5.7.sh && chmod u+x install_percona_5.7.sh && ./install_percona_5.7.sh
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_btsync.sh && chmod u+x install_btsync.sh && ./install_btsync.sh
-
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_resilio.sh && chmod u+x install_resilio.sh && ./install_resilio.sh
 
 ------------------------------------------
 once downloaded do the following:
