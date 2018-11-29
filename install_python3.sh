@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.2                             \r\n
-Last Updated:  11/20/2018
+Version:  1.4.3                             \r\n
+Last Updated:  11/28/2018
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -30,12 +30,11 @@ Last Updated:  11/20/2018
 #--------------------------------------------------------------------------------------------
 echo "Installing Python 3.7+ latest.... "
 
-#sudo -E add-apt-repository -y ppa:deadsnakes/ppa
 sudo -E add-apt-repository -y ppa:jonathonf/python-3.7
 sudo -E apt-get update
 #--------------------------------------------------------------------------------------------
 sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
-sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties
+sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties python3-yaml
 sudo -E apt-get install -y python3-dev
 sudo -E apt-get install -y python3.7
 python3 -V
@@ -68,7 +67,7 @@ echo "Installing pymongo... \r\n "
 pip3 install pymongo
 #-- MySQL
 echo "Installing mysql... \r\n "
-
+pip3 install mysql-connector-python
 #-----------------------
 echo "Installing PIP modules... \r\n "
 pip3 install scapy
