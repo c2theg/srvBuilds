@@ -5,6 +5,9 @@ htgroup='www-data'
 rootuser='root'
 Web_path='/var/www'
 
+# fixes http permissions
+# 640 or 755
+
 chmod 0644 ${Web_path}/.htaccess
 chmod 0644 ${Web_path}/data/.htaccess
 
@@ -34,6 +37,10 @@ then
     sudo chmod -R 755 ${ocpath}
     sudo chown -R www-data:www-data ${ocpath}
 fi
+
+#--- resilio ---
+#sudo chown -R rslsync:rslsync /var/www/
+sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
 
 #--- General commands -----
 echo "\r\n \r\n"
