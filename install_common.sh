@@ -24,7 +24,7 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  1.6.16                             \r\n
+Version:  1.7.0                             \r\n
 Last Updated:  11/28/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
@@ -43,7 +43,7 @@ if nc -zw1 google.com 443; then
 	#--------------------------------------------------------------------------------------------
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop sshguard build-essential libffi-dev
 	wait
-	sudo -E apt-get install -y ntp ntpdate ssh openssh-server libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel
+	sudo -E apt-get install -y ntp ntpdate libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel
 	wait
 	#----------------------------------------------------------------------------------------------
 	if [ -s "update_core.sh" ] 
@@ -75,7 +75,7 @@ if nc -zw1 google.com 443; then
 	sudo ./update_blocklists_local_servers.sh
 
 	#------ Python ------
-	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python2.sh && sudo chmod u+x install_python2.sh && ./install_python2.sh
+	#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python2.sh && sudo chmod u+x install_python2.sh && ./install_python2.sh
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python3.sh && sudo chmod u+x install_python3.sh && ./install_python3.sh
 
 	#---- NTP Time related ---------
