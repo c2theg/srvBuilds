@@ -43,7 +43,7 @@ if nc -zw1 google.com 443; then
 	#--------------------------------------------------------------------------------------------
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop sshguard build-essential libffi-dev
 	wait
-	sudo -E apt-get install -y ntp ntpdate libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel
+	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel
 	wait
 	#----------------------------------------------------------------------------------------------
 	if [ -s "update_core.sh" ] 
