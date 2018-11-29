@@ -86,13 +86,12 @@ sudo chown -R rslsync:rslsync /var/www/
 
 sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
 
+/etc/init.d/resilio-sync restart
 
 echo "DONE. Now visit the server in your webbrowser at https://<SERVERIP>:8888"
 echo "\r\n \r\n"
 echo "To fix permissions use: sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/  \r\n \r\n"
-
-
-
+echo "Edit the config with: nano /etc/resilio-sync/config.json  - and change listen to: 0.0.0.0:8888   \r\n \r\n"
 
 
 
