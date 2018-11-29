@@ -38,7 +38,7 @@ sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev lib
 sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties
 sudo -E apt-get install -y python3-dev
 sudo -E apt-get install -y python3.7
-
+python3 -V
 #----------- if issues with PIP install -------------------
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 sudo python3 get-pip.py --force-reinstall
@@ -48,57 +48,55 @@ sudo -E pip3 install virtualenv
 virtualenv venv
 python3 -m venv myenv
 wait
-pip install --upgrade pip
+pip3 install --upgrade pip
 #--------------------------------------------------------------------------------------------
+pip3 install pyyaml
+
 #----- Install Flask ------------
 echo "Installing Flask... \r\n "
-pip install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
+pip3 install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
 wait
-#---- Requests -------
-echo "Installing requests... \r\n "
-pip install requests
-pipenv install requests
-#sudo pip3 install --upgrade requests
+
+#--- Web API stuff ----
+#-- REST --
+pip3 install requests
 #-----------------------
 echo "Installing pexpect... \r\n "
-pip install pexpect
+pip3 install pexpect
 #-- MongoDB
 echo "Installing pymongo... \r\n "
-python -m pip install pymongo
-python3 -m pip install pymongo
-#python -m pip install --upgrade pymongo
+pip3 install pymongo
 #-- MySQL
 echo "Installing mysql... \r\n "
-pip install mysql-connector-python
-#pip install mysql-connector-python-rf
+
 #-----------------------
 echo "Installing PIP modules... \r\n "
-pip install scapy
-pip install Twisted
-pip install cbor2
-pip install simp-AES
+pip3 install scapy
+pip3 install Twisted
+pip3 install cbor2
+pip3 install simp-AES
 #--- Specify projects - optional --
-#pip install protobuf
-#pip install websockets
-#pip install redis
-#pip install python-memcached
+#pip3 install protobuf
+#pip3 install websockets
+#pip3 install redis
+#pip3 install python-memcached
 
-#pip install GeoIP
-#pip install simplegeoip
-#pip install pysflow
-#pip install mqtt-client
-#pip install zmq
-#pip install rabbitmq
-#pip install kafka-python
-#pip install soap2py
-#pip install ansible
-#pip install -U exabgp
-#pip install yabgp==0.1.7
-#pip install pysnmp
-#pip install ping
-#pip install pytraceroute
-#pip install pyang
-#pip install netconf
+#pip3 install GeoIP
+#pip3 install simplegeoip
+#pip3 install pysflow
+#pip3 install mqtt-client
+#pip3 install zmq
+#pip3 install rabbitmq
+#pip3 install kafka-python
+#pip3 install soap2py
+#pip3 install ansible
+#pip3 install -U exabgp
+#pip3 install yabgp==0.1.7
+#pip3 install pysnmp
+#pip3 install ping
+#pip3 install pytraceroute
+#pip3 install pyang
+#pip3 install netconf
 #--------------------------------------------------
 wait
 echo "\r\n \r\n "
