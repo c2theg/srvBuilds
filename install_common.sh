@@ -95,6 +95,8 @@ if nc -zw1 google.com 443; then
 	echo "Syncing Hardware clock to system clock... \r\n \r\n"
 	sudo hwclock --systohc
 	
+	timedatectl
+	
 	echo "\r\n \r\n"
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
