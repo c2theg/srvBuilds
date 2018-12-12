@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  1.7.0                             \r\n
-Last Updated:  11/28/2018
+Version:  1.7.1                             \r\n
+Last Updated:  12/11/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
 #ping -q -c5 github.com > /dev/null
@@ -72,7 +72,7 @@ if nc -zw1 google.com 443; then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod u ntp.conf
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf && mv resolv_base.conf /etc/resolvconf/resolv.conf.d/base
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
-	sudo ./update_blocklists_local_servers.sh
+	
 
 	#------ Python ------
 	#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python2.sh && sudo chmod u+x install_python2.sh && ./install_python2.sh
@@ -98,6 +98,7 @@ if nc -zw1 google.com 443; then
 	timedatectl
 	
 	echo "\r\n \r\n"
+	sudo ./update_blocklists_local_servers.sh
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
