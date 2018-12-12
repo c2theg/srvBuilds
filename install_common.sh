@@ -92,11 +92,17 @@ if nc -zw1 google.com 443; then
 	
 	echo "Syncing Hardware clock to system clock... \r\n \r\n"
 	sudo hwclock --systohc
-	
 	timedatectl
 	
+	echo "To sync system clock with PTP, run the following: (This doesn't work in ESXi with a vmxnet3 v Nic)  \r\n \r\n
+	https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-starting_ptp4l  \r\n \r\n
+	ifconfig                    \r\n
+	ethtool -T eth0 or ens160   \r\n
+	ptp4l -i eth0 -m            \r\n"
+	
 	echo "\r\n \r\n"
-	sudo ./update_blocklists_local_servers.sh
+	echo "To setup local url blocking:  sudo ./update_blocklists_local_servers.sh  \r\n \r\n"
+	
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
