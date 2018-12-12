@@ -21,7 +21,7 @@ echo "
 \r\n \r\n
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
-This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
+This really is meant to be run under Ubuntu 14.04 - 18.04 LTS
 
 \r\n \r\n
 Version:  1.7.2                             \r\n
@@ -94,7 +94,7 @@ if nc -zw1 google.com 443; then
 	sudo hwclock --systohc
 	timedatectl
 	
-	echo "To sync system clock with PTP, run the following: (This doesn't work in ESXi with a vmxnet3 v Nic)  \r\n \r\n
+	echo "To sync system clock with PTP, run the following: (This doesn't work in ESXi with a vmxnet3 vNic)  \r\n \r\n
 	https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-starting_ptp4l  \r\n \r\n
 	ifconfig                    \r\n
 	ethtool -T eth0 or ens160   \r\n
