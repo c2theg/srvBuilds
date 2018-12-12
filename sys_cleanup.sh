@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.7                             \r\n
-Last Updated:  9/26/2018
+Version:  1.6.8                             \r\n
+Last Updated:  12/11/2018
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -142,6 +142,8 @@ rm /var/log/update_pihole_lists.log
 #---------- MISC ------------------------------------------------------
 rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
+
+history -c
 
 echo " -------------- Done Cleaning system -------- "
 echo "\r\n \r\n"
