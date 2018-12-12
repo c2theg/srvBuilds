@@ -98,7 +98,7 @@ if nc -zw1 google.com 443; then
 	https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-starting_ptp4l  \r\n \r\n
 	ifconfig                    \r\n
 	ethtool -T eth0 or ens160   \r\n
-	ptp4l -i eth0 -m            \r\n"
+	ptp4l -i eth0 -m -S -A           \r\n"
 	
 	echo "\r\n \r\n"
 	echo "To setup local url blocking:  sudo ./update_blocklists_local_servers.sh  \r\n \r\n"
