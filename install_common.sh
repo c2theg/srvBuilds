@@ -24,7 +24,7 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  1.7.1                             \r\n
+Version:  1.7.2                             \r\n
 Last Updated:  12/11/2018
 \r\n \r\n"
 echo "Checking Internet status...   "
@@ -46,15 +46,15 @@ if nc -zw1 google.com 443; then
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel
 	wait
 	#----------------------------------------------------------------------------------------------
-	if [ -s "update_core.sh" ] 
+	if [ -s "install_snmp.sh" ] 
 	then
 		echo "Deleting files"
-		rm sys_cleanup.sh
-		rm update_ubuntu14.04.sh
 		rm install_snmp.sh
-		rm update_core.sh
 		rm ntp.conf
 		rm update_blocklists_local_servers.sh
+		rm resolv_base.conf
+		rm install_python3.sh
+		rm 50unattended-upgrades
 	fi
 	echo "\r\n \r\n \r\n \r\n"
 	if [ -s "50unattended-upgrades" ]
@@ -62,7 +62,7 @@ if nc -zw1 google.com 443; then
 	  echo "Downloading latest custom config's "
 	  wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/50unattended-upgrades
 	  wait
-	  cp 50unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades
+	  mv 50unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades
 	  echo "Done setting up AutoUpdates! \r\n \r\n"
 	fi
 	echo "\r\n \r\n ---------------------------------------------- \r\n \r\n"
@@ -72,10 +72,8 @@ if nc -zw1 google.com 443; then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod u ntp.conf
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf && mv resolv_base.conf /etc/resolvconf/resolv.conf.d/base
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
-	
 
 	#------ Python ------
-	#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python2.sh && sudo chmod u+x install_python2.sh && ./install_python2.sh
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python3.sh && sudo chmod u+x install_python3.sh && ./install_python3.sh
 
 	#---- NTP Time related ---------
