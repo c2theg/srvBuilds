@@ -55,7 +55,7 @@ wait
 #fi
 echo "Downloading Resilio Config"
 wget -O "resilio_config.json" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio_config.json"
-wget -O "resilio-sync.service" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio-sync.service"
+#wget -O "resilio-sync.service" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio-sync.service"
 wait
 echo "Resilio Config Download Complete"
 #---------------------------------------------------------------------------------------------------------
@@ -64,18 +64,17 @@ wait
 sudo systemctl enable resilio-sync
 #sudo systemctl --user enable btsync
 wait
-systemctl status resilio-sync
-
-sudo systemctl daemon-reload
-sudo systemctl restart resilio-sync.service
-ps aux | grep rslsync
-
+#systemctl status resilio-sync
 #----------- Copy Configs --------------------
-sudo mv"resilio_config.json" "/etc/resilio-sync/config.json"
+sudo mv "resilio_config.json" "/etc/resilio-sync/config.json"
 #sudo mv "resilio_config.json" "/home/$USER/.config/resilio-sync/config.json"
 #sudo mv "resilio-sync.service" "/lib/systemd/system/resilio-sync.service"
 
+sudo systemctl daemon-reload
+sudo systemctl restart resilio-sync.service
 /etc/init.d/resilio-sync restart
+
+ps aux | grep rslsync
 #-----------------------
 #sudo systemctl start btsync --identity www-data --storage "/media/data/btsync/" --config "/etc/btsync/config.json" --webui.listen 0.0.0.0:8888
 # fixes http permissions
@@ -86,8 +85,6 @@ sudo mv"resilio_config.json" "/etc/resilio-sync/config.json"
 
 mkdir /media/data/sync
 sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
-
-/etc/init.d/resilio-sync restart
 
 echo "DONE. Now visit the server in your webbrowser at https://<SERVERIP>:8888"
 echo "\r\n \r\n"
