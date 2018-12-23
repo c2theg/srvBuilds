@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.6.3                             \r\n
-Last Updated:  11/28/2018
+Version:  0.6.4                             \r\n
+Last Updated:  12/22/2018
 \r\n \r\n
 This is really meant for 16.04 \r\n \r\n
 
@@ -57,11 +57,6 @@ echo "Downloading Resilio Config"
 wget -O "resilio_config.json" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio_config.json"
 wget -O "resilio-sync.service" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio-sync.service"
 wait
-#----------- Copy Configs --------------------
-#sudo mv"resilio_config.json" "/etc/resilio-sync/config.json"
-#sudo mv "resilio_config.json" "/home/$USER/.config/resilio-sync/config.json"
-#sudo mv "resilio-sync.service" "/lib/systemd/system/resilio-sync.service"
-wait
 echo "Resilio Config Download Complete"
 #---------------------------------------------------------------------------------------------------------
 sudo systemctl start resilio-sync
@@ -75,15 +70,21 @@ sudo systemctl daemon-reload
 sudo systemctl restart resilio-sync.service
 ps aux | grep rslsync
 
+#----------- Copy Configs --------------------
+sudo mv"resilio_config.json" "/etc/resilio-sync/config.json"
+#sudo mv "resilio_config.json" "/home/$USER/.config/resilio-sync/config.json"
+#sudo mv "resilio-sync.service" "/lib/systemd/system/resilio-sync.service"
+
+/etc/init.d/resilio-sync restart
 #-----------------------
 #sudo systemctl start btsync --identity www-data --storage "/media/data/btsync/" --config "/etc/btsync/config.json" --webui.listen 0.0.0.0:8888
 # fixes http permissions
 # 640 or 755
-sudo chmod -R 755 /var/www/
+#sudo chmod -R 755 /var/www/
+#sudo chown -R www-data:www-data /var/www/
+#sudo chown -R rslsync:rslsync /var/www/
 
-sudo chown -R www-data:www-data /var/www/
-sudo chown -R rslsync:rslsync /var/www/
-
+mkdir /media/data/sync
 sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
 
 /etc/init.d/resilio-sync restart
@@ -92,6 +93,3 @@ echo "DONE. Now visit the server in your webbrowser at https://<SERVERIP>:8888"
 echo "\r\n \r\n"
 echo "To fix permissions use: sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/  \r\n \r\n"
 echo "Edit the config with: nano /etc/resilio-sync/config.json  - and change listen to: 0.0.0.0:8888   \r\n \r\n"
-
-
-
