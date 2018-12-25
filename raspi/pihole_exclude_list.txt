@@ -85,3 +85,8 @@ reddit.com
 *.amazonaws.com
 *.nest.com
 *.mozilla.com
+myip.dnsomatic.com
+*.root-servers.net
+dns.msftncsi.com
+*.rbxcdn.com
+hosts-file.net
