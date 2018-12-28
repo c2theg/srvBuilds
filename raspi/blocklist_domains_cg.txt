@@ -1,11 +1,8 @@
 # Chris Gray 
 # Custom blocklist
-#
-# Date:  10/9/2018
+# Date:  12/27/2018
 # Fetch the latest version of this file: https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
-#
 # ===============================================================
-
 127.0.0.1 localhost
 127.0.0.1 localhost.localdomain
 127.0.0.1 local
@@ -21,10 +18,8 @@ ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
 0.0.0.0 0.0.0.0
 
-# Start Chris Gray
 #=====================================
 # Hosts contributed by Chris Gray
-
 0.0.0.0 ad.bidfluence.com	
 0.0.0.0 ak.ssl.imgfarm.com	
 0.0.0.0 ak.staticimgfarm.com	
@@ -41,3 +36,5 @@ ff02::3 ip6-allhosts
 0.0.0.0 upload3tv.systemmonitor.eu.com
 0.0.0.0 upload4tv.systemmonitor.eu.com
 0.0.0.0 usyncapp.com
+0.0.0.0 www.coach-outletonline.us.org
+0.0.0.0 coach-outletonline.us.org
