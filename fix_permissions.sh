@@ -5,17 +5,24 @@ htgroup='www-data'
 rootuser='root'
 Web_path='/var/www'
 
-# fixes http permissions
-# 640 or 755
+#--- Resilio ---
+#sudo chown -R rslsync:rslsync /var/www/
+sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
 
-chmod 0644 ${Web_path}/.htaccess
-chmod 0644 ${Web_path}/data/.htaccess
 
-sudo chmod -R 755 ${Web_path}
-sudo chown -R www-data:www-data ${Web_path}
-chown -R ${rootuser}:${htgroup} ${Web_path}/
-chown -R 'ubuntu':${htgroup} ${Web_path}/
-   
+# fixes http permissions - 640 or 755
+if [ -d "/var/www/.htaccess" ]
+then
+   chmod 0644 ${Web_path}/.htaccess
+   chmod 0644 ${Web_path}/data/.htaccess
+
+   sudo chmod -R 755 ${Web_path}
+   sudo chown -R www-data:www-data ${Web_path}
+   chown -R ${rootuser}:${htgroup} ${Web_path}/
+   chown -R 'ubuntu':${htgroup} ${Web_path}/
+fi
+
+
 if [ -d "/var/www/nextcloud" ]
 then
     ocpath='/var/www/nextcloud'
@@ -38,15 +45,10 @@ then
     sudo chown -R www-data:www-data ${ocpath}
 fi
 
-#--- resilio ---
-#sudo chown -R rslsync:rslsync /var/www/
-sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
-
 #--- General commands -----
-echo "\r\n \r\n"
-echo "All users on the system: \r\n "
-#awk -F: '{ print $1 }' /etc/passwd
-cat /etc/passwd
+#echo "\r\n \r\n"
+#echo "All users on the system: \r\n "
+#cat /etc/passwd
 
-echo "All Groups on the system: \r\n "
-cut -d: -f1 /etc/group | sort
+#echo "All Groups on the system: \r\n "
+#cut -d: -f1 /etc/group | sort
