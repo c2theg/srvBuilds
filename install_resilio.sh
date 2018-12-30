@@ -19,10 +19,10 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.6.4                             \r\n
-Last Updated:  12/22/2018
+Version:  0.6.5                             \r\n
+Last Updated:  12/29/2018
 \r\n \r\n
-This is really meant for 16.04 \r\n \r\n
+This is really meant for 16.04+ \r\n \r\n
 
 Updating system first..."
 sudo -E apt-get update
@@ -56,6 +56,8 @@ wait
 echo "Downloading Resilio Config"
 wget -O "resilio_config.json" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio_config.json"
 #wget -O "resilio-sync.service" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio-sync.service"
+wget -O "fix_permissions.sh" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/fix_permissions.sh"
+
 wait
 echo "Resilio Config Download Complete"
 #---------------------------------------------------------------------------------------------------------
@@ -85,6 +87,8 @@ ps aux | grep rslsync
 
 mkdir /media/data/sync
 sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
+
+sudo mv "fix_permissions.sh" "/media/data/sync/fix_permissions.sh"
 
 echo "DONE. Now visit the server in your webbrowser at https://<SERVERIP>:8888"
 echo "\r\n \r\n"
