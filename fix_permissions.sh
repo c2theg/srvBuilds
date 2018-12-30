@@ -11,7 +11,7 @@ sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data
 
 
 # fixes http permissions - 640 or 755
-if [ -d "/var/www/.htaccess" ]
+if [ -d "/var/www" ]
 then
    chmod 0644 ${Web_path}/.htaccess
    chmod 0644 ${Web_path}/data/.htaccess
