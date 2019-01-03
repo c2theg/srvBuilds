@@ -7,6 +7,9 @@ chmod u+x certbox-auto
 wait
 #./certbox-auto
 
+#--- OCSP Cert ---
+mkdir /etc/nginx/certs/
+wget -O /etc/nginx/certs/lets-encrypt-x3-cross-signed.pem "https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem" 
 #--------------- Old below ------------------------------------
 clear
 sudo add-apt-repository -y ppa:certbot/certbot
