@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.3                             \r\n
-Last Updated:  11/28/2018
+Version:  1.4.4                             \r\n
+Last Updated:  1/5/2019
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -59,12 +59,13 @@ wait
 #--- Web API stuff ----
 #-- REST --
 pip3 install requests
+pip3 install bleach
 #-----------------------
 echo "Installing pexpect... \r\n "
 pip3 install pexpect
 #-- MongoDB
-echo "Installing pymongo... \r\n "
-pip3 install pymongo
+#echo "Installing pymongo... \r\n "
+#pip3 install pymongo
 #-- MySQL
 echo "Installing mysql... \r\n "
 pip3 install mysql-connector-python
@@ -72,7 +73,7 @@ pip3 install mysql-connector-python
 echo "Installing PIP modules... \r\n "
 pip3 install scapy
 pip3 install Twisted
-pip3 install cbor2
+#pip3 install cbor2
 pip3 install simp-AES
 #--- Specify projects - optional --
 #pip3 install protobuf
