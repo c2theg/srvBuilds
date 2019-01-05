@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.1                            \r\n
-Last Updated:  11/11/2018
+Version:  1.5.2                            \r\n
+Last Updated:  1/5/2019
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -54,10 +54,18 @@ sudo apt-get install -y nodejs
 sudo npm update npm -g
 
 echo "Install popular NPM modules... \r\n "
+sudo npm install ws --ws:native
+sudo npm install bleach
+sudo npm install supervisor -g
+sudo npm install express connect request emailjs mysql memcache colors md5 forever redis cluster
+sudo npm install socket.io socket.io-redis socket.io-adapter socket.io-emitter socket.io-parser
+sudo npm install socket.io --save
+
 echo " 
 sudo npm install ws --ws:native \r\n \r\n
+sudo npm install bleach \r\n \r\n
 sudo npm install supervisor -g  \r\n \r\n
-sudo npm install express connect request emailjs mysql memcache colors md5 forever redis cluster  \r\n \r\n
+sudo npm install express connect request emailjs mysql memcache colors md5 forever redis cluster   \r\n \r\n
 sudo npm install socket.io socket.io-redis socket.io-adapter socket.io-emitter socket.io-parser  \r\n \r\n
 sudo npm install socket.io --save  \r\n \r\n
 "
