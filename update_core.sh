@@ -74,7 +74,7 @@ if nc -zw1 google.com 443; then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh
-	wget -O - -q -t 1 --timeout=2 https://magnetoai.com/api/updater/check.php?f=update_core > /dev/null
+	wget -O - -q -t 1 --timeout=2 https://api.magnetoai.com/update_check.php?f=update_core > /dev/null
 	#-----------------------------------------------
 	wait
 	chmod u+x update_core.sh
