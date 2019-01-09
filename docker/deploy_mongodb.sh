@@ -16,8 +16,8 @@ Created By:
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.5                             \r\n
-Last Updated:  11/24/2018
+Version:  0.0.6                             \r\n
+Last Updated:  1/9/2019
 \r\n \r\n"
 
 # wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/deploy_mongodb.sh && chmod u+x deploy_mongodb.sh && ./deploy_mongodb.sh
