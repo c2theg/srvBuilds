@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.4.3                             \r\n
-Last Updated:  11/20/2018
+Version:  1.5.0                             \r\n
+Last Updated:  1/21/2019
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -75,6 +75,15 @@ if nc -zw1 google.com 443; then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh
 	wget -O - -q -t 1 --timeout=2 https://api.magnetoai.com/update_check.php?f=update_core > /dev/null
+	
+	if [ -s "install_docker.sh" ]
+	then
+		rm update_docker_images.sh
+		rm /root/update_docker_images.sh
+		sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/update_docker_images.sh 
+		sudo chmod u+x update_docker_images.sh
+		cp update_docker_images.sh /root/update_docker_images.sh
+	fi
 	#-----------------------------------------------
 	wait
 	chmod u+x update_core.sh
@@ -124,6 +133,12 @@ if nc -zw1 google.com 443; then
 	fi
 	wait
 	sh /root/update_ubuntu14.04.sh
+	
+	if [ -s "update_docker_images.sh" ]
+	then
+		# Update all docker images
+		sudo sh ./update_docker_images.sh
+	fi
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
