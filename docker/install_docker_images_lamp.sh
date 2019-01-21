@@ -14,7 +14,7 @@ echo "
                             |_|                                             |___|
 \r\n \r\n
 Version:  0.0.1                             \r\n
-Last Updated:  1/9/2019
+Last Updated:  1/21/2019
 \r\n \r\n"
 #--- download images------
 docker pull nginx:latest
