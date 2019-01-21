@@ -143,6 +143,22 @@ rm /var/log/update_pihole_lists.log
 rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
 
+#----- DOCKER ------
+echo " From: https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images \r\n \r\n "
+# Clean up old containers before images..
+#docker ps --no-trunc -aqf "status=exited" | xargs docker rm
+#docker images --no-trunc -aqf "dangling=true" | xargs docker rmi
+#docker rm -v $(docker ps --filter status=exited -q 2>/dev/null) 2>/dev/null
+#docker rmi $(docker images --filter dangling=true -q 2>/dev/null) 2>/dev/null
+#echo "Delete all old images and any with a <none> tag. 
+#docker images | grep "<none>" | awk '{print $3}' | xargs -L1 docker rmi
+# This command is not good 
+#docker image prune -a
+#docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+
+#----- End Docker ------
+
+
 history -c
 
 echo " -------------- Done Cleaning system -------- "
