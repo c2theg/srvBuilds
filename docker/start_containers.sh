@@ -1,7 +1,6 @@
 #!/bin/sh
 clear
-now=$(date)
-echo "Running deploy_mongodb.sh at $now 
+echo " 
   _____             _             
  |  __ \           | |            
  | |  | | ___   ___| | _____ _ __ 
