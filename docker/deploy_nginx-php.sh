@@ -47,16 +47,34 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/container
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/compose-configs/docker-compose-nginx_php.yml
 #--- App Code
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/sysinfo.php
-
 #-----------------------------------------------------------------------------------------------------------------
-# create code dir and move code
-if [ ! -d "code" ]
-then
-	sudo mkdir code
+#--------- Create Directory Structure -------------------------------------------------------------------------
+if [ ! -d "/media/data" ]; then
+     mkdir /media/data 
 fi
-cp sysinfo.php ./code/index.php
-#--- rename config file to "docker-compose.yml"
-mv docker-compose-nginx_php.yml docker-compose.yml
+
+if [ ! -d "/media/data/containers" ]; then
+     mkdir /media/data/containers/
+fi
+
+if [ ! -d "/media/data/containers/nginx" ]; then
+     mkdir /media/data/containers/nginx/
+     mkdir /media/data/containers/websites/code1/
+fi
+
+#--- Create Docker Volume ---
+docker volume create nginx
+
+echo "Inspect volume \r\n "
+docker volume inspect nginx
+
+#--- rename config file to "docker-compose.yml" -----
+mv docker-compose-nginx_php.yml /media/data/containers/nginx/docker-compose.yml
+
+#--- start up container ---
+cd /media/data/containers/nginx/
+
+cp sysinfo.php /media/data/containers/websites/code1/index.php
 #--- start up container
 docker-compose up
 #docker-compose -f docker-compose-nginx_php.yml -p Webapp-Nginx-PHP
