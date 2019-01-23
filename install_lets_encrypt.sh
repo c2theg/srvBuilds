@@ -39,6 +39,12 @@ openssl req \
 
 openssl dhparam -out server_$fqdn.pem 2048
 
+echo "\r\n \r\n "
+echo "For Wildcard certs, use the following: \r\n \r\n 
+certbot certonly --server https://acme-v02.api.letsencrypt.org/directory --manual --preferred-challenges dns -d 'yourdomain.tld,*.yourdomain.tld'
+
+\r\n \r\n \r\n 
+"
 
 sudo certbot --nginx -d $fqdn 
 
