@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.0                             \r\n
-Last Updated:  1/21/2019
+Version:  1.7.1                             \r\n
+Last Updated:  2/2/2019
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -88,10 +88,12 @@ rm /var/log/letsencrypt/letsencrypt.log.*
 #------ DBs ----------------------------------------------------------
 #rm /var/log/mysql/*
 rm /var/log/mysql.log.*
+rm /var/log/mysql/mysql_error.log
+rm /var/log/mysql/error.log
+
 rm /var/log/redis/redis-server.log.*
 #------ ELK ----------------------------------------------------------
 rm /var/log/kibana/*
-
 #------ Mail ----------------------------------------------------------
 rm /var/log/mail.log.*
 rm /var/log/mail.err.*
@@ -107,12 +109,12 @@ rm /var/log/lighttpd/*
 #----------------------------------------------------------------
 echo "\r\n \r\n Removing Nginx and PHP logs, then restarting both services.. \r\n \r\n "
 rm -rf /var/log/nginx/*
-rm /var/log/php5-fpm.log.*
+#rm /var/log/php5-fpm.log.*
 rm /var/log/php7.0-fpm.log.*
-#rm /var/log/php7.1-fpm.log.*
-#rm /var/log/php7.2-fpm.log.*
+rm /var/log/php7.1-fpm.log.*
+rm /var/log/php7.2-fpm.log.*
 
-/etc/init.d/php7.0-fpm restart
+/etc/init.d/php7.2-fpm restart
 /etc/init.d/nginx restart
 
 #------- PI-Hole / DNS releated ----------
@@ -157,7 +159,6 @@ echo " From: https://stackoverflow.com/questions/32723111/how-to-remove-old-and-
 #docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 
 #----- End Docker ------
-
 
 history -c
 
