@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.1                             \r\n
-Last Updated:  2/2/2019
+Version:  1.7.2                             \r\n
+Last Updated:  2/4/2019
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -110,13 +110,15 @@ rm /var/log/lighttpd/*
 echo "\r\n \r\n Removing Nginx and PHP logs, then restarting both services.. \r\n \r\n "
 rm -rf /var/log/nginx/*
 #rm /var/log/php5-fpm.log.*
-rm /var/log/php7.0-fpm.log.*
-rm /var/log/php7.1-fpm.log.*
+#rm /var/log/php7.0-fpm.log
+#rm /var/log/php7.0-fpm.log.*
+#rm /var/log/php7.1-fpm.log
+#rm /var/log/php7.1-fpm.log.*
+rm /var/log/php7.2-fpm.log
 rm /var/log/php7.2-fpm.log.*
 
 /etc/init.d/php7.2-fpm restart
 /etc/init.d/nginx restart
-
 #------- PI-Hole / DNS releated ----------
 pihole -f
 wait
