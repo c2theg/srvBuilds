@@ -20,6 +20,8 @@ echo "
 
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP.sh
 
+INSTALLS  LEMP (Linux* Nginx Memcache PHP & Postfix)
+
 \r\n \r\n
 Version:  1.4.0                             \r\n
 Last Updated:  3/12/2018
@@ -36,8 +38,8 @@ wait
 sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute htop sysstat iptraf iftop speedometer ncdu nload
 #---- Email -----
 wait
-sudo apt-get install -y postfix procmail postfix-mysql postfix-pcre sasl2-bin postfix-cdb postfix-doc
-# dovecot-core
+sudo apt-get install -y postfix procmail postfix-pcre sasl2-bin postfix-cdb postfix-doc
+# dovecot-core postfix-mysql
 wait
 wget -O "main.cf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/main.cf"
 mv main.cf /etc/postfix/main.cf
@@ -45,14 +47,14 @@ mv main.cf /etc/postfix/main.cf
 #---------- PYTHON STUFF ----------------------------------
 #sudo apt-get install -y python2-virtualenv python3-virtualenv libicu-dev python-software-properties python python-pip python-dev python3-setuptools
 #wait
-#--- PHP 7.0 ---
+#--- PHP 7.2 ---
 sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 wait
 sudo apt-get -y update
 wait
 sudo apt-get install -y openssl-blacklist ssl-cert libmcrypt-dev mcrypt 
 sudo apt-get install -y php7.2 php7.2-cli php7.2-fpm php7.2-curl php7.2-json php7.2-gd php7.2-mysql php7.2-mbstring zip unzip
-sudo apt-get install -y php7.2-common php7.2-opcache php7.2-readline php7.2-soap php7.2-ldap php-pear php-xdebug php-apcu php7.2-mbstring php-ssh2 php-geoip php7.2-bcmath php7.2-zip php7.2-xml php-mailparse php7.2-bz2 php7.2-xmlrpc php7.2-mcrypt
+sudo apt-get install -y php7.2-common php7.2-opcache php7.2-readline php7.2-soap php7.2-ldap php-pear php-xdebug php-apcu php-ssh2 php-geoip php7.2-bcmath php7.2-zip php7.2-xml php-mailparse php7.2-bz2 php7.2-xmlrpc php7.2-mcrypt
 
 wait
 sudo pear channel-update pear.php.net
@@ -94,15 +96,15 @@ sudo mv "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
 
-#---------------
-if [ -s "/etc/php/7.0/fpm/php.ini" ]
-then
-	echo "Deleting file: PHP.ini config "
-	rm /etc/php/7.0/fpm/php.ini
-	rm /etc/php/7.0/fpm/php-fpm.conf
-	rm /media/data/php_browscap.ini
-fi
-wait
+#if [ -s "/etc/php/7.0/fpm/php.ini" ]
+#then
+#	echo "Deleting file: PHP.ini config "
+#	rm /etc/php/7.0/fpm/php.ini
+#	rm /etc/php/7.0/fpm/php-fpm.conf
+#	rm /media/data/php_browscap.ini
+#fi
+#wait
+
 echo "Downloading PHP-FPM Configs"
 wget -O  "php.ini" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php.ini"
 sudo mv "php.ini" "/etc/php/7.2/fpm/php.ini"
@@ -149,9 +151,9 @@ then
 fi
 echo "Basic HTTP Website Config"
 #wget -O "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1.conf"
-wget -O "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1_80443.conf"
+wget -O "site1_80443.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1_80443.conf"
 wait
-sudo mv "site1_80443.conf" "/etc/nginx/sites-enabled/site1.conf"
+sudo mv "site1_80443.conf" "/etc/nginx/sites-enabled/site1_80443.conf"
 wait
 
 if [ -s "/etc/nginx/sites-enabled/default" ]
@@ -160,7 +162,7 @@ then
 	rm "/etc/nginx/sites-enabled/default"
 fi
 wait
-echo "Basic HTTP Website Config Download Complete"
+echo "Basic HTTP/HTTPS Website Config Download Complete"
 #---------------------------------------------------------------------------------------------------------
 #echo "SSL-TLS HTTP Website Config"
 #wget -O "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1_tls.conf"
@@ -185,3 +187,6 @@ echo "Restarting Nginx... "
 echo "Restarting PHP-FPM... "
 /etc/init.d/php7.2-fpm restart
 echo "Done All! \r\n \r\n"
+
+echo "You will need to update the NGINX config at:  /etc/nginx/sites-enabled/ \r\n \r\n"
+
