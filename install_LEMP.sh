@@ -96,14 +96,16 @@ sudo mv "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
 
-#if [ -s "/etc/php/7.0/fpm/php.ini" ]
-#then
-#	echo "Deleting file: PHP.ini config "
-#	rm /etc/php/7.0/fpm/php.ini
-#	rm /etc/php/7.0/fpm/php-fpm.conf
-#	rm /media/data/php_browscap.ini
-#fi
-#wait
+mkdir "/media/data/"
+
+if [ -s "/etc/php/7.2/fpm/php.ini" ]
+then
+	echo "Deleting file: PHP.ini config "
+	rm /etc/php/7.2/fpm/php.ini
+	rm /etc/php/7.2/fpm/php-fpm.conf
+	rm /media/data/php_browscap.ini
+fi
+wait
 
 echo "Downloading PHP-FPM Configs"
 wget -O  "php.ini" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php.ini"
@@ -118,7 +120,6 @@ wget -O "php_browscap.ini" "https://browscap.org/stream?q=PHP_BrowsCapINI"
 sudo mv "php_browscap.ini" "/media/data/php_browscap.ini"
 wait
 #--------------------------------------------------
-
 echo "PHP-FPM Configs download complete"
 #---------------------------------------------------------------------------------------------------------
 if [ -s "/etc/nginx/nginx.conf" ]
@@ -143,19 +144,13 @@ sudo mv "nginx.conf" "/etc/nginx/nginx.conf"
 wait
 echo "Nginx Config Download Complete"
 
-if [ -s "/etc/nginx/sites-enabled/site1.conf" ]
-then
-	echo "Deleting file  site1 config "
-	rm /etc/nginx/sites-enabled/site1.conf*
-	rm site1.conf
-fi
-echo "Basic HTTP Website Config"
+
+echo "Downloading Basic HTTP/HTTPS Website Config"
 #wget -O "site1.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1.conf"
 wget -O "site1_80443.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1_80443.conf"
 wait
 sudo mv "site1_80443.conf" "/etc/nginx/sites-enabled/site1_80443.conf"
 wait
-
 if [ -s "/etc/nginx/sites-enabled/default" ]
 then
 	echo "Deleting file  nginx default config "
