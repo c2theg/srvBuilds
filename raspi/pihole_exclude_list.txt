@@ -90,3 +90,4 @@ myip.dnsomatic.com
 dns.msftncsi.com
 *.rbxcdn.com
 hosts-file.net
+*.in-addr.arpa
