@@ -12,8 +12,6 @@ apple.com
 *.apple-dns.net
 *.icloud-content.com
 *.opera.com
-*.microsoft.com
-*.azurewebsites.net
 *.google.com
 google.com
 *.googleusercontent.com
@@ -21,12 +19,18 @@ google.com
 *.gstatic.com
 *.googlevideo.com
 *.gvt2.com
+*.youtube.com
 *.facebook.com
+*.facebook.net
+*.whatsapp.com
 *.fbcdn.net
 *.bing.com
 *.live.com
 *.live.net
+*.microsoft.com
+*.azurewebsites.net
 *.msn.com
+*.microsoftonline.com
 *.msedge.net
 *.onenote.net
 *.weather.com
