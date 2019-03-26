@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.6.5                             \r\n
-Last Updated:  12/29/2018
+Version:  0.6.6                             \r\n
+Last Updated:  3/25/2019
 \r\n \r\n
 This is really meant for 16.04+ \r\n \r\n
 
@@ -43,7 +43,7 @@ curl -LO http://linux-packages.resilio.com/resilio-sync/key.asc && sudo apt-key 
 wait
 sudo apt update
 wait
-sudo apt install -y resilio-sync
+sudo apt install -y resilio-sync --allow-unauthenticated
 wait
 #---------------------------------------------------------------------------------------------------------
 #if [ -s "/etc/resilio-sync/config.json" ]
@@ -89,6 +89,7 @@ mkdir /media/data/sync
 sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
 
 sudo mv "fix_permissions.sh" "/media/data/sync/fix_permissions.sh"
+chmod u+x /media/data/sync/fix_permissions.sh
 
 echo "DONE. Now visit the server in your webbrowser at https://<SERVERIP>:8888"
 echo "\r\n \r\n"
