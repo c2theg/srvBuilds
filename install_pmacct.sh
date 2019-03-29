@@ -38,6 +38,8 @@ sudo make install
 
 
 cd /usr/local/src/
+
+# AS of 3/29/19 - Please check this before deploying
 curl -O http://www.pmacct.net/pmacct-1.7.2.tar.gz
 tar -zxvf pmacct-1.7.2.tar.gz
 cd pmacct-1.7.2/
