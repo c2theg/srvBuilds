@@ -32,13 +32,10 @@ echo "Downloading required dependencies...\r\n\r\n"
 # Sources:
 # https://github.com/pmacct/pmacct
 # https://blog.pierky.com/installing-pmacct-fresh-ubuntu-setup/
+# https://github.com/pmacct/pmacct/blob/master/QUICKSTART
 #--------------------------------------------------------------------------------------------
 echo "Get latests at: http://www.pmacct.net/#downloads \r\n \r\n"
 sudo apt-get install libjansson-dev libpcap-dev make
-sudo ./configure --enable-ipv6 --enable-jansson
-sudo make
-sudo make check
-sudo make install
 
 cd /usr/local/src/
 
@@ -46,6 +43,11 @@ cd /usr/local/src/
 curl -O http://www.pmacct.net/pmacct-1.7.2.tar.gz
 tar -zxvf pmacct-1.7.2.tar.gz
 cd pmacct-1.7.2/
+sudo ./configure --enable-ipv6 --enable-jansson
+sudo make
+sudo make check
+sudo make install
+
 
 echo "
 # whereis pmacct
