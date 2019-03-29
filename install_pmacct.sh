@@ -28,6 +28,10 @@ wait
 sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
+
+# Sources:
+# https://github.com/pmacct/pmacct
+# https://blog.pierky.com/installing-pmacct-fresh-ubuntu-setup/
 #--------------------------------------------------------------------------------------------
 echo "Get latests at: http://www.pmacct.net/#downloads \r\n \r\n"
 sudo apt-get install libjansson-dev libpcap-dev make
@@ -35,7 +39,6 @@ sudo ./configure --enable-ipv6 --enable-jansson
 sudo make
 sudo make check
 sudo make install
-
 
 cd /usr/local/src/
 
@@ -50,9 +53,9 @@ pmacct: /usr/local/bin/pmacct
 
 # whereis pmacctd
 pmacctd: /usr/local/sbin/pmacctd
+
 # whereis nfacctd
 nfacctd: /usr/local/sbin/nfacctd
-
 "
 
 mkdir /etc/pmacct       # for configuration files
@@ -61,5 +64,15 @@ mkdir /var/spool/pmacct # for plugins pipes
 mkdir /var/lib/pmacct   # for plugins output
 
 #Download sample configs
+curl -O https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/pmacctd_basic.conf
+mv pmacctd_basic.conf /etc/pmacct/pmacctd_basic.conf
 
-#/etc/pmacct/pmacctd.conf
+
+#--- Start PMACCT
+# -D option is used to daemonize it
+pmacctd -f /etc/pmacct/pmacctd_basic.conf -D
+
+wait
+sleep 5
+echo "query the in-memory-table using the pmacct client... \r\n \r\n"
+pmacct -p /var/spool/pmacct/plugin1.pipe -s
