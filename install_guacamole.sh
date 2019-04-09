@@ -1,9 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
-#
 clear
 echo "
  _____             _         _    _          _                                   
@@ -20,10 +15,11 @@ echo "
 \r\n \r\n
 This really is meant to be run under Ubuntu 16.04 LTS +
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.5                            \r\n
 Last Updated:  4/9/2018
 \r\n \r\n
 Installing Apache Guacamole"
+# https://guacamole.apache.org/doc/1.0.0/gug/installing-guacamole.html
 # https://guacamole.apache.org/doc/0.9.0/gug/installing-guacamole.html
 
 sudo -E add-apt-repository ppa:guacamole/stable -y
@@ -31,6 +27,24 @@ sudo -E add-apt-repository ppa:guacamole/stable -y
 sudo -E apt-get install -y guacamole-tomcat
 sudo -E apt-get install -y libguac-client-ssh0 libguac-client-rdp0
 
+# FreeRDP
+sudo -E apt-get install -y libfreerdp-dev
+# VNC
+sudo -E apt-get install -y libvncserver-dev
+# Pango (SSH)
+sudo -E apt-get install -y libpango1.0-dev libssh2-1-dev
+# SSL
+sudo -E apt-get install -y libssl-dev
+# FFmpeg
+sudo -E apt-get install -y libavcodec-dev libavutil-dev libswscale-dev
+# Audio 
+sudo -E apt-get install -y libpulse-dev libvorbis-dev
+# Images
+sudo -E apt-get install -y libwebp-dev
+# Telnet 
+#sudo -E apt-get install -y libtelnet-dev
+
+#----------------------------------
 chkconfig tomcat6 on
 service tomcat6 start
 
@@ -60,4 +74,3 @@ ln -s /etc/guacamole/guacamole.properties /usr/share/tomcat6/.guacamole/
 #--- Setup Apache for Webproxy - mod_proxy ----
 # READ https://guacamole.apache.org/doc/0.9.0/gug/installing-guacamole.html
 # Todo: automate this
-
