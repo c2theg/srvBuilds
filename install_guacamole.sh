@@ -37,7 +37,7 @@ service tomcat6 start
 
 #--- Install Client ---
 # Download latest version at:  https://guacamole.apache.org/releases/
-wget http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/1.0.0/source/guacamole-client-1.0.0.tar.gz
+wget -O "guacamole-client-1.0.0.tar.gz" "http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/1.0.0/source/guacamole-client-1.0.0.tar.gz"
 tar -xzf guacamole-client-1.0.0.tar.gz
 cd guacamole-client-1.0.0/
 mvn package
