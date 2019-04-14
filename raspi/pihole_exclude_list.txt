@@ -1,3 +1,14 @@
+localhost
+local
+*.google.com
+google.com
+*.googleusercontent.com
+*.googleapis.com
+*.gstatic.com
+*.googlevideo.com
+*.gvt2.com
+*.youtube.com
+*.nest.com
 comcast.net
 comcast.com
 *.comcast.net
@@ -10,15 +21,6 @@ nist-time-server.eoni.com
 apple.com
 *.apple-dns.net
 *.icloud-content.com
-*.google.com
-google.com
-*.googleusercontent.com
-*.googleapis.com
-*.gstatic.com
-*.googlevideo.com
-*.gvt2.com
-*.youtube.com
-*.nest.com
 *.facebook.com
 *.facebook.net
 *.whatsapp.com
@@ -93,3 +95,6 @@ myip.dnsomatic.com
 *.rbxcdn.com
 hosts-file.net
 *.in-addr.arpa
+*.honeywell.com
+*.docker.io
+*.hbo.com
