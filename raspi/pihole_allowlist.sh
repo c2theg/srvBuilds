@@ -26,8 +26,8 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.7                            \r\n
-Last Updated:  12/12/2018
+Version:  0.0.8                            \r\n
+Last Updated:  4/14/2019
 \r\n \r\n"
 #--------------------------
 pihole -w github.com raw.githubusercontent.com
@@ -42,7 +42,7 @@ pihole -w ajax.googleapis.com
 # Windows uses this to verify connectivity to Internet
 pihole -w www.msftncsi.com
 # The rest
-pihole -w outlook.office365.com products.office.com c.s-microsoft.com i.s-microsoft.com login.live.com
+pihole -w outlook.office365.com products.office.com c.s-microsoft.com i.s-microsoft.com login.live.com protection.outlook.com
 pihole -w clientconfig.passport.net officeclient.microsoft.com
 pihole -w v10.events.data.microsoft.com v10.vortex-win.data.microsoft.com settings-win.data.microsoft.com 
 pihole -w xbox.ipv6.microsoft.com device.auth.xboxlive.com www.msftncsi.com title.mgt.xboxlive.com xsts.auth.xboxlive.com title.auth.xboxlive.com ctldl.windowsupdate.com attestation.xboxlive.com xboxexperiencesprod.experimentation.xboxlive.com xflight.xboxlive.com cert.mgt.xboxlive.com xkms.xboxlive.com def-vef.xboxlive.com notify.xboxlive.com help.ui.xboxlive.com licensing.xboxlive.com eds.xboxlive.com www.xboxlive.com v10.vortex-win.data.microsoft.com settings-win.data.microsoft.com
@@ -66,7 +66,7 @@ pihole -w weeklyad.target.com m.weeklyad.target.com weeklyad.target.com.edgesuit
 pihole -w amazon.com fls-na.amazon.com
 
 #-- Others
-pihole -w gravatar.com
+pihole -w gravatar.com bit.ly godaddy.com secureserver.net 
 pihole -w thetvdb.com
 pihole -w themoviedb.com
 pihole -w medium.com
