@@ -5,8 +5,7 @@
 #       chmod u+x <FILE>
 #
 clear
-echo "Running update_core.sh at $now \r\n
-Current working dir: $SCRIPTPATH \r\n \r\n
+echo "
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
@@ -18,8 +17,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-Version:  0.0.5                             \r\n
-Last Updated:  1/21/2019
+Version:  0.0.6                             \r\n
+Last Updated:  4/25/2019
 \r\n \r\n"
 sudo -E apt-get update
 wait
@@ -27,4 +26,9 @@ sudo -E apt-get upgrade -y
 #wait
 
 echo "Updating all of docker images to the latest... \r\n \r\n"
-docker images | grep -v REPOSITORY | awk '{print $1}' | xargs -L1 docker pull
+#docker images | grep -v REPOSITORY | awk '{print $1}' | xargs -L1 docker pull\
+#docker images --format "{{.Repository}}:{{.Tag}}" | grep :latest | xargs -L1 docker pull
+docker images --format "{{.Repository}}:{{.Tag}}" | grep -v "<none>" | sort | uniq | xargs -L1 docker pull
+
+echo "Deleting all null and not used images... \r\n \r\n"
+docker image prune -f
