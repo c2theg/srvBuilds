@@ -30,5 +30,7 @@ echo "Updating all of docker images to the latest... \r\n \r\n"
 #docker images --format "{{.Repository}}:{{.Tag}}" | grep :latest | xargs -L1 docker pull
 docker images --format "{{.Repository}}:{{.Tag}}" | grep -v "<none>" | sort | uniq | xargs -L1 docker pull
 
-echo "Deleting all null and not used images... \r\n \r\n"
-docker image prune -f
+echo "Deleting all <none> and not used images... \r\n \r\n"
+docker image prune -af
+
+echo "\r\n \r\n DONE \r\n \r\n"
