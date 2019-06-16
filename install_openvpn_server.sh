@@ -99,6 +99,29 @@ then
     openvpn --version
     
     echo "\r\n \r\n"
+    #---- Create NAT rules on Server so internet works while connected. -----
+    # https://serverfault.com/questions/851035/connected-to-openvpn-but-no-internet-connection
+    # /etc/default/ufw
+    # DEFAULT_FORWARD_POLICY="ACCEPT"
+    echo 'DEFAULT_FORWARD_POLICY="ACCEPT"' >> /etc/default/ufw
+    ## NAT (Network Address Translation) table rules
+    echo '#-- add the following code after the header and before the "*filter" line. -- ' >> /etc/ufw/before.rules
+    echo '*nat' >> /etc/ufw/before.rules
+
+    echo '*nat' >> /etc/ufw/before.rules   
+    # Allow traffic from clients to eth0
+    -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+    echo '-A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE' >> /etc/ufw/before.rules
+    # do not delete the "COMMIT" line or the NAT table rules above will not be processed
+    echo 'COMMIT' >> /etc/ufw/before.rules    
+    
+    #--- Firewall UFW ---
+    ufw allow 1194
+    ufw reload
+        
+    iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+    sysctl -w net.ipv4.ip_forward=1
+
 else
     echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
