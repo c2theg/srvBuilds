@@ -25,8 +25,8 @@ https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.6                             \r\n
-Last Updated:  11/4/2018
+Version:  0.0.7                             \r\n
+Last Updated:  6/16/2019
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
