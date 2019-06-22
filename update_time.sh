@@ -21,21 +21,13 @@ echo "Running update_time.sh at $now
                             |_|                                             |___|
 
 # https://www.tecmint.com/set-time-timezone-and-synchronize-time-using-timedatectl-command/
+# http://manpages.ubuntu.com/manpages/disco/en/man1/timedatectl.1.html
+
 \r\n \r\n
-Version:  0.0.6                             \r\n
+Version:  0.0.7                             \r\n
 Last Updated:  6/22/2019
 \r\n \r\n"
 wait
-#sudo -E apt-get update
-#wait
-#sudo -E apt-get upgrade -y --force-yes
-#wait
-#sudo -E apt-get install -f -y
-#wait
-#echo "Freeing up space"
-#sudo apt-get autoremove -y
-#wait
-#echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/timesyncd.conf && chmod +u timesyncd.conf
 mv timesyncd.conf /etc/systemd/timesyncd.conf
@@ -50,7 +42,7 @@ sudo ntpd -gq
 sudo service ntp start
 
 echo "Update settings... \r\n "
-# http://manpages.ubuntu.com/manpages/disco/en/man1/timedatectl.1.html
+# 
 #sudo timedatectl set-timezone UTC
 #sudo timedatectl set-timezone America/New_York
 
@@ -70,7 +62,6 @@ sudo hwclock --show
 echo "For more details enter: \r\n \r\n  sudo systemctl status systemd-timesyncd.service \r\n \r\n"
 echo "Show current time.. \r\n"
 date
-
 
 #---- NTPDATE Service -------
 #sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod +u ntp.conf
