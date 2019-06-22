@@ -26,7 +26,7 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.5.1                             \r\n
+Version:  1.6.0                             \r\n
 Last Updated:  6/22/2019
 \r\n \r\n"
 #sudo -E apt-get update
@@ -53,7 +53,7 @@ if nc -zw1 google.com 443; then
 		rm sys_restart.*
 		rm install_monitoring.*
 		rm update_blocklists_local_servers.*
-		rm install_time.sh
+		rm update_time.sh
 	fi
 	if [ -s "/root/update_core.sh" ]
 	then
@@ -65,19 +65,20 @@ if nc -zw1 google.com 443; then
 		rm /root/install_monitoring.*
 		rm /root/sys_restart.*
 		rm /root/update_blocklists_local_servers.*
-		rm /root/install_time.sh
+		rm /root/update_time.sh
+		
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_restart.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_restart.sh && chmod u+x sys_restart.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && chmod u+x install_common.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh && chmod u+x install_monitoring.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod u+x update_time.sh
-	wget -O - -q -t 1 --timeout=2 https://api.magnetoai.com/update_check.php?f=update_core > /dev/null
+	wget -O - -q -t 1 --timeout=1 https://api.magnetoai.com/update_check.php?f=update_core > /dev/null
 	
 	if [ -s "install_docker.sh" ]
 	then
@@ -89,24 +90,28 @@ if nc -zw1 google.com 443; then
 	fi
 	#-----------------------------------------------
 	wait
-	chmod u+x update_core.sh
-	chmod u+x sys_cleanup.sh
-	chmod u+x update_ubuntu14.04.sh
-	chmod u+x install_common.sh
-	chmod u+x sys_restart.sh
-	chmod u+x install_monitoring.sh
-	chmod u+x update_blocklists_local_servers.sh	
-	wait
-	if [ -d "/home/ubuntu/" ]
+	if [ -d "/root/" ]
 	then
-		cp /root/update_core.sh /home/ubuntu/update_core.sh
-		cp /root/sys_cleanup.sh /home/ubuntu/sys_cleanup.sh
-		cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
-		cp /root/install_common.sh /home/ubuntu/install_common.sh
-		cp /root/sys_restart.sh /home/ubuntu/sys_restart.sh
-		cp /root/install_monitoring.sh /home/ubuntu/install_monitoring.sh
+		cp update_core.sh /root/update_core.sh
+		cp sys_cleanup.sh /root/sys_cleanup.sh
+		cp update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
+		cp install_common.sh /root/install_common.sh
+		cp sys_restart.sh /root/sys_restart.sh
+		cp install_monitoring.sh /root/install_monitoring.sh
+		cp update_blocklists_local_servers.sh /root/update_blocklists_local_servers.sh
+		cp update_time.sh /root/update_time.sh
 	fi
 	
+	wait
+#	if [ -d "/home/ubuntu/" ]
+#	then
+#		cp /root/update_core.sh /home/ubuntu/update_core.sh
+#		cp /root/sys_cleanup.sh /home/ubuntu/sys_cleanup.sh
+#		cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
+#		cp /root/install_common.sh /home/ubuntu/install_common.sh
+#		cp /root/sys_restart.sh /home/ubuntu/sys_restart.sh
+#		cp /root/install_monitoring.sh /home/ubuntu/install_monitoring.sh
+#	fi	
 	#--- for old script compatibility - delete soon
 #	if [ -d "/home/cgray/" ]
 #	then
@@ -125,16 +130,6 @@ if nc -zw1 google.com 443; then
 #		chown cgray:cgray /home/cgray/sys_restart.sh
 #	fi
 
-	wait
-	mv update_core.sh /root/update_core.sh
-	mv sys_cleanup.sh /root/sys_cleanup.sh
-	mv update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
-	mv install_common.sh /root/install_common.sh
-	mv sys_restart.sh /root/sys_restart.sh
-	mv install_monitoring.sh /root/install_monitoring.sh
-	mv update_blocklists_local_servers.sh /root/update_blocklists_local_servers.sh
-	mv update_time.sh /root/update_time.sh
-	
 	wait
 	sh /root/update_ubuntu14.04.sh
 	sh /root/update_time.sh
