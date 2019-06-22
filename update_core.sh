@@ -42,7 +42,7 @@ echo "Checking Internet status...\r\n\r\n"
 #ping -q -c3 github.com > /dev/null
 #if [ $? -eq 0 ]
 if nc -zw1 google.com 443; then
-	echo "Connected!!! \r\n \r\n
+	echo "Connected!!! \r\n \r\n"
 	if [ -s "update_core.sh" ]
 	then
 		echo "Deleting old files \r\n"
