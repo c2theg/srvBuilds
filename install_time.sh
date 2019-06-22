@@ -6,7 +6,7 @@
 #
 clear
 now=$(date)
-echo "Running update_ubuntu.sh at $now 
+echo "Running install_time.sh at $now 
 
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
@@ -22,20 +22,20 @@ echo "Running update_ubuntu.sh at $now
 
 # https://www.tecmint.com/set-time-timezone-and-synchronize-time-using-timedatectl-command/
 \r\n \r\n
-Version:  0.0.3                             \r\n
+Version:  0.0.4                             \r\n
 Last Updated:  6/22/2019
 \r\n \r\n"
 wait
-sudo -E apt-get update
-wait
-sudo -E apt-get upgrade -y --force-yes
-wait
-sudo -E apt-get install -f -y
-wait
-echo "Freeing up space"
-sudo apt-get autoremove -y
-wait
-echo "Downloading required dependencies...\r\n\r\n"
+#sudo -E apt-get update
+#wait
+#sudo -E apt-get upgrade -y --force-yes
+#wait
+#sudo -E apt-get install -f -y
+#wait
+#echo "Freeing up space"
+#sudo apt-get autoremove -y
+#wait
+#echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/timesyncd.conf && chmod +u timesyncd.conf
 mv timesyncd.conf /etc/systemd/timesyncd.conf
@@ -47,9 +47,8 @@ sudo hwclock --show
 
 # http://manpages.ubuntu.com/manpages/disco/en/man1/timedatectl.1.html
 echo "Fix and update clock"
-
 #sudo timedatectl set-timezone UTC
-sudo timedatectl set-timezone America/New_York
+#sudo timedatectl set-timezone America/New_York
 
 sudo timedatectl set-ntp on
 sudo timedatectl set-ntp true
