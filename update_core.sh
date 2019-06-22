@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.5.0                             \r\n
-Last Updated:  1/21/2019
+Version:  1.5.1                             \r\n
+Last Updated:  6/22/2019
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -53,6 +53,7 @@ if nc -zw1 google.com 443; then
 		rm sys_restart.*
 		rm install_monitoring.*
 		rm update_blocklists_local_servers.*
+		rm install_time.sh
 	fi
 	if [ -s "/root/update_core.sh" ]
 	then
@@ -64,6 +65,7 @@ if nc -zw1 google.com 443; then
 		rm /root/install_monitoring.*
 		rm /root/sys_restart.*
 		rm /root/update_blocklists_local_servers.*
+		rm /root/install_time.sh
 	fi
 
 	echo "Downloading latest versions... \r\n\r\n"	
@@ -74,6 +76,7 @@ if nc -zw1 google.com 443; then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod u+x update_time.sh
 	wget -O - -q -t 1 --timeout=2 https://api.magnetoai.com/update_check.php?f=update_core > /dev/null
 	
 	if [ -s "install_docker.sh" ]
@@ -92,17 +95,7 @@ if nc -zw1 google.com 443; then
 	chmod u+x install_common.sh
 	chmod u+x sys_restart.sh
 	chmod u+x install_monitoring.sh
-	chmod u+x update_blocklists_local_servers.sh
-	wait
-	
-	mv update_core.sh /root/update_core.sh
-	mv sys_cleanup.sh /root/sys_cleanup.sh
-	mv update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
-	mv install_common.sh /root/install_common.sh
-	mv sys_restart.sh /root/sys_restart.sh
-	mv install_monitoring.sh /root/install_monitoring.sh
-	mv update_blocklists_local_servers.sh /root/update_blocklists_local_servers.sh
-	
+	chmod u+x update_blocklists_local_servers.sh	
 	wait
 	if [ -d "/home/ubuntu/" ]
 	then
@@ -114,25 +107,37 @@ if nc -zw1 google.com 443; then
 		cp /root/install_monitoring.sh /home/ubuntu/install_monitoring.sh
 	fi
 	
-	#--- for old script compatibility
-	if [ -d "/home/cgray/" ]
-	then
-		wait
-		cp /root/update_core.sh /home/cgray/update_core.sh
-		cp /root/sys_cleanup.sh /home/cgray/sys_cleanup.sh
-		cp /root/update_ubuntu14.04.sh /home/cgray/update_ubuntu14.04.sh
-		cp /root/install_common.sh /home/cgray/install_common.sh
-		cp /root/sys_restart.sh /home/cgray/sys_restart.sh
-		cp /root/install_monitoring.sh /home/cgray/install_monitoring.sh
-		wait
-		chown cgray:cgray /home/cgray/update_core.sh
-		chown cgray:cgray /home/cgray/sys_cleanup.sh
-		chown cgray:cgray /home/cgray/update_ubuntu14.04.sh
-		chown cgray:cgray /home/cgray/install_common.sh
-		chown cgray:cgray /home/cgray/sys_restart.sh
-	fi
+	#--- for old script compatibility - delete soon
+#	if [ -d "/home/cgray/" ]
+#	then
+#		wait
+#		cp /root/update_core.sh /home/cgray/update_core.sh
+#		cp /root/sys_cleanup.sh /home/cgray/sys_cleanup.sh
+#		cp /root/update_ubuntu14.04.sh /home/cgray/update_ubuntu14.04.sh
+#		cp /root/install_common.sh /home/cgray/install_common.sh
+#		cp /root/sys_restart.sh /home/cgray/sys_restart.sh
+#		cp /root/install_monitoring.sh /home/cgray/install_monitoring.sh
+#		wait
+#		chown cgray:cgray /home/cgray/update_core.sh
+#		chown cgray:cgray /home/cgray/sys_cleanup.sh
+#		chown cgray:cgray /home/cgray/update_ubuntu14.04.sh
+#		chown cgray:cgray /home/cgray/install_common.sh
+#		chown cgray:cgray /home/cgray/sys_restart.sh
+#	fi
+
+	wait
+	mv update_core.sh /root/update_core.sh
+	mv sys_cleanup.sh /root/sys_cleanup.sh
+	mv update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
+	mv install_common.sh /root/install_common.sh
+	mv sys_restart.sh /root/sys_restart.sh
+	mv install_monitoring.sh /root/install_monitoring.sh
+	mv update_blocklists_local_servers.sh /root/update_blocklists_local_servers.sh
+	mv update_time.sh /root/update_time.sh
+	
 	wait
 	sh /root/update_ubuntu14.04.sh
+	sh /root/update_time.sh
 	
 	if [ -s "update_docker_images.sh" ]
 	then
