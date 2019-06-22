@@ -6,7 +6,7 @@
 #
 clear
 now=$(date)
-echo "Running install_time.sh at $now 
+echo "Running update_time.sh at $now 
 
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
