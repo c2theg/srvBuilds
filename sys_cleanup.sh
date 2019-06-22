@@ -21,7 +21,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.4                             \r\n
+Version:  1.7.5                             \r\n
 Last Updated:  6/22/2019
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
@@ -183,3 +183,11 @@ sudo df -h
 echo "\r\n \r\n"
 echo "Then issue the following: sudo apt-get purge linux-image-x.x.x.x-generic"
 echo "\r\n \r\n \r\n \r\n"
+
+echo "Showing files still left open, as they could not be deleted until they are closed. \r\n \r\n"
+sudo lsof | grep deleted
+
+echo "\r\n \r\n"
+lsof +L1
+
+echo "\r\n \r\n Your best option is to restart the server to release these files... \r\n \r\n"
