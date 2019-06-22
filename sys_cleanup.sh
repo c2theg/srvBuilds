@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.3                             \r\n
-Last Updated:  6/15/2019
+Version:  1.7.4                             \r\n
+Last Updated:  6/22/2019
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -60,6 +60,8 @@ wait
 echo "\r\n \r\n \r\n"
 echo "---- removing old logs from /var/log  ----- \r\n\r\n"
 #------ Core ----------------------------------------------------------
+rm /var/log/error.*
+rm /var/log/network.log
 rm /var/log/pm-powersave.log*
 rm /var/log/cups/*
 rm /var/log/alternatives.log.*
@@ -77,6 +79,8 @@ rm /var/log/apt/history.log.*
 rm /var/log/unattended-upgrades/unattended-upgrades-dpkg_*
 rm /var/log/unattended-upgrades/unattended-upgrades.log.*
 rm /var/log/upstart/*
+rm /var/log/syslog
+rm /var/log/messages
 #------ Security ----------------------------------------------------------
 rm /var/log/syslog.*
 rm /var/log/user.log.*
@@ -95,12 +99,12 @@ rm /var/log/redis/redis-server.log.*
 #------ ELK ----------------------------------------------------------
 rm /var/log/kibana/*
 #------ Mail ----------------------------------------------------------
+rm /var/log/mail.log
 rm /var/log/mail.log.*
 rm /var/log/mail.err.*
 rm /var/mail/root
 rm /var/mail/www-data
 rm /var/mail/ubuntu
-
 /etc/init.d/sendmail restart
 #------ Web / HTTP -------------------------------------------------------
 rm /var/log/apache2/*
@@ -109,12 +113,13 @@ rm /var/log/lighttpd/*
 echo "\r\n \r\n Removing Nginx and PHP logs, then restarting both services.. \r\n \r\n "
 rm -rf /var/log/nginx/*
 rm /var/log/php5-fpm.log.*
-#rm /var/log/php7.0-fpm.log
-#rm /var/log/php7.0-fpm.log.*
-#rm /var/log/php7.1-fpm.log
-#rm /var/log/php7.1-fpm.log.*
+rm /var/log/php7.0-fpm.log
+rm /var/log/php7.0-fpm.log.*
+rm /var/log/php7.1-fpm.log
+rm /var/log/php7.1-fpm.log.*
 rm /var/log/php7.2-fpm.log
 rm /var/log/php7.2-fpm.log.*
+
 /etc/init.d/php7.2-fpm restart
 /etc/init.d/nginx restart
 #------- PI-Hole / DNS releated ----------
@@ -144,6 +149,7 @@ rm /var/log/update_pihole_lists.log
 #---------- MISC ------------------------------------------------------
 rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
+rm /var/log/update_elk_plugins.log
 
 #----- DOCKER ------
 echo " From: https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images \r\n \r\n "
