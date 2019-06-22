@@ -50,7 +50,7 @@ if nc -zw1 google.com 443; then
 	then
 		echo "Deleting files"
 		rm install_snmp.sh
-		rm ntp.conf
+		rm install_time.sh
 		rm update_blocklists_local_servers.sh
 		rm resolv_base.conf
 		rm install_python3.sh
@@ -69,7 +69,6 @@ if nc -zw1 google.com 443; then
 	wget -O - -q -t 1 --timeout=3 https://magnetoai.com/api/updater/check.php?f=install_common > /dev/null
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
-	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod +u ntp.conf
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_time.sh && chmod +u install_time.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf && mv resolv_base.conf /etc/resolvconf/resolv.conf.d/base
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
