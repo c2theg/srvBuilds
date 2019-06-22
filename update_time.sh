@@ -41,6 +41,9 @@ sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/time
 mv timesyncd.conf /etc/systemd/timesyncd.conf
 wait
 
+echo "Setting NTP server to: time.cloudflare.com ... \r\n"
+sudo ntpdate -s time.cloudflare.com
+
 echo "Stopping NTP Services... \r\n"
 sudo service ntp stop
 sudo ntpd -gq
@@ -55,10 +58,19 @@ sudo timedatectl set-ntp on
 sudo timedatectl set-ntp true
 sudo timedatectl set-local-rtc 0
 
+echo "Restarting services... \r\n "
 sudo systemctl restart systemd-timesyncd.service
+
+echo "Show status.. \r\n \r\n"
 sudo timedatectl status
+
+echo "\r\n \r\n Hardware Clock \r\n"
 sudo hwclock --show
+
 echo "For more details enter: \r\n \r\n  sudo systemctl status systemd-timesyncd.service \r\n \r\n"
+echo "Show current time.. \r\n"
+date
+
 
 #---- NTPDATE Service -------
 #sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod +u ntp.conf
