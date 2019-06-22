@@ -21,7 +21,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.6                             \r\n
+Version:  1.7.7                             \r\n
 Last Updated:  6/22/2019
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
@@ -153,6 +153,7 @@ rm /var/log/update_elk_plugins.log
 
 #--- BTSync / Resilio ---
 rm /var/lib/resilio-sync/sync.log.*
+rm /var/lib/btsync/sync.log.old
 
 #----- DOCKER ------
 echo " From: https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images \r\n \r\n "
