@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 - 18.04 LTS
 
 \r\n \r\n
-Version:  1.7.2                             \r\n
-Last Updated:  12/11/2018
+Version:  1.7.3                             \r\n
+Last Updated:  6/22/2019
 \r\n \r\n"
 echo "Checking Internet status...   "
 #ping -q -c5 github.com > /dev/null
@@ -69,36 +69,15 @@ if nc -zw1 google.com 443; then
 	wget -O - -q -t 1 --timeout=3 https://magnetoai.com/api/updater/check.php?f=install_common > /dev/null
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod u ntp.conf
+	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod +u ntp.conf
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_time.sh && chmod +u install_time.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf && mv resolv_base.conf /etc/resolvconf/resolv.conf.d/base
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
 
 	#------ Python ------
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python3.sh && sudo chmod u+x install_python3.sh && ./install_python3.sh
 
-	#---- NTP Time related ---------
-	mv ntp.conf /etc/ntp.conf
-	wait
-	#sudo systemctl reload ntp.service
-	sudo /etc/init.d/ntp restart
-	wait
-	sudo timedatectl set-timezone America/New_York
-	wait
-	
-	echo "Forcing update of System Clock now!... \r\n \r\n "
-	service ntp stop
-	ntpdate time.google.com
-	service ntp start
-	
-	echo "Syncing Hardware clock to system clock... \r\n \r\n"
-	sudo hwclock --systohc
-	timedatectl
-	
-	echo "To sync system clock with PTP, run the following: (This doesn't work in ESXi with a vmxnet3 vNic)  \r\n \r\n
-	https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-starting_ptp4l  \r\n \r\n
-	ifconfig                    \r\n
-	ethtool -T eth0 or ens160   \r\n
-	ptp4l -i eth0 -m -S -A           \r\n"
+	sudo ./install_time.sh
 	
 	echo "\r\n \r\n"
 	echo "To setup local url blocking:  sudo ./update_blocklists_local_servers.sh  \r\n \r\n"
