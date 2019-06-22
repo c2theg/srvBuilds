@@ -42,10 +42,10 @@ echo "Checking Internet status...\r\n\r\n"
 #ping -q -c3 github.com > /dev/null
 #if [ $? -eq 0 ]
 if nc -zw1 google.com 443; then
-	echo "Connected!!! \r\n \r\n"
-	echo "Deleting old files \r\n"	
+	echo "Connected!!! \r\n \r\n
 	if [ -s "update_core.sh" ]
 	then
+		echo "Deleting old files \r\n"
 		rm sys_cleanup.sh
  		rm update_ubuntu14.04.sh
  		rm install_common.sh
@@ -57,6 +57,7 @@ if nc -zw1 google.com 443; then
 	fi
 	if [ -s "/root/update_core.sh" ]
 	then
+		echo "Deleting old files 2 \r\n"	
 		#------ under crontab -----
 		rm /root/sys_cleanup.sh
  		rm /root/update_ubuntu14.04.sh
@@ -65,14 +66,13 @@ if nc -zw1 google.com 443; then
 		rm /root/install_monitoring.*
 		rm /root/sys_restart.*
 		rm /root/update_blocklists_local_servers.*
-		rm /root/update_time.sh
-		
+		rm /root/update_time.sh	
 	fi
 
-	echo "Downloading latest versions... \r\n\r\n"	
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
+	echo "Downloading latest versions... \r\n\r\n"
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_restart.sh && chmod u+x sys_restart.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && chmod u+x install_common.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh && chmod u+x install_monitoring.sh
@@ -82,11 +82,11 @@ if nc -zw1 google.com 443; then
 	
 	if [ -s "install_docker.sh" ]
 	then
+		rm install_docker.sh
 		rm update_docker_images.sh
 		rm /root/update_docker_images.sh
-		sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/update_docker_images.sh 
-		sudo chmod u+x update_docker_images.sh
-		cp update_docker_images.sh /root/update_docker_images.sh
+		sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/docker/update_docker_images.sh && chmod u+x update_docker_images.sh
+		mv update_docker_images.sh /root/update_docker_images.sh
 	fi
 	#-----------------------------------------------
 	wait
