@@ -22,7 +22,7 @@ echo "Running update_time.sh at $now
 
 # https://www.tecmint.com/set-time-timezone-and-synchronize-time-using-timedatectl-command/
 \r\n \r\n
-Version:  0.0.4                             \r\n
+Version:  0.0.5                             \r\n
 Last Updated:  6/22/2019
 \r\n \r\n"
 wait
@@ -41,9 +41,9 @@ sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/time
 mv timesyncd.conf /etc/systemd/timesyncd.conf
 wait
 
-sudo timedatectl status
-sudo systemctl status systemd-timesyncd.service
-sudo hwclock --show
+#sudo timedatectl status
+#sudo systemctl status systemd-timesyncd.service
+#sudo hwclock --show
 
 # http://manpages.ubuntu.com/manpages/disco/en/man1/timedatectl.1.html
 echo "Fix and update clock"
@@ -56,7 +56,7 @@ sudo timedatectl set-local-rtc 1
 
 sudo systemctl restart systemd-timesyncd.service
 sudo timedatectl status
-sudo systemctl status systemd-timesyncd.service
+echo "For Details enter: \r\n \r\n  sudo systemctl status systemd-timesyncd.service \r\n \r\n"
 
 #---- NTPDATE Service -------
 #sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod +u ntp.conf
