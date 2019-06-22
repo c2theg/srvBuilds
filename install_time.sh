@@ -76,3 +76,11 @@ sudo systemctl status systemd-timesyncd.service
 
 # https://help.ubuntu.com/lts/serverguide/NTP.html.en
 # https://askubuntu.com/questions/27528/how-to-display-current-time-date-setting
+
+#---- PTP -----
+#echo "To sync system clock with PTP, run the following: (This doesn't work in ESXi with a vmxnet3 vNic)  \r\n \r\n
+#https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-starting_ptp4l  \r\n \r\n
+#ifconfig                    \r\n
+#ethtool -T eth0 or ens160   \r\n
+#ptp4l -i eth0 -m -S -A           \r\n"
+	
