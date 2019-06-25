@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.2.2                             \r\n
-Last Updated:  12/22/2018
+Version:  0.2.3                             \r\n
+Last Updated:  6/25/2019
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
@@ -64,6 +64,14 @@ then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists-porn.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_exclude_list.txt
+	
+	#-- OS base config --
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf
+	cp resolv_base.conf /etc/resolv.conf
+	cp resolv_base.conf /etc/resolvconf/resolv.conf.d/base
+	
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod +u update_time.sh
 	#--------------------------------------------------------------------------------------------------------
 	wait
 	chmod u+x pihole_allowlist.sh
@@ -81,7 +89,8 @@ then
 	sh /root/pihole_allowlist.sh
 	wait
 	sh /root/pihole_blocklist.sh
-	
+	wait
+	sh /root/update_time.sh
 	#----------------------------------------------------------------
 	#---- Update exclude Top Domain, list. to Ignore popular sites, in a effort to expose sites that shouldn't be loaded
 	API_EXCLUDE_DOMAINS_list=$(paste -s -d ',' pihole_exclude_list.txt)
