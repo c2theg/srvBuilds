@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 - 18.04 LTS
 
 \r\n \r\n
-Version:  1.7.4                             \r\n
-Last Updated:  6/22/2019
+Version:  1.7.5                             \r\n
+Last Updated:  6/25/2019
 \r\n \r\n"
 echo "Checking Internet status...   "
 #ping -q -c5 github.com > /dev/null
@@ -70,9 +70,11 @@ if nc -zw1 google.com 443; then
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod +u update_time.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf && mv resolv_base.conf /etc/resolvconf/resolv.conf.d/base
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
-
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf
+	cp resolv_base.conf /etc/resolv.conf
+	cp resolv_base.conf /etc/resolvconf/resolv.conf.d/base
+	
 	#------ Python ------
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python3.sh && sudo chmod u+x install_python3.sh && ./install_python3.sh
 
