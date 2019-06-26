@@ -56,8 +56,14 @@ then
 		rm /root/update_pihole_lists.sh*
 		rm /root/update_pihole_lists-porn.sh*
 		rm /root/pihole_exclude_list.txt*
+		rm /root/update_time.sh*
 	fi
-
+	rm update_time.sh*
+	rm resolv_base.conf*
+	rm pihole_exclude_list.txt*
+	rm update_pihole_lists.sh*
+	
+	
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh	
@@ -90,12 +96,13 @@ then
 	wait
 	sh /root/pihole_blocklist.sh
 	wait
-	sh /root/update_time.sh
 	#----------------------------------------------------------------
 	#---- Update exclude Top Domain, list. to Ignore popular sites, in a effort to expose sites that shouldn't be loaded
 	API_EXCLUDE_DOMAINS_list=$(paste -s -d ',' pihole_exclude_list.txt)
 	sed -i '/API_EXCLUDE_DOMAINS=/c\'API_EXCLUDE_DOMAINS="$API_EXCLUDE_DOMAINS_list" /etc/pihole/setupVars.conf
 	#----------------------------------------------------------------
+	wait
+	sh /root/update_time.sh	
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
