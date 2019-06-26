@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.2.3                             \r\n
-Last Updated:  6/25/2019
+Version:  0.2.4                             \r\n
+Last Updated:  6/26/2019
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
@@ -58,11 +58,11 @@ then
 		rm /root/pihole_exclude_list.txt*
 		rm /root/update_time.sh*
 	fi
-	rm update_time.sh*
+	
 	rm resolv_base.conf*
 	rm pihole_exclude_list.txt*
 	rm update_pihole_lists.sh*
-	
+	rm update_blocklists_local_servers.sh.*
 	
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.sh
@@ -77,7 +77,7 @@ then
 	cp resolv_base.conf /etc/resolv.conf
 	cp resolv_base.conf /etc/resolvconf/resolv.conf.d/base
 	
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod +u update_time.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod +u update_time.sh && cp /root/update_time.sh
 	#--------------------------------------------------------------------------------------------------------
 	wait
 	chmod u+x pihole_allowlist.sh
