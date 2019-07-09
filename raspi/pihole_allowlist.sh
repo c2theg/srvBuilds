@@ -26,11 +26,20 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.9                            \r\n
-Last Updated:  7/4/2019
+Version:  0.0.10                            \r\n
+Last Updated:  7/9/2019
 \r\n \r\n"
 #--------------------------
 pihole -w github.com raw.githubusercontent.com
+
+#--- General ---
+pihole -w cloudflare.com
+
+#-- DNS DoH https://github.com/curl/curl/wiki/DNS-over-HTTPS#publicly-available-servers  --
+pihole -w mozilla.cloudflare-dns.com dns.google dns.quad9.net doh.powerdns.org
+
+#-- NTP ---
+pihole -w time.cloudflare.com time.google.com nist.gov pool.ntp.org
 
 #--- Google
 pihole -w clients2.google.com clients3.google.com clients4.google.com dl.google.com android.clients.google.com 
@@ -70,14 +79,12 @@ pihole -w gravatar.com bit.ly godaddy.com secureserver.net
 pihole -w thetvdb.com
 pihole -w themoviedb.com
 pihole -w medium.com
-pihole -w highcharts.com www.highcharts.com code.highcharts.com
+pihole -w highcharts.com
 pihole -w spclient.wg.spotify.com apresolve.spotify.com
-pihole -w cloudflare.com www.cloudflare.com cdnjs.cloudflare.com
+
 #-- Charters.com
 pihole -w yottaa.net
 #-- Starbucks mobile app
 pihole -w device-api.urbanairship.com sbux-dl.urbanairship.com
-#-- DNS DoH --
-pihole -w mozilla.cloudflare-dns.com
 #-- movies --
-pihole -w www6.putlockertv.to putlockertv.to
+pihole -w putlockertv.to
