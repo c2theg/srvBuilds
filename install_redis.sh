@@ -21,8 +21,8 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.2                             \r\n
-Last Updated:  11/16/2018
+Version:  0.0.3                             \r\n
+Last Updated:  7/21/2019
 \r\n \r\n"
 wait
 sudo -E apt-get update
@@ -118,15 +118,15 @@ echo "\r\n \r\n"
 echo " Running benchmark again. https://redis.io/topics/benchmarks "
 echo " "
 echo " "
-redis-benchmark -q -n 1000 -c 10 -P 5 -p 46378 
+redis-benchmark -q -n 1000 -c 10 -P 5
 # -a password
 wait
 echo "\r\n \r\n"
 echo "--------------------------------------------------------------------"
 echo "To test, issue the following commands: "
-echo " redis-benchmark -q -n 1000 -c 10 -P 5 -p 46378 -a password "
+echo " redis-benchmark -q -n 1000 -c 10 -P 5 "
 echo " "
-echo " redis-cli -p 46378 -a <password>"
+echo " redis-cli -a <password>"
 echo "      >  info"
 echo " "
 echo " /usr/bin/redis-server /etc/redis/redis_slave.conf"
