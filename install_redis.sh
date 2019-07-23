@@ -98,15 +98,14 @@ sudo chown redis /var/log/redis/ && sudo chmod u+x /var/log/redis/
 
 #-- non human editable cluster node file --
 touch /etc/redis/cluster_nodes.conf
-sudo chown redis /etc/redis/cluster_nodes.conf && sudo chmod u+x /etc/redis/cluster_nodes.conf
 
-mv /etc/redis/redis.conf /etc/redis/redis_orginal.conf
-wait
-mv redis_cluster.conf /etc/redis/redis.conf
-#wait
+mv /etc/redis/redis.conf /etc/redis/redis_bk.conf
 mv redis_standalone.conf /etc/redis/redis_standalone.conf
-#wait
-#mv redis_slave.conf /etc/redis/redis_slave.conf
+cp redis_cluster.conf /etc/redis/redis_cluster.conf
+mv redis_cluster.conf /etc/redis/redis.conf
+wait
+sudo chown redis /etc/redis/* && sudo chmod u+x /etc/redis/*
+
 echo "--------------------------------------------------------------------"
 echo "\r\n Starting.... \r\n \r\n "
 echo " /usr/bin/redis-server /etc/redis/redis.conf"
