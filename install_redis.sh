@@ -21,7 +21,7 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.6                             \r\n
+Version:  0.0.7                             \r\n
 Last Updated:  7/22/2019
 \r\n \r\n"
 wait
@@ -54,9 +54,13 @@ echo "fixing the: WARNING overcommit_memory is set to 0! Background save may fai
 #sudo sysctl vm.overcommit_memory=1
 sudo echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf
 wait
-echo "Fixing the: WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128. \r\n"
+#echo "Fixing the: WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128. \r\n"
+
+echo "Fixing WARNINGS / Issues with other platforms... \r\n \r\n"
 sudo echo "sysctl -w net.core.somaxconn=65535" >> /etc/rc.local
 sudo echo 65534 > /proc/sys/net/core/somaxconn
+sudo echo never > /sys/kernel/mm/transparent_hugepage/enabled
+
 wait
 #  WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run
 if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
