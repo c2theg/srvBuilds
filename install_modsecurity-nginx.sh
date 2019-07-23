@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.1.1                             \r\n
-Last Updated:  11/20/2018
+Version:  1.1.2                             \r\n
+Last Updated:  7/23/2019
 \r\n \r\n
 #Updating system first..."
 sudo -E apt-get update
@@ -33,7 +33,7 @@ echo "Downloading required dependencies...\r\n\r\n"
 
 apt-get install -y git build-essential libpcre3 libpcre3-dev libssl-dev libtool autoconf libxml2-dev libcurl4-openssl-dev automake pkgconf
 
-# Download the nginx_refactoring branch of ModSecurity for Nginx:
+# Download the nginx_refactoring branch of ModSecurity for Nginx: https://github.com/SpiderLabs/ModSecurity
 cd /usr/src
 git clone -b nginx_refactoring https://github.com/SpiderLabs/ModSecurity.git
 
@@ -43,20 +43,19 @@ cd ModSecurity
 ./configure --enable-standalone-module --disable-mlogc
 make
 
-#Download and unarchive the latest stable release of Nginx
+#Download and unarchive the latest stable release of Nginx - http://nginx.org/en/download.html
 cd /usr/src
-wget https://nginx.org/download/nginx-1.15.6.tar.gz
-tar -zxvf nginx-1.15.6.tar.gz && rm -f nginx-1.15.6.tar.gz
+wget -O nginx.tar.gz http://nginx.org/download/nginx-1.17.2.tar.gz
+tar -zxvf nginx.tar.gz && rm -f nginx.tar.gz
 
 # compile Nginx while enabling ModSecurity and SSL modules
-cd nginx-1.13.6/
+cd nginx/
 ./configure --user=nginx --group=nginx --add-module=/usr/src/ModSecurity/nginx/modsecurity --with-http_ssl_module
 make
 make install
 
-Modify the default user of Nginx:
+#Modify the default user of Nginx:
 sed -i "s/#user  nobody;/user nginx nginx;/" /usr/local/nginx/conf/nginx.conf
-
 
 #Modify the default user of Nginx:
 sed -i "s/#user  nobody;/user www-data www-data;/" /usr/local/nginx/conf/nginx.conf
@@ -100,15 +99,13 @@ LimitNOFILE=200000
 WantedBy=multi-user.target
 EOF
 
-
 systemctl restart nginx.service
 
 # Import ModSecurity configuration files:
 cp /usr/src/ModSecurity/modsecurity.conf-recommended /usr/local/nginx/conf/modsecurity.conf
 cp /usr/src/ModSecurity/unicode.mapping /usr/local/nginx/conf/
 
-
-Add OWASP ModSecurity CRS (Core Rule Set) files:
+#Add OWASP ModSecurity CRS (Core Rule Set) files:
 cd /usr/local/nginx/conf
 git clone https://github.com/SpiderLabs/owasp-modsecurity-crs.git
 cd owasp-modsecurity-crs
@@ -120,7 +117,7 @@ mv RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example RESPONSE-999-EXCLUSION-RU
 # Test ModSecurity
 systemctl start nginx.service
 
-
+# Firewall Rules
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 iptables -A INPUT -p tcp --dport 443 -j ACCEPT
@@ -144,5 +141,4 @@ echo " ------------------------------- \r\n "
 echo "Test it out: \r\n \r\n "
 echo 'http://203.0.113.1/?param="><script>alert(1);</script>'
 
-
-echo "\r\n \r\n \r\n"
+echo "\r\n \r\n DONE \r\n"
