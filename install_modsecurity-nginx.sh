@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.1.2                             \r\n
+Version:  1.1.3                            \r\n
 Last Updated:  7/23/2019
 \r\n \r\n
 #Updating system first..."
@@ -49,7 +49,7 @@ wget -O nginx.tar.gz http://nginx.org/download/nginx-1.17.2.tar.gz
 tar -zxvf nginx.tar.gz && rm -f nginx.tar.gz
 
 # compile Nginx while enabling ModSecurity and SSL modules
-cd nginx/
+cd nginx-1.17.2/
 ./configure --user=nginx --group=nginx --add-module=/usr/src/ModSecurity/nginx/modsecurity --with-http_ssl_module
 make
 make install
@@ -61,21 +61,22 @@ sed -i "s/#user  nobody;/user nginx nginx;/" /usr/local/nginx/conf/nginx.conf
 sed -i "s/#user  nobody;/user www-data www-data;/" /usr/local/nginx/conf/nginx.conf
 
 #Having Nginx successfully installed, related files will be located at:
-nginx path prefix: "/usr/local/nginx"
-nginx binary file: "/usr/local/nginx/sbin/nginx"
-nginx modules path: "/usr/local/nginx/modules"
-nginx configuration prefix: "/usr/local/nginx/conf"
-nginx configuration file: "/usr/local/nginx/conf/nginx.conf"
-nginx pid file: "/usr/local/nginx/logs/nginx.pid"
-nginx error log file: "/usr/local/nginx/logs/error.log"
-nginx http access log file: "/usr/local/nginx/logs/access.log"
-nginx http client request body temporary files: "client_body_temp"
-nginx http proxy temporary files: "proxy_temp"
-nginx http fastcgi temporary files: "fastcgi_temp"
-nginx http uwsgi temporary files: "uwsgi_temp"
-nginx http scgi temporary files: "scgi_temp"
+#nginx path prefix: "/usr/local/nginx"
+#nginx binary file: "/usr/local/nginx/sbin/nginx"
+#nginx modules path: "/usr/local/nginx/modules"
+#nginx configuration prefix: "/usr/local/nginx/conf"
+#nginx configuration file: "/usr/local/nginx/conf/nginx.conf"
+#nginx pid file: "/usr/local/nginx/logs/nginx.pid"
+#nginx error log file: "/usr/local/nginx/logs/error.log"
+#nginx http access log file: "/usr/local/nginx/logs/access.log"
+#nginx http client request body temporary files: "client_body_temp"
+#nginx http proxy temporary files: "proxy_temp"
+#nginx http fastcgi temporary files: "fastcgi_temp"
+#nginx http uwsgi temporary files: "uwsgi_temp"
+#nginx http scgi temporary files: "scgi_temp"
 
 # you can test the installation with:
+echo "Test the nginx config.. \r\n "
 /usr/local/nginx/sbin/nginx -t
 
 
@@ -117,12 +118,12 @@ mv RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example RESPONSE-999-EXCLUSION-RU
 # Test ModSecurity
 systemctl start nginx.service
 
-# Firewall Rules
+echo "Setting Firewall Rules.. \r\n "
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 iptables -A INPUT -p tcp --dport 443 -j ACCEPT
-iptables -A INPUT -p tcp --dport 22 -j ACCEPT
-iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+#iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+#iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 iptables -P INPUT DROP
 iptables -P OUTPUT ACCEPT
 iptables -P FORWARD DROP
@@ -136,7 +137,7 @@ ufw allow 22
 ufw default deny
 ufw enable  
 
-echo " ------------------------------- \r\n "
+echo " \r\n ------------------------------- \r\n "
 
 echo "Test it out: \r\n \r\n "
 echo 'http://203.0.113.1/?param="><script>alert(1);</script>'
