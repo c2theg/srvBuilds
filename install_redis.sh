@@ -21,7 +21,7 @@ echo "Running install_redis.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.7                             \r\n
+Version:  0.0.8                             \r\n
 Last Updated:  7/22/2019
 \r\n \r\n"
 wait
@@ -36,7 +36,6 @@ sudo apt-get autoremove -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-
 echo "This installs redis-server to your box... \r\n"
 sudo add-apt-repository -y ppa:chris-lea/redis-server
 wait
@@ -59,9 +58,8 @@ wait
 echo "Fixing WARNINGS / Issues with other platforms... \r\n \r\n"
 sudo echo "sysctl -w net.core.somaxconn=65535" >> /etc/rc.local
 sudo echo 65534 > /proc/sys/net/core/somaxconn
-sudo echo never > /sys/kernel/mm/transparent_hugepage/enabled
 
-wait
+#sudo echo never > /sys/kernel/mm/transparent_hugepage/enabled
 #  WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run
 if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
     sudo echo never > /sys/kernel/mm/transparent_hugepage/enabled
@@ -109,24 +107,17 @@ mv redis_cluster.conf /etc/redis/redis.conf
 mv redis_standalone.conf /etc/redis/redis_standalone.conf
 #wait
 #mv redis_slave.conf /etc/redis/redis_slave.conf
-wait
-echo "\r\n Starting.... \r\n \r\n "
-
-sudo /etc/init.d/redis-server restart
-echo "\r\n \r\n Running benchmark again. https://redis.io/topics/benchmarks \r\n \r\n"
-redis-benchmark -q -n 1000 -c 10 -P 5
-echo "\r\n \r\n"
 echo "--------------------------------------------------------------------"
-echo "To test, issue the following commands: "
-echo " redis-benchmark -q -n 1000 -c 10 -P 5 "
-echo " "
-echo " redis-cli -a <password>"
-echo "      >  info"
-echo " "
+echo "\r\n Starting.... \r\n \r\n "
 echo " /usr/bin/redis-server /etc/redis/redis.conf"
 echo "\r\n \r\n"
+
+echo "To test, issue the following commands: "
+echo " redis-benchmark -q -n 1000 -c 10 -P 5  \r\n"
+echo " redis-cli -a <password>"
+
+
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ruby.sh && chmod u+x install_ruby.sh && ./install_ruby.sh
 #gem install redis
 #wget http://download.redis.io/redis-stable/src/redis-trib.rb && chmod u+x redis-trib.rb && ./redis-trib.rb
-
 echo "Done!"
