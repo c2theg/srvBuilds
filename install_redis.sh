@@ -89,7 +89,7 @@ sudo echo 'respawn' >> /etc/init/redis-server.conf
 echo "----------------------------------------------------------------------- \r\n"
 echo "Downloading latest custom config... \r\n "
 wait
-#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_custom.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_cluster.conf
 #wait
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_master.conf
 #wait
@@ -101,15 +101,20 @@ echo "Making backups and copies.. \r\n \r\n"
 sudo mkdir /var/run/redis/
 sudo chown redis /var/run/redis/
 
+sudo mkdir /var/log/redis/
+sudo chown redis /var/log/redis/
 
 mv /etc/redis/redis.conf /etc/redis/redis_orginal.conf
 wait
-mv redis_custom.conf /etc/redis/redis.conf
+mv redis_cluster.conf /etc/redis/redis.conf
+#wait
+#mv redis_master.conf /etc/redis/redis_master.conf
+#wait
+#mv redis_slave.conf /etc/redis/redis_slave.conf
+
 wait
-mv redis_master.conf /etc/redis/redis_master.conf
-wait
-mv redis_slave.conf /etc/redis/redis_slave.conf
-wait
+
+echo "\r\n Starting.... \r\n \r\n "
 sudo /etc/init.d/redis-server restart
 
 echo "\r\n \r\n"
@@ -129,7 +134,7 @@ echo " "
 echo " redis-cli -a <password>"
 echo "      >  info"
 echo " "
-echo " /usr/bin/redis-server /etc/redis/redis_slave.conf"
+echo " /usr/bin/redis-server /etc/redis/redis.conf"
 echo "\r\n \r\n"
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ruby.sh && chmod u+x install_ruby.sh && ./install_ruby.sh
 #gem install redis
