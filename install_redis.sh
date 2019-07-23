@@ -21,7 +21,7 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.5                             \r\n
+Version:  0.0.6                             \r\n
 Last Updated:  7/22/2019
 \r\n \r\n"
 wait
@@ -37,7 +37,7 @@ wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 
-echo "This installs redis-server to your box..."
+echo "This installs redis-server to your box... \r\n"
 sudo add-apt-repository -y ppa:chris-lea/redis-server
 wait
 sudo -E apt-get update
@@ -48,17 +48,13 @@ sudo -E apt-get install -y redis-server
 #pip install redis-trib
 wait
 clear
-echo "\n\n\n\n\n\n"
-echo " "
-echo " "
-echo " "
-echo " "
-echo "Fixing environment settings... "
-echo "fixing the: WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. \n\n";
+echo "\r\n \r\n "
+echo "Fixing environment settings... \r\n \r\n"
+echo "fixing the: WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. \r\n";
 #sudo sysctl vm.overcommit_memory=1
 sudo echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf
 wait
-echo "Fixing the: WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128."
+echo "Fixing the: WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128. \r\n"
 sudo echo "sysctl -w net.core.somaxconn=65535" >> /etc/rc.local
 sudo echo 65534 > /proc/sys/net/core/somaxconn
 wait
@@ -70,16 +66,10 @@ if test -f /sys/kernel/mm/transparent_hugepage/defrag; then
     sudo echo never > /sys/kernel/mm/transparent_hugepage/defrag
 fi
 wait
-echo " "
-echo "Running benchmark before custom config gets downloaded... If this fails, please edit the command and add password. https://redis.io/topics/benchmarks"
-echo " "
-echo " "
+echo "\r\n Running benchmark before custom config gets downloaded... If this fails, please edit the command and add password. https://redis.io/topics/benchmarks \r\n"
 redis-benchmark -q -n 1000 -c 10 -P 5
 wait
-echo " "
-echo " "
-echo " "
-echo "Creating Autostart script... "
+echo "\r\n \r\n Creating Autostart script... \r\n"
 touch /etc/init/redis-server.conf
 sudo echo 'description "redis server"' > /etc/init/redis-server.conf
 sudo echo 'start on runlevel [23]' >> /etc/init/redis-server.conf
@@ -91,8 +81,8 @@ echo "Downloading latest custom config... \r\n "
 wait
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_cluster.conf
 #wait
-#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_master.conf
-#wait
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_standalone.conf
+wait
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_slave.conf
 #wait
 
@@ -108,29 +98,19 @@ sudo chown redis /var/log/redis/ && sudo chmod u+x /var/log/redis/
 touch /etc/redis/cluster_nodes.conf
 sudo chown redis /etc/redis/cluster_nodes.conf && sudo chmod u+x /etc/redis/cluster_nodes.conf
 
-
 mv /etc/redis/redis.conf /etc/redis/redis_orginal.conf
 wait
 mv redis_cluster.conf /etc/redis/redis.conf
 #wait
-#mv redis_master.conf /etc/redis/redis_master.conf
+mv redis_standalone.conf /etc/redis/redis_standalone.conf
 #wait
 #mv redis_slave.conf /etc/redis/redis_slave.conf
-
 wait
-
 echo "\r\n Starting.... \r\n \r\n "
+
 sudo /etc/init.d/redis-server restart
-
-echo "\r\n \r\n"
-echo "\r\n \r\n"
-
-echo " Running benchmark again. https://redis.io/topics/benchmarks "
-echo " "
-echo " "
+echo "\r\n \r\n Running benchmark again. https://redis.io/topics/benchmarks \r\n \r\n"
 redis-benchmark -q -n 1000 -c 10 -P 5
-# -a password
-wait
 echo "\r\n \r\n"
 echo "--------------------------------------------------------------------"
 echo "To test, issue the following commands: "
