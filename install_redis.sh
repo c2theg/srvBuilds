@@ -21,7 +21,7 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.4                             \r\n
+Version:  0.0.5                             \r\n
 Last Updated:  7/22/2019
 \r\n \r\n"
 wait
@@ -99,10 +99,15 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_clu
 echo "Making backups and copies.. \r\n \r\n"
 
 sudo mkdir /var/run/redis/
-sudo chown redis /var/run/redis/
+sudo chown redis /var/run/redis/ && sudo chmod u+x /var/run/redis/
 
 sudo mkdir /var/log/redis/
-sudo chown redis /var/log/redis/
+sudo chown redis /var/log/redis/ && sudo chmod u+x /var/log/redis/
+
+#-- non human editable cluster node file --
+touch /etc/redis/cluster_nodes.conf
+sudo chown redis /etc/redis/cluster_nodes.conf && sudo chmod u+x /etc/redis/cluster_nodes.conf
+
 
 mv /etc/redis/redis.conf /etc/redis/redis_orginal.conf
 wait
