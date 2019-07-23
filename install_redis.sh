@@ -6,7 +6,7 @@
 #
 clear
 now=$(date)
-echo "Running update_ubuntu.sh at $now 
+echo "Running install_redis.sh at $now 
 
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
