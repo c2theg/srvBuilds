@@ -21,8 +21,8 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.3                             \r\n
-Last Updated:  7/21/2019
+Version:  0.0.4                             \r\n
+Last Updated:  7/22/2019
 \r\n \r\n"
 wait
 sudo -E apt-get update
@@ -86,21 +86,21 @@ sudo echo 'start on runlevel [23]' >> /etc/init/redis-server.conf
 sudo echo 'stop on shutdown' >> /etc/init/redis-server.conf
 sudo echo 'exec sudo -u redis /usr/bin/redis-server /etc/redis/redis.conf' >> /etc/init/redis-server.conf
 sudo echo 'respawn' >> /etc/init/redis-server.conf
-echo " "
-echo "-----------------------------------------------------------------------"
-echo " "
-echo " "
-echo "Downloading latest custom config's "
+echo "----------------------------------------------------------------------- \r\n"
+echo "Downloading latest custom config... \r\n "
 wait
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_custom.conf
-wait
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_master.conf
-wait
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_slave.conf
-wait
+#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_custom.conf
+#wait
+#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_master.conf
+#wait
+#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_slave.conf
+#wait
 
-echo "Making backups and copies.."
-echo " "
+echo "Making backups and copies.. \r\n \r\n"
+
+sudo mkdir /var/run/redis/
+sudo chown redis /var/run/redis/
+
 
 mv /etc/redis/redis.conf /etc/redis/redis_orginal.conf
 wait
