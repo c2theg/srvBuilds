@@ -26,37 +26,40 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS + or Pi-Hole
 
 \r\n \r\n
-Version:  0.1.4                            \r\n
-Last Updated:  9/17/2018
+Version:  0.1.5                            \r\n
+Last Updated:  7/24/2019
 \r\n \r\n"
 
 #---------------------------------------------------------------------------------------
 rm /etc/pihole/adlists.list
 
 #-- Sources: https://firebog.net/
-FileText="#Additional blocklists config by: Christopher Gray\n\n#https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh \n
-##-----------------------------------------------\n
-# The below list amalgamates several lists we used previously.
-# See https://github.com/StevenBlack/hosts for details
-##StevenBlack's list
-https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+FileText="
+## Additional blocklists 
+## config by: Christopher Gray\n\n#https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
+## -----------------------------------------------------------------------------
+## The below list amalgamates several lists we used previously.
+## See https://github.com/StevenBlack/hosts for details
+## StevenBlack's list
+## https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts
 
-##MalwareDomains
+## MalwareDomains
 https://mirror1.malwaredomains.com/files/justdomains
 
-##Cameleon
+## Cameleon
 http://sysctl.org/cameleon/hosts
 
-##Zeustracker
+## Zeustracker
 https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
 
-##Disconnect.me Tracking
+## Disconnect.me Tracking
 https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
 
-##Disconnect.me Ads
+## Disconnect.me Ads
 https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 
-##Hosts-file.net
+## Hosts-file.net
 https://hosts-file.net/ad_servers.txt
 https://hosts-file.net/emd.txt
 https://hosts-file.net/exp.txt
@@ -74,7 +77,6 @@ https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.tx
 https://www.spamhaus.org/drop/drop.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
-\n\n
 "
 
 touch /etc/pihole/adlists.list
