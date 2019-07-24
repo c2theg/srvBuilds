@@ -1,6 +1,7 @@
 # Chris Gray 
 # Custom blocklist
 # Date:  12/27/2018
+# Updated: 9/24/19
 # Fetch the latest version of this file: https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
 # ===============================================================
 127.0.0.1 localhost
@@ -38,3 +39,40 @@ ff02::3 ip6-allhosts
 0.0.0.0 usyncapp.com
 0.0.0.0 www.coach-outletonline.us.org
 0.0.0.0 coach-outletonline.us.org
+0.0.0.0 722forbidden1.sytes.net 
+0.0.0.0 antiq.scifi.ro 
+0.0.0.0 appropriations.co.cc 
+0.0.0.0 blackicemaccom.biz
+0.0.0.0 bog5151.zapto.org
+0.0.0.0 dataclub.biz
+0.0.0.0 dkxszh.org
+0.0.0.0 fenhelua.com
+0.0.0.0 funny.evils.in
+0.0.0.0 goobzo.com
+0.0.0.0 handjobheats.com
+0.0.0.0 havingbeothers.co.cc
+0.0.0.0 heftyzonealarm.info
+0.0.0.0 hidatabase.cn
+0.0.0.0 hosted-by.leaseweb.com
+0.0.0.0 info.xxuz.com
+0.0.0.0 jiang-zem.in
+0.0.0.0 kara.no-ip.info
+0.0.0.0 kievandmoskaustt.in
+0.0.0.0 lealemon.xxuz.com
+0.0.0.0 lovesyr.sytes.net
+0.0.0.0 lucas.digitaldesk.biz
+0.0.0.0 mssql.maurosouza9899.kinghost.net
+0.0.0.0 ns0.pollosm.me.uk
+0.0.0.0 ns1.boxonline.com
+0.0.0.0 ns1.boxonline.net
+0.0.0.0 ns1.boxonline.org
+0.0.0.0 ns1.pollosm.me.uk
+0.0.0.0 sectempus.biz
+0.0.0.0 team.immsky.de
+0.0.0.0 wifi-usbx.me
+0.0.0.0 wolfvr.com
+0.0.0.0 www.1860tour.com
+0.0.0.0 www.akwm139.com
+0.0.0.0 www.documents.mypicture.info
+0.0.0.0 www.ghjgf.info
+0.0.0.0 www.xiaopijia.com
