@@ -26,8 +26,8 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS + or Pi-Hole
 
 \r\n \r\n
-Version:  0.1.5                            \r\n
-Last Updated:  7/24/2019
+Version:  0.1.6                            \r\n
+Last Updated:  7/31/2019
 \r\n \r\n"
 
 #---------------------------------------------------------------------------------------
@@ -38,11 +38,9 @@ FileText="
 ## Additional blocklists 
 ## config by: Christopher Gray\n\n#https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 ## -----------------------------------------------------------------------------
-## The below list amalgamates several lists we used previously.
 ## See https://github.com/StevenBlack/hosts for details
-## StevenBlack's list
-## https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
-https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts
+## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts
+https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
 
 ## MalwareDomains
 https://mirror1.malwaredomains.com/files/justdomains
