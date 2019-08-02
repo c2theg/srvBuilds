@@ -41,7 +41,8 @@ FileText="
 ## See https://github.com/StevenBlack/hosts for details
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
-https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+## https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts
 
 ## MalwareDomains
 https://mirror1.malwaredomains.com/files/justdomains
