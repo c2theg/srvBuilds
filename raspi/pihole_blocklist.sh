@@ -26,8 +26,8 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS + or Pi-Hole
 
 \r\n \r\n
-Version:  0.1.6                            \r\n
-Last Updated:  7/31/2019
+Version:  0.1.7                            \r\n
+Last Updated:  8/2/2019
 \r\n \r\n"
 
 #---------------------------------------------------------------------------------------
@@ -40,7 +40,8 @@ FileText="
 ## -----------------------------------------------------------------------------
 ## See https://github.com/StevenBlack/hosts for details
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts
-https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
+## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
+https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
 
 ## MalwareDomains
 https://mirror1.malwaredomains.com/files/justdomains
