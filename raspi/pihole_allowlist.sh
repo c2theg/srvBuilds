@@ -60,6 +60,9 @@ pihole -w s.gateway.messenger.live.com ui.skype.com pricelist.skype.com apps.sky
 #--- Facebook
 pihole -w www.facebook.com facebook.com static.xx.fbcdn.net fbcdn.net creative.ak.fbcdn.net scontent-lga3-1.xx.fbcdn.net edge-chat.facebook.com external-lhr0-1.xx.fbcdn.net external-lhr1-1.xx.fbcdn.net external-lhr10-1.xx.fbcdn.net external-lhr2-1.xx.fbcdn.net external-lhr3-1.xx.fbcdn.net external-lhr4-1.xx.fbcdn.net external-lhr5-1.xx.fbcdn.net external-lhr6-1.xx.fbcdn.net external-lhr7-1.xx.fbcdn.net external-lhr8-1.xx.fbcdn.net external-lhr9-1.xx.fbcdn.net fbcdn-creative-a.akamaihd.net scontent-lhr3-1.xx.fbcdn.net scontent.xx.fbcdn.net scontent.fgdl5-1.fna.fbcdn.net graph.facebook.com connect.facebook.com cdn.fbsbx.com
 
+#--- Twitter
+pihole -w twitter.com www.twitter.com mobile.twitter.com analytics.twitter.com
+
 #-- Plex
 pihole -w plex.tv tvdb2.plex.tv pubsub.plex.bz proxy.plex.bz proxy02.pop.ord.plex.bz cpms.spop10.ams.plex.bz meta-db-worker02.pop.ric.plex.bz meta.plex.bz tvthemes.plexapp.com.cdn.cloudflare.net tvthemes.plexapp.com 106c06cd218b007d-b1e8a1331f68446599e96a4b46a050f5.ams.plex.services meta.plex.tv cpms35.spop10.ams.plex.bz proxy.plex.tv metrics.plex.tv pubsub.plex.tv status.plex.tv www.plex.tv node.plexapp.com nine.plugins.plexapp.com staging.plex.tv app.plex.tv o1.email.plex.tv  o2.sg0.plex.tv dashboard.plex.tv
 
@@ -75,7 +78,7 @@ pihole -w weeklyad.target.com m.weeklyad.target.com weeklyad.target.com.edgesuit
 pihole -w amazon.com fls-na.amazon.com
 
 #-- Others
-pihole -w gravatar.com bit.ly godaddy.com secureserver.net twitter.com  www.twitter.com
+pihole -w gravatar.com bit.ly godaddy.com secureserver.net
 pihole -w thetvdb.com
 pihole -w themoviedb.com
 pihole -w medium.com
