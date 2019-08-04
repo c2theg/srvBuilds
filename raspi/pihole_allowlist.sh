@@ -90,4 +90,4 @@ pihole -w yottaa.net
 #-- Starbucks mobile app
 pihole -w device-api.urbanairship.com sbux-dl.urbanairship.com
 #-- movies --
-pihole -w putlockertv.to uporn.com images.uporn.com
+pihole -w putlockertv.to uporn.com images.uporn.com pornhub.com
