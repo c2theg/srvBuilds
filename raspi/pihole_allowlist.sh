@@ -26,8 +26,8 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.12                            \r\n
-Last Updated:  7/28/2019
+Version:  0.0.13                            \r\n
+Last Updated:  8/4/2019
 \r\n \r\n"
 #--------------------------
 pihole -w github.com raw.githubusercontent.com
@@ -90,4 +90,4 @@ pihole -w yottaa.net
 #-- Starbucks mobile app
 pihole -w device-api.urbanairship.com sbux-dl.urbanairship.com
 #-- movies --
-pihole -w putlockertv.to
+pihole -w putlockertv.to uporn.com images.uporn.com
