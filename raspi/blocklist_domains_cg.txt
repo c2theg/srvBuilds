@@ -76,3 +76,5 @@ ff02::3 ip6-allhosts
 0.0.0.0 www.documents.mypicture.info
 0.0.0.0 www.ghjgf.info
 0.0.0.0 www.xiaopijia.com
+0.0.0.0 img-resize-cdn-prod.samsungnyc.com
+0.0.0.0 mediaservices.cdn-apple.com
