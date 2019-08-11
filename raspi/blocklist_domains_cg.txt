@@ -1,7 +1,7 @@
 # Chris Gray 
 # Custom blocklist
 # Date:  12/27/2018
-# Updated: 9/24/19
+# Updated: 8/11/19
 # Fetch the latest version of this file: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
 # ===============================================================
 127.0.0.1 localhost
@@ -78,3 +78,5 @@ ff02::3 ip6-allhosts
 0.0.0.0 www.xiaopijia.com
 0.0.0.0 img-resize-cdn-prod.samsungnyc.com
 0.0.0.0 mediaservices.cdn-apple.com
+::1/128 img-resize-cdn-prod.samsungnyc.com
+::1/128 mediaservices.cdn-apple.com
