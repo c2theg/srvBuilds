@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.2.4                             \r\n
-Last Updated:  6/26/2019
+Version:  0.3.0                             \r\n
+Last Updated:  8/11/2019
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
@@ -63,6 +63,7 @@ then
 	rm pihole_exclude_list.txt*
 	rm update_pihole_lists.sh*
 	rm update_blocklists_local_servers.sh.*
+	rm blocklist_regexs_cg.txt*
 	
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.sh
@@ -70,7 +71,7 @@ then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists-porn.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_exclude_list.txt
-	
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_regexs_cg.txt && chmod u+x blocklist_regexs_cg.txt && chown pihole:www-data blocklist_regexs_cg.txt 	
 	#-- OS base config --
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf
@@ -90,6 +91,7 @@ then
 	mv pihole_blocklist.sh /root/pihole_blocklist.sh
 	mv update_pihole_lists.sh /root/update_pihole_lists.sh	
 	mv update_pihole_lists-porn.sh /root/update_pihole_lists-porn.sh
+	mv blocklist_regexs_cg.txt /etc/pihole/regex.list
 	wait
 	
 	sh /root/pihole_allowlist.sh
