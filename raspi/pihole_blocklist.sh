@@ -23,12 +23,24 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 \r\n \r\n
-Version:  0.1.8                            \r\n
+Version:  0.2.0                            \r\n
 Last Updated:  8/11/2019
 \r\n \r\n"
 
 #---------------------------------------------------------------------------------------
+#---- remove temp files ---
 rm /etc/pihole/adlists.list
+
+rm /etc/pihole/*.gitlab.io.domains
+rm /etc/pihole/*.githubusercontent.com.domains
+rm /etc/pihole/*.hosts-file.net.domains
+rm /etc/pihole/*.s3.amazonaws.com.domains
+rm /etc/pihole/*.sysctl.org.domains
+rm /etc/pihole/*.malwaredomainlist.com.domains
+rm /etc/pihole/*.malwaredomains.com.domains
+rm /etc/pihole/*.easylist.to.domains
+rm /etc/pihole/*.spamhaus.org.domains
+rm /etc/pihole/*.zeustracker.abuse.ch.domains
 
 #-- Sources: https://firebog.net/
 FileText="
