@@ -1,9 +1,9 @@
-# Chris Gray 
-# Custom blocklist
+# Custom blocklist - by: Chris Gray 
 # Date:  12/27/2018
-# Updated: 8/11/19
+# Updated: 8/12/19
 # Fetch the latest version of this file: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
-# ===============================================================
+# ========================================================================================
+# -- Generic Fixes --
 127.0.0.1 localhost
 127.0.0.1 localhost.localdomain
 127.0.0.1 local
@@ -18,9 +18,7 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
 0.0.0.0 0.0.0.0
-
 #=====================================
-# Hosts contributed by Chris Gray
 0.0.0.0 ad.bidfluence.com	
 0.0.0.0 ak.ssl.imgfarm.com	
 0.0.0.0 ak.staticimgfarm.com	
@@ -114,18 +112,14 @@ ff02::3 ip6-allhosts
 0.0.0.0 appropriations.co.cc
 0.0.0.0 antiq.scifi.ro
 0.0.0.0 722forbidden1.sytes.net
-
 0.0.0.0 samsungnyc.com
 ::1     samsungnyc.com
 0.0.0.0 img-resize-cdn-prod.samsungnyc.com
 ::1     img-resize-cdn-prod.samsungnyc.com
-
 0.0.0.0 mediaservices.cdn-apple.com
 ::1     mediaservices.cdn-apple.com
-
 0.0.0.0 tp-link.com
 ::1     tp-link.com
-
 0.0.0.0 2906542.fls.doubleclick.net
 0.0.0.0 a.root-servers.net
 0.0.0.0 nist-time-server.eoni.com
