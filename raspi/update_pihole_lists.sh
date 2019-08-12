@@ -62,7 +62,8 @@ then
 	rm resolv_base.conf*
 	rm pihole_exclude_list.txt*
 	rm update_pihole_lists.sh*
-	rm update_blocklists_local_servers.sh.*
+	rm update_blocklists_local_servers.*
+	
 	rm blocklist_regexs_cg.txt*
 	
 	echo "Downloading latest versions... \r\n\r\n"	
