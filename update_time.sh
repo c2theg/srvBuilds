@@ -4,7 +4,8 @@
 #       dos2unix <FILE>
 #       chmod u+x <FILE>
 #
-clear
+#clear
+echo "\r\n \r\n \r\n \r\n" 
 now=$(date)
 echo "Running update_time.sh at $now 
 
@@ -24,8 +25,8 @@ echo "Running update_time.sh at $now
 # http://manpages.ubuntu.com/manpages/disco/en/man1/timedatectl.1.html
 
 \r\n \r\n
-Version:  0.0.7                             \r\n
-Last Updated:  6/22/2019
+Version:  0.0.8                             \r\n
+Last Updated:  8/11/2019
 \r\n \r\n"
 wait
 #--------------------------------------------------------------------------------------------
@@ -62,6 +63,7 @@ sudo hwclock --show
 echo "For more details enter: \r\n \r\n  sudo systemctl status systemd-timesyncd.service \r\n \r\n"
 echo "Show current time.. \r\n"
 date
+echo "\r\n \r\n \r\n"
 
 #---- NTPDATE Service -------
 #sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod +u ntp.conf
@@ -87,4 +89,3 @@ date
 #ifconfig                    \r\n
 #ethtool -T eth0 or ens160   \r\n
 #ptp4l -i eth0 -m -S -A           \r\n"
-	
