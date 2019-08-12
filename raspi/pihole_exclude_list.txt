@@ -98,3 +98,5 @@ hosts-file.net
 *.honeywell.com
 *.docker.io
 *.hbo.com
+speedtest.net
+*.speedtest.net
