@@ -84,3 +84,12 @@ ff02::3 ip6-allhosts
 
 0.0.0.0 mediaservices.cdn-apple.com
 ::1/128 mediaservices.cdn-apple.com
+
+0.0.0.0 tp-link.com
+::1/128 tp-link.com
+
+0.0.0.0 2906542.fls.doubleclick.net
+::1/128 2906542.fls.doubleclick.net
+
+0.0.0.0 a.root-servers.net
+0.0.0.0 nist-time-server.eoni.com
