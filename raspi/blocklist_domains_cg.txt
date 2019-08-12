@@ -76,6 +76,7 @@ ff02::3 ip6-allhosts
 0.0.0.0 www.documents.mypicture.info
 0.0.0.0 www.ghjgf.info
 0.0.0.0 www.xiaopijia.com
+0.0.0.0 spheral.ru
 
 0.0.0.0 samsungnyc.com
 ::1     samsungnyc.com
