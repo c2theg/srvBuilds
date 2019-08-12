@@ -20,14 +20,11 @@ echo "
 
 \r\n \r\n
 
- https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
- https://firebog.net/
-
-This really is meant to be run under Ubuntu 16.04 LTS + or Pi-Hole
+https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 \r\n \r\n
-Version:  0.1.7                            \r\n
-Last Updated:  8/2/2019
+Version:  0.1.8                            \r\n
+Last Updated:  8/11/2019
 \r\n \r\n"
 
 #---------------------------------------------------------------------------------------
@@ -36,7 +33,7 @@ rm /etc/pihole/adlists.list
 #-- Sources: https://firebog.net/
 FileText="
 ## Additional blocklists 
-## config by: Christopher Gray\n\n#https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
+## config by: Christopher Gray
 ## -----------------------------------------------------------------------------
 ## See https://github.com/StevenBlack/hosts for details
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts
@@ -72,14 +69,11 @@ https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.tx
 https://easylist.to/easylist/easylist.txt
 https://easylist.to/easylist/easyprivacy.txt
 https://easylist.to/easylist/fanboy-annoyance.txt
-https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt
-
 https://www.spamhaus.org/drop/drop.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
 "
-
 touch /etc/pihole/adlists.list
 echo -n "$FileText" >> /etc/pihole/adlists.list
-
 pihole -g
