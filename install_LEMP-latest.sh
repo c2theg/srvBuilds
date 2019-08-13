@@ -97,6 +97,7 @@ wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
 
 mkdir "/media/data/"
+mkdir "/var/log/nginx/"
 
 if [ -s "/etc/php/7.3/fpm/php.ini" ]
 then
