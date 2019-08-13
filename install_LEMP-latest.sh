@@ -112,8 +112,8 @@ wget -O  "php.ini" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/co
 sudo mv "php.ini" "/etc/php/7.3/fpm/php.ini"
 wait
 #--------------------------------------------------
-wget -O "php-fpm.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fpm.conf"
-sudo mv "php-fpm.conf" "/etc/php/7.3/fpm/php-fpm.conf"
+wget -O "php-fpm.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fpm-7.3.conf"
+sudo mv "php-fpm-7.3.conf" "/etc/php/7.3/fpm/php-fpm.conf"
 wait
 #--------------------------------------------------
 wget -O "php_browscap.ini" "https://browscap.org/stream?q=PHP_BrowsCapINI"
