@@ -20,10 +20,10 @@ echo "
 
  
 |￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣|
-|    SENIOR ENGINEERS    |
-|     DO NOT GROW ON     |
-|         TREES          |
-|__＿＿＿＿＿＿＿＿＿＿______|
+|    SENIOR ENGINEERS     |
+|     DO NOT GROW ON      |
+|         TREES           |
+|＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿|
           (\_❀) ||
           (•ㅅ•) ||
           / 　 づ
