@@ -1,4 +1,10 @@
 #!/bin/bash
+# ---- Add to crontab ----
+#  15 3 * * * /usr/bin/certbot renew --quiet
+#
+#
+#
+
 fqdn='cloud.site.com'
 #----------------------------------------------------------------------------
 wget https://dl.eff.org/certbot-auto && chmod a+x certbot-auto
