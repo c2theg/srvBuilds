@@ -1,7 +1,33 @@
-#!/bin/bash
-# ---- Add to crontab ----
-#  15 3 * * * /usr/bin/certbot renew --quiet
+#!/bin/sh
+#    If you update this from Windows, using Notepad ++, do the following:
+#       sudo apt-get -y install dos2unix
+#       dos2unix <FILE>
+#       chmod u+x <FILE>
 #
+clear
+echo "
+ _____             _         _    _          _                                   
+|     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
+|   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
+|_____|_| |___|__,|_| |___|___|  |___|_  |  |_|                                  
+                                     |___|                                       
+                                                                                 
+ _____ _       _     _           _              _____    __    _____             
+|     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _ 
+|   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
+|_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
+                            |_|                                             |___|
+
+
+\r\n \r\n
+Version:  0.0.3                             \r\n
+Last Updated:  8/13/2019
+\r\n \r\n "
+
+# ---- Add to crontab ----
+#  15 3 * * * /usr/bin/certbot renew --quiet --deploy-hook "systemctl restart nginx"
+#    or
+#  43 6 * * * certbot renew --post-hook "systemctl reload nginx"
 #
 #
 
@@ -56,4 +82,4 @@ sudo certbot --nginx -d $fqdn
 
 echo -e "\r\n DONE \r\n \r\n "
 echo -e "If you want to schedule this to renew daily add the following to crontab: \r\n \r\n "
-echo -e "15 3 * * * /usr/bin/certbot renew --quiet \r\n \r\n"
+echo -e "15 3 * * * /usr/bin/certbot renew --quiet --deploy-hook \"systemctl restart nginx\" \r\n \r\n"
