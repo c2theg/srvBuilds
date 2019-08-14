@@ -20,7 +20,7 @@ echo "
 
  
 |￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣|
-|    SENIOR ENGINEERS     |
+|    GREAT ENGINEERS      |
 |     DO NOT GROW ON      |
 |         TREES           |
 |＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿|
