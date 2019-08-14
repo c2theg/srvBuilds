@@ -26,14 +26,14 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.13                            \r\n
-Last Updated:  8/4/2019
+Version:  0.0.14                            \r\n
+Last Updated:  8/14/2019
 \r\n \r\n"
 #--------------------------
 pihole -w github.com raw.githubusercontent.com
 
 #--- General ---
-pihole -w cloudflare.com
+pihole -w cloudflare.com  1dot1dot1dot1.cloudflare-dns.com  cloudflare-dns.com
 
 #-- DNS DoH https://github.com/curl/curl/wiki/DNS-over-HTTPS#publicly-available-servers  --
 pihole -w mozilla.cloudflare-dns.com dns.google dns.quad9.net doh.powerdns.org
