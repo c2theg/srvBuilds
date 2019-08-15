@@ -7,8 +7,13 @@ Web_path='/var/www'
 
 #--- Resilio ---
 #sudo chown -R rslsync:rslsync /var/www/
-sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
+#sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
 
+if [ -d "/media/data/sync/" ]
+then
+   sudo chmod -R 755 /media/data/sync/
+   sudo chown -R www-data:www-data /media/data/sync/
+fi
 
 # fixes http permissions - 640 or 755
 if [ -d "/var/www" ]
@@ -21,7 +26,6 @@ then
    chown -R ${rootuser}:${htgroup} ${Web_path}/
    chown -R 'ubuntu':${htgroup} ${Web_path}/
 fi
-
 
 if [ -d "/var/www/nextcloud" ]
 then
