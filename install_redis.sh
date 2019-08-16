@@ -21,18 +21,18 @@ echo "Running install_redis.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.8                             \r\n
-Last Updated:  7/22/2019
+Version:  0.0.9                             \r\n
+Last Updated:  8/16/2019
 \r\n \r\n"
 wait
-sudo -E apt-get update
+#sudo -E apt-get update
+#wait
+#sudo -E apt-get upgrade -y --force-yes
 wait
-sudo -E apt-get upgrade -y --force-yes
+#sudo -E apt-get install -f -y
 wait
-sudo -E apt-get install -f -y
-wait
-echo "Freeing up space"
-sudo apt-get autoremove -y
+#echo "Freeing up space"
+#sudo apt-get autoremove -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
@@ -81,10 +81,13 @@ sudo echo 'respawn' >> /etc/init/redis-server.conf
 echo "----------------------------------------------------------------------- \r\n"
 echo "Downloading latest custom config... \r\n "
 wait
+rm redis_cluster.conf
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_cluster.conf
-#wait
+wait
+rm redis_standalone.conf
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_standalone.conf
 wait
+#rm redis_slave.conf
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_slave.conf
 #wait
 
@@ -114,7 +117,6 @@ echo "\r\n \r\n"
 echo "To test, issue the following commands: "
 echo " redis-benchmark -q -n 1000 -c 10 -P 5  \r\n"
 echo " redis-cli -a <password>"
-
 
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ruby.sh && chmod u+x install_ruby.sh && ./install_ruby.sh
 #gem install redis
