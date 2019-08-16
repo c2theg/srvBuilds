@@ -122,6 +122,13 @@ echo " redis-cli -p 46379  \r\n"
 echo " Or auth with: \r\n 
 echo " redis-cli -p 46379 -a <password> \r\n \r\n"
 
+echo " /etc/init.d/redis-server stop  \r\n"
+echo " /etc/init.d/redis-server start  \r\n"
+
+echo "Setting up Redis to start on startup... \r\n "
+sudo systemctl enable redis-server.service
+echo " \r\n "
+
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ruby.sh && chmod u+x install_ruby.sh && ./install_ruby.sh
 #gem install redis
 #wget http://download.redis.io/redis-stable/src/redis-trib.rb && chmod u+x redis-trib.rb && ./redis-trib.rb
