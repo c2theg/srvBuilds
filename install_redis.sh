@@ -124,7 +124,12 @@ echo " redis-cli -p 46379 -a <password> \r\n \r\n"
 
 echo " /etc/init.d/redis-server stop  \r\n"
 echo " /etc/init.d/redis-server start  \r\n"
+echo "
+redis-cli info  \r\n 
+redis-cli info stats  \r\n
+redis-cli info server  \r\n
 
+"
 echo "Setting up Redis to start on startup... \r\n "
 sudo systemctl enable redis-server.service
 echo " \r\n "
@@ -133,3 +138,11 @@ echo " \r\n "
 #gem install redis
 #wget http://download.redis.io/redis-stable/src/redis-trib.rb && chmod u+x redis-trib.rb && ./redis-trib.rb
 echo "Done!"
+
+if [ -d "/etc/php" ]
+then
+    echo "installing PHP module... \r\n "
+    sudo apt-get install -y php-redis
+    sudo bash -c "echo extension=redis.so > /etc/php/7.3/mods-available/redis.ini"
+    echo "Modify /etc/php/7.X/fpm/php.ini to configure redis servers... \r\n \r\n "
+fi
