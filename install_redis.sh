@@ -21,7 +21,7 @@ echo "Running install_redis.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.9                             \r\n
+Version:  0.1.0                             \r\n
 Last Updated:  8/16/2019
 \r\n \r\n"
 wait
@@ -114,9 +114,13 @@ echo "\r\n Starting.... \r\n \r\n "
 echo " /usr/bin/redis-server /etc/redis/redis.conf"
 echo "\r\n \r\n"
 
+sudo /usr/bin/redis-server /etc/redis/redis.conf
+
 echo "To test, issue the following commands: "
-echo " redis-benchmark -q -n 1000 -c 10 -P 5  \r\n"
-echo " redis-cli -a <password>"
+echo " redis-benchmark -q -n 1000 -c 10 -P 5 -p 46379 \r\n"
+echo " redis-cli -p 46379  \r\n"
+echo " Or auth with: \r\n 
+echo " redis-cli -p 46379 -a <password> \r\n \r\n"
 
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ruby.sh && chmod u+x install_ruby.sh && ./install_ruby.sh
 #gem install redis
