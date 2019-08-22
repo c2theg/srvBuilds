@@ -21,13 +21,15 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.6.9                             \r\n
-Last Updated:  6/27/2018
+Version:  1.7.0                             \r\n
+Last Updated:  8/22/2019
 \r\n \r\n"
 wait
-sudo -E apt-get update
+#sudo -E apt-get update
+sudo -E apt-get -o Acquire::ForceIPv4=true update
 wait
-sudo -E apt-get upgrade -y --force-yes
+#sudo -E apt-get upgrade -y --force-yes
+sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y --force-yes
 wait
 sudo -E apt-get install -f -y
 wait
