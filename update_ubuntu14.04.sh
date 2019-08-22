@@ -25,6 +25,9 @@ Version:  1.7.0                             \r\n
 Last Updated:  8/22/2019
 \r\n \r\n"
 wait
+# https://askubuntu.com/questions/759524/problem-with-ipv6-sudo-apt-get-update-upgrade
+# echo 'Acquire::ForceIPv4 "true";' | sudo tee /etc/apt/apt.conf.d/99force-ipv4
+#
 #sudo -E apt-get update
 sudo -E apt-get -o Acquire::ForceIPv4=true update
 wait
