@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.7                             \r\n
-Last Updated:  6/22/2019
+Version:  1.7.8                             \r\n
+Last Updated:  8/22/2019
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -95,16 +95,16 @@ rm /var/log/mysql.log.*
 rm /var/log/mysql/mysql_error.log
 rm /var/log/mysql/error.log
 
-rm /var/log/redis/redis-server.log.*
+rm /var/log/redis/*
 #------ ELK ----------------------------------------------------------
 rm /var/log/kibana/*
 #------ Mail ----------------------------------------------------------
 rm /var/log/mail.log
 rm /var/log/mail.log.*
 rm /var/log/mail.err.*
-rm /var/mail/root
-rm /var/mail/www-data
-rm /var/mail/ubuntu
+rm /var/mail/root/*
+rm /var/mail/www-data/*
+rm /var/mail/ubuntu/*
 /etc/init.d/sendmail restart
 #------ Web / HTTP -------------------------------------------------------
 rm /var/log/apache2/*
