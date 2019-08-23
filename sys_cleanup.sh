@@ -94,7 +94,7 @@ rm /var/log/letsencrypt/letsencrypt.log.*
 rm /var/log/mysql.log.*
 rm /var/log/mysql/mysql_error.log
 rm /var/log/mysql/error.log
-
+rm /var/log/mongodb/*
 rm /var/log/redis/*
 #------ ELK ----------------------------------------------------------
 rm /var/log/kibana/*
