@@ -75,6 +75,7 @@ sudo apt-get install -y php7.3 php7.3-cli php7.3-fpm php7.3-curl php7.3-json php
 sudo apt-get install -y php7.3-common php7.3-opcache php7.3-readline php7.3-soap php7.3-ldap php7.3-pear php-xdebug php-apcu php-ssh2 php-geoip php7.3-bcmath php7.3-zip php7.3-xml php-xml php-mailparse php7.3-bz2 php7.3-xmlrpc php7.3-mcrypt
 wait
 #--- pear ---
+# https://pear.php.net/manual/en/installation.getting.php
 wget http://pear.php.net/go-pear.phar
 php go-pear.phar
 sudo pear channel-update pear.php.net
@@ -83,6 +84,7 @@ sudo pecl channel-update pecl.php.net
 sudo pear install mail Net_SMTP Auth_SASL2-0.1.0 mail_mime
 sudo apt-get install -y php7.3-mongodb php-mongodb
 pecl install mongodb
+pear install PEAR
 
 #--- extras ---
 sudo apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev libsslcommon2-dev libmysqlclient-dev
