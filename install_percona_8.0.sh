@@ -68,4 +68,17 @@ echo "\r\n Percona Config Download Complete \r\n"
 #mysql> SHOW SLAVE STATUS;
 #mysql> SHOW MASTER STATUS;
 #"
-#echo " Done! \r\n\r\n"
+
+echo " \r\n \r\n To setup remote logins: \r\n \r\n
+
+Login to the CLI of MySQL   \r\n \r\n
+mysql --user=root --password=<PASSWORD>  \r\n \r\n
+
+Give remove access  \r\n \r\n
+CREATE USER 'user1'@'localhost' IDENTIFIED BY '<password>';  
+CREATE USER 'user1'@'%' IDENTIFIED BY '<password>';
+
+GRANT ALL ON *.* TO 'user1'@'localhost';
+GRANT ALL ON *.* TO 'user1'@'%';
+"
+echo " Done! \r\n\r\n"
