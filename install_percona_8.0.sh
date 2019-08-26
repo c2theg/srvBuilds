@@ -18,13 +18,13 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.1                             \r\n
-Last Updated:  1/8/2019
+Version:  0.0.2                             \r\n
+Last Updated:  8/25/2019
 \r\n \r\n
 Updating system first..."
-sudo -E apt-get update
-wait
-sudo -E apt-get upgrade -y
+#sudo -E apt-get update
+#wait
+#sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
@@ -32,13 +32,10 @@ cd ~
 wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
 sudo dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
 sudo percona-release setup ps80
-
 sudo -E apt-get update
-
 wait
-sudo apt-get install percona-server-server
-
-
+sudo apt-get install -y percona-server-server
+wait
 mkdir /var/log/mysql
 mkdir /var/log/mysql/replication/
 sudo chmod -R 755 /var/log/mysql/ && sudo chown -R mysql:mysql /var/log/mysql/
