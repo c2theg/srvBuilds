@@ -85,6 +85,7 @@ https://www.spamhaus.org/drop/drop.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts
 
 ## blocklist.site
+https://blocklist.site/app/dl/phishing
 https://blocklist.site/app/dl/fakenews
 https://blocklist.site/app/dl/malware
 https://blocklist.site/app/dl/piracy
