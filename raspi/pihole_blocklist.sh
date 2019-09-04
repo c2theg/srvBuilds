@@ -23,8 +23,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 \r\n \r\n
-Version:  0.2.0                            \r\n
-Last Updated:  8/11/2019
+Version:  0.2.1                            \r\n
+Last Updated:  9/3/2019
 \r\n \r\n"
 
 #---------------------------------------------------------------------------------------
@@ -83,6 +83,17 @@ https://easylist.to/easylist/easyprivacy.txt
 https://easylist.to/easylist/fanboy-annoyance.txt
 https://www.spamhaus.org/drop/drop.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts
+
+## blocklist.site
+https://blocklist.site/app/dl/fakenews
+https://blocklist.site/app/dl/malware
+https://blocklist.site/app/dl/piracy
+https://blocklist.site/app/dl/ransomware
+https://blocklist.site/app/dl/scam
+https://blocklist.site/app/dl/spam
+https://blocklist.site/app/dl/tracking
+
+## Personal - Must be at the end ##
 https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
 "
