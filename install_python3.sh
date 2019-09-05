@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.4                             \r\n
-Last Updated:  1/5/2019
+Version:  1.4.5                             \r\n
+Last Updated:  9/5/2019
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -28,7 +28,7 @@ Last Updated:  1/5/2019
 #wait
 #echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "Installing Python 3.7+ latest.... "
+echo "Installing Python 3+ latest.... "
 
 sudo -E add-apt-repository -y ppa:jonathonf/python-3.7
 sudo -E apt-get update
@@ -78,9 +78,11 @@ pip3 install simp-AES
 #--- Specify projects - optional --
 #pip3 install protobuf
 #pip3 install websockets
-#pip3 install redis
-#pip3 install python-memcached
 
+#pip3 install redis
+#pip3 install redis-trib
+
+#pip3 install python-memcached
 #pip3 install GeoIP
 #pip3 install simplegeoip
 #pip3 install pysflow
@@ -100,8 +102,7 @@ pip3 install simp-AES
 #--------------------------------------------------
 wait
 echo "\r\n \r\n "
-echo "Done installing Python3 \r\n \r\n"
-
+echo "Done installing Python3+ \r\n \r\n"
 python3 --version
 pip3 --version
 virtualenv --version
