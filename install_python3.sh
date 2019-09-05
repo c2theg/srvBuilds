@@ -33,6 +33,7 @@ echo "Installing Python 3+ latest.... "
 sudo -E add-apt-repository -y ppa:jonathonf/python-3.7
 sudo -E apt-get update
 #--------------------------------------------------------------------------------------------
+sudo -E apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties python3-yaml
 sudo -E apt-get install -y python3-dev
