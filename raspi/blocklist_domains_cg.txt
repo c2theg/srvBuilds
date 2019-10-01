@@ -1,6 +1,6 @@
 # Custom blocklist - by: Chris Gray 
 # Date:  12/27/2018
-# Updated: 9/30/19
+# Updated: 10/1/19
 # Fetch the latest version of this file: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
 # ========================================================================================
 ad.bidfluence.com	
@@ -69,5 +69,8 @@ tp-link.com
 2906542.fls.doubleclick.net
 a.root-servers.net
 nist-time-server.eoni.com
+#-- for Wyze Cam --
 iotcplatform.com
 us-master.iotcplatform.com
+wyze-datacollect-api.wyzecam.com
+# wyze-device-alarm-file.s3.us-west-2.amazonaws.com
