@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.3.0                             \r\n
-Last Updated:  8/11/2019
+Version:  0.3.1                             \r\n
+Last Updated:  10/16/2019
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
@@ -63,16 +63,16 @@ then
 	rm pihole_exclude_list.txt*
 	rm update_pihole_lists.sh*
 	rm update_blocklists_local_servers.*
-	
 	rm blocklist_regexs_cg.txt*
 	
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh	
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists-porn.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_exclude_list.txt
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_regexs_cg.txt && chmod u+x blocklist_regexs_cg.txt && chown pihole:www-data blocklist_regexs_cg.txt 	
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_regexs_cg.txt
+	
 	#-- OS base config --
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf
@@ -82,10 +82,10 @@ then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod +u update_time.sh && cp /root/update_time.sh
 	#--------------------------------------------------------------------------------------------------------
 	wait
-	chmod u+x pihole_allowlist.sh
-	chmod u+x pihole_blocklist.sh
-	chmod u+x update_pihole_lists.sh
-	chmod u+x update_pihole_lists-porn.sh
+	chmod u+x pihole_allowlist.sh && chown pihole:www-data pihole_allowlist.sh
+	chmod u+x pihole_blocklist.sh && chown pihole:www-data pihole_blocklist.sh
+	chmod u+x update_pihole_lists.sh && chown pihole:www-data update_pihole_lists.sh
+	chmod u+x update_pihole_lists-porn.sh && chown pihole:www-data update_pihole_lists-porn.sh
 	wait
 	
 	mv pihole_allowlist.sh /root/pihole_allowlist.sh
