@@ -27,7 +27,7 @@ wait
 # Ubuntu 18.04 setup with min install
 
 sudo apt-get update
-sudo apt install net-tools curl ssh
+sudo apt install -y net-tools curl ssh
 
 #-- VNC Server
 # https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-18-04
