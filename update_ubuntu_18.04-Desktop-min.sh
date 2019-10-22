@@ -33,6 +33,19 @@ sudo apt install net-tools curl ssh
 # https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-18-04
 sudo apt-get install -y vnc4server vnc-java x11-xfs-utils tightvncserver tightvnc-java
 # vncserver
+mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
+
+ #!/bin/bash
+ xrdb $HOME/.Xresources
+ startxfce4 &
+
+sudo chmod +x ~/.vnc/xstartup
+
+echo "to CHECK the status of VNC Server use:    netstat -tulpn   \r\n \r\n"
+echo "To KILL VNCServer use:  vncserver -kill :1  \r\n \r\n"
+echo "set VNC Password: vncpasswd  \r\n \r\n"
+
+
 
 
 
