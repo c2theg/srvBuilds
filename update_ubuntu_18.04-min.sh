@@ -24,7 +24,8 @@ Last Updated:  10/22/2019
 \r\n \r\n"
 wait
 
-# Ubuntu 18.04 setup with mini install
+# Ubuntu 18.04 setup with min install
 
 sudo apt-get update
 sudo apt install net-tools curl ssh
+sudo apt install linux-generic-hwe-18.04 linux-headers-generic-hwe-18.04 linux-image-generic-hwe-18.04
