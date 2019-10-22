@@ -19,7 +19,7 @@ echo "Running update_ubuntu_18.04-Desktop-min.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  10/22/2019
 \r\n \r\n"
 wait
@@ -28,8 +28,16 @@ wait
 
 sudo apt-get update
 sudo apt install net-tools curl ssh
-sudo apt-get install vnc4server
+
+#-- VNC Server
+# https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-18-04
+sudo apt-get install -y vnc4server vnc-java x11-xfs-utils tightvncserver tightvnc-java
+# vncserver
+
 
 
 #--- Optional ---
 sudo apt install linux-generic-hwe-18.04 linux-headers-generic-hwe-18.04 linux-image-generic-hwe-18.04
+
+#Password too long - only the first 8 characters will be used
+sudo vncserver
