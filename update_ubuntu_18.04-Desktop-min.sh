@@ -30,7 +30,7 @@ sudo apt-get update && apt-get upgrade
 
 #--- General ---
 sudo apt install -y net-tools curl ssh
-sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump tcl8.6
+sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump tcl8.6 ncat
 # slurm -z -c -L -i ens16
 
 
