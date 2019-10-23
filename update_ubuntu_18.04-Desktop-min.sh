@@ -19,10 +19,12 @@ echo "Running update_ubuntu_18.04-Desktop-min.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.5                             \r\n
+Version:  0.0.6                             \r\n
 Last Updated:  10/23/2019
 \r\n \r\n"
 wait
+
+sudo add-apt-repository universe
 
 # Ubuntu 18.04 setup with min install
 sudo apt-get install -y apt-transport-https
