@@ -25,32 +25,58 @@ Last Updated:  10/22/2019
 wait
 
 # Ubuntu 18.04 setup with min install
+sudo apt-get install -y apt-transport-https
+sudo apt-get update && apt-get upgrade
 
-sudo apt-get update
+#--- General ---
 sudo apt install -y net-tools curl ssh
 
 #-- VNC Server
 # https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-18-04
-sudo apt-get install -y vnc4server vnc-java x11-xfs-utils tightvncserver tightvnc-java
+#sudo apt-get install -y vnc4server vnc-java x11-xfs-utils tightvncserver tightvnc-java
 # vncserver
-mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
+#mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
 
- #!/bin/bash
- xrdb $HOME/.Xresources
- startxfce4 &
+# #!/bin/bash
+# xrdb $HOME/.Xresources
+# startxfce4 &
 
-sudo chmod +x ~/.vnc/xstartup
+#sudo chmod +x ~/.vnc/xstartup
 
-echo "to CHECK the status of VNC Server use:    netstat -tulpn   \r\n \r\n"
-echo "To KILL VNCServer use:  vncserver -kill :1  \r\n \r\n"
-echo "set VNC Password: vncpasswd  \r\n \r\n"
-
-
-
+#echo "to CHECK the status of VNC Server use:    netstat -tulpn   \r\n \r\n"
+#echo "To KILL VNCServer use:  vncserver -kill :1  \r\n \r\n"
+#echo "set VNC Password: vncpasswd  \r\n \r\n"
 
 
 #--- Optional ---
 sudo apt install linux-generic-hwe-18.04 linux-headers-generic-hwe-18.04 linux-image-generic-hwe-18.04
 
 #Password too long - only the first 8 characters will be used
-sudo vncserver
+#sudo vncserver
+
+
+#--- Chrome ---
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+
+echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+
+#--- Download VSCode ---
+wget -O "vscode.deb" "https://go.microsoft.com/fwlink/?LinkID=760868"
+chmod u+x vscode.deb 
+sudo apt install ./vscode.deb
+
+#--- Postman ---
+sudo snap install postman
+
+#--- Wireshark ---
+sudo apt-get install -y libcap2-bin wireshark mmdb-bin qt5-image-formats-plugins qtwayland5 snmp-mibs-downloader wireshark-doc
+
+#--- NMap ---
+sudo apt-get install -y nmap
+
+
+
+
+
+
