@@ -33,8 +33,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 INSTALLS  LEMP (Linux* Nginx Memcache PHP (Latest - 7.3)
 
 \r\n \r\n
-Version:  1.4.6                             \r\n
-Last Updated:  8/24/2019
+Version:  1.4.7                             \r\n
+Last Updated:  10/23/2019
 \r\n \r\n
 Updating system first..."
 
@@ -44,9 +44,8 @@ sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 
 #--- Create Filesystem  ----
 mkdir "/media/data/"
+mkdir "/var/www/html/"
 mkdir "/var/log/nginx/"
-
-sudo chmod -R 755 /media/data/ && sudo chown -R www-data:www-data /media/data/
 
 #----- Update ------
 sudo -E apt-get -y update
@@ -172,12 +171,20 @@ wget -O "nginx_global_logging.conf" "https://raw.githubusercontent.com/c2theg/sr
 wget -O "nginx_global_security.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx_global_security.conf"
 wget -O "nginx_global_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx_global_tls.conf"
 wget -O "nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx.conf"
+#-- sample page --
+wget -O "index.html" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/index.html"
+wget -O "nginx.png" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx.png"
+wget -O "f5-logo-tagline-right-solid-rgb-1.png" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/f5-logo-tagline-right-solid-rgb-1.png"
 
 sudo mv "nginx_global_filetypes.conf" "/etc/nginx/snippets/nginx_global_filetypes.conf"
 sudo mv "nginx_global_logging.conf" "/etc/nginx/snippets/nginx_global_logging.conf"
 sudo mv "nginx_global_security.conf" "/etc/nginx/snippets/nginx_global_security.conf"
 sudo mv "nginx_global_tls.conf" "/etc/nginx/snippets/nginx_global_tls.conf"
 sudo mv "nginx.conf" "/etc/nginx/nginx.conf"
+#-- sample page --
+sudo mv "index.html" "/var/www/html/index.html"
+sudo mv "nginx.png" "/var/www/html/nginx.png"
+sudo mv "f5-logo-tagline-right-solid-rgb-1.png" "/var/www/html/f5-logo-tagline-right-solid-rgb-1.png"
 
 wait
 echo "Nginx Config Download Complete"
@@ -210,7 +217,8 @@ echo "Basic HTTP/HTTPS Website Config Download Complete"
 #wait
 #echo " Download Complete"
 #---------------------------------------------------------------------------------------------------------
-sudo chmod -R 755 /media/data/  && sudo chown -R www-data:www-data /media/data/
+sudo chmod -R 755 /media/data/ && sudo chown -R www-data:www-data /media/data/
+sudo chmod -R 755 /var/www/html/ && sudo chown -R www-data:www-data /var/www/html/
 
 wait
 echo "Restarting Nginx... "
