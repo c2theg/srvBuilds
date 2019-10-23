@@ -30,6 +30,9 @@ sudo apt-get update && apt-get upgrade
 
 #--- General ---
 sudo apt install -y net-tools curl ssh
+sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump
+# slurm -z -c -L -i ens16
+
 
 #-- VNC Server
 # https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-18-04
