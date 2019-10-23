@@ -19,8 +19,8 @@ echo "Running update_ubuntu_18.04-Desktop-min.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.3                             \r\n
-Last Updated:  10/22/2019
+Version:  0.0.4                             \r\n
+Last Updated:  10/23/2019
 \r\n \r\n"
 wait
 
@@ -30,7 +30,7 @@ sudo apt-get update && apt-get upgrade
 
 #--- General ---
 sudo apt install -y net-tools curl ssh
-sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump
+sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump tcl8.6
 # slurm -z -c -L -i ens16
 
 
@@ -78,6 +78,8 @@ sudo apt-get install -y libcap2-bin wireshark mmdb-bin qt5-image-formats-plugins
 #--- NMap ---
 sudo apt-get install -y nmap
 
+#--- Filezilla ---
+sudo apt-get install -y filezilla
 
 
 
