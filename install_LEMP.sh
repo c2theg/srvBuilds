@@ -23,8 +23,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP.sh
 INSTALLS  LEMP (Linux* Nginx Memcache PHP & Postfix)
 
 \r\n \r\n
-Version:  1.4.0                             \r\n
-Last Updated:  3/12/2018
+Version:  1.4.1                             \r\n
+Last Updated:  10/23/2019
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -158,22 +158,23 @@ then
 fi
 wait
 echo "Basic HTTP/HTTPS Website Config Download Complete"
-#---------------------------------------------------------------------------------------------------------
-#echo "SSL-TLS HTTP Website Config"
-#wget -O "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1_tls.conf"
-#wait
-#sudo mv "site1_tls.conf" "/etc/nginx/sites-available/site1_tls.conf"
-#wait
-#echo "SSL-TLS HTTP Website Config Download Complete"
-#---------------------------------------------------------------------------------------------------------
-#echo "Pagespeed Config"
-#wget "pagespeed.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/configs/pagespeed.conf"
-#wait
-#sudo mv "pagespeed.conf" "/etc/nginx/conf.d/pagespeed.conf"
-#wait
-#echo " Download Complete"
-#---------------------------------------------------------------------------------------------------------
-sudo chmod -R 755 /media/data/  && sudo chown -R www-data:www-data /media/data/
+#--- Create Filesystem  ----
+mkdir "/media/data/"
+mkdir "/var/www/html/"
+mkdir "/var/log/nginx/"
+
+#-- sample page --
+wget -O "index.html" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/index.html"
+wget -O "nginx.png" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx.png"
+wget -O "f5-logo-tagline-right-solid-rgb-1.png" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/f5-logo-tagline-right-solid-rgb-1.png"
+
+#-- sample page --
+sudo mv "index.html" "/var/www/html/index.html"
+sudo mv "nginx.png" "/var/www/html/nginx.png"
+sudo mv "f5-logo-tagline-right-solid-rgb-1.png" "/var/www/html/f5-logo-tagline-right-solid-rgb-1.png"
+
+sudo chmod -R 755 /media/data/ && sudo chown -R www-data:www-data /media/data/
+sudo chmod -R 755 /var/www/html/ && sudo chown -R www-data:www-data /var/www/html/
 
 wait
 echo "Restarting Nginx... "
