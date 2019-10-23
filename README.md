@@ -9,6 +9,11 @@ Other Short URLs <br /><br />
 <b>---------- Installers ------------------</b>
 <br /><br />
 
+<h3> update_ubuntu_18.04-Desktop-min </h3>
+wget http://bit.ly/ubuntudeskmin && mv ubuntudeskmin update_ubuntu_18.04-Desktop-min.sh && chmod u+x update_ubuntu_18.04-Desktop-min.sh && ./update_ubuntu_18.04-Desktop-min.sh
+
+<br /><br />
+
 <b>Ansible Host </b><br />
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ansible-host.sh && chmod u+x install_ansible-host.sh && ./install_ansible-host.sh
 
