@@ -19,7 +19,7 @@ echo "Running update_ubuntu_18.04-Desktop-min.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.4                             \r\n
+Version:  0.0.5                             \r\n
 Last Updated:  10/23/2019
 \r\n \r\n"
 wait
@@ -81,7 +81,11 @@ sudo apt-get install -y nmap
 #--- Filezilla ---
 sudo apt-get install -y filezilla
 
-
+#--- Sublime Text ---
+wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+echo "deb https://download.sublimetext.com/apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+sudo apt-get update
+sudo apt-get install -y sublime-text
 
 
 
