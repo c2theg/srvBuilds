@@ -29,22 +29,26 @@ echo "
  
 INSTALLS  DOH (Cloudflare) on Pi Hole
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.2                             \r\n
 Last Updated:  10/31/2019
 
 https://docs.pi-hole.net/guides/dns-over-https/
 \r\n \r\n"
 
-# For Debian/Ubuntu
-wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.deb
-sudo apt-get install ./cloudflared-stable-linux-amd64.deb
-cloudflared -v
 
-# ARM architecture (Raspberry Pi)
-wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-arm.tgz
-tar -xvzf cloudflared-stable-linux-arm.tgz
-sudo cp ./cloudflared /usr/local/bin
-sudo chmod +x /usr/local/bin/cloudflared
+Platform = $( cat file /bin/bash )
+if [[ $Platform == *"ARM"* ]]; then
+    echo "Installing - ARM architecture (Raspberry Pi) version of Cloudflared... \r\n "
+    wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-arm.tgz
+    tar -xvzf cloudflared-stable-linux-arm.tgz
+    sudo cp ./cloudflared /usr/local/bin
+    sudo chmod +x /usr/local/bin/cloudflared
+else
+    echo "Installing - For Debian/Ubuntu version of Cloudflared... \r\n "
+    wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.deb
+    sudo apt-get install ./cloudflared-stable-linux-amd64.deb
+fi
+
 cloudflared -v
 
 #------------------------------------------------------------
