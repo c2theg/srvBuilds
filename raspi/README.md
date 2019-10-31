@@ -21,10 +21,9 @@ Install pi-hole as usual ( <b> curl -sSL https://install.pi-hole.net | bash </b>
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh && chmod u+x update_pihole_lists.sh && sudo ./update_pihole_lists.sh
 
 
-<h3>DOH on Pi Hole</h3>
+<h3>DoH on Pi Hole</h3>
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_doh_pihole.sh && chmod u+x install_doh_pihole.sh && sudo ./install_doh_pihole.sh
 
 
 <h3>OpenDNS account, linux updater </h3>
-
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/install_opendns.sh && chmod u+x install_opendns.sh && sudo ./install_opendns.sh
