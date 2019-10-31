@@ -135,9 +135,6 @@ wait
 sudo mv "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
-sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/custom_404.html && mv custom_404.html /usr/share/nginx/html/
-sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/custom_50x.html && mv custom_50x.html /usr/share/nginx/html/
-
 
 if [ -s "/etc/php/7.3/fpm/php.ini" ]
 then
@@ -180,7 +177,7 @@ wget -O "custom_50x.html" "https://raw.githubusercontent.com/c2theg/srvBuilds/ma
 wget -O "nginx.png" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx.png"
 wget -O "f5-logo-tagline-right-solid-rgb-1.png" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/f5-logo-tagline-right-solid-rgb-1.png"
 
-
+#-- Move Files --
 sudo mv "nginx_global_filetypes.conf" "/etc/nginx/snippets/nginx_global_filetypes.conf"
 sudo mv "nginx_global_logging.conf" "/etc/nginx/snippets/nginx_global_logging.conf"
 sudo mv "nginx_global_security.conf" "/etc/nginx/snippets/nginx_global_security.conf"
