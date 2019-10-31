@@ -1,8 +1,12 @@
 # Custom blocklist - by: Chris Gray 
 # Date:  12/27/2018
-# Updated: 10/1/19
+# Updated: 10/31/19
 # Fetch the latest version of this file: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
 # ========================================================================================
+#-- to disable DoH on pi hole, for Firefox only currently
+use-application-dns.net
+
+#-- the rest --
 ad.bidfluence.com	
 ak.ssl.imgfarm.com	
 ak.staticimgfarm.com	
