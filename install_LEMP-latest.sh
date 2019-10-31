@@ -33,8 +33,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 INSTALLS  LEMP (Linux* Nginx Memcache PHP (Latest - 7.3)
 
 \r\n \r\n
-Version:  1.4.7                             \r\n
-Last Updated:  10/23/2019
+Version:  1.4.8                             \r\n
+Last Updated:  10/30/2019
 \r\n \r\n
 Updating system first..."
 
@@ -135,7 +135,9 @@ wait
 sudo mv "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
-sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/404.html && mv 404.html /usr/share/nginx/html/
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/custom_404.html && mv custom_404.html /usr/share/nginx/html/
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/custom_50x.html && mv custom_50x.html /usr/share/nginx/html/
+
 
 if [ -s "/etc/php/7.3/fpm/php.ini" ]
 then
@@ -173,8 +175,11 @@ wget -O "nginx_global_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBui
 wget -O "nginx.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx.conf"
 #-- sample page --
 wget -O "index.html" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/index.html"
+wget -O "custom_404.html" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/custom_404.html"
+wget -O "custom_50x.html" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/custom_50x.html"
 wget -O "nginx.png" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx.png"
 wget -O "f5-logo-tagline-right-solid-rgb-1.png" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/f5-logo-tagline-right-solid-rgb-1.png"
+
 
 sudo mv "nginx_global_filetypes.conf" "/etc/nginx/snippets/nginx_global_filetypes.conf"
 sudo mv "nginx_global_logging.conf" "/etc/nginx/snippets/nginx_global_logging.conf"
@@ -182,9 +187,11 @@ sudo mv "nginx_global_security.conf" "/etc/nginx/snippets/nginx_global_security.
 sudo mv "nginx_global_tls.conf" "/etc/nginx/snippets/nginx_global_tls.conf"
 sudo mv "nginx.conf" "/etc/nginx/nginx.conf"
 #-- sample page --
-sudo mv "index.html" "/var/www/html/index.html"
-sudo mv "nginx.png" "/var/www/html/nginx.png"
-sudo mv "f5-logo-tagline-right-solid-rgb-1.png" "/var/www/html/f5-logo-tagline-right-solid-rgb-1.png"
+sudo mv "index.html" "/usr/share/nginx/html/index.html"
+sudo mv "index.html" "/usr/share/nginx/html/custom_404.html"
+sudo mv "index.html" "/usr/share/nginx/html/custom_50x.html"
+sudo mv "nginx.png" "/usr/share/nginx/html/nginx.png"
+sudo mv "f5-logo-tagline-right-solid-rgb-1.png" "/usr/share/nginx/html/f5-logo-tagline-right-solid-rgb-1.png"
 
 wait
 echo "Nginx Config Download Complete"
@@ -218,7 +225,7 @@ echo "Basic HTTP/HTTPS Website Config Download Complete"
 #echo " Download Complete"
 #---------------------------------------------------------------------------------------------------------
 sudo chmod -R 755 /media/data/ && sudo chown -R www-data:www-data /media/data/
-sudo chmod -R 755 /var/www/html/ && sudo chown -R www-data:www-data /var/www/html/
+sudo chmod -R 755 /usr/share/nginx/html/ && sudo chown -R www-data:www-data /usr/share/nginx/html/
 
 wait
 echo "Restarting Nginx... "
