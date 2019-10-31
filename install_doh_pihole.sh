@@ -24,7 +24,7 @@ echo "
 |         TREES           |
 |＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿|
           (\_❀) ||
-          (•ㅅ•) ||
+          (•ㅅ•)||
           / 　 づ
  
 INSTALLS  DOH (Cloudflare) on Pi Hole
