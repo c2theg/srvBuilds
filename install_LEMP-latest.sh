@@ -185,8 +185,8 @@ sudo mv "nginx_global_tls.conf" "/etc/nginx/snippets/nginx_global_tls.conf"
 sudo mv "nginx.conf" "/etc/nginx/nginx.conf"
 #-- sample page --
 sudo mv "index.html" "/usr/share/nginx/html/index.html"
-sudo mv "index.html" "/usr/share/nginx/html/custom_404.html"
-sudo mv "index.html" "/usr/share/nginx/html/custom_50x.html"
+sudo mv "custom_404.html" "/usr/share/nginx/html/custom_404.html"
+sudo mv "custom_50x.html" "/usr/share/nginx/html/custom_50x.html"
 sudo mv "nginx.png" "/usr/share/nginx/html/nginx.png"
 sudo mv "f5-logo-tagline-right-solid-rgb-1.png" "/usr/share/nginx/html/f5-logo-tagline-right-solid-rgb-1.png"
 
