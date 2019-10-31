@@ -29,14 +29,14 @@ echo "
  
 INSTALLS  DOH (Cloudflare) on Pi Hole
 \r\n \r\n
-Version:  0.0.2                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  10/31/2019
 
 https://docs.pi-hole.net/guides/dns-over-https/
 \r\n \r\n"
 
 
-Platform = $( cat file /bin/bash )
+Platform=`cat file /bin/bash`
 if [[ $Platform == *"ARM"* ]]; then
     echo "Installing - ARM architecture (Raspberry Pi) version of Cloudflared... \r\n "
     wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-arm.tgz
