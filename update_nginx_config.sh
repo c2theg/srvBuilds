@@ -77,7 +77,10 @@ sudo mv "custom_50x.html" "/usr/share/nginx/html/custom_50x.html"
 sudo mv "nginx.png" "/usr/share/nginx/html/nginx.png"
 sudo mv "f5-logo-tagline-right-solid-rgb-1.png" "/usr/share/nginx/html/f5-logo-tagline-right-solid-rgb-1.png"
 
-echo "All done...  configs are follows: \r\n \r\n"
+echo "Restarting Nginx \r\n \r\n"
+/etc/init.d/nginx restart
+
+echo "\r\n \r\n \r\n \r\n All done...  configs are follows: \r\n \r\n"
 echo "Nginx: /etc/nginx/snippets/    \r\n"
 echo "Errors:  /usr/share/nginx/html/   \r\n"
 echo "logs: /var/log/nginx/ \r\n "
