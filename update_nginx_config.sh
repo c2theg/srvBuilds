@@ -34,6 +34,20 @@ Version:  0.0.1                            \r\n
 Last Updated:  10/31/2019
 \r\n \r\n"
 
+echo "Deleting files... "
+rm /etc/nginx/snippets/nginx_global_filetypes.conf
+rm /etc/nginx/snippets/nginx_global_logging.conf
+rm /etc/nginx/snippets/nginx_global_security.conf
+rm /etc/nginx/snippets/nginx_global_tls.conf
+rm /etc/nginx/nginx.conf
+
+rm /usr/share/nginx/html/index.html
+rm /usr/share/nginx/html/custom_404.html
+rm /usr/share/nginx/html/custom_50x.html
+rm /usr/share/nginx/html/nginx.png
+rm /usr/share/nginx/html/f5-logo-tagline-right-solid-rgb-1.png
+
+
 echo "Downloading Nginx Config"
 wget -O "nginx_global_filetypes.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx_global_filetypes.conf"
 wget -O "nginx_global_logging.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx_global_logging.conf"
@@ -47,6 +61,9 @@ wget -O "custom_50x.html" "https://raw.githubusercontent.com/c2theg/srvBuilds/ma
 wget -O "nginx.png" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx.png"
 wget -O "f5-logo-tagline-right-solid-rgb-1.png" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/f5-logo-tagline-right-solid-rgb-1.png"
 
+echo "Nginx Config Download Complete \r\n"
+
+echo "Moving files.. \r\n "
 #-- Move Files --
 sudo mv "nginx_global_filetypes.conf" "/etc/nginx/snippets/nginx_global_filetypes.conf"
 sudo mv "nginx_global_logging.conf" "/etc/nginx/snippets/nginx_global_logging.conf"
@@ -60,5 +77,7 @@ sudo mv "custom_50x.html" "/usr/share/nginx/html/custom_50x.html"
 sudo mv "nginx.png" "/usr/share/nginx/html/nginx.png"
 sudo mv "f5-logo-tagline-right-solid-rgb-1.png" "/usr/share/nginx/html/f5-logo-tagline-right-solid-rgb-1.png"
 
-wait
-echo "Nginx Config Download Complete"
+echo "All done...  configs are follows: \r\n \r\n"
+echo "Nginx: /etc/nginx/snippets/    \r\n"
+echo "Errors:  /usr/share/nginx/html/   \r\n"
+echo "logs: /var/log/nginx/ \r\n "
