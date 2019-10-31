@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #    If you update this from Windows, using Notepad ++, do the following:
 #       sudo apt-get -y install dos2unix
 #       dos2unix <FILE>
@@ -29,15 +29,17 @@ echo "
  
 INSTALLS  DOH (Cloudflare) on Pi Hole
 \r\n \r\n
-Version:  0.0.3                             \r\n
+Version:  0.0.4                             \r\n
 Last Updated:  10/31/2019
 
 https://docs.pi-hole.net/guides/dns-over-https/
 \r\n \r\n"
 
 
-Platform=`cat file /bin/bash`
-if [[ $Platform == *"ARM"* ]]; then
+Platform=`file /bin/bash`
+echo "Platform is  $Platform \r\n "
+
+if [[ $Platform =  *ARM* ]]; then
     echo "Installing - ARM architecture (Raspberry Pi) version of Cloudflared... \r\n "
     wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-arm.tgz
     tar -xvzf cloudflared-stable-linux-arm.tgz
@@ -84,10 +86,16 @@ sudo systemctl enable cloudflared
 sudo systemctl start cloudflared
 sudo systemctl status cloudflared
 
+wait
+
 dig @127.0.0.1 -p 5053 google.com
 
-echo "DONE now you have to login to your PiHole and set the DNS server to the following: \r\n \r\n
+echo "DONE now you have to login to your PiHole and set the DNS server to the following:
+
+
 127.0.0.1#5053 
 
-\r\n \r\n \r\n "
 
+DONE! 
+
+"
