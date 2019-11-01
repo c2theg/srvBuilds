@@ -30,7 +30,7 @@ echo "
 Updating Nginx GeoIP Database (Maxmind)
 
 \r\n \r\n
-Version:  0.0.1                            \r\n
+Version:  0.0.2                            \r\n
 Last Updated:  10/31/2019
 \r\n \r\n"
 
@@ -55,6 +55,10 @@ then
 	#rm /etc/nginx/geoip/GeoIP.dat # the country IP database
 fi
 
+if [! -d "temp_geoip" ]
+then
+	mkdir temp_geoip
+fi
 
 echo "Downloading GeoIP databases... \r\n \r\n "
 wget -O "GeoLite2-City.tar.gz" "https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
