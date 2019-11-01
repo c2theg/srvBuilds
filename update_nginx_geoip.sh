@@ -30,7 +30,7 @@ echo "
 Updating Nginx GeoIP Database (Maxmind)
 
 \r\n \r\n
-Version:  0.0.4                            \r\n
+Version:  0.0.6                            \r\n
 Last Updated:  10/31/2019
 \r\n \r\n"
 
@@ -44,15 +44,17 @@ if [ -s "GeoLite2-City.tar.gz" ]
 then
 	echo "Deleting files... "
 	rm GeoLite2-City.tar.gz  # the city IP database
-	#rm GeoLite2-Country.tar.gz  # the country IP database
+	rm GeoLite2-Country.tar.gz  # the country IP database
+	rm GeoLite2-ASN.tar.gz  # the country IP database
 fi
 
 
-if [ -s "/etc/nginx/geoip/GeoLiteCity.dat" ]
+if [ -s "/etc/nginx/geoip/GeoLite2-City.mmdb" ]
 then
 	echo "Deleting files... "
-	rm /etc/nginx/geoip/GeoLiteCity.dat # the city IP database
-	#rm /etc/nginx/geoip/GeoIP.dat # the country IP database
+	rm /etc/nginx/geoip/GeoLite2-City.mmdb # the city IP database
+	rm /etc/nginx/geoip/GeoLite2-Country.mmdb # the country IP database
+	rm /etc/nginx/geoip/GeoLite2-ASN.mmdb # the country IP database
 fi
 
 if [! -d "temp_geoip" ]
@@ -62,16 +64,16 @@ fi
 
 echo "Downloading GeoIP databases... \r\n \r\n "
 wget -O "GeoLite2-City.tar.gz" "https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
-#wget -O "GeoLite2-Country.tar.gz" "https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz"
-#wget -O "GeoLite2-ASN.tar.gz" "https://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz"
+wget -O "GeoLite2-Country.tar.gz" "https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz"
+wget -O "GeoLite2-ASN.tar.gz" "https://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz"
 echo "\r\n \r\n Nginx Config Download Complete \r\n \r\n"
 
+#---------------------------------------------
 echo "Uncompressing files (City)... \r\n "
 tar -C temp_geoip -xvf GeoLite2-City.tar.gz
 echo "\r\n moving to temp_geoip/  \r\n"
 cd temp_geoip/
 wait
-
 DirName=`ls`
 echo "Compiled Date: $DirName \r\n"
 cd $DirName/
@@ -80,14 +82,35 @@ ls
 echo "Moving files.. \r\n "
 mv GeoLite2-City.mmdb /etc/nginx/geoip/
 echo "Done. moving on.. \r\n"
-#-------------------------------------------
-#echo "Uncompressing files... \r\n "
-#tar -zxvf GeoLite2-Country.tar.gz
-#tar -zxvf GeoLite2-ASN.tar.gz
-
-#mv GeoLite2-Country.tar.gz /etc/nginx/geoip/
-#mv GeoLite2-ASN.tar.gz /etc/nginx/geoip/
-
+#---------------------------------------------
+echo "Uncompressing files (Country)... \r\n "
+tar -C temp_geoip -xvf GeoLite2-Country.tar.gz
+echo "\r\n moving to temp_geoip/  \r\n"
+cd temp_geoip/
+wait
+DirName=`ls`
+echo "Compiled Date: $DirName \r\n"
+cd $DirName/
+echo "List Files.. \r\n \r\n "
+ls
+echo "Moving files.. \r\n "
+mv GeoLite2-Country.mmdb /etc/nginx/geoip/
+echo "Done. moving on.. \r\n"
+#---------------------------------------------
+echo "Uncompressing files (ASN)... \r\n "
+tar -C temp_geoip -xvf GeoLite2-ASN.tar.gz
+echo "\r\n moving to temp_geoip/  \r\n"
+cd temp_geoip/
+wait
+DirName=`ls`
+echo "Compiled Date: $DirName \r\n"
+cd $DirName/
+echo "List Files.. \r\n \r\n "
+ls
+echo "Moving files.. \r\n "
+mv GeoLite2-ASN.mmdb /etc/nginx/geoip/
+echo "Done. moving on.. \r\n"
+#---------------------------------------------
 
 echo "Restarting Nginx \r\n \r\n"
 /etc/init.d/nginx restart
@@ -95,5 +118,5 @@ echo "Restarting Nginx \r\n \r\n"
 echo "\r\n \r\n \r\n \r\n All done...  configs are follows: \r\n \r\n"
 echo "Nginx: /etc/nginx/snippets/    \r\n"
 echo "Errors:  /usr/share/nginx/html/   \r\n"
-echo "logs: /var/log/nginx/ \r\n "
+echo "Logs: /var/log/nginx/ \r\n "
 echo "GeoLocation DB: /etc/nginx/geoip/"
