@@ -30,7 +30,7 @@ echo "
 Updating Nginx GeoIP Database (Maxmind)
 
 \r\n \r\n
-Version:  0.0.10                            \r\n
+Version:  0.0.12                            \r\n
 Last Updated:  10/31/2019
 \r\n \r\n"
 
@@ -126,7 +126,9 @@ mv COPYRIGHT.txt /etc/nginx/geoip/
 mv LICENSE.txt /etc/nginx/geoip/
 mv README.txt /etc/nginx/geoip/
 
-echo "cleaning up dir.. \r\n \r\n "
+echo "cleaning up dir.. 
+
+"
 cd ..
 #rm -r $DirName/*
 cd ..
@@ -140,3 +142,9 @@ echo "Nginx: /etc/nginx/snippets/    \r\n"
 echo "Errors:  /usr/share/nginx/html/   \r\n"
 echo "Logs: /var/log/nginx/ \r\n "
 echo "GeoLocation DB: /etc/nginx/geoip/"
+
+echo "Maxmind updates this database once a month.. So you should set this to update via cron 
+
+5 4 */2 * * update_nginx_geoip.sh >> /var/log/update_nginx_geoip.log 2>&1
+
+"
