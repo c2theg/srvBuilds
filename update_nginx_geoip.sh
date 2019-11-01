@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #    If you update this from Windows, using Notepad ++, do the following:
 #       sudo apt-get -y install dos2unix
 #       dos2unix <FILE>
@@ -30,7 +30,7 @@ echo "
 Updating Nginx GeoIP Database (Maxmind)
 
 \r\n \r\n
-Version:  0.0.2                            \r\n
+Version:  0.0.3                            \r\n
 Last Updated:  10/31/2019
 \r\n \r\n"
 
@@ -68,10 +68,18 @@ echo "\r\n \r\n Nginx Config Download Complete \r\n \r\n"
 
 echo "Uncompressing files (City)... \r\n "
 tar -C temp_geoip -xvf GeoLite2-City.tar.gz
+echo "\r\n moving to temp_geoip/  \r\n"
 cd temp_geoip/
+wait
+
 DirName = `ls`
 echo "Compiled Date: $DirName \r\n"
 cd $DirName/
+
+echo "List Files.. \r\n \r\n "
+ls
+
+
 echo "Moving files.. \r\n "
 mv GeoLite2-City.mmdb /etc/nginx/geoip/
 echo "Done. moving on.. \r\n"
