@@ -30,7 +30,7 @@ echo "
 Updating Nginx GeoIP Database (Maxmind)
 
 \r\n \r\n
-Version:  0.0.12                            \r\n
+Version:  0.0.13                            \r\n
 Last Updated:  10/31/2019
 \r\n \r\n"
 
@@ -73,51 +73,49 @@ echo "\r\n \r\n Nginx Config Download Complete \r\n \r\n"
 #---------------------------------------------
 echo "Uncompressing files (City)... \r\n "
 tar -C temp_geoip -xvf GeoLite2-City.tar.gz
-echo "\r\n moving to temp_geoip/  \r\n"
+#echo "\r\n moving to temp_geoip/  \r\n"
 cd temp_geoip/
 wait
 DirName=`ls`
-echo "Compiled Date: $DirName \r\n"
+#echo "Compiled Date: $DirName \r\n"
 cd $DirName/
-echo "List Files.. \r\n \r\n "
-ls
-echo "Moving files.. \r\n "
+#echo "List Files.. \r\n \r\n "
+#ls
+#echo "Moving files.. \r\n "
 mv GeoLite2-City.mmdb /etc/nginx/geoip/
 echo "Done. moving on.. \r\n"
 cd ..
-#rm -r $DirName/*
 cd ..
 rm -r temp_geoip/*
 #---------------------------------------------
 echo "Uncompressing files (Country)... \r\n "
 tar -C temp_geoip -xvf GeoLite2-Country.tar.gz
-echo "\r\n moving to temp_geoip/  \r\n"
+#echo "\r\n moving to temp_geoip/  \r\n"
 cd temp_geoip/
 wait
 DirName=`ls`
-echo "Compiled Date: $DirName \r\n"
+#echo "Compiled Date: $DirName \r\n"
 cd $DirName/
-echo "List Files.. \r\n \r\n "
-ls
-echo "Moving files.. \r\n "
+#echo "List Files.. \r\n \r\n "
+#ls
+#echo "Moving files.. \r\n "
 mv GeoLite2-Country.mmdb /etc/nginx/geoip/
 echo "Done. moving on.. \r\n"
 cd ..
-#rm -r $DirName/*
 cd ..
 rm -r temp_geoip/*
 #---------------------------------------------
 echo "Uncompressing files (ASN)... \r\n "
 tar -C temp_geoip -xvf GeoLite2-ASN.tar.gz
-echo "\r\n moving to temp_geoip/  \r\n"
+#echo "\r\n moving to temp_geoip/  \r\n"
 cd temp_geoip/
 wait
 DirName=`ls`
-echo "Compiled Date: $DirName \r\n"
+#echo "Compiled Date: $DirName \r\n"
 cd $DirName/
-echo "List Files.. \r\n \r\n "
-ls
-echo "Moving files.. \r\n "
+#echo "List Files.. \r\n \r\n "
+#ls
+#echo "Moving files.. \r\n "
 mv GeoLite2-ASN.mmdb /etc/nginx/geoip/
 echo "Done. moving on.. \r\n"
 #---------------------------------------------
@@ -125,17 +123,14 @@ echo "Moving the rest... \r\n "
 mv COPYRIGHT.txt /etc/nginx/geoip/
 mv LICENSE.txt /etc/nginx/geoip/
 mv README.txt /etc/nginx/geoip/
-
 echo "cleaning up dir.. 
-
 "
 cd ..
-#rm -r $DirName/*
 cd ..
 rm -r temp_geoip/*
 
-echo "Restarting Nginx \r\n \r\n"
-/etc/init.d/nginx restart
+#echo "Restarting Nginx \r\n \r\n"
+#/etc/init.d/nginx restart
 
 echo "\r\n \r\n \r\n \r\n All done...  configs are follows: \r\n \r\n"
 echo "Nginx: /etc/nginx/snippets/    \r\n"
@@ -145,6 +140,6 @@ echo "GeoLocation DB: /etc/nginx/geoip/"
 
 echo "Maxmind updates this database once a month.. So you should set this to update via cron 
 
-5 4 */2 * * update_nginx_geoip.sh >> /var/log/update_nginx_geoip.log 2>&1
+5 4 */2 * * /home/ubuntu/update_nginx_geoip.sh >> /var/log/update_nginx_geoip.log 2>&1
 
 "
