@@ -30,7 +30,7 @@ echo "
 Updating Nginx GeoIP Database (Maxmind)
 
 \r\n \r\n
-Version:  0.0.9                            \r\n
+Version:  0.0.10                            \r\n
 Last Updated:  10/31/2019
 \r\n \r\n"
 
@@ -62,6 +62,8 @@ then
 	mkdir temp_geoip
 fi
 
+rm -r temp_geoip/*
+
 echo "Downloading GeoIP databases... \r\n \r\n "
 wget -O "GeoLite2-City.tar.gz" "https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
 wget -O "GeoLite2-Country.tar.gz" "https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz"
@@ -83,8 +85,9 @@ echo "Moving files.. \r\n "
 mv GeoLite2-City.mmdb /etc/nginx/geoip/
 echo "Done. moving on.. \r\n"
 cd ..
-rm -r $DirName/*
+#rm -r $DirName/*
 cd ..
+rm -r temp_geoip/*
 #---------------------------------------------
 echo "Uncompressing files (Country)... \r\n "
 tar -C temp_geoip -xvf GeoLite2-Country.tar.gz
@@ -100,8 +103,9 @@ echo "Moving files.. \r\n "
 mv GeoLite2-Country.mmdb /etc/nginx/geoip/
 echo "Done. moving on.. \r\n"
 cd ..
-rm -r $DirName/*
+#rm -r $DirName/*
 cd ..
+rm -r temp_geoip/*
 #---------------------------------------------
 echo "Uncompressing files (ASN)... \r\n "
 tar -C temp_geoip -xvf GeoLite2-ASN.tar.gz
@@ -124,9 +128,9 @@ mv README.txt /etc/nginx/geoip/
 
 echo "cleaning up dir.. \r\n \r\n "
 cd ..
-rm -r $DirName/*
+#rm -r $DirName/*
 cd ..
-
+rm -r temp_geoip/*
 
 echo "Restarting Nginx \r\n \r\n"
 /etc/init.d/nginx restart
