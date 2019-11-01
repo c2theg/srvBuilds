@@ -30,7 +30,7 @@ echo "
 Updating Nginx GeoIP Database (Maxmind)
 
 \r\n \r\n
-Version:  0.0.8                            \r\n
+Version:  0.0.9                            \r\n
 Last Updated:  10/31/2019
 \r\n \r\n"
 
@@ -83,6 +83,7 @@ echo "Moving files.. \r\n "
 mv GeoLite2-City.mmdb /etc/nginx/geoip/
 echo "Done. moving on.. \r\n"
 cd ..
+rm -r $DirName/*
 cd ..
 #---------------------------------------------
 echo "Uncompressing files (Country)... \r\n "
@@ -99,6 +100,7 @@ echo "Moving files.. \r\n "
 mv GeoLite2-Country.mmdb /etc/nginx/geoip/
 echo "Done. moving on.. \r\n"
 cd ..
+rm -r $DirName/*
 cd ..
 #---------------------------------------------
 echo "Uncompressing files (ASN)... \r\n "
@@ -123,6 +125,7 @@ mv README.txt /etc/nginx/geoip/
 echo "cleaning up dir.. \r\n \r\n "
 cd ..
 rm -r $DirName/*
+cd ..
 
 
 echo "Restarting Nginx \r\n \r\n"
