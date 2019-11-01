@@ -30,7 +30,7 @@ echo "
 Updating Nginx GeoIP Database (Maxmind)
 
 \r\n \r\n
-Version:  0.0.6                            \r\n
+Version:  0.0.7                            \r\n
 Last Updated:  10/31/2019
 \r\n \r\n"
 
@@ -111,6 +111,11 @@ echo "Moving files.. \r\n "
 mv GeoLite2-ASN.mmdb /etc/nginx/geoip/
 echo "Done. moving on.. \r\n"
 #---------------------------------------------
+echo "Moving the rest... \r\n "
+mv COPYRIGHT.txt /etc/nginx/geoip/
+mv LICENSE.txt /etc/nginx/geoip/
+mv README.txt /etc/nginx/geoip/
+
 
 echo "Restarting Nginx \r\n \r\n"
 /etc/init.d/nginx restart
