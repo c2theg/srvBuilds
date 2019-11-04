@@ -30,8 +30,8 @@ echo "
 Updating Nginx GeoIP Database (Maxmind)
 
 \r\n \r\n
-Version:  0.0.13                            \r\n
-Last Updated:  10/31/2019
+Version:  0.0.14                            \r\n
+Last Updated:  11/4/2019
 \r\n \r\n"
 
 
@@ -45,16 +45,13 @@ then
 	echo "Deleting files... "
 	rm GeoLite2-City.tar.gz  # the city IP database
 	rm GeoLite2-Country.tar.gz  # the country IP database
-	rm GeoLite2-ASN.tar.gz  # the country IP database
 fi
-
 
 if [ -s "/etc/nginx/geoip/GeoLite2-City.mmdb" ]
 then
 	echo "Deleting files... "
 	rm /etc/nginx/geoip/GeoLite2-City.mmdb # the city IP database
 	rm /etc/nginx/geoip/GeoLite2-Country.mmdb # the country IP database
-	rm /etc/nginx/geoip/GeoLite2-ASN.mmdb # the country IP database
 fi
 
 if [! -d "temp_geoip" ]
@@ -67,9 +64,7 @@ rm -r temp_geoip/*
 echo "Downloading GeoIP databases... \r\n \r\n "
 wget -O "GeoLite2-City.tar.gz" "https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
 wget -O "GeoLite2-Country.tar.gz" "https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz"
-wget -O "GeoLite2-ASN.tar.gz" "https://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz"
 echo "\r\n \r\n Nginx Config Download Complete \r\n \r\n"
-
 #---------------------------------------------
 echo "Uncompressing files (City)... \r\n "
 tar -C temp_geoip -xvf GeoLite2-City.tar.gz
@@ -100,24 +95,6 @@ cd $DirName/
 #ls
 #echo "Moving files.. \r\n "
 mv GeoLite2-Country.mmdb /etc/nginx/geoip/
-echo "Done. moving on.. \r\n"
-cd ..
-cd ..
-rm -r temp_geoip/*
-#---------------------------------------------
-echo "Uncompressing files (ASN)... \r\n "
-tar -C temp_geoip -xvf GeoLite2-ASN.tar.gz
-#echo "\r\n moving to temp_geoip/  \r\n"
-cd temp_geoip/
-wait
-DirName=`ls`
-#echo "Compiled Date: $DirName \r\n"
-cd $DirName/
-#echo "List Files.. \r\n \r\n "
-#ls
-#echo "Moving files.. \r\n "
-mv GeoLite2-ASN.mmdb /etc/nginx/geoip/
-echo "Done. moving on.. \r\n"
 #---------------------------------------------
 echo "Moving the rest... \r\n "
 mv COPYRIGHT.txt /etc/nginx/geoip/
