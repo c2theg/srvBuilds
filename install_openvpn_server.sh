@@ -25,8 +25,8 @@ https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.8                             \r\n
-Last Updated:  7/28/2019
+Version:  0.0.9                             \r\n
+Last Updated:  11/4/2019
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
@@ -91,7 +91,6 @@ then
     
     # wget configs server from github
     wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/openvpn-server.conf
-
     #-----------------------
     #  Easy Script 
     #-----------------------
@@ -121,6 +120,8 @@ then
     ufw reload
     iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
     sysctl -w net.ipv4.ip_forward=1
+    
+    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/fix_openvpn.sh && chmod u+x fix_openvpn.sh && ./fix_openvpn.sh
 else
     echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
