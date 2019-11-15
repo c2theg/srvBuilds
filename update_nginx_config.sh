@@ -30,8 +30,8 @@ echo "
 Update nginx config..
 
 \r\n \r\n
-Version:  0.0.1                            \r\n
-Last Updated:  10/31/2019
+Version:  0.0.2                            \r\n
+Last Updated:  11/14/2019
 \r\n \r\n"
 
 echo "Deleting files... "
@@ -47,6 +47,7 @@ rm /usr/share/nginx/html/custom_50x.html
 rm /usr/share/nginx/html/nginx.png
 rm /usr/share/nginx/html/f5-logo-tagline-right-solid-rgb-1.png
 
+mkdir /etc/nginx/certs/
 
 echo "Downloading Nginx Config"
 wget -O "nginx_global_filetypes.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/nginx_global_filetypes.conf"
@@ -76,6 +77,9 @@ sudo mv "custom_404.html" "/usr/share/nginx/html/custom_404.html"
 sudo mv "custom_50x.html" "/usr/share/nginx/html/custom_50x.html"
 sudo mv "nginx.png" "/usr/share/nginx/html/nginx.png"
 sudo mv "f5-logo-tagline-right-solid-rgb-1.png" "/usr/share/nginx/html/f5-logo-tagline-right-solid-rgb-1.png"
+
+# RFC-7919 recommended: https://wiki.mozilla.org/Security/Server_Side_TLS#ffdhe4096
+curl https://ssl-config.mozilla.org/ffdhe2048.txt > /etc/nginx/certs/dhparam.pem
 
 echo "Restarting Nginx \r\n \r\n"
 /etc/init.d/nginx restart
