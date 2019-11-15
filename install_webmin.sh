@@ -6,7 +6,7 @@
 #
 clear
 
-Version='1.860'
+Version='1.930'
 
 
 echo "
@@ -23,8 +23,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2.6                             \r\n
-Last Updated:  10/19/2017
+Version:  1.2.7                             \r\n
+Last Updated:  11/15/2019
 \r\n \r\n
 
 This will install version  $Version of Webmin \r\n \r\n
@@ -52,7 +52,7 @@ wait
 
 #sudo wget -O "$FileName" "$URL"
 
-sudo wget -O "webmin.deb" "https://downloads.sourceforge.net/project/webadmin/webmin/1.860/webmin_1.860_all.deb?r=&ts=1508441364&use_mirror=phoenixnap"
+sudo wget -O "webmin.deb" "https://downloads.sourceforge.net/project/webadmin/webmin/$Version/webmin_$Version_all.deb?r=&ts=1508441364&use_mirror=phoenixnap"
 wait
 #sudo dpkg --install "webmin_$Version_all.deb"
 
