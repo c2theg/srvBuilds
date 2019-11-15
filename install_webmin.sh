@@ -23,7 +23,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2.7                             \r\n
+Version:  1.2.8                            \r\n
 Last Updated:  11/15/2019
 \r\n \r\n
 
@@ -38,23 +38,7 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo apt-get -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 wait
-#sudo wget http://prdownloads.sourceforge.net/webadmin/webmin_1.860_all.deb 
-
-#URL="https://downloads.sourceforge.net/project/webadmin/webmin/"
-#URL+="$Version"
-#URL+="/webmin_"
-#URL+="$Version"
-#URL+="_all.deb?r=http%3A%2F%2Fwww.webmin.com%2Fdownload.html&ts=1508439010&use_mirror=ayera"
-
-#FileName="webmin_"
-#FileName+="$Version"
-#FileName+="_all.deb"
-
-#sudo wget -O "$FileName" "$URL"
-
-sudo wget -O "webmin.deb" "https://downloads.sourceforge.net/project/webadmin/webmin/$Version/webmin_$Version_all.deb?r=&ts=1508441364&use_mirror=phoenixnap"
+sudo wget http://prdownloads.sourceforge.net/webadmin/webmin_$Version_all.deb
 wait
-#sudo dpkg --install "webmin_$Version_all.deb"
-
-sudo dpkg --install "webmin.deb"
+sudo dpkg --install webmin_$Version_all.deb
 echo "Done! \r\n \r\n"
