@@ -33,8 +33,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 INSTALLS  LEMP (Linux* Nginx Memcache PHP (Latest - 7.3)
 
 \r\n \r\n
-Version:  1.4.8                             \r\n
-Last Updated:  10/30/2019
+Version:  1.4.9                             \r\n
+Last Updated:  11/17/2019
 \r\n \r\n
 Updating system first..."
 
@@ -125,6 +125,7 @@ sudo /etc/init.d/memcached restart
 wait
 #------- NGINX --------
 sudo apt-get install -y nginx nginx-common nginx-full fcgiwrap gcc make libpcre3-dev zlib1g-dev
+#sudo apt-get install -y nginx-plus-module-geoip2
 #sudo apt-get -y install nginx-pagespeed 
 #-- Download PHP Configs ---
 #sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start  && update-rc.d php-fastcgi defaults
