@@ -9,4 +9,8 @@ echo "\r\n \r\n
 Make sure to add this to crontab: \r\n \r\n
 @reboot /home/ubuntu/fix_openvpn.sh >> /var/log/fix_openvpn.sh
 
+
 "
+
+
+netstat -pnltu
