@@ -1,2 +1,1 @@
 *.tp-link.com
-*.samsungnyc.com
