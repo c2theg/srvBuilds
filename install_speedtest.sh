@@ -1,6 +1,7 @@
 #!/bin/sh
 clear
-echo "This install's speedtest to your"
+
+# https://www.speedtest.net/apps/cli
 
 sudo apt-get install -y gnupg1 apt-transport-https dirmngr
 export INSTALL_KEY=379CE192D401AB61
@@ -16,10 +17,5 @@ sudo apt-get update
 sudo apt-get install -y speedtest
 wait
 #echo " "
-#echo " Running test... "
-#echo " "
-
-#speedtest-cli --bytes
-#speedtest-cli --share
-#speedtest-cli --simple
-#speedtest-cli --list | grep –i Australia
+speedtest
+speedtest --format=json
