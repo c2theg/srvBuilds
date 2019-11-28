@@ -1,48 +1,25 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       apt-get install dos2unix
-#       dos2unix install_docker.sh
-#       chmod u+x install_docker.sh
-#
 clear
 echo "This install's speedtest to your"
 
-
-# https://www.howtoforge.com/tutorial/check-internet-speed-with-speedtest-cli-on-ubuntu/
-# https://github.com/sivel/speedtest-cli
-
-
-sudo apt-get -y update && apt-get -y upgrade
+sudo apt-get install -y gnupg1 apt-transport-https dirmngr
+export INSTALL_KEY=379CE192D401AB61
+# Ubuntu versions supported: xenial, bionic
+# Debian versions supported: jessie, stretch, buster
+export DEB_DISTRO=$(lsb_release -sc)
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys $INSTALL_KEY
+echo "deb https://ookla.bintray.com/debian ${DEB_DISTRO} main" | sudo tee  /etc/apt/sources.list.d/speedtest.list
+sudo apt-get update
+# Other non-official binaries will conflict with Speedtest CLI
+# Example how to remove using apt-get
+# sudo apt-get remove speedtest-cli
+sudo apt-get install -y speedtest
 wait
+#echo " "
+#echo " Running test... "
+#echo " "
 
-echo "Install speedtest   \r\n"
-
-easy_install speedtest-cli
-wait
-
-#sudo apt-get -y install python-pip
-#pip install speedtest-cli
-
-#cd /tmp
-#wget https://github.com/sivel/speedtest-cli/archive/master.zip
-#wait
-#unzip master.zip
-#cd speedtest-cli-master/
-#chmod 755 speedtest_cli.py
-#sudo mv speedtest_cli.py /usr/local/bin/speedtest-cli
-
-wait
-echo " "
-echo " "
-echo " "
-echo " Running test... "
-echo " "
-
-speedtest-cli --bytes
-
-speedtest-cli --share
-
-speedtest-cli --simple
-
+#speedtest-cli --bytes
+#speedtest-cli --share
+#speedtest-cli --simple
 #speedtest-cli --list | grep –i Australia
-
