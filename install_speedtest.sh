@@ -18,4 +18,4 @@ sudo apt-get install -y speedtest
 wait
 #echo " "
 speedtest
-speedtest --format=json
+speedtest --format=json > speedtest_results.json &
