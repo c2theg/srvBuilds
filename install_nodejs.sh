@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.3                            \r\n
-Last Updated:  1/8/2019
+Version:  1.5.4                            \r\n
+Last Updated:  12/15/2019
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -34,11 +34,13 @@ sudo -E apt-get install -y build-essential libssl-dev
 cd ~
 
 # https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
+# https://github.com/nodesource/distributions
+
 
 # LTS
-curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 # Latest
-#curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
+#curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 #--------------------------------------------------------------------------------------------
 wait
 sudo apt-get install -y nodejs
@@ -56,7 +58,7 @@ echo "Install popular NPM modules... \r\n "
 sudo npm install ws --ws:native
 sudo npm install bleach
 sudo npm install supervisor -g
-sudo npm install express connect request emailjs colors forever redis cluster
+sudo npm install connect request emailjs colors forever cluster
 sudo npm install socket.io socket.io-redis socket.io-adapter socket.io-emitter socket.io-parser
 sudo npm install socket.io --save
 
@@ -65,13 +67,19 @@ sudo npm install pem bcrypt aes-js md5 hash.js
 
 #--- Comms ---
 sudo npm install protobufjs grpc
+sudo npm install ping traceroute 
+sudo npm install react express debug async xml2js 
 
 #--- Optional Packages ---
+sudo npm install validator jsonfile
+
+#---- Databases -----
 sudo npm install mysql
-sudo npm install mongodb
-sudo npm install memcache
+sudo npm install bson kerberos node-gyp mongodb-core mongodb  
+sudo npm install memcache 
+sudo npm install redis
+sudo npm install elasticsearch
 #sudo npm install influxdb-nodejs
-sudo npm install ping traceroute
 
 #--- Sources ---
 # https://www.npmjs.com/package/protobufjs
