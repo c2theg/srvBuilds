@@ -21,7 +21,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.3                             \r\n
+Version:  1.7.4                             \r\n
 Last Updated:  12/15/2019
 \r\n \r\n"
 wait
@@ -54,7 +54,7 @@ sudo apt-get autoremove -y
 wait
 
 #------------------------ Python PIP ---------------------------------
-if pip -V | grep -q ' not installed'; then
+if pip -V | grep -q ' not '; then
     # True
     echo "Skipping pip update.. "
 else
@@ -64,7 +64,7 @@ else
 fi
 
 #------------------------ Python PIP3 ---------------------------------
-if pip3 -V | grep -q ' not installed'; then
+if pip3 -V | grep -q ' not '; then
     # True
     echo "Skipping pip3 update.. "
 else
@@ -74,7 +74,7 @@ else
 fi
 
 #------------------------ Node JS ---------------------------------
-if nodejs --version | grep -q ' not installed'; then
+if nodejs --version | grep -q ' not '; then
     # True
     echo "skipping NodeJS Update.. "
 else
