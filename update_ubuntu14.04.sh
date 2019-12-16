@@ -21,7 +21,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.1                             \r\n
+Version:  1.7.2                             \r\n
 Last Updated:  12/15/2019
 \r\n \r\n"
 wait
@@ -53,35 +53,39 @@ wait
 sudo apt-get autoremove -y
 wait
 
-
 #------------------------ Python PIP ---------------------------------
-VersionOutput=$(pip -V)
-if grep -q "currently not installed" <<< "$VersionOutput"; then
- # True
- print ("Skipping pip update.. \r\n")
+STR='pip -V'
+SUB='currently not installed'
+if [[ "$STR" =~ .*"$SUB".* ]]; then
+    # True
+    echo "Skipping pip update.. "
 else
- # False 
-  sudo pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+    # False 
+    echo "Updating PIP... "
+    sudo pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
 
 #------------------------ Python PIP3 ---------------------------------
-VersionOutput=$(pip3 -V)
-if grep -q "currently not installed" <<< "$VersionOutput"; then
- # True
- print ("Skipping pip update.. \r\n")
+STR='pip3 -V'
+SUB='currently not installed'
+if [[ "$STR" =~ .*"$SUB".* ]]; then
+    # True
+    echo "Skipping pip update.. "
 else
- # False 
-  sudo pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+    # False 
+    echo "Updating PIP3... "
+    sudo pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
 
 #------------------------ Node JS ---------------------------------
-VersionOutput=$(nodejs --version)
-if grep -q "currently not installed" <<< "$VersionOutput"; then
- # True
- print ("skipping NodeJS Update.. \r\n")
+STR='nodejs --version'
+SUB='currently not installed'
+if [[ "$STR" =~ .*"$SUB".* ]]; then
+    # True
+    echo "skipping NodeJS Update.. "
 else
- # False 
-  sudo npm update npm -g
+    echo "Updating NPM.. "
+    sudo npm update npm -g
 fi
 
 #------------------------ Crontab ---------------------------------
