@@ -21,8 +21,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.4                             \r\n
-Last Updated:  12/15/2019
+Version:  1.7.5                             \r\n
+Last Updated:  12/16/2019
 \r\n \r\n"
 wait
 # https://askubuntu.com/questions/759524/problem-with-ipv6-sudo-apt-get-update-upgrade
@@ -60,6 +60,7 @@ if pip -V | grep -q ' not '; then
 else
     # False 
     echo "Updating PIP... "
+    sudo pip install -U pip
     sudo pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
 
@@ -70,6 +71,7 @@ if pip3 -V | grep -q ' not '; then
 else
     # False 
     echo "Updating PIP3... "
+    sudo pip3 install -U pip
     sudo pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
 
