@@ -21,8 +21,8 @@ echo "Running update_ubuntu.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.0                             \r\n
-Last Updated:  8/22/2019
+Version:  1.7.1                             \r\n
+Last Updated:  12/15/2019
 \r\n \r\n"
 wait
 # https://askubuntu.com/questions/759524/problem-with-ipv6-sudo-apt-get-update-upgrade
@@ -53,6 +53,38 @@ wait
 sudo apt-get autoremove -y
 wait
 
+
+#------------------------ Python PIP ---------------------------------
+VersionOutput=$(pip -V)
+if grep -q "currently not installed" <<< "$VersionOutput"; then
+ # True
+ print ("Skipping pip update.. \r\n")
+else
+ # False 
+  sudo pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+fi
+
+#------------------------ Python PIP3 ---------------------------------
+VersionOutput=$(pip3 -V)
+if grep -q "currently not installed" <<< "$VersionOutput"; then
+ # True
+ print ("Skipping pip update.. \r\n")
+else
+ # False 
+  sudo pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+fi
+
+#------------------------ Node JS ---------------------------------
+VersionOutput=$(nodejs --version)
+if grep -q "currently not installed" <<< "$VersionOutput"; then
+ # True
+ print ("skipping NodeJS Update.. \r\n")
+else
+ # False 
+  sudo npm update npm -g
+fi
+
+#------------------------ Crontab ---------------------------------
 Cron_output=$(crontab -l | grep "update_core.sh")
 #echo "The output is: [ $Cron_output ]"
 if [ -z "$Cron_output" ]
