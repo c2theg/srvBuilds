@@ -100,3 +100,4 @@ hosts-file.net
 *.hbo.com
 speedtest.net
 *.speedtest.net
+*.synology.com
