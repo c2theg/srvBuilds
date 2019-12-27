@@ -101,3 +101,8 @@ hosts-file.net
 speedtest.net
 *.speedtest.net
 *.synology.com
+cloudsync-tw.synology.com
+sns.synology.com
+checkip.synology.com
+checkipv6.synology.com
+pgorelease.nianticlabs.com
