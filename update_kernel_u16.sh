@@ -20,7 +20,7 @@ echo "Running update_kernel.sh
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.2                             \r\n
 Last Updated:  12/29/2019
 \r\n \r\n"
 wait
@@ -30,7 +30,7 @@ wait
 sudo apt update
 sudo apt upgrade -y
 #sudo reboot
-
+sudo apt install byobu
 sudo apt list --upgradeable
 
 uname -msr
@@ -39,6 +39,7 @@ sudo mkdir -p ~/latest_kernel
 cd ~/latest_kernel
 
 #----- download kernel's here -----
+
 wget -c http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.16/linux-headers-4.16.0-041600_4.16.0-041600.201804012230_all.deb
 wget -c http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.16/linux-headers-4.16.0-041600-generic_4.16.0-041600.201804012230_amd64.deb
 wget -c http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.16/linux-image-4.16.0-041600-generic_4.16.0-041600.201804012230_amd64.deb
@@ -47,13 +48,12 @@ wget -c http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.16/linux-image-4.16.0-0
 dpkg -i *.deb
 
 sudo update-grub
-sudo reboot
+#sudo reboot
 
 #--- Remove Old Kernel ----
-sudo apt install byobu
+
+echo "Update Grub"
 dpkg -l | grep linux-image
 #sudo purge-old-kernels
-sudo purge-old-kernels --keep 1 -q
-
-
-sudo update-grub
+#sudo purge-old-kernels --keep 1 -q
+#sudo update-grub
