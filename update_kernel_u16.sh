@@ -20,7 +20,7 @@ echo "Running update_kernel.sh
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.2                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  12/29/2019
 \r\n \r\n"
 wait
@@ -45,15 +45,29 @@ wget -c http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.16/linux-headers-4.16.0
 wget -c http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.16/linux-image-4.16.0-041600-generic_4.16.0-041600.201804012230_amd64.deb
 
 #----------------------------------
+echo "Installing New Kernel... \r\n "
 dpkg -i *.deb
 
+#----------------------------------
+dpkg -l | grep linux-image
+
+echo "Updating Grub... \r\n"
 sudo update-grub
-#sudo reboot
 
 #--- Remove Old Kernel ----
-
-echo "Update Grub"
-dpkg -l | grep linux-image
 #sudo purge-old-kernels
 #sudo purge-old-kernels --keep 1 -q
 #sudo update-grub
+#----------------------------------
+echo "Clean up downloaded kernels... \r\n "
+rm ~/latest_kernel/*
+
+sudo apt --purge autoremove
+sudo dpkg --list | egrep -i --color 'linux-image|linux-headers'
+sudo apt-get autoremove
+dpkg --list | grep linux-image
+
+#apt-get --purge remove linux-image-XXX
+
+sudo update-grub2
+sudo reboot
