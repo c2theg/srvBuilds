@@ -12,6 +12,8 @@ Everything 30 Minutes: <br /><br />
 <hr>
 <h2>Pi-Hole</h2>
 
+Configure Raspberry PI using: <b>sudo raspi-config</b>
+
 Install pi-hole as usual ( <b> curl -sSL https://install.pi-hole.net | bash </b> ) 
 <br /><br />
 
