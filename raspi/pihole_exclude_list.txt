@@ -90,6 +90,7 @@ reddit.com
 *.dropbox.com
 *.twimg.com
 *.mozilla.com
+mozilla.com
 myip.dnsomatic.com
 *.root-servers.net
 *.rbxcdn.com
