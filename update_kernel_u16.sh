@@ -5,7 +5,7 @@
 #       chmod u+x <FILE>
 #
 clear
-echo "Running update_kernel.sh 
+echo "Running update_kernel_u16.sh 
 
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
@@ -20,8 +20,8 @@ echo "Running update_kernel.sh
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.3                             \r\n
-Last Updated:  12/29/2019
+Version:  0.0.4                             \r\n
+Last Updated:  1/5/2020
 \r\n \r\n"
 wait
 # https://www.howtoforge.com/tutorial/how-to-upgrade-linux-kernel-in-ubuntu-1604-server/
