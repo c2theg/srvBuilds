@@ -88,6 +88,7 @@ reddit.com
 *.reddit.com
 *.opera.com
 *.dropbox.com
+notify.dropboxapi.com
 *.twimg.com
 *.mozilla.com
 mozilla.com
@@ -107,3 +108,6 @@ sns.synology.com
 checkip.synology.com
 checkipv6.synology.com
 pgorelease.nianticlabs.com
+nexusapi-us1.dropcam.com
+i.instagram.com
+*.samsung.com
