@@ -7,6 +7,10 @@ google.com
 *.gstatic.com
 *.googlevideo.com
 *.gvt2.com
+*.googleapis.com
+client4.google.com
+safebrowsing.googleapis.com
+ssl.gstatic.com
 *.youtube.com
 *.nest.com
 comcast.net
@@ -26,6 +30,10 @@ apple.com
 *.whatsapp.com
 *.fbcdn.net
 *.microsoft.com
+presence.teams.microsoft.com
+*.teams.microsoft.com
+plex.tv
+config.edge.skype.com
 bing.com
 live.com
 *.office365.com
