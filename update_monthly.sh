@@ -30,7 +30,7 @@ Last Updated:  1/12/2020
 
 sudo -E apt-get update
 wait
-#sudo -E apt-get upgrade -y
+sudo -E apt-get upgrade -y
 
 sudo apt update
 sudo apt dist-upgrade -y
