@@ -23,7 +23,7 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 \r\n \r\n
-Version:  0.2.5                            \r\n
+Version:  0.2.6                            \r\n
 Last Updated:  1/12/2020
 \r\n \r\n"
 
@@ -55,7 +55,6 @@ FileText="
 https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts
 
 ## MalwareDomains
-https://mirror1.malwaredomains.com/files/justdomains 
 https://raw.githubusercontent.com/Ultimate-Hosts-Blacklist/MalwareDomainList.com/master/volatile.list
 
 ## Cameleon
