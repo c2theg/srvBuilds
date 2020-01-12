@@ -23,7 +23,7 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 \r\n \r\n
-Version:  0.2.3                            \r\n
+Version:  0.2.4                            \r\n
 Last Updated:  1/12/2020
 \r\n \r\n"
 
@@ -55,9 +55,7 @@ FileText="
 https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts
 
 ## MalwareDomains
-#https://mirror1.malwaredomains.com/files/justdomains - DOWN as of 1/12/2020
-
-# https://github.com/Ultimate-Hosts-Blacklist/MalwareDomainList.com
+https://mirror1.malwaredomains.com/files/justdomains 
 https://raw.githubusercontent.com/Ultimate-Hosts-Blacklist/MalwareDomainList.com/master/volatile.list
 
 ## Cameleon
@@ -80,7 +78,8 @@ https://hosts-file.net/hjk.txt
 https://hosts-file.net/pup.txt
 
 ## uBlock Origin lists
-https://www.malwaredomainlist.com/hostslist/hosts.txt
+#https://www.malwaredomainlist.com/hostslist/hosts.txt - DOWN as of 1/12/2020
+
 https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt
 https://easylist.to/easylist/easylist.txt
 https://easylist.to/easylist/easyprivacy.txt
