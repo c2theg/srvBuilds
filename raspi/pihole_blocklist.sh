@@ -23,7 +23,7 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 \r\n \r\n
-Version:  0.2.4                            \r\n
+Version:  0.2.5                            \r\n
 Last Updated:  1/12/2020
 \r\n \r\n"
 
@@ -80,10 +80,10 @@ https://hosts-file.net/pup.txt
 ## uBlock Origin lists
 #https://www.malwaredomainlist.com/hostslist/hosts.txt - DOWN as of 1/12/2020
 
-https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt
-https://easylist.to/easylist/easylist.txt
-https://easylist.to/easylist/easyprivacy.txt
-https://easylist.to/easylist/fanboy-annoyance.txt
+#https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt   #  Format: Adblock (list type not supported)
+#https://easylist.to/easylist/easylist.txt    #  Format: Adblock (list type not supported)
+#https://easylist.to/easylist/easyprivacy.txt   #  Format: Adblock (list type not supported)
+#https://easylist.to/easylist/fanboy-annoyance.txt   #  Format: Adblock (list type not supported)
 https://www.spamhaus.org/drop/drop.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts
 
@@ -99,7 +99,7 @@ https://blocklist.site/app/dl/tracking
 
 ## Personal - Must be at the end ##
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/url_general_blocklist.txt
-https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt
+#https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt #  Format: Adblock (list type not supported)
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
 "
 touch /etc/pihole/adlists.list
