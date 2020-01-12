@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.3.1                             \r\n
-Last Updated:  10/16/2019
+Version:  0.3.2                             \r\n
+Last Updated:  1/12/2020
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
@@ -40,6 +40,23 @@ wait
 #sudo apt-get autoremove -y
 wait
 #echo "Downloading required dependencies...\r\n\r\n"
+
+sudo apt update
+sudo apt dist-upgrade -y
+sudo apt-get autoclean
+
+# sudo rpi-update
+#############################################################
+#WARNING: 'rpi-update' updates to pre-releases of the linux 
+#kernel tree and Videocore firmware.
+
+#'rpi-update' should only be used if there is a specific 
+#reason to do so - for example, a request by a Raspberry Pi 
+#engineer.
+
+#DO NOT use 'rpi-update' as part of a regular update process.
+#############################################################
+
 #--------------------------------------------------------------------------------------------
 echo "Checking Internet status...\r\n\r\n"
 ping -q -c3 github.com > /dev/null
