@@ -23,11 +23,17 @@ echo "
  https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.txt
  https://discourse.pi-hole.net/t/commonly-whitelisted-domains/212/12
 
+
+-- Todo: add domains from the following lists --
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt #  Format: Adblock (list type not supported)
+
+
+
 This really is meant to be run under Ubuntu 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.14                            \r\n
-Last Updated:  8/14/2019
+Version:  0.0.15                            \r\n
+Last Updated:  1/12/2020
 \r\n \r\n"
 #--------------------------
 pihole -w github.com raw.githubusercontent.com
