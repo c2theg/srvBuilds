@@ -119,3 +119,4 @@ pgorelease.nianticlabs.com
 nexusapi-us1.dropcam.com
 i.instagram.com
 *.samsung.com
+time.cloudflare.com
