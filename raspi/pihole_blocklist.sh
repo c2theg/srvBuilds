@@ -98,7 +98,6 @@ https://blocklist.site/app/dl/tracking
 
 ## Personal - Must be at the end ##
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/url_general_blocklist.txt
-#https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt #  Format: Adblock (list type not supported)
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
 "
 touch /etc/pihole/adlists.list
