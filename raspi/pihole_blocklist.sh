@@ -23,8 +23,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 \r\n \r\n
-Version:  0.2.2                            \r\n
-Last Updated:  10/1/2019
+Version:  0.2.3                            \r\n
+Last Updated:  1/12/2020
 \r\n \r\n"
 
 #---------------------------------------------------------------------------------------
@@ -36,7 +36,8 @@ rm /etc/pihole/*.githubusercontent.com.domains
 rm /etc/pihole/*.hosts-file.net.domains
 rm /etc/pihole/*.s3.amazonaws.com.domains
 rm /etc/pihole/*.sysctl.org.domains
-rm /etc/pihole/*.malwaredomainlist.com.domains
+#rm /etc/pihole/*.malwaredomainlist.com.domains
+rm /etc/pihole/*.volatile.com.domains
 rm /etc/pihole/*.malwaredomains.com.domains
 rm /etc/pihole/*.easylist.to.domains
 rm /etc/pihole/*.spamhaus.org.domains
@@ -54,7 +55,10 @@ FileText="
 https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts
 
 ## MalwareDomains
-https://mirror1.malwaredomains.com/files/justdomains
+#https://mirror1.malwaredomains.com/files/justdomains - DOWN as of 1/12/2020
+
+# https://github.com/Ultimate-Hosts-Blacklist/MalwareDomainList.com
+https://raw.githubusercontent.com/Ultimate-Hosts-Blacklist/MalwareDomainList.com/master/volatile.list
 
 ## Cameleon
 http://sysctl.org/cameleon/hosts
