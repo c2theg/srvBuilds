@@ -47,3 +47,11 @@ crontab -e   <br /> <br />
 
  <br /> <br /> <b> Then restart cron:  </b><br />
 /etc/init.d/cron restart
+
+
+<br /><br />
+
+<h3> CentOS </h3>
+
+curl -k -O https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_centos7.sh && chmod u+x update_centos7.sh && ./update_centos7.sh
+
