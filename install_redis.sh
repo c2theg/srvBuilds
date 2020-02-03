@@ -21,8 +21,8 @@ echo "Running install_redis.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1.0                             \r\n
-Last Updated:  8/16/2019
+Version:  0.1.1                             \r\n
+Last Updated:  2/3/2020
 \r\n \r\n"
 wait
 #sudo -E apt-get update
@@ -91,6 +91,13 @@ wait
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis_slave.conf
 #wait
 
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis.service
+mv redis.service /etc/systemd/system/redis.service
+
+sudo adduser --system --group --no-create-home redis
+sudo mkdir /var/lib/redis0
+sudo chown redis:redis /var/lib/redis && sudo chmod 770 /var/lib/redis
+
 echo "Making backups and copies.. \r\n \r\n"
 
 sudo mkdir /var/run/redis/
@@ -111,7 +118,7 @@ sudo chown redis /etc/redis/* && sudo chmod u+x /etc/redis/*
 
 echo "--------------------------------------------------------------------"
 echo "\r\n Starting.... \r\n \r\n "
-echo " /usr/bin/redis-server /etc/redis/redis.conf"
+echo "  sudo /usr/bin/redis-server /etc/redis/redis.conf "
 echo "\r\n \r\n"
 
 sudo /usr/bin/redis-server /etc/redis/redis.conf
