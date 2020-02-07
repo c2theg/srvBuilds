@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.8                             \r\n
-Last Updated:  8/22/2019
+Version:  1.7.9                             \r\n
+Last Updated:  2/7/2020
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -193,5 +193,14 @@ sudo lsof | grep deleted
 
 echo "\r\n \r\n"
 lsof +L1
+
+
+echo "\r\n \r\n"
+
+echo " Returns a list of files that most inode usage have.. \r\n "
+find / -xdev -type f | cut -d "/" -f2 | sort | uniq -c | sort -n | less
+
+
+du -ah / | sort -nr | head -n 10
 
 echo "\r\n \r\n Your best option is to restart the server to release these files... \r\n \r\n"
