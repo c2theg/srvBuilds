@@ -207,6 +207,9 @@ then
 fi
 wait
 echo "Basic HTTP/HTTPS Website Config Download Complete"
+
+touch /var/www/html/healthcheck.html
+echo "true" > "/var/www/html/healthcheck.html"
 #---------------------------------------------------------------------------------------------------------
 #echo "SSL-TLS HTTP Website Config"
 #wget -O "site1_tls.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/site1_tls.conf"
