@@ -33,8 +33,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 INSTALLS  LEMP (Linux* Nginx Memcache PHP (Latest - 7.3)
 
 \r\n \r\n
-Version:  1.4.9                             \r\n
-Last Updated:  11/17/2019
+Version:  1.5.0                             \r\n
+Last Updated:  2/15/2020
 \r\n \r\n
 Updating system first..."
 
@@ -70,8 +70,11 @@ sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute h
 #wait
 #--- PHP ---
 sudo apt-get install -y openssl-blacklist ssl-cert libmcrypt-dev mcrypt 
-sudo apt-get install -y php7.3 php7.3-cli php7.3-fpm php7.3-curl php7.3-json php7.3-gd php7.3-mysql php7.3-mbstring php7.3-dev zip unzip
-sudo apt-get install -y php7.3-common php7.3-opcache php7.3-readline php7.3-soap php7.3-ldap php7.3-pear php-xdebug php-apcu php-ssh2 php-geoip php7.3-bcmath php7.3-zip php7.3-xml php-xml php-mailparse php7.3-bz2 php7.3-xmlrpc php7.3-mcrypt
+sudo apt-get install -y php7.4 php7.4-cli php7.4-fpm php7.4-curl php7.4-json php7.4-gd php7.4-mysql php7.4-mbstring php7.4-dev zip unzip
+sudo apt-get install -y php7.4-common php7.4-opcache php7.4-readline php7.4-soap php7.4-ldap php-pear php-xdebug php-apcu php-ssh2 php-geoip php7.4-bcmath php7.4-zip php7.4-xml php-xml php-mailparse php7.4-bz2 php7.4-xmlrpc
+#php7.4-mcrypt
+sudo pecl install mcrypt-1.0.3
+
 wait
 #--- pear ---
 # https://pear.php.net/manual/en/installation.getting.php
@@ -81,7 +84,7 @@ sudo pear channel-update pear.php.net
 sudo pecl channel-update pecl.php.net
 
 sudo pear install mail Net_SMTP Auth_SASL2-0.1.0 mail_mime
-sudo apt-get install -y php7.3-mongodb php-mongodb
+sudo apt-get install -y php-mongodb
 pecl install mongodb
 pear install PEAR
 
