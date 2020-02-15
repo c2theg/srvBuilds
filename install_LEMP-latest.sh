@@ -30,7 +30,7 @@ echo "
 
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 
-INSTALLS  LEMP (Linux* Nginx Memcache PHP (Latest - 7.3)
+INSTALLS  LEMP (Linux* Nginx Memcache PHP (Latest - 7.4)
 
 \r\n \r\n
 Version:  1.5.0                             \r\n
@@ -140,21 +140,21 @@ sudo mv "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
 
-if [ -s "/etc/php/7.3/fpm/php.ini" ]
+if [ -s "/etc/php/7.4/fpm/php.ini" ]
 then
 	echo "Deleting file: PHP.ini config "
-	rm /etc/php/7.3/fpm/php.ini
-	rm /etc/php/7.3/fpm/php-fpm.conf
+	rm /etc/php/7.4/fpm/php.ini
+	rm /etc/php/7.4/fpm/php-fpm.conf
 	rm /media/data/php_browscap.ini
 fi
 wait
 echo "Downloading PHP-FPM Configs"
 wget -O  "php.ini" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php.ini"
-sudo mv "php.ini" "/etc/php/7.3/fpm/php.ini"
+sudo mv "php.ini" "/etc/php/7.4/fpm/php.ini"
 wait
 #--------------------------------------------------
-wget -O "php-fpm.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fpm-7.3.conf"
-sudo mv "php-fpm.conf" "/etc/php/7.3/fpm/php-fpm.conf"
+wget -O "php-fpm.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fpm-7.4.conf"
+sudo mv "php-fpm.conf" "/etc/php/7.4/fpm/php-fpm.conf"
 wait
 #--------------------------------------------------
 wget -O "php_browscap.ini" "https://browscap.org/stream?q=PHP_BrowsCapINI"
@@ -236,7 +236,7 @@ echo "Restarting Nginx... "
 /etc/init.d/nginx restart
 
 echo "Restarting PHP-FPM... "
-/etc/init.d/php7.3-fpm restart
+/etc/init.d/php7.4-fpm restart
 echo "Done All! \r\n \r\n"
 
 echo "You will need to update the NGINX config at:  /etc/nginx/sites-enabled/ \r\n \r\n"
