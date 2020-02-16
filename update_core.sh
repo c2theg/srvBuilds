@@ -78,7 +78,7 @@ if nc -zw1 google.com 443; then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh && chmod u+x install_monitoring.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod u+x update_time.sh
-	wget -O - -q -t 1 --timeout=1 https://api.magnetoai.com/update_check.php?f=update_core > /dev/null
+	#wget -O - -q -t 1 --timeout=1 https://api.magnetoai.com/update_check.php?f=update_core > /dev/null
 	
 	if [ -s "install_docker.sh" ]
 	then
