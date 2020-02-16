@@ -25,13 +25,16 @@ This really is meant to be run under Ubuntu 14.04 - 18.04 LTS
 
 \r\n \r\n
 Version:  1.7.7                             \r\n
-Last Updated:  2/15/2020
+Last Updated:  2/16/2020
 \r\n \r\n"
 echo "Checking Internet status...   "
 #ping -q -c5 github.com > /dev/null
 #if [ $? -eq 0 ]; then
 if nc -zw1 google.com 443; then
 	echo "Connected \r\n \r\n"
+	# Neofetch - needed for < 17.04
+	sudo add-apt-repository -y ppa:dawidd0811/neofetch
+	
 	sudo -E apt-get update
 	wait
 	sudo -E apt-get upgrade -y
@@ -43,8 +46,9 @@ if nc -zw1 google.com 443; then
 	#--------------------------------------------------------------------------------------------
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop sshguard build-essential libffi-dev portmap nfs-common nfs-kernel-server
 	wait
-	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl
+	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl 
 	wait
+	sudo -E apt-get install -y neofetch
 	#----------------------------------------------------------------------------------------------
 	if [ -s "install_snmp.sh" ] 
 	then
