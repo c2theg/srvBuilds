@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.8                             \r\n
-Last Updated:  11/10/2018
+Version:  0.0.9                             \r\n
+Last Updated:  2/16/2020
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -28,14 +28,14 @@ Last Updated:  11/10/2018
 #echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Updating PIP \r\n \r\n "
-pip install --upgrade pip
+pip3 install --upgrade pip
 
 echo "Update all already installed PIPs' \r\n \r\n"
-pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 
 echo "Installing Python Networking PIPs  \r\n \r\n"
-pip install protobuf
-pip install websockets
+pip3 install protobuf
+pip3 install websockets
 pip install redis
 pip install python-memcached
 pip install scapy
@@ -48,10 +48,10 @@ pip install simplegeoip
 pip install pysflow
 pip install mqtt-client
 pip install zmq
-#pip install rabbitmq
+pip install rabbitmq
 #pip install kafka-python
 pip install soap2py
-#pip install ansible
+pip install ansible
 pip install -U exabgp
 pip install yabgp==0.1.7
 pip install pysnmp
@@ -59,5 +59,3 @@ pip install ping
 pip install pytraceroute
 pip install pyang
 pip install netconf
-
-
