@@ -24,7 +24,7 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 - 18.04 LTS
 
 \r\n \r\n
-Version:  1.7.7                             \r\n
+Version:  1.7.8                             \r\n
 Last Updated:  2/16/2020
 \r\n \r\n"
 echo "Checking Internet status...   "
@@ -49,6 +49,7 @@ if nc -zw1 google.com 443; then
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl 
 	wait
 	sudo -E apt-get install -y neofetch
+	echo "neofetch" >> ~/.bashrc
 	#----------------------------------------------------------------------------------------------
 	if [ -s "install_snmp.sh" ] 
 	then
