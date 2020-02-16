@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.5                             \r\n
-Last Updated:  9/5/2019
+Version:  1.4.6                             \r\n
+Last Updated:  2/16/2020
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -28,16 +28,16 @@ Last Updated:  9/5/2019
 #wait
 #echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "Installing Python 3+ latest.... "
+echo "Installing Python 3.8+ latest... "
 
-sudo -E add-apt-repository -y ppa:jonathonf/python-3.7
+sudo -E add-apt-repository -y ppa:deadsnakes/ppa
 sudo -E apt-get update
 #--------------------------------------------------------------------------------------------
 sudo -E apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties python3-yaml
 sudo -E apt-get install -y python3-dev
-sudo -E apt-get install -y python3.7
+sudo -E apt-get install -y python3.8
 python3 -V
 #----------- if issues with PIP install -------------------
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
@@ -80,8 +80,8 @@ pip3 install simp-AES
 #pip3 install protobuf
 #pip3 install websockets
 
-#pip3 install redis
-#pip3 install redis-trib
+pip3 install redis
+pip3 install redis-trib
 
 #pip3 install python-memcached
 #pip3 install GeoIP
@@ -92,11 +92,11 @@ pip3 install simp-AES
 #pip3 install rabbitmq
 #pip3 install kafka-python
 #pip3 install soap2py
-#pip3 install ansible
+pip3 install ansible
 #pip3 install -U exabgp
 #pip3 install yabgp==0.1.7
 #pip3 install pysnmp
-#pip3 install ping
+pip3 install ping
 #pip3 install pytraceroute
 #pip3 install pyang
 #pip3 install netconf
