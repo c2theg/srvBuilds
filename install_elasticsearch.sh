@@ -22,11 +22,11 @@ echo "
 
 https://www.elastic.co/guide/index.html
 
-https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch6x.sh
-This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
+https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch.sh
+This really is meant to be run under Ubuntu 14.04 - 18.04 LTS +
 \r\n \r\n
-Version:  0.1.6                             \r\n
-Last Updated:  3/24/2018
+Version:  0.2.0                             \r\n
+Last Updated:  2/16/2020
 \r\n \r\n"
 
 echo -e "Installing Java...  \r\n \r\n "
@@ -36,18 +36,17 @@ sudo apt-get -y install oracle-java8-installer
 wait
 sudo apt -y install oracle-java8-set-default
 
-echo -e "Installing Elastic Search 6.X \r\n \r\n"
+echo -e "Installing Elastic Search Latest \r\n \r\n"
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 
 sudo apt-get install -y apt-transport-https
-if [ ! -s "/etc/apt/sources.list.d/elastic-6.x.list" ]
+if [ ! -s "/etc/apt/sources.list.d/elastic-7.x.list" ]
 then
-	echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+	echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
 fi
 
 sudo apt-get update
-
-sudo apt-get install -y elasticsearch npm
+sudo apt-get install -y elasticsearch
 
 echo -e "Adding: ulimit -n 65536  \r\n \r\n "
 ulimit -n 65536
@@ -75,11 +74,11 @@ mkdir /media/data/es/logs
 chmod -R 755 /media/data/es/ && sudo chown -R elasticsearch:elasticsearch /media/data/es/
 #---------------------------------
 
-mv /etc/elasticsearch/elasticsearch.yml  /etc/elasticsearch/elasticsearch6_backup.yml
+mv /etc/elasticsearch/elasticsearch.yml  /etc/elasticsearch/elasticsearch_backup.yml
 wait
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/elasticsearch-6x.yml
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/elasticsearch.yml
 wait
-cp elasticsearch-6x.yml /etc/elasticsearch/elasticsearch.yml
+cp elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
 wait
 echo " Restarting ElasticSearch... \r\n \r\n "
 sudo /etc/init.d/elasticsearch restart
