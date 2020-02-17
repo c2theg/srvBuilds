@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.6                             \r\n
-Last Updated:  2/16/2020
+Version:  1.4.7                             \r\n
+Last Updated:  2/17/2020
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -29,7 +29,6 @@ Last Updated:  2/16/2020
 #echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Installing Python 3.8+ latest... "
-
 sudo -E add-apt-repository -y ppa:deadsnakes/ppa
 sudo -E apt-get update
 #--------------------------------------------------------------------------------------------
@@ -48,10 +47,11 @@ sudo -E pip3 install virtualenv
 virtualenv venv
 python3 -m venv myenv
 wait
+pip install --upgrade pip
 pip3 install --upgrade pip
+python3 -m pip install --upgrade pip
 #--------------------------------------------------------------------------------------------
 pip3 install pyyaml
-
 #----- Install Flask ------------
 echo "Installing Flask... \r\n "
 pip3 install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
