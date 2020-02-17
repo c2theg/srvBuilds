@@ -126,7 +126,7 @@ sudo /usr/bin/redis-server /etc/redis/redis.conf
 echo "To test, issue the following commands: "
 echo " redis-benchmark -q -n 1000 -c 10 -P 5 -p 46379 \r\n"
 echo " redis-cli -p 46379  \r\n"
-echo " Or auth with: \r\n 
+echo " Or auth with: \r\n "
 echo " redis-cli -p 46379 -a <password> \r\n \r\n"
 
 echo " /etc/init.d/redis-server stop  \r\n"
