@@ -21,8 +21,8 @@ echo "Running install_redis.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1.1                             \r\n
-Last Updated:  2/3/2020
+Version:  0.1.2                             \r\n
+Last Updated:  2/17/2020
 \r\n \r\n"
 wait
 #sudo -E apt-get update
@@ -43,7 +43,7 @@ sudo -E apt-get update
 wait
 sudo -E apt-get install -y build-essential tcl
 wait
-sudo -E apt-get install -y redis-server
+sudo -E apt-get install -y redis-server ruby-redis redis-tools
 #pip install redis-trib
 wait
 clear
