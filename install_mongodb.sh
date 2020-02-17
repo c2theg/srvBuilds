@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.4                             \r\n
-Last Updated:  1/5/2020
+Version:  0.0.6                             \r\n
+Last Updated:  2/17/2020
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -30,28 +30,68 @@ Last Updated:  1/5/2020
 
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "Installing gnupg.. "
+echo "Installing gnupg, openssl.. "
 sudo apt-get install -y gnupg openssl
-
-#--- Ubuntu 16.04 ---
-sudo apt-get install -y libcurl3
-#--- Ubuntu 18.04 ---
-#sudo apt-get install libcurl4
 
 echo "Adding Key... "
 wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
-#--- Ubuntu 16.04 (Xenial) ---
-# /etc/apt/sources.list.d/mongodb-org-4.2.list
-echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
-#--- Ubuntu 18.04 (Bionic) ----
-#echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
 
+#------------- OS Version Detection -------------
+if [ -f /etc/os-release ]; then
+    # freedesktop.org and systemd
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
+elif type lsb_release >/dev/null 2>&1; then
+    # linuxbase.org
+    OS=$(lsb_release -si)
+    VER=$(lsb_release -sr)
+elif [ -f /etc/lsb-release ]; then
+    # For some versions of Debian/Ubuntu without lsb_release command
+    . /etc/lsb-release
+    OS=$DISTRIB_ID
+    VER=$DISTRIB_RELEASE
+elif [ -f /etc/debian_version ]; then
+    # Older Debian/Ubuntu/etc.
+    OS=Debian
+    VER=$(cat /etc/debian_version)
+elif [ -f /etc/SuSe-release ]; then
+    # Older SuSE/etc.
+    ...
+elif [ -f /etc/redhat-release ]; then
+    # Older Red Hat, CentOS, etc.
+    ...
+else
+    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+    OS=$(uname -s)
+    VER=$(uname -r)
+fi
+echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
+#-----------------------------------------------
+if [ $VER = '14.04' ]; then
+    wait
+    echo "14.04"
+    echo "Mongo not supported on this version of Ubuntu"
+else
+    if [ $VER = '16.04' ]; then
+    	wait
+    	echo "16.04"
+     sudo apt-get install -y libcurl3
+     echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+    elif [ $VER = '18.04' ]; then
+    	wait
+    	echo "18.04"
+     sudo apt-get install libcurl4
+     echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+    fi
+fi
 #-------------------------------------
 echo "Updating repo's... \r\n \r\n "
 sudo apt-get update
 
-echo "Install Mongodb... "
-sudo apt-get install -y mongodb-org=4.2.2 mongodb-org-server=4.2.2 mongodb-org-shell=4.2.2 mongodb-org-mongos=4.2.2 mongodb-org-tools=4.2.2
+MongoDBVersion=4.2.3
+echo "Install Mongodb $MongoDBVersion ... "
+sudo apt-get install -y mongodb-org=$MongoDBVersion mongodb-org-server=$MongoDBVersion mongodb-org-shell=$MongoDBVersion mongodb-org-mongos=$MongoDBVersion mongodb-org-tools=$MongoDBVersion
 
 #----------------------------------
 ps -e | grep mongo
@@ -63,7 +103,7 @@ systemctl start mongod
 systemctl enable mongod
 netstat -plntu
 
-echo "Done. Starting Mongo..."
+echo "Done. Starting Mongo (from config: /etc/mongod.conf) ..."
 #sudo service mongod start
 sudo -u mongodb mongod --config /etc/mongod.conf
 
