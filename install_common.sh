@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 - 18.04 LTS
 
 \r\n \r\n
-Version:  1.7.11                             \r\n
-Last Updated:  2/17/2020
+Version:  1.7.12                             \r\n
+Last Updated:  2/18/2020
 \r\n \r\n"
 echo "Checking Internet status...   "
 #ping -q -c5 github.com > /dev/null
@@ -47,15 +47,17 @@ if nc -zw1 google.com 443; then
 	wait
 	wait
 	
-	# Neofetch - needed for < 17.04
-	sudo add-apt-repository -y ppa:dawidd0811/neofetch
-	sudo -E apt-get update
-	wait
-	sudo -E apt-get install -y neofetch
-	neofetch
-	echo "neofetch" >> ~/.bashrc
-	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/neofetch-config.conf
-	mv neofetch-config.conf $HOME/.config/neofetch/config.conf
+	if [ ! -f "$HOME/.config/neofetch/config.conf" ]; then
+		# Neofetch
+		sudo add-apt-repository -y ppa:dawidd0811/neofetch
+		sudo -E apt-get update
+		wait
+		sudo -E apt-get install -y neofetch
+		neofetch
+		echo "neofetch" >> ~/.bashrc
+		wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/neofetch-config.conf
+		mv neofetch-config.conf $HOME/.config/neofetch/config.conf
+	fi
 	#----------------------------------------------------------------------------------------------
 	if [ -s "install_snmp.sh" ] 
 	then
