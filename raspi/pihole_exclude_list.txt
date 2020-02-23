@@ -136,3 +136,7 @@ lcprd1.samsungcloudsolution.net
 akamai.net
 osb.samsungqbe.com
 api.intelsa-preprod.intel.com
+api.wyzecam.com
+ctldl.windowsupdate.com
+outlook.office.com
+time.samsungcloudsolution.com
