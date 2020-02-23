@@ -17,6 +17,8 @@ comcast.net
 comcast.com
 *.comcast.net
 *.comcast.com
+www.xfinity.com
+xfinity.com
 nist-time-server.eoni.com
 *.ntp.org
 *.nist.gov
@@ -123,6 +125,7 @@ time.cloudflare.com
 htbackdrops.plex.tv
 lastfm-z.plexapp.com
 musicbrainz.plex.tv
+songkick.plex.tv
 plex.tv
 plexapp.com
 lastfm.freetls.fastly.net
@@ -130,3 +133,6 @@ mediaservices.cdn-apple.com
 olmprodpowerlift-cdn.azureedge.net
 www.msftconnecttest.com
 lcprd1.samsungcloudsolution.net
+akamai.net
+osb.samsungqbe.com
+api.intelsa-preprod.intel.com
