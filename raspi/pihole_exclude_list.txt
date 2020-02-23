@@ -120,3 +120,13 @@ nexusapi-us1.dropcam.com
 i.instagram.com
 *.samsung.com
 time.cloudflare.com
+htbackdrops.plex.tv
+lastfm-z.plexapp.com
+musicbrainz.plex.tv
+plex.tv
+plexapp.com
+lastfm.freetls.fastly.net
+mediaservices.cdn-apple.com
+olmprodpowerlift-cdn.azureedge.net
+www.msftconnecttest.com
+lcprd1.samsungcloudsolution.net
