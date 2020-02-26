@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 - 18.04 LTS
 
 \r\n \r\n
-Version:  1.7.12                             \r\n
-Last Updated:  2/18/2020
+Version:  1.7.13                             \r\n
+Last Updated:  2/26/2020
 \r\n \r\n"
 echo "Checking Internet status...   "
 #ping -q -c5 github.com > /dev/null
@@ -41,7 +41,7 @@ if nc -zw1 google.com 443; then
 	wait
 	echo "Downloading required dependencies...\r\n\r\n"
 	#--------------------------------------------------------------------------------------------
-	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop sshguard build-essential libffi-dev portmap nfs-common nfs-kernel-server
+	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev libssl1.0.0 whois traceroute htop sshguard build-essential libffi-dev portmap nfs-common nfs-kernel-server speedometer
 	wait
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl
 	wait
