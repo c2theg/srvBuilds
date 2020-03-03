@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.8                             \r\n
-Last Updated:  3/2/2020
+Version:  1.4.9                             \r\n
+Last Updated:  3/3/2020
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -51,30 +51,15 @@ pip install --upgrade pip
 pip3 install --upgrade pip
 python3 -m pip install --upgrade pip
 #--------------------------------------------------------------------------------------------
-pip3 install pyyaml
 #----- Install Flask ------------
-echo "Installing Flask... \r\n "
-pip3 install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
-wait
-
+#echo "Installing Flask... \r\n "
+#pip3 install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
 #--- Web API stuff ----
 #-- REST --
 pip3 install requests
 #pip3 install bleach
 #-----------------------
-echo "Installing pexpect... \r\n "
-pip3 install pexpect
-#-- MongoDB
-#echo "Installing pymongo... \r\n "
-#pip3 install pymongo
-#-- MySQL
-#echo "Installing mysql... \r\n "
-#pip3 install mysql-connector-python
-#-----------------------
-echo "Installing PIP modules... https://hugovk.github.io/top-pypi-packages/ \r\n "
-#pip3 install scapy
-#pip3 install Twisted
-#pip3 install cbor2
+echo "Installing other PIP modules... https://hugovk.github.io/top-pypi-packages/ \r\n "
 pip3 install simp-AES
 pip3 install pynacl
 pip3 install urllib3
@@ -82,6 +67,10 @@ pip3 install requests
 pip3 install pyyaml
 pip3 install setuptools
 #--- Specify projects - optional --
+#pip3 install scapy
+#pip3 install Twisted
+#pip3 install cbor2
+
 #pip3 install protobuf
 #pip3 install websockets
 
@@ -105,6 +94,16 @@ pip3 install setuptools
 #pip3 install pytraceroute
 #pip3 install pyang
 #pip3 install netconf
+#-----------------------
+#echo "Installing pexpect... \r\n "
+#pip3 install pexpect
+#-- MongoDB
+#echo "Installing pymongo... \r\n "
+#pip3 install pymongo
+#-- MySQL
+#echo "Installing mysql... \r\n "
+#pip3 install mysql-connector-python
+
 #--------------------------------------------------
 wait
 echo "\r\n \r\n "
