@@ -44,13 +44,15 @@ sudo python3 get-pip.py --force-reinstall
 #----------------------------------------------------------
 sudo -E apt-get install -y python3-pip python3-venv python3-setuptools python-virtualenv python3-virtualenv
 sudo -E pip3 install virtualenv
-virtualenv venv
-python3 -m venv myenv
+#virtualenv venv
+#python3 -m venv myenv
 wait
 pip install --upgrade pip
 pip3 install --upgrade pip
 python3 -m pip install --upgrade pip
 #--------------------------------------------------------------------------------------------
+pip3 install pip
+
 #----- Install Flask ------------
 #echo "Installing Flask... \r\n "
 #pip3 install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
