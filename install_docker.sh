@@ -77,9 +77,11 @@ echo " docker run --name some-nginx -d -p 8080:80 some-content-nginx
 echo "Downloading a better way to manage containers... \r\n.."
 echo " PORTAINER! - https://github.com/portainer/portainer \r\n "
 
+docker pull portainer/portainer
+docker run -d -p 9000:9000 -v "/var/run/docker.sock:/var/run/docker.sock" portainer/portainer
+
 echo "Running command: sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer"
 echo "\r\n \r\n"
-sudo docker run -d -p 9000:9000 -v "/var/run/docker.sock:/var/run/docker.sock" portainer/portainer &
 
 echo "Visit http://<Local_IP>:9000 in Chrome or Firefox \r\n \r\n"
 docker --version
