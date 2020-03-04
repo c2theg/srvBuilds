@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.2                             \r\n
-Last Updated:  3/3/2020
+Version:  1.5.3                             \r\n
+Last Updated:  3/4/2020
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -55,10 +55,12 @@ chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 #------------------------------------
 echo "Installing Cockpit ... "
+#- give cockpit access to docker api
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
 sudo -E apt-get install cockpit cockpit-docker -y
 echo "Done! - Visit: https://SERVER_IP:9090  "
-
-echo "\r\n \r\n"
 echo "\r\n \r\n"
 
 echo "Hello-World... ( sudo docker run -p 3000:80 tutum/hello-world  )"
