@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.1                             \r\n
-Last Updated:  11/20/2018
+Version:  1.5.2                             \r\n
+Last Updated:  3/3/2020
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -29,99 +29,33 @@ sudo -E apt-get upgrade -y
 #wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-HOST = hostname -I
-
-#------------- Version Detection -------------
-if [ -f /etc/os-release ]; then
-    # freedesktop.org and systemd
-    . /etc/os-release
-    OS=$NAME
-    VER=$VERSION_ID
-elif type lsb_release >/dev/null 2>&1; then
-    # linuxbase.org
-    OS=$(lsb_release -si)
-    VER=$(lsb_release -sr)
-elif [ -f /etc/lsb-release ]; then
-    # For some versions of Debian/Ubuntu without lsb_release command
-    . /etc/lsb-release
-    OS=$DISTRIB_ID
-    VER=$DISTRIB_RELEASE
-elif [ -f /etc/debian_version ]; then
-    # Older Debian/Ubuntu/etc.
-    OS=Debian
-    VER=$(cat /etc/debian_version)
-elif [ -f /etc/SuSe-release ]; then
-    # Older SuSE/etc.
-    ...
-elif [ -f /etc/redhat-release ]; then
-    # Older Red Hat, CentOS, etc.
-    ...
-else
-    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
-    OS=$(uname -s)
-    VER=$(uname -r)
-fi
-echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
-#-----------------------------------------------
 # - from:  https://docs.docker.com/engine/installation/linux/ubuntu/#os-requirements
 
 echo "Installing Docker... \r\n \r\n"
 sudo -E apt-get -y install apt-transport-https ca-certificates curl software-properties-common
 wait
+#-------- Ubuntu 16.04 ------------------------
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo -E apt-get update
+apt-cache policy docker-ce
+sudo -E apt-get install -y docker-ce
 
-if [ $VER = '14.04' ]; then
-    #-------- Ubuntu 14.04 ------------------------
-    sudo -E apt-get -y install docker.io
-    wait
-    apt-cache madison docker-ce
-else
-    if [ $VER = '16.04' ]; then
-        #-------- Ubuntu 16.04 ------------------------
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-        wait
-        sudo apt-key fingerprint 0EBFCD88
-        wait
-        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-        wait
-        sudo -E apt-get update
-        wait
-        apt-cache policy docker-ce
-        wait
-        sudo -E apt-get install -y docker-ce
-     elif [ $VER = '18.04' ]; then
-        sudo -E apt-get install -y ifupdown aufs-tools debootstrap docker-doc
-        sudo -E apt install -y docker.io
-     fi
-     #----------------------------------------
-     #--- Install Docker Compose ---
-     # Get Latest from: https://github.com/docker/compose/releases
-     sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-     sudo chmod +x /usr/local/bin/docker-compose
-     docker-compose --version
-     #------------------------------------
-     wait
-     echo "\r\n\r\n \r\n Adding Cockpit (Only for Ubuntu 16.04+) https://cockpit-project.org/  \r\n \r\n"
-     sudo add-apt-repository -y ppa:cockpit-project/cockpit
-     wait
-     sudo -E apt-get install -y cockpit
-     wait
-     #--- start Cockpit ---
-     sudo systemctl start cockpit 
-     sudo systemctl enable cockpit
-     echo "\r\n \r\n"
-     echo "----------------------------  \r\n \r\n"
-     echo "Visit: https://$HOST:9090  to access Cockpit! \r\n \r\n"
-fi
 sudo systemctl start docker
 sudo systemctl enable docker
-
 sudo systemctl status docker
 
 wait
+#--- Install Docker Compose ---
+# Get Latest from: https://github.com/docker/compose/releases
+curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+#------------------------------------
+
 echo "Done!"
 echo "\r\n \r\n"
 
-echo "\r\n \r\n \r\n"
 echo "Running sample container"
 sudo docker run hello-world
 wait
@@ -133,11 +67,7 @@ echo "Running command: sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/
 echo "\r\n \r\n"
 sudo docker run -d -p 9000:9000 -v "/var/run/docker.sock:/var/run/docker.sock" portainer/portainer
 
-echo "\r\n Local IP's: "
-hostname -I
-echo "\r\n \r\n"
 echo "Visit http://$HOST:9000 in Chrome or Firefox \r\n \r\n"
-
 docker --version
 docker ps
 
@@ -153,7 +83,6 @@ echo ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2376 >> /etc/systemd/s
 sudo systemctl daemon-reload
 sudo systemctl restart docker.service
 wait
-wait
 #----------------------------
 echo "\r\n \r\n "
 ps aux | grep -i docker
@@ -168,7 +97,4 @@ echo " Hello World Container:  sudo docker run -p 3000:80 tutum/hello-world  \r\
 echo "\r\n \r\n Docker deployment complete!!! \r\n \r\n"
 
 docker images
-
 docker ps
-
-
