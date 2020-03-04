@@ -43,31 +43,45 @@ sudo -E apt-get install -y docker-ce
 
 sudo systemctl start docker
 sudo systemctl enable docker
-sudo systemctl status docker
-
+#sudo systemctl status docker
 wait
+sudo usermod -aG docker $USER
+#sudo apt-get install docker.io
+
 #--- Install Docker Compose ---
 # Get Latest from: https://github.com/docker/compose/releases
 curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 #------------------------------------
+echo "Installing Cockpit ... "
+sudo -E apt-get install cockpit cockpit-docker -y
+echo "Done! - Visit: https://SERVER_IP:9090  "
 
-echo "Done!"
+echo "\r\n \r\n"
 echo "\r\n \r\n"
 
-echo "Running sample container"
-sudo docker run hello-world
+echo "Hello-World... ( sudo docker run -p 3000:80 tutum/hello-world  )"
+sudo docker pull hello-world
 wait
-echo "\r\n \r\n -------------------------------------------------------------- \r\n \r\n"
+
+echo "Nginx Container... ( https://hub.docker.com/_/nginx )
+
+"
+sudo docker pull nginx
+echo " docker run --name some-nginx -d -p 8080:80 some-content-nginx 
+
+
+"
+
 echo "Downloading a better way to manage containers... \r\n.."
 echo " PORTAINER! - https://github.com/portainer/portainer \r\n "
 
 echo "Running command: sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer"
 echo "\r\n \r\n"
-sudo docker run -d -p 9000:9000 -v "/var/run/docker.sock:/var/run/docker.sock" portainer/portainer
+sudo docker run -d -p 9000:9000 -v "/var/run/docker.sock:/var/run/docker.sock" portainer/portainer &
 
-echo "Visit http://$HOST:9000 in Chrome or Firefox \r\n \r\n"
+echo "Visit http://<Local_IP>:9000 in Chrome or Firefox \r\n \r\n"
 docker --version
 docker ps
 
