@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.6.0                             \r\n
-Last Updated:  6/22/2019
+Version:  1.6.1                             \r\n
+Last Updated:  3/6/2020
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -68,7 +68,7 @@ if nc -zw1 google.com 443; then
 		rm /root/update_blocklists_local_servers.*
 		rm /root/update_time.sh	
 	fi
-
+	rm *.sh.1
 	echo "Downloading latest versions... \r\n\r\n"
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
