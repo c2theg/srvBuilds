@@ -69,6 +69,8 @@ if nc -zw1 google.com 443; then
 		rm install_python3.sh
 		rm 50unattended-upgrades
 	fi
+	rm *.sh.1
+	
 	echo "\r\n \r\n \r\n \r\n"
 	if [ -s "50unattended-upgrades" ]
 	then
