@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 This really is meant to be run under Ubuntu 14.04 - 18.04 LTS
 
 \r\n \r\n
-Version:  1.7.13                             \r\n
-Last Updated:  2/26/2020
+Version:  1.7.14                             \r\n
+Last Updated:  3/6/2020
 \r\n \r\n"
 echo "Checking Internet status...   "
 #ping -q -c5 github.com > /dev/null
@@ -63,7 +63,7 @@ if nc -zw1 google.com 443; then
 	then
 		echo "Deleting files"
 		rm install_snmp.sh
-		rm install_time.sh
+		rm update_time.sh
 		rm update_blocklists_local_servers.sh
 		rm resolv_base.conf
 		rm install_python3.sh
@@ -79,7 +79,7 @@ if nc -zw1 google.com 443; then
 	  echo "Done setting up AutoUpdates! \r\n \r\n"
 	fi
 	echo "\r\n \r\n ---------------------------------------------- \r\n \r\n"
-	wget -O - -q -t 1 --timeout=3 https://magnetoai.com/api/updater/check.php?f=install_common > /dev/null
+	#wget -O - -q -t 1 --timeout=1 https://magnetoai.com/api/updater/check.php?f=install_common > /dev/null
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod +u update_time.sh
@@ -91,7 +91,7 @@ if nc -zw1 google.com 443; then
 	#------ Python ------
 	wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python3.sh && sudo chmod u+x install_python3.sh && ./install_python3.sh
 
-	sudo ./install_time.sh
+	sudo ./update_time.sh
 	
 	echo "\r\n \r\n"
 	echo "To setup local url blocking:  sudo ./update_blocklists_local_servers.sh  \r\n \r\n"
