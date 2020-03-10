@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.9                             \r\n
-Last Updated:  2/7/2020
+Version:  1.8.0                             \r\n
+Last Updated:  3/10/2020
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -168,8 +168,8 @@ echo " From: https://stackoverflow.com/questions/32723111/how-to-remove-old-and-
 #docker image prune -a
 #docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 
+docker system prune -f
 #----- End Docker ------
-
 history -c
 
 echo " -------------- Done Cleaning system -------- "
