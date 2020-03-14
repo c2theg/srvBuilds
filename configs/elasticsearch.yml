@@ -1,6 +1,5 @@
 # ======== Christopher Gray - ES v7.x - Custom Config v0.6.7 - 3/13/20 ========
 # https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html
-#
 #   Set Permissions:
 #       sudo chmod -R 755 /media/data/es/ && sudo chown -R elasticsearch:elasticsearch /media/data/es/
 # ---------------------------------- Cluster -----------------------------------
