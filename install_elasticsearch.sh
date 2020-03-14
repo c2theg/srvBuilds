@@ -29,18 +29,12 @@ Version:  0.2.1                             \r\n
 Last Updated:  3/13/2020
 \r\n \r\n"
 
-sudo apt-get update
-
-
 echo -e "Installing Java (OpenJRE & OpenJDK 11)...  \r\n \r\n "
-#sudo add-apt-repository -y ppa:webupd8team/java
-#sudo apt-get -y install oracle-java8-installer
-wait
-#sudo apt -y install oracle-java8-set-default
+sudo add-apt-repository -y ppa:webupd8team/java
+sudo apt-get update
 
 sudo apt -y install default-jre
 sudo apt -y install default-jdk
-# sudo apt -y install openjdk-11-jre-headless
 wait
 
 
