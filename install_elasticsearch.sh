@@ -25,8 +25,8 @@ https://www.elastic.co/guide/index.html
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch.sh
 This really is meant to be run under Ubuntu 14.04 - 18.04 LTS +
 \r\n \r\n
-Version:  0.2.1                             \r\n
-Last Updated:  3/13/2020
+Version:  0.2.3                             \r\n
+Last Updated:  3/14/2020
 \r\n \r\n"
 
 echo -e "Installing Java (OpenJRE & OpenJDK 11)...  \r\n \r\n "
@@ -72,12 +72,19 @@ mkdir -p /media/data/es/data
 mkdir -p /media/data/es/logs
 chmod -R 755 /media/data/es/ && sudo chown -R elasticsearch:elasticsearch /media/data/es/
 #---------------------------------
-mv /etc/elasticsearch/elasticsearch.yml  /etc/elasticsearch/elasticsearch_backup.yml
-wait
+
+#--- Use Optimized Config ---
+cp /etc/elasticsearch/elasticsearch.yml  /etc/elasticsearch/elasticsearch_backup.yml
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/elasticsearch_latest.yml
+mv elasticsearch_latest.yml /etc/elasticsearch/elasticsearch.yml
 wait
-cp elasticsearch_latest.yml /etc/elasticsearch/elasticsearch.yml
-wait
+
+#--- Fix default Java JVM Options ---
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/elasticsearch_jvm.options
+cp /etc/elasticsearch/jvm.options /etc/elasticsearch/jvm.options.bk
+mv elasticsearch_jvm.options /etc/elasticsearch/jvm.options
+#--------------------------------------
+
 echo " Restarting ElasticSearch... \r\n \r\n "
 sudo /etc/init.d/elasticsearch restart
 sudo update-rc.d elasticsearch defaults 95 10
@@ -89,23 +96,18 @@ cd /usr/share/elasticsearch/
 # sudo bin/elasticsearch-plugin install http://some.domain/path/to/plugin.zip
 
 #-- uninstall if already installed --
-sudo bin/elasticsearch-plugin remove ingest-user-agent
-sudo bin/elasticsearch-plugin remove ingest-geoip
+#sudo bin/elasticsearch-plugin remove ingest-user-agent
+#sudo bin/elasticsearch-plugin remove ingest-geoip
 #-- install --
-sudo bin/elasticsearch-plugin install ingest-user-agent
-sudo bin/elasticsearch-plugin install ingest-geoip
-
-#--- NPM Plugins ----
-#npm install -g grunt
-#npm install -g grunt-cli
+#sudo bin/elasticsearch-plugin install ingest-user-agent
+#sudo bin/elasticsearch-plugin install ingest-geoip
 #-------------------
 #git clone git://github.com/mobz/elasticsearch-head.git
 #cd elasticsearch-head
 #npm install
 #npm run start
-
 #--- Show plugins ----
-sudo bin/elasticsearch-plugin list
+#sudo bin/elasticsearch-plugin list
 #--------------------------------
 cd ~
 
@@ -115,5 +117,7 @@ ps -ef | grep elasticsearch
 
 netstat -tulnp
 
-curl 127.0.0.1:9200
+#curl 127.0.0.1:9200
+curl -X GET "localhost:9200/"
+
 echo "DONE! \r\n \r\n"
