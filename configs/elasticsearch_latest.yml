@@ -52,4 +52,4 @@ bootstrap.memory_lock: false
 #http.cors.allow-headers: X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization
 # ================== END CUSTOM CONFIG =========================
 # Allow to create logstash index
-action.auto_create_index: logstash-*
+#action.auto_create_index: logstash-*
