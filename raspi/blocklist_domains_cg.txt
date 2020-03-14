@@ -97,6 +97,7 @@ log2.musical.ly
 api2-21-h2.musical.ly
 live.musical.ly
 app.musemuse.cn
+share.musemuse.cn
 musemuse.cn
 www.musemuse.cn
 static.cmptch.com	
