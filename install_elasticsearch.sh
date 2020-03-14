@@ -29,12 +29,15 @@ Version:  0.2.1                             \r\n
 Last Updated:  3/13/2020
 \r\n \r\n"
 
-echo -e "Installing Java...  \r\n \r\n "
+echo -e "Installing Java (OpenJDK 8)...  \r\n \r\n "
 sudo add-apt-repository -y ppa:webupd8team/java
 sudo apt-get update
-sudo apt-get -y install oracle-java8-installer
+#sudo apt-get -y install oracle-java8-installer
 wait
-sudo apt -y install oracle-java8-set-default
+#sudo apt -y install oracle-java8-set-default
+sudo apt -y install openjdk-8-jdk
+wait
+
 
 echo -e "Installing Elastic Search Latest \r\n \r\n"
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
