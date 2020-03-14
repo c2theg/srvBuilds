@@ -25,8 +25,8 @@ https://www.elastic.co/guide/index.html
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch.sh
 This really is meant to be run under Ubuntu 14.04 - 18.04 LTS +
 \r\n \r\n
-Version:  0.2.0                             \r\n
-Last Updated:  2/16/2020
+Version:  0.2.1                             \r\n
+Last Updated:  3/13/2020
 \r\n \r\n"
 
 echo -e "Installing Java...  \r\n \r\n "
@@ -66,14 +66,10 @@ then
 fi
 
 #---------------------------------
-mkdir /media/
-mkdir /media/data/
-mkdir /media/data/es/
-mkdir /media/data/es/data
-mkdir /media/data/es/logs
+mkdir -p /media/data/es/data
+mkdir -p /media/data/es/logs
 chmod -R 755 /media/data/es/ && sudo chown -R elasticsearch:elasticsearch /media/data/es/
 #---------------------------------
-
 mv /etc/elasticsearch/elasticsearch.yml  /etc/elasticsearch/elasticsearch_backup.yml
 wait
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/elasticsearch.yml
@@ -82,9 +78,7 @@ cp elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
 wait
 echo " Restarting ElasticSearch... \r\n \r\n "
 sudo /etc/init.d/elasticsearch restart
-
 sudo update-rc.d elasticsearch defaults 95 10
-
 #----- Install / Updates Plugins ----
 cd /usr/share/elasticsearch/
 
