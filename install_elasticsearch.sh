@@ -74,9 +74,9 @@ chmod -R 755 /media/data/es/ && sudo chown -R elasticsearch:elasticsearch /media
 #---------------------------------
 mv /etc/elasticsearch/elasticsearch.yml  /etc/elasticsearch/elasticsearch_backup.yml
 wait
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/elasticsearch.yml
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/elasticsearch_latest.yml
 wait
-cp elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
+cp elasticsearch_latest.yml /etc/elasticsearch/elasticsearch.yml
 wait
 echo " Restarting ElasticSearch... \r\n \r\n "
 sudo /etc/init.d/elasticsearch restart
