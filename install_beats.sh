@@ -67,6 +67,8 @@ sudo update-rc.d auditbeat defaults 95 10
 wait
 
 #-----------------------------------
+echo -e "Installing Sample Kibana dashboards...  https://www.elastic.co/guide/en/beats/devguide/7.6/import-dashboards.html   \r\n \r\n"
+
 #wget -O "beats_kibana_dashboards.zip" "https://artifacts.elastic.co/downloads/beats/beats-dashboards/beats-dashboards-5.4.3.zip"
 #unzip beats_kibana_dashboards.zip
 #sudo ./beats-dashboards-5.4.3/scripts/import_dashboards
@@ -78,6 +80,10 @@ wait
 #-----------------------------------
 #sudo /bin/systemctl stop kibana.service
 #sudo /bin/systemctl start kibana.service
+
+cd /etc/metricbeat/
+metricbeat setup --dashboards
+
 
 
 echo "DONE! \r\n \r\n"
