@@ -108,3 +108,8 @@ app.snapchat.com
 mvm.snapchat.com
 us-east4-gcp.api.snapchat.com
 api.snapchat.com
+feelinsonice-hrd.appspot.com
+feelinsonice.appspot.com
+feelinsonice.l.google.com
+app.snapchat.com
+data.flurry.com
