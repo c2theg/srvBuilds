@@ -1,13 +1,12 @@
-# ======== Christopher Gray - Kibana v6.x - Custom Config v0.0.4 - 12/30/17 ========
+# ======== Christopher Gray - Kibana v7.6+ - Custom Config v0.0.6 - 3/15/20 ========
 # https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html
 # ---------------------------------- Settings --------------------------------------------
 server.host: "0.0.0.0"
 server.port: 5601
-elasticsearch.url: "http://localhost:9200"
-
+#elasticsearch.url: "http://localhost:9200"
+elasticsearch.hosts: ["http://localhost:9200"]
+server.name: "kibana1"
 #----------------------------- Default config below --------------------------------------
-
-
 # If you are running kibana behind a proxy, and want to mount it at a path,
 # specify that path here. The basePath can't end in a slash.
 # server.basePath: ""
