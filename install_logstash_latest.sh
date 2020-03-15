@@ -19,32 +19,14 @@ echo "
                             |_|                                             |___|
 \r\n \r\n
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash_latests.sh
-This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
+This really is meant to be run under Ubuntu 16.04 LTS +
 \r\n \r\n
-Version:  0.0.8                             \r\n
+Version:  0.0.9                             \r\n
 Last Updated:  3/15/2020
+\r\n \r\n"
 
-\r\n \r\n
+echo "**** MAKE SURE YOU ALREADY INSTALLED ELASTIC SEARCH before installing this!!! **** \r\n \r\n"
 
-Updating system first..."
-sudo -E apt-get update
-wait
-sudo -E apt-get upgrade -y
-wait
-echo "Freeing up space"
-sudo apt-get autoremove -y
-wait
-echo "Downloading required dependencies...\r\n\r\n"
-#--------------------------------------------------------------------------------------------
-if [ ! -s "/etc/apt/sources.list.d/elastic-7.x.list" ]
-then
-    wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-    sudo -E apt-get install -y apt-transport-https
-    echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
-fi
-
-sudo -E apt-get update
-wait
 sudo -E apt-get install -y logstash
 #sudo -E apt-get install -y ruby ruby-bundler
 
