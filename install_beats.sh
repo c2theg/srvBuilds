@@ -31,6 +31,8 @@ Version:  0.0.9                             \r\n
 Last Updated:  3/15/2020
 \r\n \r\n"
 
+echo "**** MAKE SURE YOU ALREADY INSTALLED ELASTIC SEARCH before installing this!!! **** \r\n \r\n"
+
 sudo apt-get -y install libpcap0.8
 
 echo -e "Installing Packetbeat \r\n  https://www.elastic.co/guide/en/beats/packetbeat/current/packetbeat-getting-started.html  \r\n \r\n"
