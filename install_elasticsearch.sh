@@ -25,13 +25,16 @@ https://www.elastic.co/guide/index.html
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch.sh
 This really is meant to be run under Ubuntu 14.04 - 18.04 LTS +
 \r\n \r\n
-Version:  0.2.3                             \r\n
-Last Updated:  3/14/2020
+Version:  0.2.4                             \r\n
+Last Updated:  3/15/2020
 \r\n \r\n"
+
+sudo apt-get install -y apt-transport-https
 
 echo -e "Installing Java (OpenJRE & OpenJDK 11)...  \r\n \r\n "
 sudo add-apt-repository -y ppa:webupd8team/java
 sudo apt-get update
+
 
 sudo apt -y install default-jre
 sudo apt -y install default-jdk
