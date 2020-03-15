@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2                             \r\n
-Last Updated:  5/31/2017
+Version:  1.3                             \r\n
+Last Updated:  3/15/2020
 \r\n \r\n
 #Updating system first..."
 #sudo -E apt-get update
@@ -44,11 +44,11 @@ sudo apt-get install -y snmp-mibs-downloader
 wait
 sudo download-mibs
 wait
-wget http://sourceforge.net/projects/net-snmp/files/net-snmp/5.7.3/net-snmp-5.7.3.tar.gz 
+wget http://sourceforge.net/projects/net-snmp/files/net-snmp/5.8/net-snmp-5.8.tar.gz 
 wait
-tar -xvzf net-snmp-5.7.3.tar.gz
+tar -xvzf net-snmp-5.8.tar.gz
 wait
-mv net-snmp-5.7.3 net-snmp
+mv net-snmp-5.8 net-snmp
 wait
 cd net-snmp
 wait
