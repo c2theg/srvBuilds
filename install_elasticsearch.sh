@@ -25,32 +25,26 @@ https://www.elastic.co/guide/index.html
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch.sh
 This really is meant to be run under Ubuntu 14.04 - 18.04 LTS +
 \r\n \r\n
-Version:  0.2.4                             \r\n
+Version:  0.2.5                             \r\n
 Last Updated:  3/15/2020
 \r\n \r\n"
-
-sudo apt-get install -y apt-transport-https
 
 echo -e "Installing Java (OpenJRE & OpenJDK 11)...  \r\n \r\n "
 sudo add-apt-repository -y ppa:webupd8team/java
 sudo apt-get update
 
-
 sudo apt -y install default-jre
 sudo apt -y install default-jdk
 wait
 
-
-echo -e "Installing Elastic Search Latest \r\n \r\n"
-wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-
-sudo apt-get install -y apt-transport-https
-if [ ! -s "/etc/apt/sources.list.d/elastic-7.x.list" ]
-then
-	echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+echo -e "Installing ElasticSearch \r\n \r\n"
+if [ ! -s "/etc/apt/sources.list.d/elastic-7.x.list" ]; then
+    wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+    sudo -E apt-get install -y apt-transport-https
+    echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+    sudo apt-get update
 fi
 
-sudo apt-get update
 sudo apt-get install -y elasticsearch
 
 echo -e "Adding: ulimit -n 65536  \r\n \r\n "
@@ -61,15 +55,12 @@ echo "Setting Java Heap size to 2gb. -> MAX 32gb, DONT GO OVER 32GB even if you 
 export ES_HEAP_SIZE=2g
 ES_JAVA_OPTS="-Xms2g -Xmx2g" /usr/share/elasticsearch/bin/elasticsearch
 #--------------------------------------------------
-
 echo "Downloading optimized config...  \r\n \r\n "
 
-if [ -s "/etc/elasticsearch/logging.yml" ]
-then
+if [ -s "/etc/elasticsearch/logging.yml" ]; then
 	echo "Deleting file  logging.yml "
 	rm /etc/elasticsearch/logging.yml
 fi
-
 #---------------------------------
 mkdir -p /media/data/es/data
 mkdir -p /media/data/es/logs
@@ -91,9 +82,9 @@ mv elasticsearch_jvm.options /etc/elasticsearch/jvm.options
 echo " Restarting ElasticSearch... \r\n \r\n "
 sudo /etc/init.d/elasticsearch restart
 sudo update-rc.d elasticsearch defaults 95 10
-#----- Install / Updates Plugins ----
-cd /usr/share/elasticsearch/
 
+#----- Install / Updates Plugins ----
+#cd /usr/share/elasticsearch/
 #sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu
 # sudo bin/elasticsearch-plugin install file:///path/to/plugin.zip
 # sudo bin/elasticsearch-plugin install http://some.domain/path/to/plugin.zip
@@ -116,8 +107,8 @@ cd ~
 
 echo "\r\n \r\n "
 #netstat -a -n | grep tcp | grep 9200
-ps -ef | grep elasticsearch
 
+ps -ef | grep elasticsearch
 netstat -tulnp
 
 #curl 127.0.0.1:9200
