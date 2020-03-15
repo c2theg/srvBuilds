@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3                             \r\n
+Version:  1.3.1                             \r\n
 Last Updated:  3/15/2020
 \r\n \r\n
 #Updating system first..."
@@ -30,20 +30,17 @@ wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 rm snmpd.conf
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/snmpd.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/snmpd.conf
 wait
 chmod u+x snmpd.conf
 wait
-sudo apt-get install -y libperl-dev snmp lm-sensors fancontrol sensord read-edid i2c-tools rrdtool libi2c-dev python-smbus librrds-perl unzip zip snmpd
+sudo apt-get install -y libperl-dev snmp snmpd lm-sensors fancontrol read-edid i2c-tools rrdtool libi2c-dev python-smbus librrds-perl 
+sudo apt-get install -y unzip zip
 wait
-echo "deb http://nova.clouds.archive.ubuntu.com/ubuntu trusty main multiverse" >> /etc/apt/sources.list
-wait
-sudo apt-get update -y
-wait
+
 sudo apt-get install -y snmp-mibs-downloader
-wait
 sudo download-mibs
-wait
+
 wget http://sourceforge.net/projects/net-snmp/files/net-snmp/5.8/net-snmp-5.8.tar.gz 
 wait
 tar -xvzf net-snmp-5.8.tar.gz
@@ -52,14 +49,17 @@ mv net-snmp-5.8 net-snmp
 wait
 cd net-snmp
 wait
-./configure --with-default-snmp-version="3" --with-sys-contact="someuser@company.com" --with-sys-location="NDC_Server1" --with-logfile="/var/log/snmpd.log" --with-persistent-directory="/var/net-snmp"
+./configure --with-default-snmp-version="2c" --with-sys-contact="admin@companyxyz.com" --with-sys-location="DC_Server1" --with-logfile="/var/log/snmpd.log" --with-persistent-directory="/var/net-snmp"
 wait
 
 # Move Sample snmp.conf to the correct location
+cd ..
 cp snmpd.conf /etc/snmp/snmpd.conf
 wait
 /etc/init.d/snmpd restart
 wait
+
+service snmpd status
 
 echo "DONE! \r\n \r\n"
 echo "To edit, enter the following: \r\n"
