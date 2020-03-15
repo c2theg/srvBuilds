@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash6.sh
+https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash_latests.sh
 This really is meant to be run under Ubuntu 14.04 - 16.04 LTS +
 \r\n \r\n
 Version:  0.0.8                             \r\n
