@@ -58,5 +58,5 @@ discovery.seed_hosts: []
 #http.cors.allow-headers: X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization
 # ================== END CUSTOM CONFIG =========================
 # allow autocreation of indexes
-xpack.security.enabled: true
+xpack.security.enabled: false
 action.auto_create_index: ".security*,.monitoring*,.watches,.triggered_watches,.watcher-history*,.ml*,.logstash*"
