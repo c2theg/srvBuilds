@@ -19,11 +19,12 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.1.9                            \r\n
-Last Updated:  3/14/2020
+Version:  0.1.10                            \r\n
+Last Updated:  3/15/2020
 \r\n \r\n"
 
-echo "**** MAKE SURE YOU ALREADY INSTALLED ELASTIC SEARCH before installing this!!! **** \r\n \r\n"
+echo "**** MAKE SURE YOU ALREADY INSTALLED ELASTIC SEARCH before installing this!!! **** \r\n
+ -- This will install the matching version of ElasticSearch -- \r\n \r\n"
 
 echo " Source: https://www.elastic.co/guide/en/kibana/current/deb.html \r\n \r\n "
 sudo apt-get install -y kibana
