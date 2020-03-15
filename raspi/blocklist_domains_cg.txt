@@ -100,16 +100,17 @@ app.musemuse.cn
 share.musemuse.cn
 musemuse.cn
 www.musemuse.cn
-static.cmptch.com	
-#---- snap -------
-www.snapchat.com
-snapchat.com
-app.snapchat.com
-mvm.snapchat.com
-us-east4-gcp.api.snapchat.com
-api.snapchat.com
-feelinsonice-hrd.appspot.com
-feelinsonice.appspot.com
-feelinsonice.l.google.com
-app.snapchat.com
-data.flurry.com
+static.cmptch.com
+
+#---- SnapChat -------
+#www.snapchat.com
+#snapchat.com
+#app.snapchat.com
+#mvm.snapchat.com
+#us-east4-gcp.api.snapchat.com
+#api.snapchat.com
+#feelinsonice-hrd.appspot.com
+#feelinsonice.appspot.com
+#feelinsonice.l.google.com
+#app.snapchat.com
+#data.flurry.com
