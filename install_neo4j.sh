@@ -27,7 +27,7 @@ Last Updated:  3/15/2020
 wget --no-check-certificate -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
 echo 'deb http://debian.neo4j.org/repo stable/' > /etc/apt/sources.list.d/neo4j.list
 sudo -E apt update
-sudo -E apt install neo4j
+sudo -E apt install -y neo4j
 
 sudo -E systemctl start neo4j
 sudo -E systemctl enable neo4j
