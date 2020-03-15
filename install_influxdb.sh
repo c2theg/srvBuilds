@@ -24,27 +24,26 @@ echo "
 
 This really is meant to be run under Ubuntu 16.04 LTS +
 \r\n \r\n
-Version:  0.0.1                             \r\n
-Last Updated:  8/8/2018
+Version:  0.0.2                             \r\n
+Last Updated:  3/15/2020
 \r\n \r\n"
 
-sudo -E apt-get update
-wait
-sudo -E apt-get upgrade -y
-wait
+#echo 'deb https://repos.influxdata.com/ubuntu bionic stable' >> /etc/apt/sources.list.d/influxdb.list
+#sudo curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
 
-echo 'deb https://repos.influxdata.com/ubuntu bionic stable' >> /etc/apt/sources.list.d/influxdb.list
+#wget https://dl.influxdata.com/influxdb/releases/influxdb_1.7.10_amd64.deb
+#sudo dpkg -i influxdb_1.7.10_amd64.deb
 
-sudo curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
+wget -qO- https://repos.influxdata.com/influxdb.key | sudo apt-key add -
+source /etc/lsb-release
+echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
 
-sudo apt-get update
-wait
 
-sudo -E apt-get install -y influxdb
+sudo -E apt-get update && sudo apt-get install -y influxdb
+sudo service influxdb start
 
-wait
-
-sudo -E systemctl start influxdb
+sudo systemctl unmask influxdb.service
+sudo systemctl start influxdb
 sudo -E systemctl enable influxdb
 
 sudo  systemctl status influxdb
