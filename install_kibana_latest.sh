@@ -63,3 +63,5 @@ echo "DONE! \r\n \r\n Point your browser to:  http://localhost:5601  to view it 
 #check out the site here: https://www.rosehosting.com/blog/install-and-configure-the-elk-stack-on-ubuntu-16-04/  \r\n \r\n "
 
 curl -X GET "localhost:5601/api/status"
+
+curl -u kibana:changeme http://localhost:9200/_xpack?pretty
