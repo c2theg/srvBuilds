@@ -120,4 +120,6 @@ netstat -tulnp
 #curl 127.0.0.1:9200
 curl -X GET "localhost:9200/"
 
+curl -u elastic:changeme http://localhost:9200
+
 echo "DONE! \r\n \r\n"
