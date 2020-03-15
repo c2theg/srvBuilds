@@ -25,7 +25,8 @@ Version:  0.0.9                             \r\n
 Last Updated:  3/15/2020
 \r\n \r\n"
 
-echo "**** MAKE SURE YOU ALREADY INSTALLED ELASTIC SEARCH before installing this!!! **** \r\n \r\n"
+echo "**** MAKE SURE YOU ALREADY INSTALLED ELASTIC SEARCH before installing this!!! **** \r\n
+ -- This will install the matching version of ElasticSearch -- \r\n \r\n"
 
 sudo -E apt-get install -y logstash
 #sudo -E apt-get install -y ruby ruby-bundler
