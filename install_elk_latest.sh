@@ -18,24 +18,25 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.2.0                            \r\n
-Last Updated:  2/16/2020
+Version:  0.2.1                            \r\n
+Last Updated:  3/15/2020
 \r\n \r\n"
 
 echo "Deleting old versions... \r\n \r\n"
 rm install_elasticsearch.sh
+rm install_kibana_latest.sh
+rm install_logstash_latest.sh
 rm install_beats.sh
-rm install_logstash.sh
-rm install_kibana.sh
 
 echo "\r\n \r\n Downloading Configs... \r\n \r\n"
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch.sh && sudo chmod u+x install_elasticsearch.sh && sudo ./install_elasticsearch.sh 
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch.sh  && sudo chmod u+x install_elasticsearch.sh && ./install_elasticsearch.sh
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_beats.sh && sudo chmod u+x install_beats.sh && sudo ./install_beats.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_kibana_latest.sh && chmod u+x install_kibana_latest.sh && ./install_kibana_latest.sh
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash.sh  && sudo chmod u+x install_logstash.sh && sudo ./install_logstash.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash_latest.sh && chmod u+x install_logstash_latest.sh && ./install_logstash_latest.sh
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_kibana.sh  && sudo chmod u+x install_kibana.sh && sudo ./install_kibana.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_beats.sh && chmod u+x install_beats.sh && ./install_beats.sh
 
-echo "\r\n \r\n  Done installing Elastic Stack ( E L K ) \r\n \r\n "
+
+echo "\r\n \r\n  Finished installing Elastic Stack ( E L K ) \r\n \r\n "
