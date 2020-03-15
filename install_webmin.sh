@@ -6,9 +6,7 @@
 #
 clear
 
-Version='1.930'
-
-
+Version='1.941'
 echo "
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
@@ -23,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.2.8                            \r\n
-Last Updated:  11/15/2019
+Version:  1.2.9                            \r\n
+Last Updated:  3/15/2020
 \r\n \r\n
 
 This will install version  $Version of Webmin \r\n \r\n
