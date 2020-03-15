@@ -61,3 +61,5 @@ echo "DONE! \r\n \r\n Point your browser to:  http://localhost:5601  to view it 
 #echo " -- Secure Kibana behind Nginx Reverse proxy \r\n \r\n
 #echo "admin:$(openssl passwd -apr1 YourStrongPassword)" | sudo tee -a /etc/nginx/htpasswd.kibana
 #check out the site here: https://www.rosehosting.com/blog/install-and-configure-the-elk-stack-on-ubuntu-16-04/  \r\n \r\n "
+
+curl -X GET "localhost:5601/api/status"
