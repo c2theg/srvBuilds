@@ -20,7 +20,7 @@ echo "
 
 This really is meant to be run under Ubuntu 16.04 - 18.04 LTS +
 \r\n \r\n
-Version:  0.0.1                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  3/15/2020
 \r\n \r\n"
 
@@ -32,7 +32,7 @@ sudo -E apt install -y neo4j
 sudo -E systemctl start neo4j
 sudo -E systemctl enable neo4j
 
-sudo  systemctl status influxdb
+sudo systemctl status neo4j
 #-------------------------
 
 echo "DONE! \r\n \r\n"
