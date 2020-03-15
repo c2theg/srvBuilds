@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.2                             \r\n
-Last Updated:  8/25/2019
+Version:  0.0.4                             \r\n
+Last Updated:  3/15/2020
 \r\n \r\n
 Updating system first..."
 #sudo -E apt-get update
@@ -36,8 +36,7 @@ sudo -E apt-get update
 wait
 sudo apt-get install -y percona-server-server
 wait
-mkdir /var/log/mysql
-mkdir /var/log/mysql/replication/
+mkdir -p /var/log/mysql/replication/
 sudo chmod -R 755 /var/log/mysql/ && sudo chown -R mysql:mysql /var/log/mysql/
 
 #echo "\r\n Downloading Config \r\n"
@@ -46,6 +45,7 @@ sudo chmod -R 755 /var/log/mysql/ && sudo chown -R mysql:mysql /var/log/mysql/
 #sudo mv "mysqld.cnf" "/etc/mysql/percona-server.conf.d/mysqld.cnf"
 wait
 echo "\r\n Percona Config Download Complete \r\n"
+
 #sudo /etc/init.d/mysql restart
 #echo "\r\n \r\n \r\n \r\n"
 #echo "To create a remote connection use the following: \r\n \r\n"
