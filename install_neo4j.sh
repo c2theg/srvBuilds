@@ -20,12 +20,15 @@ echo "
 
 This really is meant to be run under Ubuntu 16.04 - 18.04 LTS +
 \r\n \r\n
-Version:  0.0.3                             \r\n
+Version:  0.0.4                             \r\n
 Last Updated:  3/15/2020
 \r\n \r\n"
 
-wget --no-check-certificate -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
-echo 'deb http://debian.neo4j.org/repo stable/' > /etc/apt/sources.list.d/neo4j.list
+#wget --no-check-certificate -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
+wget -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
+
+echo 'deb https://debian.neo4j.org/repo stable/' | sudo tee /etc/apt/sources.list.d/neo4j.list
+
 sudo -E apt update
 sudo -E apt install -y neo4j
 
