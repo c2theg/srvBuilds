@@ -1,4 +1,4 @@
-# ======== Christopher Gray - ES v7.x - Custom Config v0.6.7 - 3/13/20 ========
+# ======== Christopher Gray - ES v7.6+ - Custom Config v0.6.8 - 3/15/20 ========
 # https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html
 #   Set Permissions:
 #       sudo chmod -R 755 /media/data/es/ && sudo chown -R elasticsearch:elasticsearch /media/data/es/
@@ -17,35 +17,22 @@ node.attr.rack: r1
 node.master: true
 node.data: true
 node.ingest: true
-#-- XPack --
-#node.ml: true 
-#xpack.ml.enabled: true
+#search.remote.connect: false
 # ---------------------------------- Network -----------------------------------
-network.host: 0.0.0.0   # HAS to be set to 0.0.0.0 for Kibana to work
+network.host: localhost
+# HAS to be set the same as Kibana for it to work
 #network.host: ${ES_NETWORK_HOST} #-- Use Env variable --
 http.port: 9200   # incoming HTTP requests
-# transport.tcp.port: 9300 # for communication between nodes - deprecated
 #network.tcp.send_buffer_size: 2048
 #network.tcp.receive_buffer_size: 2048
 # ----------------------------------- Paths ------------------------------------
 path.data: /media/data/es/data
 path.logs: /media/data/es/logs
-#logs: /var/log/elasticsearch  # Default Path
-# ----------------------------------- Plugins ------------------------------------
-#Default Path: /usr/share/elasticsearch/plugins
-#plugin.mandatory: analysis-icu,lang-js
 # ----------------------------------- Memory -----------------------------------
 bootstrap.memory_lock: false
 # --------------------------------- Discovery ----------------------------------
-#discovery.zen.ping.unicast.hosts: ["10.1.1.2:9300","10.1.1.3","es_3"]
-#discovery.zen.ping_timeout: 10
-#discovery.zen.minimum_master_nodes: 2  ###-- import for master node failure
-
-discovery.seed_hosts: []
-#discovery.zen.minimum_master_nodes: 2
-#gateway.recover_after_nodes: 2
-#gateway.recover_after_time: 5m
-#bootstrap.system_call_filter: false
+#discovery.seed_hosts: ["127.0.0.1", "[::1]"]
+#cluster.initial_master_nodes: ["node-1"]
 # ---------------------------------- Gateway -----------------------------------
 #gateway.recover_after_nodes: 2
 # ---------------------------------- HTTP -----------------------------------
@@ -56,7 +43,12 @@ discovery.seed_hosts: []
 #--- if using XPack ---
 #http.cors.allow-credentials: true
 #http.cors.allow-headers: X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization
-# ================== END CUSTOM CONFIG =========================
-# allow autocreation of indexes
+#--------------------------------
 xpack.security.enabled: false
-action.auto_create_index: ".security*,.monitoring*,.watches,.triggered_watches,.watcher-history*,.ml*,.logstash*"
+action.auto_create_index: ".security*,.monitoring*,.watches,.triggered_watches,.watcher-history*,.ml*,.logstats*"
+# ----------------------------------- Plugins ------------------------------------
+#Default Path: /usr/share/elasticsearch/plugins
+#plugin.mandatory: analysis-icu,lang-js
+#-- XPack --
+#node.ml: true 
+#xpack.ml.enabled: true
