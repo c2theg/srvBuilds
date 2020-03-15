@@ -23,6 +23,8 @@ Version:  0.1.9                            \r\n
 Last Updated:  3/14/2020
 \r\n \r\n"
 
+echo "**** MAKE SURE YOU ALREADY INSTALLED ELASTIC SEARCH before installing this!!! **** \r\n \r\n"
+
 echo " Source: https://www.elastic.co/guide/en/kibana/current/deb.html \r\n \r\n "
 sudo apt-get install -y kibana
 
