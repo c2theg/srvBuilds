@@ -101,3 +101,10 @@ share.musemuse.cn
 musemuse.cn
 www.musemuse.cn
 static.cmptch.com	
+#---- snap -------
+www.snapchat.com
+snapchat.com
+app.snapchat.com
+mvm.snapchat.com
+us-east4-gcp.api.snapchat.com
+api.snapchat.com
