@@ -132,11 +132,11 @@ sudo apt-get install -y nginx nginx-common nginx-full fcgiwrap gcc make libpcre3
 #-- Download PHP Configs ---
 #sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start  && update-rc.d php-fastcgi defaults
 cd ~
-echo "Downloading PHP-Fastcgi Config"
-wget -O "php-fastcgi" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fastcgi.sh"
-wait
-sudo mv "php-fastcgi" "/etc/init.d/php-fastcgi"
-wait
+#echo "Downloading PHP-Fastcgi Config"
+#wget -O "php-fastcgi" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fastcgi.sh"
+#wait
+#sudo mv "php-fastcgi" "/etc/init.d/php-fastcgi"
+#wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
 
 if [ -s "/etc/php/7.4/fpm/php.ini" ]; then
