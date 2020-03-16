@@ -20,8 +20,8 @@ echo "
 
  
 |￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣|
-|    GREAT ENGINEERS      |
-|     DO NOT GROW ON      |
+|    GREAT ENGINEERS       |
+|     DO NOT GROW ON       |
 |         TREES           |
 |＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿|
           (\_❀) ||
@@ -111,8 +111,7 @@ sudo apt-get install -y php-memcached memcached
 wait
 
 cd ~
-if [ -s "memcached.conf" ]
-then
+if [ -s "memcached.conf" ]; then
 	echo "Deleting file  memcached.conf "
 	rm memcached.conf
 fi
@@ -140,8 +139,7 @@ sudo mv "php-fastcgi" "/etc/init.d/php-fastcgi"
 wait
 sudo chmod +x /etc/init.d/php-fastcgi && /etc/init.d/php-fastcgi start && update-rc.d php-fastcgi defaults
 
-if [ -s "/etc/php/7.4/fpm/php.ini" ]
-then
+if [ -s "/etc/php/7.4/fpm/php.ini" ]; then
 	echo "Deleting file: PHP.ini config "
 	rm /etc/php/7.4/fpm/php.ini
 	rm /etc/php/7.4/fpm/php-fpm.conf
@@ -162,8 +160,7 @@ sudo mv "php_browscap.ini" "/media/data/php_browscap.ini"
 wait
 echo "PHP-FPM Configs download complete"
 #---------------------------------------------------------------------------------------------------------
-if [ -s "/etc/nginx/nginx.conf" ]
-then
+if [ -s "/etc/nginx/nginx.conf" ]; then
 	echo "Deleting file nginx config "
 	rm /etc/nginx/nginx.conf
 	rm nginx.conf
@@ -203,8 +200,7 @@ wget -O "site1_80443.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/m
 wait
 sudo mv "site1_80443.conf" "/etc/nginx/sites-enabled/site1_80443.conf"
 wait
-if [ -s "/etc/nginx/sites-enabled/default" ]
-then
+if [ -s "/etc/nginx/sites-enabled/default" ]; then
 	echo "Deleting file  nginx default config "
 	rm "/etc/nginx/sites-enabled/default"
 fi
