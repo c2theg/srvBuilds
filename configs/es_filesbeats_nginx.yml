@@ -1,0 +1,6 @@
+output.elasticsearch:
+  hosts: ["<es_url>"]
+  username: "elastic"
+  password: "<password>"
+setup.kibana:
+  host: "<kibana_url>"
