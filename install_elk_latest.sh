@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.2.1                            \r\n
+Version:  0.2.2                            \r\n
 Last Updated:  3/15/2020
 \r\n \r\n"
 
@@ -28,7 +28,11 @@ rm install_kibana_latest.sh
 rm install_logstash_latest.sh
 rm install_beats.sh
 
-echo "\r\n \r\n Downloading Configs... \r\n \r\n"
+echo "
+
+Downloading Configs... 
+
+"
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch.sh  && sudo chmod u+x install_elasticsearch.sh && ./install_elasticsearch.sh
 
@@ -39,4 +43,17 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_logstash_
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_beats.sh && chmod u+x install_beats.sh && ./install_beats.sh
 
 
-echo "\r\n \r\n  Finished installing Elastic Stack ( E L K ) \r\n \r\n "
+echo "
+
+
+-------- Finished installing Elastic Stack ( E L K ) --------
+           Visit Kibana at http://<Server IP>:5601
+           
+
+"
+
+ip a
+
+echo "
+
+"
