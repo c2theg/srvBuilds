@@ -101,7 +101,7 @@ share.musemuse.cn
 musemuse.cn
 www.musemuse.cn
 static.cmptch.com
-
+acloudimages.com
 #---- SnapChat -------
 #www.snapchat.com
 #snapchat.com
