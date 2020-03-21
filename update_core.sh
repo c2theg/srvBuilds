@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.6.1                             \r\n
-Last Updated:  3/6/2020
+Version:  1.6.2                             \r\n
+Last Updated:  3/21/2020
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -43,8 +43,7 @@ echo "Checking Internet status...\r\n\r\n"
 #if [ $? -eq 0 ]
 if nc -zw1 google.com 443; then
 	echo "Connected!!! \r\n \r\n"
-	if [ -s "update_core.sh" ]
-	then
+	if [ -s "update_core.sh" ]; then
 		echo "Deleting old files \r\n"
 		rm sys_cleanup.sh
  		rm update_ubuntu14.04.sh
@@ -55,8 +54,7 @@ if nc -zw1 google.com 443; then
 		rm update_blocklists_local_servers.*
 		rm update_time.sh
 	fi
-	if [ -s "/root/update_core.sh" ]
-	then
+	if [ -s "/root/update_core.sh" ]; then
 		echo "Deleting old files 2 \r\n"	
 		#------ under crontab -----
 		rm /root/sys_cleanup.sh
@@ -80,8 +78,7 @@ if nc -zw1 google.com 443; then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod u+x update_time.sh
 	#wget -O - -q -t 1 --timeout=1 https://api.magnetoai.com/update_check.php?f=update_core > /dev/null
 	
-	if [ -s "install_docker.sh" ]
-	then
+	if [ -s "install_docker.sh" ]; then
 		rm install_docker.sh
 		rm update_docker_images.sh
 		rm /root/update_docker_images.sh
@@ -90,8 +87,7 @@ if nc -zw1 google.com 443; then
 	fi
 	#-----------------------------------------------
 	wait
-	if [ -d "/root/" ]
-	then
+	if [ -d "/root/" ]; then
 		cp update_core.sh /root/update_core.sh
 		cp sys_cleanup.sh /root/sys_cleanup.sh
 		cp update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
@@ -134,8 +130,7 @@ if nc -zw1 google.com 443; then
 	sh /root/update_ubuntu14.04.sh
 	sh /root/update_time.sh
 	
-	if [ -s "update_docker_images.sh" ]
-	then
+	if [ -s "update_docker_images.sh" ]; then
 		# Update all docker images
 		sudo sh ./update_docker_images.sh
 	fi
@@ -146,8 +141,7 @@ fi
 
 Cron_output=$(crontab -l | grep "update_core.sh")
 #echo "The output is: [ $Cron_output ]"
-if [ -z "$Cron_output" ]
-then
+if [ -z "$Cron_output" ]; then
     echo "Script not in crontab. Adding."
 
     # run “At 04:20.” everyday
@@ -167,11 +161,9 @@ else
     echo "Script was found in crontab. skipping addition"
 fi
 
-
 Cron_output=$(crontab -l | grep "sys_restart.sh")
 #echo "The output is: [ $Cron_output ]"
-if [ -z "$Cron_output" ]
-then
+if [ -z "$Cron_output" ]; then
     #-- Restart Server “At 03:13 on day-of-month 7.”
     line="13 3 7 * * /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
@@ -179,12 +171,9 @@ fi
 
 Cron_output=$(crontab -l | grep "update_blocklists_local_servers.sh")
 #echo "The output is: [ $Cron_output ]"
-if [ -z "$Cron_output" ]
-then
+if [ -z "$Cron_output" ]; then
     #-- Restart Server “At 03:13 on day-of-month 7.”
     line="5 1 * * 6 /root/update_blocklists_local_servers.sh >> /var/log/update_blocklists_local_servers.log 2>&1"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
 fi
-
-
 echo "Done! \r\n \r\n"
