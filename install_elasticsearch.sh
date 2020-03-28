@@ -25,8 +25,8 @@ https://www.elastic.co/guide/index.html
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_elasticsearch.sh
 This really is meant to be run under Ubuntu 14.04 - 18.04 LTS +
 \r\n \r\n
-Version:  0.2.5                             \r\n
-Last Updated:  3/15/2020
+Version:  0.2.6                             \r\n
+Last Updated:  3/28/2020
 \r\n \r\n"
 
 echo -e "Installing Java (OpenJRE & OpenJDK 11)...  \r\n \r\n "
@@ -50,6 +50,10 @@ sudo apt-get install -y elasticsearch
 echo -e "Adding: ulimit -n 65536  \r\n \r\n "
 ulimit -n 65536
 echo "elasticsearch  -  nofile  65536" >> /etc/security/limits.conf 
+
+#--- fix for containers ---
+sudo sysctl -w vm.max_map_count=262141
+echo "vm.max_map_count=262141" >> /etc/sysctl.conf
 
 echo "Setting Java Heap size to 2gb. -> MAX 32gb, DONT GO OVER 32GB even if you have 64gb+ of ram!!! \r\n \r\n"
 export ES_HEAP_SIZE=2g
