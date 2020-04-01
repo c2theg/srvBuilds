@@ -75,4 +75,7 @@ dpkg --list | grep linux-image
 #apt-get --purge remove linux-image-XXX
 
 sudo update-grub2
+
+echo "REBOOTING System.. "
 sudo reboot
+
