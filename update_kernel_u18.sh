@@ -25,6 +25,7 @@ Last Updated:  3/31/2020
 \r\n \r\n"
 wait
 # https://www.kernel.org/
+# https://kernel.ubuntu.com/~kernel-ppa/mainline/   -> DOWNLOAD FROM 
 # https://www.tecmint.com/upgrade-kernel-in-ubuntu/
 # https://www.howtoforge.com/tutorial/how-to-upgrade-linux-kernel-in-ubuntu-1604-server/
 # http://kroah.com/log/blog/2018/08/24/what-stable-kernel-should-i-use/
