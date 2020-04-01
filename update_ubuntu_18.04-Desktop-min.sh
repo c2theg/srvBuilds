@@ -19,8 +19,8 @@ echo "Running update_ubuntu_18.04-Desktop-min.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.6                             \r\n
-Last Updated:  10/23/2019
+Version:  0.0.7                             \r\n
+Last Updated:  4/1/2020
 \r\n \r\n"
 wait
 
@@ -32,7 +32,7 @@ sudo apt-get update && apt-get upgrade
 
 #--- General ---
 sudo apt install -y net-tools curl ssh
-sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump tcl8.6 ncat
+sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump tcl8.6 ncat gimp
 # slurm -z -c -L -i ens16
 
 
@@ -59,6 +59,23 @@ sudo apt install linux-generic-hwe-18.04 linux-headers-generic-hwe-18.04 linux-i
 #Password too long - only the first 8 characters will be used
 #sudo vncserver
 
+# Themes and looks
+# https://www.howtogeek.com/358049/how-to-install-desktop-themes-on-ubuntu-18.04-lts/
+sudo apt install -y gnome-tweaks gnome-shell-extensions unity-tweak-tool
+sudo apt install -y adwaita-icon-theme-full
+sudo apt install -y numix-gtk-theme numix-icon-theme arc-theme
+
+
+sudo apt-get install -y xscreensaver xscreensaver-gl-extra xscreensaver-data-extra
+xscreensaver &
+sudo apt-get remove gnome-screensaver
+
+
+#-- Utilities ----
+sudo apt-get install -y gnome-startup-applications
+gnome-session-properties
+
+sudo add-apt-repository ppa:transmissionbt/ppa
 
 #--- Chrome ---
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -88,6 +105,21 @@ wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add
 echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
 sudo apt-get update
 sudo apt-get install -y sublime-text
+
+#--- Termius ---
+wget https://www.termius.com/download/linux/Termius.deb
+chmod u+x Termius.deb 
+sudo apt install ./Termius.deb
+
+#---- Others ----
+sudo snap install vlc
+
+#--- widgets ----
+sudo add-apt-repository ppa:kasra-mp/ubuntu-indicator-weather
+sudo apt update
+sudo apt install indicator-weather
+
+sudo apt install conky
 
 
 
