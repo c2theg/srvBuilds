@@ -20,12 +20,14 @@ echo "Running update_kernel_u18.sh
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.3                             \r\n
-Last Updated:  1/5/2020
+Version:  0.0.4                             \r\n
+Last Updated:  3/31/2020
 \r\n \r\n"
 wait
+# https://www.kernel.org/
+# https://www.tecmint.com/upgrade-kernel-in-ubuntu/
 # https://www.howtoforge.com/tutorial/how-to-upgrade-linux-kernel-in-ubuntu-1604-server/
-
+# http://kroah.com/log/blog/2018/08/24/what-stable-kernel-should-i-use/
 #-------------------------------------------------------------------------------------------------
 sudo apt update
 sudo apt upgrade -y
@@ -41,16 +43,10 @@ cd ~/latest_kernel
 #----- download kernel's here ----->  https://kernel.ubuntu.com/~kernel-ppa/mainline/
 echo "visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n "
 
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.8/linux-headers-5.4.8-050408_5.4.8-050408.202001041436_all.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.8/linux-headers-5.4.8-050408-generic_5.4.8-050408.202001041436_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.8/linux-image-unsigned-5.4.8-050408-generic_5.4.8-050408.202001041436_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.8/linux-modules-5.4.8-050408-generic_5.4.8-050408.202001041436_amd64.deb
-
-# https://www.tecmint.com/upgrade-kernel-in-ubuntu/
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.0/linux-headers-5.0.0-050000_5.0.0-050000.201903032031_all.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.0/linux-headers-5.0.0-050000-generic_5.0.0-050000.201903032031_amd64.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.0/linux-image-unsigned-5.0.0-050000-generic_5.0.0-050000.201903032031_amd64.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.0/linux-modules-5.0.0-050000-generic_5.0.0-050000.201903032031_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428_5.4.28-050428.202003250833_all.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-image-unsigned-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-modules-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
 
 #-------------------------------------
 echo "Installing New Kernel... \r\n "
