@@ -19,7 +19,7 @@ echo "Running update_kernel_u18.sh
 Version:  0.1.6 
 Last Updated:  4/7/2020
 
-KERNEL - Mainline Build (STABLE) 5.4.30
+KERNEL - Mainline Build (STABLE) 5.4.28
 
 
 "
@@ -46,10 +46,10 @@ cd ~/latest_kernel
 #----- download kernel's here ----->  https://kernel.ubuntu.com/~kernel-ppa/mainline/
 echo "visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n "
 
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.30/linux-headers-5.4.30-050430_5.4.30-050430.202004021433_all.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.30/linux-headers-5.4.30-050430-generic_5.4.30-050430.202004021433_arm64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.30/linux-image-unsigned-5.4.30-050430-generic_5.4.30-050430.202004021433_arm64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.30/linux-modules-5.4.30-050430-generic_5.4.30-050430.202004021433_arm64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428_5.4.28-050428.202003250833_all.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-image-unsigned-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-modules-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
 
 #-------------------------------------
 echo "Installing New Kernel... \r\n "
