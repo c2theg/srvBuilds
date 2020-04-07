@@ -1,9 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
-#
 clear
 echo "Running update_kernel_u18.sh
 
@@ -19,10 +14,15 @@ echo "Running update_kernel_u18.sh
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
-Version:  0.0.4                             \r\n
-Last Updated:  3/31/2020
-\r\n \r\n"
+
+
+Version:  0.1.5 
+Last Updated:  4/7/2020
+
+KERNEL - Mainline Build (STABLE) 5.4.30
+
+
+"
 wait
 # https://www.kernel.org/
 # https://kernel.ubuntu.com/~kernel-ppa/mainline/   -> DOWNLOAD FROM 
@@ -32,7 +32,6 @@ wait
 #-------------------------------------------------------------------------------------------------
 sudo apt update
 sudo apt upgrade -y
-#sudo reboot
 sudo apt install byobu
 sudo apt list --upgradeable
 
@@ -44,10 +43,10 @@ cd ~/latest_kernel
 #----- download kernel's here ----->  https://kernel.ubuntu.com/~kernel-ppa/mainline/
 echo "visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n "
 
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428_5.4.28-050428.202003250833_all.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-image-unsigned-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-modules-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.30/linux-headers-5.4.30-050430_5.4.30-050430.202004021433_all.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.30/linux-headers-5.4.30-050430-generic_5.4.30-050430.202004021433_arm64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.30/linux-image-unsigned-5.4.30-050430-generic_5.4.30-050430.202004021433_arm64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.30/linux-modules-5.4.30-050430-generic_5.4.30-050430.202004021433_arm64.deb
 
 #-------------------------------------
 echo "Installing New Kernel... \r\n "
@@ -73,9 +72,7 @@ sudo apt-get autoremove
 dpkg --list | grep linux-image
 
 #apt-get --purge remove linux-image-XXX
-
 sudo update-grub2
 
-echo "REBOOTING System.. "
+echo "REBOOTING System!!  Please wait 1 minute before retrying."
 sudo reboot
-
