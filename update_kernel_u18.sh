@@ -16,7 +16,7 @@ echo "Running update_kernel_u18.sh
 
 
 
-Version:  0.1.5 
+Version:  0.1.6 
 Last Updated:  4/7/2020
 
 KERNEL - Mainline Build (STABLE) 5.4.30
@@ -39,6 +39,9 @@ uname -msr
 
 sudo mkdir -p ~/latest_kernel
 cd ~/latest_kernel
+
+#echo "Clean up downloaded kernels... \r\n "
+#rm ~/latest_kernel/*
 
 #----- download kernel's here ----->  https://kernel.ubuntu.com/~kernel-ppa/mainline/
 echo "visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n "
@@ -63,8 +66,8 @@ sudo update-grub
 #sudo purge-old-kernels --keep 1 -q
 #sudo update-grub
 #----------------------------------
-echo "Clean up downloaded kernels... \r\n "
-rm ~/latest_kernel/*
+#echo "Clean up downloaded kernels... \r\n "
+#rm ~/latest_kernel/*
 
 sudo apt --purge autoremove
 sudo dpkg --list | egrep -i --color 'linux-image|linux-headers'
