@@ -74,5 +74,15 @@ dpkg --list | grep linux-image
 #apt-get --purge remove linux-image-XXX
 sudo update-grub2
 
-echo "REBOOTING System!!  Please wait 1 minute before retrying."
+echo "
+
+
+REBOOTING SYSTEM NOW!!!
+
+
+Please wait 1 minute before retrying.
+
+
+
+"
 sudo reboot
