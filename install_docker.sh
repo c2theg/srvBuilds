@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.4                             \r\n
-Last Updated:  4/9/2020
+Version:  1.5.5                             \r\n
+Last Updated:  4/10/2020
 
 "
 echo "Downloading required dependencies...\r\n\r\n"
@@ -28,6 +28,7 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 sudo apt-get update
 apt-cache policy docker-ce
 sudo apt-get install -y docker-ce
+sudo apt  install -y docker-compose
 
 wait
 sudo systemctl status docker
