@@ -21,8 +21,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.8.0                             \r\n
-Last Updated:  3/10/2020
+Version:  1.8.1                             \r\n
+Last Updated:  4/18/2020
 \r\n \r\n"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
@@ -81,6 +81,10 @@ rm /var/log/unattended-upgrades/unattended-upgrades.log.*
 rm /var/log/upstart/*
 rm /var/log/syslog
 rm /var/log/messages
+rm /var/log/vmware-vmsvc-root.*
+rm /var/log/unattended-upgrades/*
+rm /var/log/kern.log
+
 #------ Security ----------------------------------------------------------
 rm /var/log/syslog.*
 rm /var/log/user.log.*
@@ -94,10 +98,20 @@ rm /var/log/letsencrypt/letsencrypt.log.*
 rm /var/log/mysql.log.*
 rm /var/log/mysql/mysql_error.log
 rm /var/log/mysql/error.log
+
 rm /var/log/mongodb/*
 rm /var/log/redis/*
+rm /var/log/neo4j/*
+
+#-- Restart Services --
+/etc/init.d/redis-server restart
 #------ ELK ----------------------------------------------------------
 rm /var/log/kibana/*
+rm /var/log/elasticsearch/*
+rm /var/log/logstash/*
+rm /var/log/metricbeat/*
+
+/etc/init.d/elasticsearch restart
 #------ Mail ----------------------------------------------------------
 rm /var/log/mail.log
 rm /var/log/mail.log.*
@@ -119,8 +133,17 @@ rm /var/log/php7.1-fpm.log
 rm /var/log/php7.1-fpm.log.*
 rm /var/log/php7.2-fpm.log
 rm /var/log/php7.2-fpm.log.*
+rm /var/log/php7.3-fpm.log
+rm /var/log/php7.3-fpm.log.*
+rm /var/log/php7.4-fpm.log
+rm /var/log/php7.4-fpm.log.*
 
+/etc/init.d/php7.0-fpm restart
+/etc/init.d/php7.1-fpm restart
 /etc/init.d/php7.2-fpm restart
+/etc/init.d/php7.3-fpm restart
+/etc/init.d/php7.4-fpm restart
+
 /etc/init.d/nginx restart
 #------- PI-Hole / DNS releated ----------
 pihole -f
@@ -151,9 +174,8 @@ rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
 rm /var/log/update_elk_plugins.log
 
-#--- BTSync / Resilio ---
+#--- Resilio ---
 rm /var/lib/resilio-sync/sync.log.*
-rm /var/lib/btsync/sync.log.old
 
 #----- DOCKER ------
 echo " From: https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images \r\n \r\n "
@@ -194,13 +216,10 @@ sudo lsof | grep deleted
 echo "\r\n \r\n"
 lsof +L1
 
-
 echo "\r\n \r\n"
 
 echo " Returns a list of files that most inode usage have.. \r\n "
 find / -xdev -type f | cut -d "/" -f2 | sort | uniq -c | sort -n | less
 
-
 du -ah / | sort -nr | head -n 10
-
 echo "\r\n \r\n Your best option is to restart the server to release these files... \r\n \r\n"
