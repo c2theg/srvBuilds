@@ -213,13 +213,12 @@ echo "\r\n \r\n \r\n \r\n"
 echo "Showing files still left open, as they could not be deleted until they are closed. \r\n \r\n"
 sudo lsof | grep deleted
 
-echo "\r\n \r\n"
-lsof +L1
+#echo "\r\n \r\n"
+#lsof +L1
 
-echo "\r\n \r\n"
-
+#echo "\r\n \r\n"
 echo " Returns a list of files that most inode usage have.. \r\n "
 find / -xdev -type f | cut -d "/" -f2 | sort | uniq -c | sort -n | less
 
-du -ah / | sort -nr | head -n 10
+#du -ah / | sort -nr | head -n 10
 echo "\r\n \r\n Your best option is to restart the server to release these files... \r\n \r\n"
