@@ -1,1 +1,10 @@
 *.tp-link.com
+#--- Tik Tok ---
+*.tiktok.com
+*.muscdn.com
+*.musical.ly
+*.tiktokcdn.com
+*.tiktokcdn.com.c.worldfcdn.com
+*-tiktokcdn-com.akamaized.net
+*.tiktokv.com
+*.tiktokcdn.com.wsdvs.com
