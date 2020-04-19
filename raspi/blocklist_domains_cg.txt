@@ -1,6 +1,6 @@
 # Custom blocklist - by: Chris Gray 
 # Date:  12/27/2018
-# Updated: 4/18/2020
+# Updated: 4/19/2020
 # Fetch the latest version of this file: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
 # ========================================================================================
 #-- to disable DoH on pi hole, for Firefox only currently
@@ -104,6 +104,8 @@ live.musical.ly
 pull-flv-l1.tiktokcdn.com.wsdvs.com
 pull-rtmp-l11.tiktokcdn.com
 pull-hls-l11.tiktokcdn.com
+pull-flv-l11.tiktokcdn.com
+pull-cmaf-f5.tiktokcdn.com
 pull-f5-ab.tiktokcdn.com
 p16.muscdn.com
 pull-f5.tiktokcdn.com.c.worldfcdn.com
