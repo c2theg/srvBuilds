@@ -1,3 +1,6 @@
+# By: Christopher Gray
+#  Updated: 4/19/2020
+#=================
 *.tp-link.com
 #--- Generic ---
 ^(.+[_.-])?ad[sxv]?[0-9]*[_.-]
