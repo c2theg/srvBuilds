@@ -72,12 +72,17 @@ https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
 ## Disconnect.me Ads
 https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 
-## Hosts-file.net
+## Hosts-file.net - NOW OWNED BY MalewareBytes!!! BOO!!!
 # https://hosts-file.net/ad_servers.txt
 # https://hosts-file.net/emd.txt
 # https://hosts-file.net/exp.txt
 # https://hosts-file.net/hjk.txt
 # https://hosts-file.net/pup.txt
+
+# https://hostsfile.tk/ ->  https://github.com/fredprod/host-file.net-backup
+https://raw.githubusercontent.com/fredprod/host-file.net-backup/master/ad_servers.txt
+https://raw.githubusercontent.com/fredprod/host-file.net-backup/master/emd.txt
+https://raw.githubusercontent.com/fredprod/host-file.net-backup/master/exp.txt
 
 ## uBlock Origin lists
 #https://www.malwaredomainlist.com/hostslist/hosts.txt - DOWN as of 1/12/2020
