@@ -16,6 +16,11 @@
 ^pixels?[-.]
 ^stat(s|istics)?[0-9]*[_.-]
 ^track(ing)?[0-9]*[_.-]
+^adse?rv(e(rs?)?|ices?)?[0-9]*[-.]
+^clicks?[-.]
+^telemetry[-.]
+^track(ers?|ing)?[0-9]*[-.]
+^traff(ic)?[-.]
 #--- Tik Tok ---
 *.tiktok.com
 *.muscdn.com
@@ -25,3 +30,5 @@
 *-tiktokcdn-com.akamaized.net
 *.tiktokv.com
 *.tiktokcdn.com.wsdvs.com
+((^)|(\.))tiktok\.
+((^)|(\.))tiktokcdn\.
