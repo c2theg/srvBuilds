@@ -23,8 +23,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 \r\n \r\n
-Version:  0.2.6                            \r\n
-Last Updated:  1/12/2020
+Version:  0.2.7                            \r\n
+Last Updated:  4/18/2020
 \r\n \r\n"
 
 #---------------------------------------------------------------------------------------
@@ -52,7 +52,10 @@ FileText="
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
-https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts
+## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts
+https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-porn/hosts
+https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling/hosts
+
 
 ## MalwareDomains
 https://raw.githubusercontent.com/Ultimate-Hosts-Blacklist/MalwareDomainList.com/master/volatile.list
@@ -70,11 +73,11 @@ https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
 https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 
 ## Hosts-file.net
-https://hosts-file.net/ad_servers.txt
-https://hosts-file.net/emd.txt
-https://hosts-file.net/exp.txt
-https://hosts-file.net/hjk.txt
-https://hosts-file.net/pup.txt
+# https://hosts-file.net/ad_servers.txt
+# https://hosts-file.net/emd.txt
+# https://hosts-file.net/exp.txt
+# https://hosts-file.net/hjk.txt
+# https://hosts-file.net/pup.txt
 
 ## uBlock Origin lists
 #https://www.malwaredomainlist.com/hostslist/hosts.txt - DOWN as of 1/12/2020
