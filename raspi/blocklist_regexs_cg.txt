@@ -30,5 +30,11 @@
 *-tiktokcdn-com.akamaized.net
 *.tiktokv.com
 *.tiktokcdn.com.wsdvs.com
+#------------------------
 ((^)|(\.))tiktok\.
+((^)|(\.))tiktokv\.
 ((^)|(\.))tiktokcdn\.
+((^)|(\.))muscdn\.
+((^)|(\.))musical\.
+((^)|(\.))tiktokcdn.com.c.worldfcdn.com\.
+((^)|(\.))tiktokcdn.com.wsdvs.com\.
