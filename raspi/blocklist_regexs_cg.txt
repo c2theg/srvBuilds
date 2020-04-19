@@ -25,15 +25,6 @@
 ^track(ers?|ing)?[0-9]*[-.]
 ^traff(ic)?[-.]
 #--- Tik Tok ---
-*.tiktok.com
-*.muscdn.com
-*.musical.ly
-*.tiktokcdn.com
-*.tiktokcdn.com.c.worldfcdn.com
-*-tiktokcdn-com.akamaized.net
-*.tiktokv.com
-*.tiktokcdn.com.wsdvs.com
-#------------------------
 ((^)|(\.))tiktok\.
 ((^)|(\.))tiktokv\.
 ((^)|(\.))tiktokcdn\.
