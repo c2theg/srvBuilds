@@ -6,7 +6,7 @@
 #
 clear
 now=$(date)
-echo "Running update_ubuntu_18.04-Desktop-min.sh at $now 
+echo "Running setup_ubuntu_desktop.sh at $now 
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
@@ -19,22 +19,24 @@ echo "Running update_ubuntu_18.04-Desktop-min.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.7                             \r\n
-Last Updated:  4/1/2020
+Version:  0.0.8                             \r\n
+Last Updated:  4/23/2020
 \r\n \r\n"
 wait
 
 sudo add-apt-repository universe
 
-# Ubuntu 18.04 setup with min install
+# Ubuntu 18.04+ setup with min install
 sudo apt-get install -y apt-transport-https
-sudo apt-get update && apt-get upgrade
+sudo apt-get update
+sudo apt-get upgrade -y
+
+sudo apt-get install -y snapd
 
 #--- General ---
 sudo apt install -y net-tools curl ssh
 sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump tcl8.6 ncat gimp
 # slurm -z -c -L -i ens16
-
 
 #-- VNC Server
 # https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-18-04
@@ -54,7 +56,8 @@ sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump tcl8.6 ncat gimp
 
 
 #--- Optional ---
-sudo apt install linux-generic-hwe-18.04 linux-headers-generic-hwe-18.04 linux-image-generic-hwe-18.04
+# for Ubuntu 18.04 only
+#sudo apt install linux-generic-hwe-18.04 linux-headers-generic-hwe-18.04 linux-image-generic-hwe-18.04
 
 #Password too long - only the first 8 characters will be used
 #sudo vncserver
@@ -65,11 +68,10 @@ sudo apt install -y gnome-tweaks gnome-shell-extensions unity-tweak-tool
 sudo apt install -y adwaita-icon-theme-full
 sudo apt install -y numix-gtk-theme numix-icon-theme arc-theme
 
-
-sudo apt-get install -y xscreensaver xscreensaver-gl-extra xscreensaver-data-extra
-xscreensaver &
-sudo apt-get remove gnome-screensaver
-
+#-- Bonus Screensavers
+#sudo apt-get install -y xscreensaver xscreensaver-gl-extra xscreensaver-data-extra
+#xscreensaver &
+#sudo apt-get remove gnome-screensaver
 
 #-- Utilities ----
 sudo apt-get install -y gnome-startup-applications
@@ -78,18 +80,18 @@ gnome-session-properties
 sudo add-apt-repository ppa:transmissionbt/ppa
 
 #--- Chrome ---
+echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
 
-echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
-
 #--- Download VSCode ---
-wget -O "vscode.deb" "https://go.microsoft.com/fwlink/?LinkID=760868"
-chmod u+x vscode.deb 
-sudo apt install ./vscode.deb
+#wget -O "vscode.deb" "https://go.microsoft.com/fwlink/?LinkID=760868"
+#chmod u+x vscode.deb 
+#sudo apt install ./vscode.deb
+sudo snap install code --classic
 
 #--- Postman ---
-sudo snap install postman
+sudo snap install -y postman
 
 #--- Wireshark ---
 sudo apt-get install -y libcap2-bin wireshark mmdb-bin qt5-image-formats-plugins qtwayland5 snmp-mibs-downloader wireshark-doc
@@ -109,17 +111,17 @@ sudo apt-get install -y sublime-text
 #--- Termius ---
 wget https://www.termius.com/download/linux/Termius.deb
 chmod u+x Termius.deb 
-sudo apt install ./Termius.deb
+sudo apt install -y ./Termius.deb
 
 #---- Others ----
-sudo snap install vlc
+sudo snap install -y vlc
 
 #--- widgets ----
 sudo add-apt-repository ppa:kasra-mp/ubuntu-indicator-weather
 sudo apt update
-sudo apt install indicator-weather
+sudo apt install -y indicator-weather
 
-sudo apt install conky
+sudo apt install -y conky
 
 
 
