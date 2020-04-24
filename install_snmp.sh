@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3.2                             \r\n
+Version:  1.3.3                             \r\n
 Last Updated:  4/24/2020
 \r\n \r\n
 #Updating system first..."
@@ -34,12 +34,16 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/snmpd.con
 wait
 chmod u+x snmpd.conf
 wait
-sudo apt-get install -y libperl-dev snmp snmpd lm-sensors fancontrol read-edid i2c-tools rrdtool libi2c-dev python-smbus librrds-perl 
+# python-smbus
 sudo apt-get install -y unzip zip
+sudo apt-get install -y libperl-dev snmp snmpd
 wait
-
 sudo apt-get install -y snmp-mibs-downloader
 sudo download-mibs
+
+#--- Sensors ---
+sudo apt-get install -y lm-sensors fancontrol read-edid i2c-tools
+sudo apt-get install -y rrdtool libi2c-dev librrds-perl
 
 #-- VISIT  http://www.net-snmp.org/download.html  for the latest version --
 #wget http://sourceforge.net/projects/net-snmp/files/net-snmp/5.8/net-snmp-5.8.tar.gz
