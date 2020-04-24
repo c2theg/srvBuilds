@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3.1                             \r\n
-Last Updated:  3/15/2020
+Version:  1.3.2                             \r\n
+Last Updated:  4/24/2020
 \r\n \r\n
 #Updating system first..."
 #sudo -E apt-get update
@@ -41,10 +41,11 @@ wait
 sudo apt-get install -y snmp-mibs-downloader
 sudo download-mibs
 
+#-- VISIT  http://www.net-snmp.org/download.html  for the latest version --
 #wget http://sourceforge.net/projects/net-snmp/files/net-snmp/5.8/net-snmp-5.8.tar.gz
 #curl -O "net-snmp-5.8.tar.gz" "https://downloads.sourceforge.net/project/net-snmp/net-snmp/5.8/net-snmp-5.8.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fnet-snmp%2Ffiles%2Fnet-snmp%2F5.8%2Fnet-snmp-5.8.tar.gz%2Fdownload%3Fuse_mirror%3Dgigenet&ts=1587743687&use_mirror=gigenet"
-
-
+#- couldn't get a direct download link to work, so mirror to my github account
+wget https://github.com/c2theg/srvBuilds/raw/master/net-snmp-5.8.tar.gz
 wait
 tar -xvzf net-snmp-5.8.tar.gz
 wait
