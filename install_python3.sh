@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.9                             \r\n
-Last Updated:  3/3/2020
+Version:  1.4.10                             \r\n
+Last Updated:  4/24/2020
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -29,9 +29,13 @@ Last Updated:  3/3/2020
 #echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Installing Python 3.8+ latest... "
-sudo -E add-apt-repository -y ppa:deadsnakes/ppa
-sudo -E apt-get update
+
+# deadsnakes - Not needed in Ubuntu 20.04
+#sudo -E add-apt-repository -y ppa:deadsnakes/ppa
+#sudo -E apt-get update
 #--------------------------------------------------------------------------------------------
+sudo apt --fix-broken install -y python-pycurl python-apt
+sudo apt-get install -y software-properties-common
 sudo -E apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties python3-yaml
