@@ -41,7 +41,10 @@ wait
 sudo apt-get install -y snmp-mibs-downloader
 sudo download-mibs
 
-wget http://sourceforge.net/projects/net-snmp/files/net-snmp/5.8/net-snmp-5.8.tar.gz 
+#wget http://sourceforge.net/projects/net-snmp/files/net-snmp/5.8/net-snmp-5.8.tar.gz
+#curl -O "net-snmp-5.8.tar.gz" "https://downloads.sourceforge.net/project/net-snmp/net-snmp/5.8/net-snmp-5.8.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fnet-snmp%2Ffiles%2Fnet-snmp%2F5.8%2Fnet-snmp-5.8.tar.gz%2Fdownload%3Fuse_mirror%3Dgigenet&ts=1587743687&use_mirror=gigenet"
+
+
 wait
 tar -xvzf net-snmp-5.8.tar.gz
 wait
