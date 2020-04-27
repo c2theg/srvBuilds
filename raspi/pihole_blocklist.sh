@@ -23,8 +23,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 \r\n \r\n
-Version:  0.2.8                            \r\n
-Last Updated:  4/18/2020
+Version:  0.2.9                            \r\n
+Last Updated:  4/26/2020
 \r\n \r\n"
 
 #---------------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ https://raw.githubusercontent.com/RooneyMcNibNug/pihole-stuff/master/SNAFU.txt
 https://ssl.bblck.me/blacklists/hosts-file.txt
 https://hostsfile.mine.nu/hosts0.txt
 https://www.joewein.net/dl/bl/dom-bl-base.txt
-https://v.firebog.net/hosts/Kowabit.txt
+#https://v.firebog.net/hosts/Kowabit.txt
 https://adblock.mahakala.is
 https://adaway.org/hosts.txt
 https://v.firebog.net/hosts/AdguardDNS.txt
