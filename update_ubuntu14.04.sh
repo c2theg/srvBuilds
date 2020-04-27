@@ -21,8 +21,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.5                             \r\n
-Last Updated:  12/16/2019
+Version:  1.7.6                             \r\n
+Last Updated:  4/26/2020
 \r\n \r\n"
 wait
 # https://askubuntu.com/questions/759524/problem-with-ipv6-sudo-apt-get-update-upgrade
@@ -32,7 +32,8 @@ wait
 sudo -E apt-get -o Acquire::ForceIPv4=true update
 wait
 #sudo -E apt-get upgrade -y --force-yes
-sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y --force-yes
+#sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y --force-yes
+sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y
 wait
 sudo -E apt-get install -f -y
 wait
