@@ -25,8 +25,8 @@ echo "Running update_time.sh at $now
 # http://manpages.ubuntu.com/manpages/disco/en/man1/timedatectl.1.html
 
 \r\n \r\n
-Version:  0.0.8                             \r\n
-Last Updated:  8/11/2019
+Version:  0.0.9                             \r\n
+Last Updated:  4/28/2020
 \r\n \r\n"
 wait
 #--------------------------------------------------------------------------------------------
@@ -41,11 +41,6 @@ echo "Stopping NTP Services... \r\n"
 sudo service ntp stop
 sudo ntpd -gq
 sudo service ntp start
-
-echo "Update settings... \r\n "
-# 
-#sudo timedatectl set-timezone UTC
-#sudo timedatectl set-timezone America/New_York
 
 sudo timedatectl set-ntp on
 sudo timedatectl set-ntp true
@@ -63,7 +58,11 @@ sudo hwclock --show
 echo "For more details enter: \r\n \r\n  sudo systemctl status systemd-timesyncd.service \r\n \r\n"
 echo "Show current time.. \r\n"
 date
+
 echo "\r\n \r\n \r\n"
+echo "To update timezone, use the following command then re-run this script: \r\n \r\n "
+echo "sudo timedatectl set-timezone UTC \r\n \r\n "
+echo "sudo timedatectl set-timezone America/New_York  \r\n \r\n "
 
 #---- NTPDATE Service -------
 #sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod +u ntp.conf
