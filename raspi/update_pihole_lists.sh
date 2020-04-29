@@ -1,8 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
 #
 clear
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
@@ -26,8 +22,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.3.2                             \r\n
-Last Updated:  1/12/2020
+Version:  0.3.4                             \r\n
+Last Updated:  4/28/2020
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
@@ -77,10 +73,11 @@ then
 	fi
 	
 	rm resolv_base.conf*
-	rm pihole_exclude_list.txt*
-	rm update_pihole_lists.sh*
-	rm update_blocklists_local_servers.*
-	rm blocklist_regexs_cg.txt*
+	rm pihole_exclude_list.txt
+	rm update_pihole_lists.sh
+	rm update_blocklists_local_servers.sh
+	rm blocklist_regexs_cg.txt
+	rm *.1
 	
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.sh
@@ -105,6 +102,7 @@ then
 	chmod u+x update_pihole_lists-porn.sh && chown pihole:www-data update_pihole_lists-porn.sh
 	wait
 	
+	mv pihole_exclude_list.txt /root/pihole_exclude_list.txt
 	mv pihole_allowlist.sh /root/pihole_allowlist.sh
 	mv pihole_blocklist.sh /root/pihole_blocklist.sh
 	mv update_pihole_lists.sh /root/update_pihole_lists.sh	
@@ -116,7 +114,7 @@ then
 	echo "Setting up exclude list domains... \r\n "
 	
 	#---- Update exclude Top Domain, list. to Ignore popular sites, in a effort to expose sites that shouldn't be loaded
-	API_EXCLUDE_DOMAINS_list=$(paste -s -d ',' pihole_exclude_list.txt)
+	API_EXCLUDE_DOMAINS_list=$(paste -s -d ',' /root/pihole_exclude_list.txt)
 	sed -i '/API_EXCLUDE_DOMAINS=/c\'API_EXCLUDE_DOMAINS="$API_EXCLUDE_DOMAINS_list" /etc/pihole/setupVars.conf
 	#----------------------------------------------------------------
 	echo "Allow list... \r\n "
