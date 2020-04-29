@@ -112,15 +112,22 @@ then
 	mv blocklist_regexs_cg.txt /etc/pihole/regex.list
 	wait
 	
-	sh /root/pihole_allowlist.sh
-	wait
-	sh /root/pihole_blocklist.sh
-	wait
 	#----------------------------------------------------------------
+	echo "Setting up exclude list domains... \r\n "
+	
 	#---- Update exclude Top Domain, list. to Ignore popular sites, in a effort to expose sites that shouldn't be loaded
 	API_EXCLUDE_DOMAINS_list=$(paste -s -d ',' pihole_exclude_list.txt)
 	sed -i '/API_EXCLUDE_DOMAINS=/c\'API_EXCLUDE_DOMAINS="$API_EXCLUDE_DOMAINS_list" /etc/pihole/setupVars.conf
 	#----------------------------------------------------------------
+	echo "Allow list... \r\n "
+	sleep 2
+	sh /root/pihole_allowlist.sh
+	wait
+	sleep 2
+	echo "Black lists... \r\n "
+	sh /root/pihole_blocklist.sh
+	wait
+
 	wait
 	sh /root/update_time.sh	
 else
