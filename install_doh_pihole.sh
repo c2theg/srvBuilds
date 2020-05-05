@@ -87,14 +87,47 @@ sudo systemctl start cloudflared
 sudo systemctl status cloudflared
 
 wait
-
 dig @127.0.0.1 -p 5053 google.com
+wait
+#----------------------------------------------------------------
+uname -sm
 
+# https://github.com/pi-hole/pi-hole/wiki/DNSCrypt-2.0
+# https://github.com/DNSCrypt/dnscrypt-proxy/releases/tag/2.0.42
+
+arch=`uname -sm`
+echo "${arch}"
+
+#if pgrep uname -sm > /dev/null
+if [[ "${arch}" == *"armv7l"* ]]
+then
+    echo "Downloading ARM version"
+    wget https://github.com/DNSCrypt/dnscrypt-proxy/releases/download/2.0.42/dnscrypt-proxy-linux_arm-2.0.42.tar.gz
+    tar xzvf dnscrypt-proxy-linux_arm-2.*.tar.gz
+    mv linux-arm dnscrypt-proxy
+    rm dnscrypt-proxy-linux_arm-2.*.tar.gz
+
+else
+    echo "Downloading Linux version.. "
+    wget https://github.com/DNSCrypt/dnscrypt-proxy/releases/download/2.0.42/dnscrypt-proxy-linux_x86_64-2.0.42.tar.gz
+    tar xzvf dnscrypt-proxy-linux_x86_64-2.*.tar.gz
+    mv linux-x86_64 dnscrypt-proxy
+    rm dnscrypt-proxy-linux_x86_64-2.*.tar.gz
+fi
+
+cd dnscrypt-proxy
+cp example-dnscrypt-proxy.toml dnscrypt-proxy.toml
+sudo nano dnscrypt-proxy.toml
+
+sudo ./dnscrypt-proxy -service install
+sudo ./dnscrypt-proxy -service start
+
+dnscrypt-proxy -version
+sudo setcap cap_net_bind_service=+pe dnscrypt-proxy
+#----------------------------------------------------------------
 echo "DONE now you have to login to your PiHole and set the DNS server to the following:
 
-
 127.0.0.1#5053 
-
 
 DONE! 
 
