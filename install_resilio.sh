@@ -1,8 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
 #
 clear
 echo "
@@ -19,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.6.6                             \r\n
-Last Updated:  3/25/2019
+Version:  0.6.7                             \r\n
+Last Updated:  5/5/2020
 \r\n \r\n
 This is really meant for 16.04+ \r\n \r\n
 
@@ -85,7 +81,7 @@ ps aux | grep rslsync
 #sudo chown -R www-data:www-data /var/www/
 #sudo chown -R rslsync:rslsync /var/www/
 
-mkdir /media/data/sync
+mkdir -p /media/data/sync
 sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
 
 sudo mv "fix_permissions.sh" "/media/data/sync/fix_permissions.sh"
