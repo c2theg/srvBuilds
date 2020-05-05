@@ -25,8 +25,8 @@ https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server
 This really is meant to be run under Ubuntu 14.04 / 16.04 LTS +
 
 \r\n \r\n
-Version:  0.0.9                             \r\n
-Last Updated:  11/4/2019
+Version:  0.0.10
+Last Updated:  5/4/2020
 \r\n \r\n"
 echo "Checking Internet status...   "
 ping -q -c5 github.com > /dev/null
@@ -43,83 +43,21 @@ then
     echo "Downloading required dependencies...\r\n\r\n"
     #--------------------------------------------------------------------------------------------
 #    sudo -E apt-get install -y openvpn easy-rsa
-#    wait
-    
-    make-cadir ~/openvpn-ca
-    cd ~/openvpn-ca
-    # Update Vars file
-    #nano ~/openvpn-ca/vars
-    HeaderText='
-    export KEY_COUNTRY="US"\n
-    export KEY_PROVINCE="PA"\n
-    export KEY_CITY="Philadelphia"\n
-    export KEY_ORG="Company"\n
-    export KEY_EMAIL="me@myhost.mydomain"\n
-    export KEY_OU="HQ-OU"\n
-    export KEY_NAME="server"\n'
-    
-    mkdir /var/log/openvpn/
-    
-#    echo "$HeaderText" >> ~/openvpn-ca/vars    
-    # ----------------------------------------------------
-    #     Build the Certificate Authority
-    # ----------------------------------------------------     
-#    source vars
-#    ./clean-all
-#    ./build-ca
     wait
-
-#   ./build-key-server server
-#    ./build-dh
-    wait
-    
-    #mkdir keys
-    #openvpn --genkey --secret keys/ta.key
-#    openvpn --genkey --secret ta.key
-    
-    # ----------------------------------------------------
-    #     Generate a Client Certificate and Key Pair
-    # ----------------------------------------------------    
-#    ./build-key client1
-#    ./build-key-pass client1
-
-    # ----------------------------------------------------
-    #     Configure the OpenVPN Service
-    # ---------------------------------------------------- 
-    #cd ~/openvpn-ca/keys
-#   sudo cp ca.crt server.crt server.key ta.key dh2048.pem /etc/openvpn
-    
-    # wget configs server from github
-    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/openvpn-server.conf
     #-----------------------
-    #  Easy Script 
+    #  Easy Script - https://github.com/Nyr/openvpn-install
     #-----------------------
     #-- for Ubuntu 18.04+
-    #wget https://git.io/vpn -O openvpn-install.sh  &&  sudo bash openvpn-install.sh
-    #-- for Ubuntu 16.04+
-    wget https://git.io/vpn1604 -O openvpn-install.sh && sudo bash openvpn-install.sh
-    
+    wget https://git.io/vpn -O openvpn-install.sh  &&  sudo bash openvpn-install.sh
+    wait
+    sleep 5
     openvpn --version
-    
-    echo "\r\n \r\n"
-    #---- Create NAT rules on Server so internet works while connected. -----
-    # https://serverfault.com/questions/851035/connected-to-openvpn-but-no-internet-connection
-    # /etc/default/ufw
-    # DEFAULT_FORWARD_POLICY="ACCEPT"
-    echo 'DEFAULT_FORWARD_POLICY="ACCEPT"' >> /etc/default/ufw
-    ## NAT (Network Address Translation) table rules
-    echo '#-- add the following code after the header and before the "*filter" line. -- ' >> /etc/ufw/before.rules
-    echo '*nat' >> /etc/ufw/before.rules
-    echo ':POSTROUTING ACCEPT [0:0]' >> /etc/ufw/before.rules
-    # Allow traffic from clients to eth0
-    echo '-A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE' >> /etc/ufw/before.rules
-    # do not delete the "COMMIT" line or the NAT table rules above will not be processed
-    echo 'COMMIT' >> /etc/ufw/before.rules
-    #--- Firewall UFW ---
-    ufw allow 1194
-    ufw reload
-    iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
-    sysctl -w net.ipv4.ip_forward=1
+
+    #-----------------------
+    # wget configs server from github
+    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/openvpn-server.conf
+    cp /etc/openvpn/server.conf /etc/openvpn/server.conf.bk
+    mv openvpn-server.conf /etc/openvpn/server.conf
     
     wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/fix_openvpn.sh && chmod u+x fix_openvpn.sh && ./fix_openvpn.sh
 else
