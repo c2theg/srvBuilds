@@ -29,8 +29,8 @@ echo "
  
 INSTALLS  DOH (Cloudflare) on Pi Hole
 \r\n \r\n
-Version:  0.0.4                             \r\n
-Last Updated:  10/31/2019
+Version:  0.0.5                             \r\n
+Last Updated:  5/4/2020
 
 https://docs.pi-hole.net/guides/dns-over-https/
 \r\n \r\n"
@@ -58,7 +58,7 @@ sudo useradd -s /usr/sbin/nologin -r -M cloudflared
 
 # Commandline args for cloudflared
 touch /etc/default/cloudflared
-echo 'CLOUDFLARED_OPTS=--port 5053 --upstream https://1.1.1.1/dns-query --upstream https://1.0.0.1/dns-query' >> /etc/default/cloudflared
+echo 'CLOUDFLARED_OPTS=--port 5053 --upstream https://1.1.1.3/dns-query --upstream https://1.0.0.3/dns-query' >> /etc/default/cloudflared
 
 sudo chown cloudflared:cloudflared /etc/default/cloudflared
 sudo chown cloudflared:cloudflared /usr/local/bin/cloudflared
