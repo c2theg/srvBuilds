@@ -60,6 +60,8 @@ then
     mv openvpn-server.conf /etc/openvpn/server.conf
     
     wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/fix_openvpn.sh && chmod u+x fix_openvpn.sh && ./fix_openvpn.sh
+    openssl dhparam -out dh2048.pem 2048
+    cp dh2048.pem /etc/openvpn/dh2048.pem
 else
     echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
