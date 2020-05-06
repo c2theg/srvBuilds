@@ -1,0 +1,12 @@
+# https://www.ionos.com/digitalguide/server/configuration/provide-raspberry-pi-with-a-static-ip-address/
+
+sudo nano /etc/dhcpcd.conf
+
+
+interface eth0
+static ip_address=192.168.0.4/24
+static routers=192.168.0.1
+static domain_name_servers=192.168.0.1
+
+
+then Reboot
