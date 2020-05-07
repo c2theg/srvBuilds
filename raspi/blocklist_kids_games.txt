@@ -7,9 +7,17 @@
 # ========================================================================================
 # Roblox
 roblox.com
-www.roblox.com  
+www.roblox.com
+web.roblox.com
+gameinternationalization.roblox.com
 presence.roblox.com
 ephemeralcounters.api.roblox.com
+games.roblox.com
+apis.roblox.com
+friends.roblox.com
+realtime.roblox.com
+chat.roblox.com
+accountsettings.roblox.com
 ecsv2.roblox.com
 assetgame.roblox.com
 assetdelivery.roblox.com
@@ -20,6 +28,6 @@ t5.rbxcdn.com
 c7.rbxcdn.com
 t1.rbxcdn.com
 t0.rbxcdn.com
-
+t1hw.rbxcdn.com
 # Misc
 discord.co
