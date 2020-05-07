@@ -25,6 +25,11 @@ assetdelivery.roblox.com
 images.rbxcdn.com
 clientsettingscdn.roblox.com
 thumbnails.roblox.com
+avatar.roblox.com
+auth.roblox.com
+locale.roblox.com
+economy.roblox.com
+catolog.roblox.com
 t5.rbxcdn.com
 c7.rbxcdn.com
 t1.rbxcdn.com
