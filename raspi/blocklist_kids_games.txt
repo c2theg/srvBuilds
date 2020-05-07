@@ -17,6 +17,7 @@ apis.roblox.com
 friends.roblox.com
 realtime.roblox.com
 chat.roblox.com
+notifications.roblox.com
 accountsettings.roblox.com
 ecsv2.roblox.com
 assetgame.roblox.com
