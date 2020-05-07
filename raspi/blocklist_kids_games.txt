@@ -1,1 +1,25 @@
+  
+# Custom blocklist - by: Chris Gray 
+# Date:  5/7/2020
+# Updated: 
+# Fetch the latest version of this file: 
+# https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
+# ========================================================================================
 # Roblox
+roblox.com
+www.roblox.com  
+presence.roblox.com
+ephemeralcounters.api.roblox.com
+ecsv2.roblox.com
+assetgame.roblox.com
+assetdelivery.roblox.com
+images.rbxcdn.com
+clientsettingscdn.roblox.com
+thumbnails.roblox.com
+t5.rbxcdn.com
+c7.rbxcdn.com
+t1.rbxcdn.com
+t0.rbxcdn.com
+
+# Misc
+discord.co
