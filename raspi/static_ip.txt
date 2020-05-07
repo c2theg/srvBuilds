@@ -2,11 +2,10 @@
 
 sudo nano /etc/dhcpcd.conf
 
-
 interface eth0
-static ip_address=192.168.0.4/24
+static ip_address=192.168.0.5/24
+#static ip6_address=fd51:::ff/128
 static routers=192.168.0.1
-static domain_name_servers=192.168.0.1
+static domain_name_servers=192.168.0.1,208.67.222.222,1.1.1.2,2620:119:35::35,2001:4860:4860::8888
 
-
-then Reboot
+#--- then Reboot
