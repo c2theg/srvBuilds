@@ -3,7 +3,7 @@
 # Date:  5/7/2020
 # Updated: 
 # Fetch the latest version of this file: 
-# https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
+# https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_kids_games.txt
 # ========================================================================================
 # Roblox
 roblox.com
