@@ -43,9 +43,7 @@ rm /etc/pihole/*.easylist.to.domains
 rm /etc/pihole/*.spamhaus.org.domains
 rm /etc/pihole/*.zeustracker.abuse.ch.domains
 
-## Additional blocklists 
-## config by: Christopher Gray
-## -----------------------------------------------------------------------------
+## ---------- Old or Broken lists that dont work with pihole, but might with other solutions -------------------------
 ## See https://github.com/StevenBlack/hosts for details
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
@@ -61,7 +59,8 @@ rm /etc/pihole/*.zeustracker.abuse.ch.domains
 #https://easylist.to/easylist/fanboy-annoyance.txt   #  Format: Adblock (list type not supported)
 #https://v.firebog.net/hosts/Kowabit.txt
 
-#-- Sources: https://firebog.net/
+
+#------- Sources: https://firebog.net/ -------
 FileText="
 https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-porn/hosts
 https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling/hosts
@@ -92,7 +91,6 @@ https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 https://raw.githubusercontent.com/fredprod/host-file.net-backup/master/ad_servers.txt
 https://raw.githubusercontent.com/fredprod/host-file.net-backup/master/emd.txt
 https://raw.githubusercontent.com/fredprod/host-file.net-backup/master/exp.txt
-
 
 https://www.spamhaus.org/drop/drop.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts
