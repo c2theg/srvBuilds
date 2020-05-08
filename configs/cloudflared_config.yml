@@ -1,0 +1,6 @@
+proxy-dns: true
+proxy-dns-port: 5053
+proxy-dns-upstream:
+  - https://doh.familyshield.opendns.com/dns-query
+  - https://1.0.0.2/dns-query
+  - https://ordns.he.net/dns-query
