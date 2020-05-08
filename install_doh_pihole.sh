@@ -1,8 +1,4 @@
 #!/bin/bash
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
 #
 clear
 echo "
@@ -27,19 +23,21 @@ echo "
           (•ㅅ•)||
           / 　 づ
  
-INSTALLS  DOH (Cloudflare) on Pi Hole
-\r\n \r\n
-Version:  0.0.5                             \r\n
-Last Updated:  5/4/2020
+Installs  DoH (Cloudflared - But uses OpenDNS first, then Cloudflare)
+
+Version:  0.1.0
+Last Updated:  5/8/2020
 
 https://docs.pi-hole.net/guides/dns-over-https/
-\r\n \r\n"
 
 
-Platform=`file /bin/bash`
-echo "Platform is  $Platform \r\n "
+"
+sudo useradd -s /usr/sbin/nologin -r -M cloudflared
 
-if [[ $Platform =  *ARM* ]]; then
+arch=`uname -sm`
+echo "${arch}"
+if [[ "${arch}" == *"armv7l"* ]]
+then
     echo "Installing - ARM architecture (Raspberry Pi) version of Cloudflared... \r\n "
     wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-arm.tgz
     tar -xvzf cloudflared-stable-linux-arm.tgz
@@ -50,55 +48,33 @@ else
     wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.deb
     sudo apt-get install ./cloudflared-stable-linux-amd64.deb
 fi
-
 cloudflared -v
-
-#------------------------------------------------------------
-sudo useradd -s /usr/sbin/nologin -r -M cloudflared
-
-# Commandline args for cloudflared
-touch /etc/default/cloudflared
-echo 'CLOUDFLARED_OPTS=--port 5053 --upstream https://1.1.1.3/dns-query --upstream https://1.0.0.3/dns-query' >> /etc/default/cloudflared
 
 sudo chown cloudflared:cloudflared /etc/default/cloudflared
 sudo chown cloudflared:cloudflared /usr/local/bin/cloudflared
 
-touch /etc/systemd/system/cloudflared.service
-echo '
-[Unit]
-Description=cloudflared DNS over HTTPS proxy
-After=syslog.target network-online.target
+sudo mkdir /etc/cloudflared/
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/cloudflared_config.yml
+mv cloudflared_config.yml /etc/cloudflared/config.yml
 
-[Service]
-Type=simple
-User=cloudflared
-EnvironmentFile=/etc/default/cloudflared
-ExecStart=/usr/local/bin/cloudflared proxy-dns $CLOUDFLARED_OPTS
-Restart=on-failure
-RestartSec=10
-KillMode=process
+#--- Create Service for autostart ---
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/cloudflared.service
+mv cloudflared.service /etc/systemd/system/cloudflared.service
 
-[Install]
-WantedBy=multi-user.target
-' >> /etc/systemd/system/cloudflared.service
-
+sudo cloudflared service install
 sudo systemctl enable cloudflared
 sudo systemctl start cloudflared
 sudo systemctl status cloudflared
-
+#------------------------------------------------------------
 wait
 dig @127.0.0.1 -p 5053 google.com
 wait
 #----------------------------------------------------------------
-uname -sm
 
 # https://github.com/pi-hole/pi-hole/wiki/DNSCrypt-2.0
 # https://github.com/DNSCrypt/dnscrypt-proxy/releases/tag/2.0.42
-
 arch=`uname -sm`
 echo "${arch}"
-
-#if pgrep uname -sm > /dev/null
 if [[ "${arch}" == *"armv7l"* ]]
 then
     echo "Downloading ARM version"
