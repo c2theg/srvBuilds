@@ -7,6 +7,6 @@ iface he-ipv6 inet6 v4tunnel
         address 2001:pppp:pppq:pppp::2
         gateway 2001:pppp:pppp:pppp::1
         netmask 64
-        local 192.168.3.14
+        local <RFC1918 address>
         endpoint 216.66.80.26
         ttl 255
