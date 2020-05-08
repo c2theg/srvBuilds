@@ -1,4 +1,10 @@
-# /etc/network/interfaces.d/he-ipv6
+#  HE - Hurricane Electric Free IPv6 Tunnel Broker
+#   https://tunnelbroker.net/
+#
+#   Usage:
+#       nano /etc/network/interfaces.d/he-ipv6
+# 
+#
 # Include files from /etc/network/interfaces.d:
 source-directory /etc/network/interfaces.d
 
@@ -8,5 +14,5 @@ iface he-ipv6 inet6 v4tunnel
         gateway 2001:pppp:pppp:pppp::1
         netmask 64
         local <RFC1918 address>
-        endpoint 216.66.80.26
+        endpoint 216.66.x.x
         ttl 255
