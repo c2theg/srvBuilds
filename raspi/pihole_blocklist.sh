@@ -167,7 +167,7 @@ https://v.firebog.net/hosts/Airelle-hrsk.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
 
 ## Personal - Must be at the end
-https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_kids_games.txt
+#https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_kids_games.txt
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_kids_chat.txt
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/url_general_blocklist.txt
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
