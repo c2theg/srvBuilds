@@ -9,6 +9,7 @@
 roblox.com
 www.roblox.com
 web.roblox.com
+api.roblox.com
 gameinternationalization.roblox.com
 presence.roblox.com
 ephemeralcounters.api.roblox.com
