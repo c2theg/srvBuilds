@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.6                             \r\n
-Last Updated:  4/10/2020
+Version:  1.5.7                             \r\n
+Last Updated:  5/8/2020
 
 "
 echo "Downloading required dependencies...\r\n\r\n"
@@ -27,11 +27,18 @@ sudo apt-get install -y apt-transport-https software-properties-common ca-certif
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
+# curl -fsSL https://get.docker.com/ | sh
 
 sudo apt-get update
 apt-cache policy docker-ce
 sudo apt-get install -y docker-ce
-sudo apt  install -y docker-compose
+sudo apt install -y docker-compose
+
+
+sudo systemctl start docker
+sudo systemctl status docker
+sudo systemctl enable docker
+
 
 wait
 sudo systemctl status docker
