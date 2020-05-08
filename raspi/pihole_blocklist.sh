@@ -23,8 +23,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 \r\n \r\n
-Version:  0.2.9                            \r\n
-Last Updated:  4/26/2020
+Version:  0.3.1                            \r\n
+Last Updated:  5/7/2020
 \r\n \r\n"
 
 #---------------------------------------------------------------------------------------
@@ -43,8 +43,6 @@ rm /etc/pihole/*.easylist.to.domains
 rm /etc/pihole/*.spamhaus.org.domains
 rm /etc/pihole/*.zeustracker.abuse.ch.domains
 
-#-- Sources: https://firebog.net/
-FileText="
 ## Additional blocklists 
 ## config by: Christopher Gray
 ## -----------------------------------------------------------------------------
@@ -53,9 +51,20 @@ FileText="
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
 ## https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts
+
+## uBlock Origin lists
+#https://www.malwaredomainlist.com/hostslist/hosts.txt - DOWN as of 1/12/2020
+
+#https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt   #  Format: Adblock (list type not supported)
+#https://easylist.to/easylist/easylist.txt    #  Format: Adblock (list type not supported)
+#https://easylist.to/easylist/easyprivacy.txt   #  Format: Adblock (list type not supported)
+#https://easylist.to/easylist/fanboy-annoyance.txt   #  Format: Adblock (list type not supported)
+#https://v.firebog.net/hosts/Kowabit.txt
+
+#-- Sources: https://firebog.net/
+FileText="
 https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-porn/hosts
 https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling/hosts
-
 
 ## MalwareDomains
 https://raw.githubusercontent.com/Ultimate-Hosts-Blacklist/MalwareDomainList.com/master/volatile.list
@@ -84,13 +93,7 @@ https://raw.githubusercontent.com/fredprod/host-file.net-backup/master/ad_server
 https://raw.githubusercontent.com/fredprod/host-file.net-backup/master/emd.txt
 https://raw.githubusercontent.com/fredprod/host-file.net-backup/master/exp.txt
 
-## uBlock Origin lists
-#https://www.malwaredomainlist.com/hostslist/hosts.txt - DOWN as of 1/12/2020
 
-#https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt   #  Format: Adblock (list type not supported)
-#https://easylist.to/easylist/easylist.txt    #  Format: Adblock (list type not supported)
-#https://easylist.to/easylist/easyprivacy.txt   #  Format: Adblock (list type not supported)
-#https://easylist.to/easylist/fanboy-annoyance.txt   #  Format: Adblock (list type not supported)
 https://www.spamhaus.org/drop/drop.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts
 
@@ -123,7 +126,6 @@ https://raw.githubusercontent.com/RooneyMcNibNug/pihole-stuff/master/SNAFU.txt
 https://ssl.bblck.me/blacklists/hosts-file.txt
 https://hostsfile.mine.nu/hosts0.txt
 https://www.joewein.net/dl/bl/dom-bl-base.txt
-#https://v.firebog.net/hosts/Kowabit.txt
 https://adblock.mahakala.is
 https://adaway.org/hosts.txt
 https://v.firebog.net/hosts/AdguardDNS.txt
@@ -164,7 +166,9 @@ https://raw.githubusercontent.com/HorusTeknoloji/TR-PhishingList/master/url-list
 https://v.firebog.net/hosts/Airelle-hrsk.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
 
-## Personal - Must be at the end ##
+## Personal - Must be at the end
+https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_kids_games.txt
+https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_kids_chat.txt
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/url_general_blocklist.txt
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
 "
