@@ -5,6 +5,10 @@ sudo apt install -y software-properties-common apt-transport-https wget
 
 #--- Mongo ---
 apt install -y mongodb-clients
+wget https://downloads.mongodb.com/compass/mongodb-compass_1.21.1_amd64.deb
+chmod u+x mongodb-compass_1.21.1_amd64.deb
+sudo apt install ./mongodb-compass_1.21.1_amd64.deb
+
 
 #--- VS Code ---
 #wget -O "vscode.deb" "https://go.microsoft.com/fwlink/?LinkID=760868"
