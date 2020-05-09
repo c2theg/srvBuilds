@@ -2,7 +2,9 @@
 #
 clear
 now=$(date)
-echo "Running network_check_18-04.sh \r\n
+
+echo "Running netplan_watchdog.sh at $now
+
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
@@ -16,20 +18,21 @@ echo "Running network_check_18-04.sh \r\n
                             |_|                                             |___|
 
 
-Version:  0.0.3                             \r\n
-Last Updated:  4/11/2020
-\r\n \r\n"
+Version:  0.0.4                             \r\n
+Last Updated:  5/9/2020
+
+"
 wait
 #--------------------------------------------------------------------------------------------
-echo "Checking Internet status at $now ...\r\n\r\n"
+echo "Checking Internet..."
 #ping -q -c3 github.com > /dev/null
 #if [ $? -eq 0 ]
 if nc -zw1 google.com 443; then
-    echo "Connected!!! Exiting  \r\n"
+    echo "Connected!!! Exiting"
 else
-    echo "NOT CONNECTED! Reconnecting..."
-    netplan apply
+    echo "NOT CONNECTED! Reconnecting...  "
+    sudo netplan apply
     sleep 15
-    echo "Done! \r\n"
+    echo "Done!"
 fi
-ping -c 12 8.8.8.8
+ping -c 5 1.1.1.1
