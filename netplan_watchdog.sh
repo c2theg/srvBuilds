@@ -1,5 +1,12 @@
 #!/bin/sh
 #
+#  Usage:
+#    crontab -e
+#
+#  #--- Netplan watchdog ---
+#  */5 * * * * /home/ubuntu/netplan_watchdog.sh > /var/log/netplan_watchdog.log 2>&1  
+#
+#
 clear
 now=$(date)
 
