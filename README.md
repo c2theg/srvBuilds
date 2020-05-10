@@ -13,23 +13,12 @@ wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && chmod u+x update_core
 wget http://bit.ly/ubuntudeskmin && mv ubuntudeskmin update_ubuntu_18.04-Desktop-min.sh && chmod u+x update_ubuntu_18.04-Desktop-min.sh && ./update_ubuntu_18.04-Desktop-min.sh
 ```
 
-<h3>Ansible Host </h3>
+<h3>Docker</h3>
 
 ```
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ansible-host.sh && chmod u+x install_ansible-host.sh && ./install_ansible-host.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
 ```
 
-<h3>Linux Nginx MySQL PHP</h3>
-
-```
-wget https://bit.ly/cgray-lemp && mv cgray-lemp install_lemp.sh && chmod u+x install_lemp.sh && ./install_lemp.sh
-```
-
-<h3> Percona 5.7 </h3>
-
-```
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_percona_5.7.sh && chmod u+x install_percona_5.7.sh && ./install_percona_5.7.sh
-```
 
 <h3>Resilio (Formally BTSync) </h3>
 
@@ -37,6 +26,12 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_percona_5
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_resilio.sh && chmod u+x install_resilio.sh && ./install_resilio.sh
 ```
 
+
+<h3>Ansible Host </h3>
+
+```
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ansible-host.sh && chmod u+x install_ansible-host.sh && ./install_ansible-host.sh
+```
 
 <h3> ----  Cronjob ------ </h3>
 <b> To add to cron use the following: </b> <br /> <br />
