@@ -20,7 +20,7 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.3.5                             \r\n
+Version:  0.4.0                             \r\n
 Last Updated:  5/10/2020
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
