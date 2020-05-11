@@ -1,13 +1,11 @@
 #!/bin/sh
 #
 clear
-# Absolute path to this script, e.g. /home/user/bin/foo.sh
 SCRIPT=$(readlink -f "$0")
-# Absolute path this script is in, thus /home/user/bin
 SCRIPTPATH=$(dirname "$SCRIPT")
 
 now=$(date)
-echo "Running update_pihole_whitelist.sh at $now \r\n
+echo "Running update_pihole_lists.sh at $now \r\n
 Current working dir: $SCRIPTPATH \r\n \r\n
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
@@ -27,16 +25,9 @@ Last Updated:  5/10/2020
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
-\r\n \r\n"
-#sudo -E apt-get update
+"
 wait
-#sudo -E apt-get upgrade -y
-#wait
-#echo "Freeing up space"
-#sudo apt-get autoremove -y
-wait
-#echo "Downloading required dependencies...\r\n\r\n"
-
+echo "Downloading required dependencies... "
 sudo apt update
 sudo apt dist-upgrade -y
 sudo apt-get autoclean
@@ -52,7 +43,6 @@ sudo apt-get autoclean
 
 #DO NOT use 'rpi-update' as part of a regular update process.
 #############################################################
-
 #--------------------------------------------------------------------------------------------
 echo "Checking Internet status...\r\n\r\n"
 ping -q -c3 github.com > /dev/null
