@@ -62,6 +62,18 @@ then
 		rm /root/update_time.sh*
 	fi
 	
+	if [ -s "/etc/pihole/backup/" ]
+	then
+		mkdir -p /etc/pihole/backup/dnsmasq.d/
+		
+		cp /etc/dnsmasq.d/*  /etc/pihole/backup/dnsmasq.d/
+		cp /etc/pihole/setupVars.conf /etc/pihole/backup/
+		cp /etc/pihole/adlists.list   /etc/pihole/backup/
+		cp /etc/pihole/whitelist.txt  /etc/pihole/backup/
+		cp /etc/pihole/blacklist.txt  /etc/pihole/backup/
+		cp /etc/pihole/wildcardblocking.txt /etc/pihole/backup/
+	fi
+	
 	rm resolv_base.conf*
 	rm pihole_exclude_list.txt
 	rm update_pihole_lists.sh
