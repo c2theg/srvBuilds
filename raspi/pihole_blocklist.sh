@@ -1,8 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
 #
 clear
 echo "
@@ -18,15 +14,14 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
 
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
-\r\n \r\n
-Version:  0.3.2                            \r\n
-Last Updated:  5/7/2020
-\r\n \r\n"
 
+Version:  0.3.3
+Last Updated:  5/11/2020
+
+"
 #---------------------------------------------------------------------------------------
 #---- remove temp files ---
 rm /etc/pihole/adlists.list
@@ -58,7 +53,7 @@ rm /etc/pihole/*.zeustracker.abuse.ch.domains
 #https://easylist.to/easylist/easyprivacy.txt   #  Format: Adblock (list type not supported)
 #https://easylist.to/easylist/fanboy-annoyance.txt   #  Format: Adblock (list type not supported)
 #https://v.firebog.net/hosts/Kowabit.txt
-
+#https://www.joewein.net/dl/bl/dom-bl-base.txt
 
 #------- Sources: https://firebog.net/ -------
 FileText="
@@ -123,7 +118,6 @@ https://hosts.nfz.moe/basic/hosts
 https://raw.githubusercontent.com/RooneyMcNibNug/pihole-stuff/master/SNAFU.txt
 https://ssl.bblck.me/blacklists/hosts-file.txt
 https://hostsfile.mine.nu/hosts0.txt
-https://www.joewein.net/dl/bl/dom-bl-base.txt
 https://adblock.mahakala.is
 https://adaway.org/hosts.txt
 https://v.firebog.net/hosts/AdguardDNS.txt
