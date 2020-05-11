@@ -20,13 +20,18 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.4.0                             \r\n
+Version:  0.4.1                             \r\n
 Last Updated:  5/10/2020
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
 "
 wait
+
+echo "Add repo keys... "
+apt-key adv --keyserver   keyserver.ubuntu.com --recv-keys 7638D0442B90D010
+apt-key adv --keyserver   keyserver.ubuntu.com --recv-keys 04EE7237B7D453EC
+
 echo "Downloading required dependencies... "
 sudo apt update
 sudo apt dist-upgrade -y
