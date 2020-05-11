@@ -1,6 +1,6 @@
   
 # Custom blocklist - by: Chris Gray 
-# Date:  5/7/2020
+# Date:  5/11/2020
 # Updated: 
 # Fetch the latest version of this file: 
 # https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_kids_games.txt
@@ -31,7 +31,7 @@ thumbnails.roblox.com
 locale.roblox.com
 economy.roblox.com
 catolog.roblox.com
-*.rbxcdn.com
+# *.rbxcdn.com -- CANT DO WILDCARDS - ugh!
 t5.rbxcdn.com
 c7.rbxcdn.com
 t1.rbxcdn.com
