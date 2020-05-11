@@ -22,8 +22,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.3.4                             \r\n
-Last Updated:  4/28/2020
+Version:  0.3.5                             \r\n
+Last Updated:  5/10/2020
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
@@ -59,7 +59,7 @@ ping -q -c3 github.com > /dev/null
 if [ $? -eq 0 ]
 then
 	echo "Connected!!! \r\n \r\n  Deleting old files \r\n"
-	sudo pihole -up
+	#sudo pihole -up # This will update versions too. Temp blocking this for ghe 5.0 upgrade
 	
 	if [ -s "/root/update_pihole_lists.sh" ]
 	then
@@ -79,14 +79,14 @@ then
 	rm blocklist_regexs_cg.txt
 	rm *.1
 	
-	echo "Downloading latest versions... \r\n\r\n"	
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
+	echo "Downloading latest versions... \r\n\r\n"
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists-porn.sh
+	
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_exclude_list.txt
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_regexs_cg.txt
-	
 	#-- OS base config --
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf
