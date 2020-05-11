@@ -1,8 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
 #
 clear
 now=$(date)
@@ -21,18 +17,20 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.8.1                             \r\n
-Last Updated:  4/18/2020
-\r\n \r\n"
+Version:  1.8.2                             \r\n
+Last Updated:  5/11/2020
+
+"
 #--------------------------------------------------------------------------------------------
 sudo rm /var/lib/apt/lists/lock
 sudo rm /var/cache/apt/archives/lock
 sudo rm /var/lib/dpkg/lock
 
-echo " --- Running System cleanup...  "
-echo "\r\n \r\n \r\n"
+echo " --- Running System cleanup...  
+
+
+"
 sudo df -h
-echo "\r\n \r\n \r\n"
 #sudo apt-get remove --purge $(dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d')
 dpkg --list | grep linux-image | awk '{ print $2 }' | sort -V | sed -n '/'`uname -r`'/q;p' | xargs sudo apt-get -y purge
 wait
@@ -57,8 +55,12 @@ wait
 #sudo -E apt-get update
 wait
 #sudo -E apt-get upgrade -y
-echo "\r\n \r\n \r\n"
-echo "---- removing old logs from /var/log  ----- \r\n\r\n"
+echo "
+
+"
+echo "---- removing old logs from /var/log  ----- 
+
+"
 #------ Core ----------------------------------------------------------
 rm /var/log/error.*
 rm /var/log/network.log
@@ -126,11 +128,11 @@ rm /var/log/lighttpd/*
 #----------------------------------------------------------------
 echo "\r\n \r\n Removing Nginx and PHP logs, then restarting both services.. \r\n \r\n "
 rm -rf /var/log/nginx/*
-rm /var/log/php5-fpm.log.*
-rm /var/log/php7.0-fpm.log
-rm /var/log/php7.0-fpm.log.*
-rm /var/log/php7.1-fpm.log
-rm /var/log/php7.1-fpm.log.*
+#rm /var/log/php5-fpm.log.*
+#rm /var/log/php7.0-fpm.log
+#rm /var/log/php7.0-fpm.log.*
+#rm /var/log/php7.1-fpm.log
+#rm /var/log/php7.1-fpm.log.*
 rm /var/log/php7.2-fpm.log
 rm /var/log/php7.2-fpm.log.*
 rm /var/log/php7.3-fpm.log
@@ -138,8 +140,8 @@ rm /var/log/php7.3-fpm.log.*
 rm /var/log/php7.4-fpm.log
 rm /var/log/php7.4-fpm.log.*
 
-/etc/init.d/php7.0-fpm restart
-/etc/init.d/php7.1-fpm restart
+#/etc/init.d/php7.0-fpm restart
+#/etc/init.d/php7.1-fpm restart
 /etc/init.d/php7.2-fpm restart
 /etc/init.d/php7.3-fpm restart
 /etc/init.d/php7.4-fpm restart
@@ -175,8 +177,8 @@ rm /var/log/update_ubuntu.log
 rm /var/log/update_elk_plugins.log
 
 #--- Resilio ---
+rm /var/lib/resilio-sync/sync.log
 rm /var/lib/resilio-sync/sync.log.*
-
 #----- DOCKER ------
 echo " From: https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images \r\n \r\n "
 # Clean up old containers before images..
