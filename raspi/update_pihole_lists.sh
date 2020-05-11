@@ -48,22 +48,11 @@ echo "Checking Internet status...\r\n\r\n"
 ping -q -c3 github.com > /dev/null
 if [ $? -eq 0 ]
 then
-	echo "Connected!!! \r\n \r\n  Deleting old files \r\n"
-	#sudo pihole -up # This will update versions too. Temp blocking this for ghe 5.0 upgrade
-	
-	if [ -s "/root/update_pihole_lists.sh" ]
-	then
-		#------ under crontab -----
-		rm /root/pihole_allowlist.sh*
-		rm /root/pihole_blocklist.sh*
-		rm /root/update_pihole_lists.sh*
-		rm /root/update_pihole_lists-porn.sh*
-		rm /root/pihole_exclude_list.txt*
-		rm /root/update_time.sh*
-	fi
+	echo "Connected!!!"
 	
 	if [ -s "/etc/pihole/backup/" ]
 	then
+		echo "Backing up pihole... "
 		mkdir -p /etc/pihole/backup/dnsmasq.d/
 		
 		cp /etc/dnsmasq.d/*  /etc/pihole/backup/dnsmasq.d/
@@ -73,7 +62,21 @@ then
 		cp /etc/pihole/blacklist.txt  /etc/pihole/backup/
 		cp /etc/pihole/wildcardblocking.txt /etc/pihole/backup/
 	fi
+
+	echo "Updatinng... "
+	sudo pihole -up
 	
+	if [ -s "/root/update_pihole_lists.sh" ]
+	then
+		echo " Deleting files... "
+		#------ under crontab -----
+		rm /root/pihole_allowlist.sh*
+		rm /root/pihole_blocklist.sh*
+		rm /root/update_pihole_lists.sh*
+		rm /root/update_pihole_lists-porn.sh*
+		rm /root/pihole_exclude_list.txt*
+		rm /root/update_time.sh*
+	fi
 	rm resolv_base.conf*
 	rm pihole_exclude_list.txt
 	rm update_pihole_lists.sh
