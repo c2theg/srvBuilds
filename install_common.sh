@@ -1,8 +1,4 @@
-#!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
+#!/bin/bash
 #
 clear
 echo "
@@ -18,11 +14,10 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
+
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
 This really is meant to be run under Ubuntu 16.04 - 20.04 LTS
-
 
 Version:  1.7.17
 Last Updated:  5/11/2020
@@ -43,15 +38,15 @@ if nc -zw1 google.com 443; then
 	echo "Freeing up space"
 	sudo apt-get autoremove -y
 	wait
-	echo "Downloading required dependencies...\r\n\r\n"
+	echo "Downloading required dependencies...
+	
+	"
 	#--------------------------------------------------------------------------------------------
 	sudo -E apt-get install -y network-manager
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev whois traceroute htop sshguard build-essential libffi-dev nfs-common nfs-kernel-server speedometer watchdog
 	wait
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl net-tools
 	wait
-	wait
-	
 	if [ ! -f "$HOME/.config/neofetch/config.conf" ]; then
 		# Neofetch
 		sudo add-apt-repository -y ppa:dawidd0811/neofetch
@@ -100,10 +95,18 @@ if nc -zw1 google.com 443; then
 
 	sudo ./update_time.sh
 	
-	echo "\r\n \r\n"
-	echo "To setup local url blocking:  sudo ./update_blocklists_local_servers.sh  \r\n \r\n"
+	echo "
+	
+	To setup local url blocking:  sudo ./update_blocklists_local_servers.sh
+	
+	"
 	
 else
-	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
+	echo "Not connected to the Internet. Fix that first and try again
+	
+	"
 fi
-echo "Done! \r\n \r\n"
+echo "Done!
+
+
+"
