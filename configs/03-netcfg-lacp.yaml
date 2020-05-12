@@ -1,7 +1,8 @@
 # Christopher Gray - 5/11/2020 - LACP
 #
-# Source: https://netplan.io/examples
-# https://www.snel.com/support/how-to-set-up-lacp-bonding-on-ubuntu-18-04-with-netplan/
+# Source: 
+#   https://netplan.io/examples
+#   https://www.snel.com/support/how-to-set-up-lacp-bonding-on-ubuntu-18-04-with-netplan/
 #
 # renderer: "networkd" or "NetworkManager"
 #--------------------------------------------------------
@@ -14,7 +15,7 @@
 #     clear && echo $(ip -o -4 route get 8.8.8.8 | sed -nr 's/.*dev ([^\ ]+).*/\1/p')
 
 # 5) create file from below, change network interface values
-    (/etc/netplan/01-netcfg-lacp.yaml)
+#     (/etc/netplan/01-netcfg-lacp.yaml)
 
 # 6) netplan apply
 # 7) test: cat /proc/net/bonding/bond0
