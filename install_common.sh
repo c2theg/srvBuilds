@@ -21,17 +21,21 @@ echo "
 \r\n \r\n
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
-This really is meant to be run under Ubuntu 14.04 - 18.04 LTS
+This really is meant to be run under Ubuntu 16.04 - 20.04 LTS
 
-\r\n \r\n
-Version:  1.7.16                             \r\n
-Last Updated:  5/10/2020
-\r\n \r\n"
-echo "Checking Internet status...   "
+
+Version:  1.7.17
+Last Updated:  5/11/2020
+
+Checking Internet status... 
+
+"
 #ping -q -c5 github.com > /dev/null
 #if [ $? -eq 0 ]; then
 if nc -zw1 google.com 443; then
-	echo "Connected \r\n \r\n"
+	echo "Connected 
+	
+	"
 	sudo -E apt-get update
 	wait
 	sudo -E apt-get upgrade -y
