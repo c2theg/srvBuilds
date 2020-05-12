@@ -41,6 +41,7 @@ if nc -zw1 google.com 443; then
 	wait
 	echo "Downloading required dependencies...\r\n\r\n"
 	#--------------------------------------------------------------------------------------------
+	sudo -E apt-get install -y network-manager
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev whois traceroute htop sshguard build-essential libffi-dev nfs-common nfs-kernel-server speedometer watchdog
 	wait
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl net-tools
