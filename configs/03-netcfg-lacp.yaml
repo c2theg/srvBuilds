@@ -7,7 +7,8 @@
 # renderer: "networkd" or "NetworkManager"
 #--------------------------------------------------------
 
-# 1) sudo lsmod | grep bonding
+# 1)  sudo lsmod | grep bonding
+# 1a) sudo lsmod | grep 8021q
 # 2) sudo modprobe bonding
 # 3) udo echo "bonding" >> /etc/modules
 
