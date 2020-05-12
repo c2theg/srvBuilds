@@ -26,13 +26,13 @@
 network:
   version: 2
   ethernets:
-    eports:
+    exports:
       match:
         name: enp*
       optional: true
   bonds:
     bond0:
-      interfaces: [eports]
+      interfaces: [exports]
       addresses: [192.168.1.10/24]
       gateway4: 192.168.1.1
       nameservers:
