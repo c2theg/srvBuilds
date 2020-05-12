@@ -42,7 +42,11 @@ if nc -zw1 google.com 443; then
 	
 	"
 	#--------------------------------------------------------------------------------------------
+	#--- Networking related ---
 	sudo -E apt-get install -y network-manager
+	sudo -E apt-get install -y ifenslave # LACP - https://www.snel.com/support/how-to-set-up-lacp-bonding-on-ubuntu-18-04-with-netplan/
+	
+	#--- Everything else ---
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev whois traceroute htop sshguard build-essential libffi-dev nfs-common nfs-kernel-server speedometer watchdog
 	wait
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl net-tools
