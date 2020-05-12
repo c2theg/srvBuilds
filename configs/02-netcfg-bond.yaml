@@ -1,0 +1,26 @@
+# Christopher Gray - 5/11/2020
+#
+# Source: https://netplan.io/examples
+#
+# 1) to view interface use:
+#       ip a
+#    Examples include: ens160 (VMWare), enp0s3, etc.
+# 2) Create this file: nano /etc/netplan/01-netcfg.yaml
+# 3) save file
+# 4) netplan apply
+# 5) ping 1.1.1.1
+
+# renderer: "networkd" or "NetworkManager"
+#--------------------------------------------------------
+network:
+  version: 2
+  renderer: networkd
+  bonds:
+    bond0:
+      dhcp4: yes
+      interfaces:
+        - enp3s0
+        - enp4s0
+      parameters:
+        mode: active-backup
+        primary: enp3s0
