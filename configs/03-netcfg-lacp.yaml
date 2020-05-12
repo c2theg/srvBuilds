@@ -1,0 +1,41 @@
+# Christopher Gray - 5/11/2020 - LACP
+#
+# Source: https://netplan.io/examples
+# https://www.snel.com/support/how-to-set-up-lacp-bonding-on-ubuntu-18-04-with-netplan/
+#
+# renderer: "networkd" or "NetworkManager"
+#--------------------------------------------------------
+
+# 1) sudo lsmod | grep bonding
+# 2) sudo modprobe bonding
+# 3) udo echo "bonding" >> /etc/modules
+
+# 4) to view interfaces:
+#     clear && echo $(ip -o -4 route get 8.8.8.8 | sed -nr 's/.*dev ([^\ ]+).*/\1/p')
+
+# 5) create file from below, change network interface values
+    (/etc/netplan/01-netcfg-lacp.yaml)
+
+# 6) netplan apply
+# 7) test: cat /proc/net/bonding/bond0
+# 8) ping 1.1.1.1
+
+#--------------------------------------------------------
+network:
+  version: 2
+  ethernets:
+    eports:
+      match:
+        name: enp*
+      optional: true
+  bonds:
+    bond0:
+      interfaces: [eports]
+      addresses: [192.168.1.10/24]
+      gateway4: 192.168.1.1
+      nameservers:
+        addresses: [208.67.222.222,208.67.220.220]
+      parameters:
+        mode: 802.3ad
+        lacp-rate: fast
+        mii-monitor-interval: 100
