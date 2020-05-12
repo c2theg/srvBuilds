@@ -1,4 +1,4 @@
-# Christopher Gray - 4/7/2020
+# Christopher Gray - 5/11/2020
 #
 # Source: https://netplan.io/examples
 #
@@ -10,14 +10,15 @@
 # 4) netplan apply
 # 5) ping 1.1.1.1
 
-#--------------------------
+# renderer: "networkd" or "NetworkManager"
+#--------------------------------------------------------
 network:
   version: 2
-  renderer: networkd
+  renderer: NetworkManager
   ethernets:
     ens160:
      dhcp4: no
-     addresses: [192.168.1.222/24]
+     addresses: [192.168.1.20/24]
      gateway4: 192.168.1.1
      nameservers:
        addresses: [208.67.222.222,1.1.1.2,8.8.8.8]
