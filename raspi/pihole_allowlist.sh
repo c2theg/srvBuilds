@@ -88,6 +88,7 @@ pihole -w themoviedb.com
 pihole -w medium.com
 pihole -w highcharts.com
 pihole -w spclient.wg.spotify.com apresolve.spotify.com
+pihole -w s3.amazonaws.com
 
 #-- Charters.com
 pihole -w yottaa.net
