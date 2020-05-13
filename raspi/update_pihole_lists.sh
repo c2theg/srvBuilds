@@ -20,8 +20,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.4.1                             \r\n
-Last Updated:  5/10/2020
+Version:  0.4.2                             \r\n
+Last Updated:  5/13/2020
 
 location: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/update_pihole_lists.sh
 
@@ -67,9 +67,6 @@ then
 		cp /etc/pihole/blacklist.txt  /etc/pihole/backup/
 		cp /etc/pihole/wildcardblocking.txt /etc/pihole/backup/
 	fi
-
-	echo "Updatinng... "
-	sudo pihole -up
 	
 	if [ -s "/root/update_pihole_lists.sh" ]
 	then
@@ -127,19 +124,35 @@ then
 	API_EXCLUDE_DOMAINS_list=$(paste -s -d ',' /root/pihole_exclude_list.txt)
 	sed -i '/API_EXCLUDE_DOMAINS=/c\'API_EXCLUDE_DOMAINS="$API_EXCLUDE_DOMAINS_list" /etc/pihole/setupVars.conf
 	#----------------------------------------------------------------
-	echo "Allow list... \r\n "
+	
+	echo "Updating... 
+	
+	"
+	sudo pihole -up
+
+	echo "
+	
+	Allow list... 
+	
+	"
 	sleep 2
 	sh /root/pihole_allowlist.sh
 	wait
 	sleep 2
-	echo "Black lists... \r\n "
+	echo "Black lists... 
+	
+	"
 	sh /root/pihole_blocklist.sh
 	wait
 
 	wait
 	sh /root/update_time.sh	
 else
-	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
+	echo "
+	
+	Not connected to the Internet. Fix that first and try again 
+	
+	"
 fi
 #-----------------------------------------------------------------------------------------
 Cron_output=$(crontab -l | grep "update_pihole_lists.sh")
