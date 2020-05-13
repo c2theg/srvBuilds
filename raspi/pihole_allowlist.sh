@@ -26,8 +26,8 @@ https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.tx
 This really is meant to be run under Rasbian / PiHole / Ubuntu 20.04 LTS +
 
 
-Version:  0.0.17
-Last Updated:  3/27/2020
+Version:  0.0.18
+Last Updated:  5/13/2020
 
 "
 #--------------------------
