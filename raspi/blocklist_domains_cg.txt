@@ -83,7 +83,7 @@ musical.ly
 tiktokcdn.com
 pull-flv-l1.tiktokcdn.com
 pull-cmaf-f16.tiktokcdn.com
-*.tiktokcdn.com
+#*.tiktokcdn.com
 tiktokcdn.com.c.worldfcdn.com
 v16a.tiktokcdn.com
 p16-tiktokcdn-com.akamaized.net
