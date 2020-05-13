@@ -1,6 +1,6 @@
 # Custom blocklist - by: Chris Gray 
 # Date:  12/27/2018
-# Updated: 4/19/2020
+# Updated: 5/13/2020
 # Fetch the latest version of this file: https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_domains_cg.txt
 # ========================================================================================
 #-- to disable DoH on pi hole, for Firefox only currently
