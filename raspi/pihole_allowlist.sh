@@ -1,8 +1,4 @@
-#!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
+#!/bin/bash
 #
 clear
 echo "
@@ -18,7 +14,6 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
 
  https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_allowlist.txt
  https://discourse.pi-hole.net/t/commonly-whitelisted-domains/212/12
@@ -28,13 +23,13 @@ echo "
 https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt #  Format: Adblock (list type not supported)
 
 
+This really is meant to be run under Rasbian / PiHole / Ubuntu 20.04 LTS +
 
-This really is meant to be run under Ubuntu 16.04 LTS +
 
-\r\n \r\n
-Version:  0.0.16                            \r\n
+Version:  0.0.17
 Last Updated:  3/27/2020
-\r\n \r\n"
+
+"
 #--------------------------
 pihole -w github.com raw.githubusercontent.com
 
@@ -64,6 +59,7 @@ pihole -w xbox.ipv6.microsoft.com device.auth.xboxlive.com www.msftncsi.com titl
 pihole -w s.gateway.messenger.live.com ui.skype.com pricelist.skype.com apps.skype.com m.hotmail.com s.gateway.messenger.live.com sa.symcb.com symcb.com 
 pihole -w settings-win.data.microsoft.com 
 pihole -w v10.vortex-win.data.microsoft.com mobile.pipe.aria.microsoft.com
+pihole -w msftncsi.com www.msftncsi.com ipv6.msftncsi.com
 
 #--- Facebook
 pihole -w www.facebook.com facebook.com static.xx.fbcdn.net fbcdn.net creative.ak.fbcdn.net scontent-lga3-1.xx.fbcdn.net edge-chat.facebook.com external-lhr0-1.xx.fbcdn.net external-lhr1-1.xx.fbcdn.net external-lhr10-1.xx.fbcdn.net external-lhr2-1.xx.fbcdn.net external-lhr3-1.xx.fbcdn.net external-lhr4-1.xx.fbcdn.net external-lhr5-1.xx.fbcdn.net external-lhr6-1.xx.fbcdn.net external-lhr7-1.xx.fbcdn.net external-lhr8-1.xx.fbcdn.net external-lhr9-1.xx.fbcdn.net fbcdn-creative-a.akamaihd.net scontent-lhr3-1.xx.fbcdn.net scontent.xx.fbcdn.net scontent.fgdl5-1.fna.fbcdn.net graph.facebook.com connect.facebook.com cdn.fbsbx.com
@@ -75,7 +71,7 @@ pihole -w twitter.com www.twitter.com mobile.twitter.com analytics.twitter.com
 pihole -w plex.tv tvdb2.plex.tv pubsub.plex.bz proxy.plex.bz proxy02.pop.ord.plex.bz cpms.spop10.ams.plex.bz meta-db-worker02.pop.ric.plex.bz meta.plex.bz tvthemes.plexapp.com.cdn.cloudflare.net tvthemes.plexapp.com 106c06cd218b007d-b1e8a1331f68446599e96a4b46a050f5.ams.plex.services meta.plex.tv cpms35.spop10.ams.plex.bz proxy.plex.tv metrics.plex.tv pubsub.plex.tv status.plex.tv www.plex.tv node.plexapp.com nine.plugins.plexapp.com staging.plex.tv app.plex.tv o1.email.plex.tv  o2.sg0.plex.tv dashboard.plex.tv
 
 #-- Apple
-pihole -w itunes.apple.com appleid.apple.com
+pihole -w itunes.apple.com appleid.apple.com ocsp.apple.com
 pihole -w captive.apple.com gsp1.apple.com www.apple.com www.appleiphonecell.com
 
 #-- Snapchat
@@ -100,9 +96,5 @@ pihole -w device-api.urbanairship.com sbux-dl.urbanairship.com
 #-- movies --
 pihole -w putlockertv.to uporn.com images.uporn.com pornhub.com
 
-
 #--Captive-portal tests (connectivitycheck)
 pihole -w connectivitycheck.android.com android.clients.google.com clients3.google.com connectivitycheck.gstatic.com
-pihole -w msftncsi.com www.msftncsi.com ipv6.msftncsi.com
-pihole -w captive.apple.com gsp1.apple.com www.apple.com www.appleiphonecell.com
-
