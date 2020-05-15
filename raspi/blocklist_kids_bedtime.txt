@@ -1,0 +1,27 @@
+# Custom blocklist - by: Chris Gray 
+# Date:  5/14/2020
+# Updated: 
+# Fetch the latest version of this file: 
+# https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_kids_bedtime.txt
+# ===========================================================================================
+google.com
+goo.gl
+googlevideo.com
+googleapis.com
+play.googleapis.com
+
+bing.com
+yahoo.com
+amazon.com
+apple.com
+icloud.com
+itunes.com
+apple-dns.net
+fe.apple-dns.net
+gateway.fe.apple-dns.net
+
+discord.co
+netflix.com
+youtu.be
+youtube.com
+www.youtube.com
