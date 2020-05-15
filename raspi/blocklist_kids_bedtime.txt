@@ -26,5 +26,6 @@ youtu.be
 youtube.com
 www.youtube.com
 redit.com
+twitter.com
 instagram.com
 snapchat.com
