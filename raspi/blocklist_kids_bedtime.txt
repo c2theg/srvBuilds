@@ -25,3 +25,6 @@ netflix.com
 youtu.be
 youtube.com
 www.youtube.com
+redit.com
+instagram.com
+snapchat.com
