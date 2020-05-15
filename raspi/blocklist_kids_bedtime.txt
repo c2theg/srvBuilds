@@ -9,6 +9,13 @@ goo.gl
 googlevideo.com
 googleapis.com
 play.googleapis.com
+youtu.be
+youtube.com
+www.youtube.com
+youtubei.googleapis.com
+www.gstatic.com
+youtubei.googleapis.com
+  
 
 bing.com
 yahoo.com
@@ -22,10 +29,11 @@ gateway.fe.apple-dns.net
 
 discord.co
 netflix.com
-youtu.be
-youtube.com
-www.youtube.com
+ios.prod.ftl.netflix.com
 redit.com
 twitter.com
 instagram.com
 snapchat.com
+
+##--- CDNs---
+ios.prod.ftl.netflix.com
