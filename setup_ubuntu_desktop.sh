@@ -19,8 +19,8 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.8                             \r\n
-Last Updated:  4/23/2020
+Version:  0.0.9                             \r\n
+Last Updated:  5/26/2020
 \r\n \r\n"
 wait
 
@@ -123,5 +123,13 @@ sudo apt install -y indicator-weather
 
 sudo apt install -y conky
 
+#--- Temp Sensors ---
+sudo apt-get install -y lm-sensors hddtemp acpi xsensors
+sudo service kmod start
+sudo hddtemp /dev/sda  
 
-
+sudo add-apt-repository -y ppa:jfi/ppa
+sudo apt-get update
+sudo apt-get install -y psensor
+sudo sensors-detect
+sensors
