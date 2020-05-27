@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3.3                             \r\n
-Last Updated:  4/24/2020
+Version:  1.3.4                             \r\n
+Last Updated:  5/27/2020
 \r\n \r\n
 #Updating system first..."
 #sudo -E apt-get update
@@ -66,6 +66,12 @@ cp snmpd.conf /etc/snmp/snmpd.conf
 wait
 /etc/init.d/snmpd restart
 wait
+
+#-- fix,   by default, snmpd is set to log at the DEBUG level which seems too intensive. ---
+sudo sed -i "s|-Lsd|-LS4d|" /lib/systemd/system/snmpd.service
+sudo systemctl daemon-reload
+sudo systemctl restart snmpd.service
+
 
 service snmpd status
 
