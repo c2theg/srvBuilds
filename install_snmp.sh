@@ -59,26 +59,33 @@ cd net-snmp
 wait
 ./configure --with-default-snmp-version="2c" --with-sys-contact="admin@companyxyz.com" --with-sys-location="DC_Server1" --with-logfile="/var/log/snmpd.log" --with-persistent-directory="/var/net-snmp"
 wait
+make
+wait
+sudo make install
+wait
+
+snmpget --version
 
 # Move Sample snmp.conf to the correct location
 cd ..
 cp snmpd.conf /etc/snmp/snmpd.conf
+
+#-- fix,   by default, snmpd is set to log at the DEBUG level which seems too intensive. ---
+sudo sed -i "s|-Lsd|-LS4d|" /lib/systemd/system/snmpd.service
 
 # tells Ubuntu to load SNMP MIB files:
 sudo sed -i 's/mibs :/# mibs :/g' /etc/snmp/snmp.conf
 
 #---------- Start Service --------------
 wait
-/etc/init.d/snmpd restart
-wait
-
-#-- fix,   by default, snmpd is set to log at the DEBUG level which seems too intensive. ---
-sudo sed -i "s|-Lsd|-LS4d|" /lib/systemd/system/snmpd.service
+/etc/init.d/snmpd start
 sudo systemctl daemon-reload
 sudo systemctl restart snmpd.service
 
+wait
 
 service snmpd status
+sudo netstat -ntlp
 
 echo "DONE! \r\n \r\n"
 echo "To edit, enter the following: \r\n"
