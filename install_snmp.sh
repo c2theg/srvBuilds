@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3.4                             \r\n
+Version:  1.3.6                             \r\n
 Last Updated:  5/27/2020
 \r\n \r\n
 #Updating system first..."
@@ -63,6 +63,11 @@ wait
 # Move Sample snmp.conf to the correct location
 cd ..
 cp snmpd.conf /etc/snmp/snmpd.conf
+
+# tells Ubuntu to load SNMP MIB files:
+sudo sed -i 's/mibs :/# mibs :/g' /etc/snmp/snmp.conf
+
+#---------- Start Service --------------
 wait
 /etc/init.d/snmpd restart
 wait
