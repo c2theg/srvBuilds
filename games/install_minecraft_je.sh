@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.2
+Version:  0.0.3
 Last Updated:  6/1/2020
 "
 
@@ -34,6 +34,9 @@ wait
 
 sudo apt-get upgrade -y
 #--- Download Minecraft --- https://www.minecraft.net/en-us/download/server/
+mkdir minecraft-je
+cd minecraft-je/
+
 wget https://launcher.mojang.com/v1/objects/bb2b6b1aefcd70dfd1892149ac3a215f6c636b07/server.jar
 
 #-- Download additional files --
