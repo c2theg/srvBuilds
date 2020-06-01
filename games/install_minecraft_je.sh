@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.1
+Version:  0.0.2
 Last Updated:  6/1/2020
 "
 
@@ -32,6 +32,7 @@ sudo apt -y install default-jre
 sudo apt -y install default-jdk
 wait
 
+sudo apt-get upgrade -y
 #--- Download Minecraft --- https://www.minecraft.net/en-us/download/server/
 wget https://launcher.mojang.com/v1/objects/bb2b6b1aefcd70dfd1892149ac3a215f6c636b07/server.jar
 
