@@ -36,4 +36,13 @@ wait
 wget https://launcher.mojang.com/v1/objects/bb2b6b1aefcd70dfd1892149ac3a215f6c636b07/server.jar
 
 #--- Start it ---
+echo " 
+
+Starting Minecraft. YOU WILL have to accept the EULA then restart minecraft using: 
 java -Xmx1024M -Xms1024M -jar server.jar nogui
+
+
+"
+
+java -Xmx1024M -Xms1024M -jar server.jar nogui
+
