@@ -36,6 +36,12 @@ sudo apt-get upgrade -y
 #--- Download Minecraft --- https://www.minecraft.net/en-us/download/server/
 wget https://launcher.mojang.com/v1/objects/bb2b6b1aefcd70dfd1892149ac3a215f6c636b07/server.jar
 
+#-- Download additional files --
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/eula.txt
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/banned-ips.json
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/banned-players.json
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/server.properties
+
 #--- Start it ---
 echo " 
 
