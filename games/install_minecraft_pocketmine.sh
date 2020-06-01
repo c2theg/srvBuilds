@@ -19,15 +19,31 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.1
+Version:  0.0.3
 Last Updated:  6/1/2020
 "
 sudo apt-get update
 wait
 sudo apt-get upgrade -y
-#--- Download Minecraft --- https://pmmp.readthedocs.io/en/rtfd/installation/get-dot-pmmp-dot-io.html
 
+sudo apt-get install build-essential libtool-bin autoconf bison screen -y
+
+echo "
+
+Creating user: minecraft  
+
+"
+
+sudo useradd -d /home/minecraft -m minecraft
+sudo passwd minecraft
+su minecraft
+#--- Download Minecraft --- https://pmmp.readthedocs.io/en/rtfd/installation/get-dot-pmmp-dot-io.html
 mkdir pocketmine
 cd pocketmine
-
 wget -q -O - https://get.pmmp.io | bash -s -
+
+echo "
+
+Done 
+
+"
