@@ -1,0 +1,26 @@
+[Unit]
+#
+# Install:
+#     cp start_minecraft_pe.service /etc/systemd/system/start_minecraft_pe.service
+#     systemctl enable start_minecraft_pe.service
+#
+Description=Autostart Minecraft Pocket Edition
+# After=network.target
+# After=systemd-user-sessions.service
+# After=network-online.target
+
+[Service]
+# User=spark
+# Type=simple
+# PIDFile=/run/my-service.pid
+ExecStart=/home/ubuntu/start.sh
+# ExecReload=/home/ubuntu/start.sh reload
+# ExecStop=/home/ubuntu/start.sh stop
+# TimeoutSec=30
+# Restart=on-failure
+# RestartSec=30
+# StartLimitInterval=350
+# StartLimitBurst=10
+
+[Install]
+WantedBy=multi-user.target
