@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.3
-Last Updated:  6/1/2020
+Version:  0.0.6
+Last Updated:  6/2/2020
 "
 
 #--- Install OpenJDK ---
@@ -38,21 +38,23 @@ mkdir minecraft-je
 cd minecraft-je/
 
 wget https://launcher.mojang.com/v1/objects/bb2b6b1aefcd70dfd1892149ac3a215f6c636b07/server.jar
-
 #-- Download additional files --
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/eula.txt
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/start_minecraft_je.service
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/start_mcje.sh
+
+
+#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/server.properties
+#wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/eula.txt
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/banned-ips.json
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/banned-players.json
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/games/minecraft/server.properties
 
+chmod u+x start_minecraft_je.service start_mcje.sh server.properties
 #--- Start it ---
 echo " 
 
 Starting Minecraft. YOU WILL have to accept the EULA then restart minecraft using: 
-java -Xmx1024M -Xms1024M -jar server.jar nogui
-
+./start_mcje.sh
 
 "
 
-java -Xmx1024M -Xms1024M -jar server.jar nogui
-
+./start_mcje.sh
