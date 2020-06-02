@@ -1,8 +1,9 @@
 [Unit]
 #
-# Install:
-#     cp start_minecraft_pe.service /etc/systemd/system/start_minecraft_pe.service
-#     systemctl enable start_minecraft_pe.service
+# Install: (MUST NOT BE ROOT, use SUDO!!!)
+#     sudo cp start_minecraft_pe.service /etc/systemd/system/start_minecraft_pe.service
+#     sudo systemctl enable start_minecraft_pe.service
+#
 #
 Description=Autostart Minecraft Pocket Edition
 # After=network.target
