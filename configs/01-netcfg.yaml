@@ -1,4 +1,8 @@
-# Christopher Gray - 5/11/2020
+# Christopher Gray - 6/3/2020
+#    Quick Setup! ( Use the line below )
+#
+#    cd /etc/netplan/ && sudo wget -O "01-netcfg.yaml" "https://bit.ly/netcfg-example" && sudo netplan apply
+#
 #
 # Source: https://netplan.io/examples
 #
