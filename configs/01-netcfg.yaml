@@ -1,19 +1,17 @@
 # Christopher Gray - 6/3/2020
-#    Quick Setup! ( Use the line below )
-#
-#    cd /etc/netplan/ && sudo wget -O "01-netcfg.yaml" "https://bit.ly/netcfg-example" && sudo netplan apply
-#
-#
+#   
 # Source: https://netplan.io/examples
 #
 # 1) to view interface use:
 #       ip a
 #    Examples include: ens160 (VMWare), enp0s3, etc.
-# 2) Create this file: nano /etc/netplan/01-netcfg.yaml
-# 3) save file
-# 4) netplan apply
-# 5) ping 1.1.1.1
-
+# 2) cd /etc/netplan/
+# 3) sudo nano 01-netcfg.yaml
+#     - NO TABS ALLOWED
+# 4) save file
+# 5) netplan apply
+# 6) ping 1.1.1.1
+#
 # renderer: "networkd" or "NetworkManager"
 #--------------------------------------------------------
 network:
