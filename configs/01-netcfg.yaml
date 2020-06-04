@@ -1,4 +1,4 @@
-# Christopher Gray - 6/3/2020
+# Christopher Gray - 6/4/2020
 #   
 # Source: https://netplan.io/examples
 #
@@ -13,6 +13,8 @@
 # 6) ping 1.1.1.1
 #
 # renderer: "networkd" or "NetworkManager"
+#
+# DEBUG: sudo netplan --debug apply
 #--------------------------------------------------------
 network:
   version: 2
