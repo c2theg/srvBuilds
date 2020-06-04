@@ -1,4 +1,6 @@
 #cloud-config
+# Source: https://cloudinit.readthedocs.io/en/0.7.7/topics/examples.html
+#
 #
 # This is an example file to automatically configure resolv.conf when the
 # instance boots for the first time.
@@ -20,7 +22,37 @@ resolv_conf:
 
 
 
+#------------------------------------------------------------------------------
+# https://cloudinit.readthedocs.io/en/latest/topics/logging.html
+#rsyslog:
+#    remotes:
+#        log_serv: "10.0.4.1"
 
+#------------------------------------------------------------------------------
+
+# Upgrade the instance on first boot
+# (ie run apt-get upgrade)
+#
+# Default: false
+# Aliases: apt_upgrade
+package_upgrade: true
+
+
+# Install additional packages on first boot
+#
+# Default: none
+#
+# if packages are specified, this apt_update will be set to true
+#
+# packages may be supplied as a single package name or as a list
+# with the format [<package>, <version>] wherein the specifc
+# package version will be installed.
+packages:
+ - pwgen
+ - pastebinit
+ - [libpython2.7, 2.7.3-0ubuntu3.1]
+ 
+#------------------------------------------------------------------------------
 
 # boot commands
 # default: none
@@ -35,3 +67,47 @@ resolv_conf:
 bootcmd:
  - echo 192.168.1.130 us.archive.ubuntu.com > /etc/hosts
  - [ cloud-init-per, once, mymkfs, mkfs, /dev/vdb ]
+
+
+# run commands
+# default: none
+# runcmd contains a list of either lists or a string
+# each item will be executed in order at rc.local like level with
+# output to the console
+# - runcmd only runs during the first boot
+# - if the item is a list, the items will be properly executed as if
+#   passed to execve(3) (with the first arg as the command).
+# - if the item is a string, it will be simply written to the file and
+#   will be interpreted by 'sh'
+#
+# Note, that the list has to be proper yaml, so you have to quote
+# any characters yaml would eat (':' can be problematic)
+runcmd:
+ - [ ls, -l, / ]
+ - [ sh, -xc, "echo $(date) ': hello world!'" ]
+ - [ sh, -c, echo "=========hello world'=========" ]
+ - ls -l /root
+ - [ wget, "http://slashdot.org", -O, /tmp/index.html ]
+ - 'echo 127.0.0.1 `server1` >> /etc/hosts'
+
+# phone_home: if this dictionary is present, then the phone_home
+# cloud-config module will post specified data back to the given
+# url
+# default: none
+# phone_home:
+#  url: http://my.foo.bar/$INSTANCE/
+#  post: all
+#  tries: 10
+#
+phone_home:
+ url: http://my.example.com/$INSTANCE_ID/
+ post: [ pub_key_dsa, pub_key_rsa, pub_key_ecdsa, instance_id ]
+ 
+ 
+ 
+#------------------------------------------------------------------------------
+# final_message
+# default: cloud-init boot finished at $TIMESTAMP. Up $UPTIME seconds
+# this message is written by cloud-final when the system is finished
+# its first boot
+final_message: "The system is finally up, after $UPTIME seconds"
