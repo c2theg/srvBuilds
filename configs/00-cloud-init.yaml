@@ -21,6 +21,36 @@ resolv_conf:
     timeout: 1
 
 
+# --- Example2 ---
+# Provide a custom ntp client configuration
+ntp:
+  enabled: true
+  ntp_client: myntpclient
+  config:
+     confpath: /etc/myntpclient/myntpclient.conf
+     check_exe: myntpclientd
+     packages:
+       - myntpclient
+     service_name: myntpclient
+     template: |
+         ## template:jinja
+         # My NTP Client config
+         {% if pools -%}# pools{% endif %}
+         {% for pool in pools -%}
+         pool {{pool}} iburst
+         {% endfor %}
+         {%- if servers %}# servers
+         {% endif %}
+         {% for server in servers -%}
+         server {{server}} iburst
+         {% endfor %}
+  pools: [time.cloudflare.com, time.google.com, time-d-g.nist.gov]
+  servers:
+    - time.cloudflare.com
+    - 162.159.200.1
+    - time.google.com
+    - time-d-g.nist.gov
+    - ca.pool.ntp.org
 
 #------------------------------------------------------------------------------
 # https://cloudinit.readthedocs.io/en/latest/topics/logging.html
