@@ -21,8 +21,8 @@ echo "Running install_redis.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1.2                             \r\n
-Last Updated:  2/17/2020
+Version:  0.1.3                             \r\n
+Last Updated:  6/6/2020
 \r\n \r\n"
 wait
 #sudo -E apt-get update
@@ -95,11 +95,10 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/redis.ser
 mv redis.service /etc/systemd/system/redis.service
 
 sudo adduser --system --group --no-create-home redis
-sudo mkdir /var/lib/redis0
+sudo mkdir /var/lib/redis
 sudo chown redis:redis /var/lib/redis && sudo chmod 770 /var/lib/redis
 
 echo "Making backups and copies.. \r\n \r\n"
-
 sudo mkdir /var/run/redis/
 sudo chown redis /var/run/redis/ && sudo chmod u+x /var/run/redis/
 
@@ -150,6 +149,6 @@ if [ -d "/etc/php" ]
 then
     echo "installing PHP module... \r\n "
     sudo apt-get install -y php-redis
-    sudo bash -c "echo extension=redis.so > /etc/php/7.3/mods-available/redis.ini"
+    sudo bash -c "echo extension=redis.so > /etc/php/7.4/mods-available/redis.ini"
     echo "Modify /etc/php/7.X/fpm/php.ini to configure redis servers... \r\n \r\n "
 fi
