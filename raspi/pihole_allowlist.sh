@@ -26,8 +26,8 @@ https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.tx
 This really is meant to be run under Rasbian / PiHole / Ubuntu 20.04 LTS +
 
 
-Version:  0.0.18
-Last Updated:  5/13/2020
+Version:  0.0.19
+Last Updated:  6/5/2020
 
 "
 #--------------------------
@@ -89,6 +89,8 @@ pihole -w medium.com
 pihole -w highcharts.com
 pihole -w spclient.wg.spotify.com apresolve.spotify.com
 pihole -w s3.amazonaws.com
+pihole -w ocsp.godaddy.com ocsp.godaddy.com.lan ocsp.sca1b.amazontrust.com ocsp.pki.goog ocsp.digicert.com.lan ocsp.usertrust.com
+
 
 #-- Charters.com
 pihole -w yottaa.net
@@ -99,3 +101,8 @@ pihole -w putlockertv.to uporn.com images.uporn.com pornhub.com
 
 #--Captive-portal tests (connectivitycheck)
 pihole -w connectivitycheck.android.com android.clients.google.com clients3.google.com connectivitycheck.gstatic.com
+
+#-- School ---
+pihole -w goguardian.com ip.goguardian.com quiddity.goguardian.com panther.goguardian.com x3-policy-maker.goguardian.com waluigi.goguardian.com snat.goguardian.com play-button.goguardian.com 
+
+
