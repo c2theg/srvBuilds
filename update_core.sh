@@ -100,18 +100,22 @@ if nc -zw1 google.com 443; then
 	
 	wait
 	if [ -d "/home/ubuntu/" ]; then
+		rm /home/ubuntu/update_core.sh
+		rm /home/ubuntu/sys_cleanup.sh
+		rm /home/ubuntu/update_ubuntu14.04.sh
+
 		cp /root/update_core.sh /home/ubuntu/update_core.sh
 		cp /root/sys_cleanup.sh /home/ubuntu/sys_cleanup.sh
 		cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
-#		cp /root/install_common.sh /home/ubuntu/install_common.sh
-#		cp /root/sys_restart.sh /home/ubuntu/sys_restart.sh
 	fi	
 	wait
+
 	sh /root/update_ubuntu14.04.sh
-	sh /root/update_time.sh
+#	sh /root/update_time.sh
+
 	if [ -s "/root/update_docker_images.sh" ]; then
 		echo "Updating all docker images.. "
-		sudo sh ./update_docker_images.sh
+		sudo sh ./root/update_docker_images.sh
 	fi
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
