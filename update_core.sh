@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.6.2                             \r\n
-Last Updated:  3/21/2020
+Version:  1.6.4                             \r\n
+Last Updated:  6/13/2020
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -99,45 +99,23 @@ if nc -zw1 google.com 443; then
 	fi
 	
 	wait
-#	if [ -d "/home/ubuntu/" ]
-#	then
-#		cp /root/update_core.sh /home/ubuntu/update_core.sh
-#		cp /root/sys_cleanup.sh /home/ubuntu/sys_cleanup.sh
-#		cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
+	if [ -d "/home/ubuntu/" ]; then
+		cp /root/update_core.sh /home/ubuntu/update_core.sh
+		cp /root/sys_cleanup.sh /home/ubuntu/sys_cleanup.sh
+		cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
 #		cp /root/install_common.sh /home/ubuntu/install_common.sh
 #		cp /root/sys_restart.sh /home/ubuntu/sys_restart.sh
-#		cp /root/install_monitoring.sh /home/ubuntu/install_monitoring.sh
-#	fi	
-	#--- for old script compatibility - delete soon
-#	if [ -d "/home/cgray/" ]
-#	then
-#		wait
-#		cp /root/update_core.sh /home/cgray/update_core.sh
-#		cp /root/sys_cleanup.sh /home/cgray/sys_cleanup.sh
-#		cp /root/update_ubuntu14.04.sh /home/cgray/update_ubuntu14.04.sh
-#		cp /root/install_common.sh /home/cgray/install_common.sh
-#		cp /root/sys_restart.sh /home/cgray/sys_restart.sh
-#		cp /root/install_monitoring.sh /home/cgray/install_monitoring.sh
-#		wait
-#		chown cgray:cgray /home/cgray/update_core.sh
-#		chown cgray:cgray /home/cgray/sys_cleanup.sh
-#		chown cgray:cgray /home/cgray/update_ubuntu14.04.sh
-#		chown cgray:cgray /home/cgray/install_common.sh
-#		chown cgray:cgray /home/cgray/sys_restart.sh
-#	fi
-
+	fi	
 	wait
 	sh /root/update_ubuntu14.04.sh
 	sh /root/update_time.sh
-	
-	if [ -s "update_docker_images.sh" ]; then
-		# Update all docker images
+	if [ -s "/root/update_docker_images.sh" ]; then
+		echo "Updating all docker images.. "
 		sudo sh ./update_docker_images.sh
 	fi
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
 fi
-
 
 Cron_output=$(crontab -l | grep "update_core.sh")
 #echo "The output is: [ $Cron_output ]"
