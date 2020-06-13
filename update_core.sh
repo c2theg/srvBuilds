@@ -115,7 +115,7 @@ if nc -zw1 google.com 443; then
 
 	if [ -s "/root/update_docker_images.sh" ]; then
 		echo "Updating all docker images.. "
-		sudo sh ./root/update_docker_images.sh
+		sudo sh /root/update_docker_images.sh
 	fi
 else
 	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
