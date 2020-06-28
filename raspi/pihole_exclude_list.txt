@@ -1,5 +1,6 @@
 localhost
 local
+wlan0
 *.google.com
 google.com
 *.googleusercontent.com
@@ -87,6 +88,7 @@ netflix.com
 *.netflix.com
 *.nflxso.net
 yahoo.com
+getpocket.cdn.mozilla.net
 linkedin.com
 amazon.com
 *.amazon.com
@@ -128,6 +130,7 @@ musicbrainz.plex.tv
 songkick.plex.tv
 plex.tv
 plexapp.com
+zpns.zoom.us
 lastfm.freetls.fastly.net
 mediaservices.cdn-apple.com
 olmprodpowerlift-cdn.azureedge.net
@@ -137,6 +140,8 @@ akamai.net
 osb.samsungqbe.com
 api.intelsa-preprod.intel.com
 api.wyzecam.com
+wyze-general-api.wyzecam.com
+api.discovery.com
 ctldl.windowsupdate.com
 outlook.office.com
 time.samsungcloudsolution.com
