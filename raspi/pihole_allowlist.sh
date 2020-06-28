@@ -37,6 +37,7 @@ pihole -w github.com raw.githubusercontent.com
 pihole -w cloudflare.com  1dot1dot1dot1.cloudflare-dns.com  cloudflare-dns.com
 
 #-- DNS DoH https://github.com/curl/curl/wiki/DNS-over-HTTPS#publicly-available-servers  --
+### ALWAYS BLOCK:  use-application-dns.net   - NEVER ALLOW IT THRU!
 pihole -w mozilla.cloudflare-dns.com dns.google dns.quad9.net doh.powerdns.org
 
 #-- NTP ---
