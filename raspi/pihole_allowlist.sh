@@ -90,7 +90,7 @@ pihole -w medium.com
 pihole -w highcharts.com
 pihole -w spclient.wg.spotify.com apresolve.spotify.com
 pihole -w s3.amazonaws.com
-pihole -w ocsp.godaddy.com ocsp.godaddy.com.lan ocsp.sca1b.amazontrust.com ocsp.pki.goog ocsp.digicert.com.lan ocsp.usertrust.com
+pihole -w ocsp.godaddy.com ocsp.godaddy.com.lan ocsp.sca1b.amazontrust.com ocsp.pki.goog ocsp.digicert.com.lan ocsp.usertrust.com crl4.digicert.com  
 
 #-- Charters.com
 pihole -w yottaa.net
@@ -106,4 +106,4 @@ pihole -w connectivitycheck.android.com android.clients.google.com clients3.goog
 pihole -w goguardian.com ip.goguardian.com quiddity.goguardian.com panther.goguardian.com x3-policy-maker.goguardian.com waluigi.goguardian.com snat.goguardian.com play-button.goguardian.com 
 
 #-- SmartTV's ---
-pihole -w cdn.samsungcloudsolution.com  samsungcloudsolution.com
+pihole -w cdn.samsungcloudsolution.com  samsungcloudsolution.com  lcprd1.samsungcloudsolution.net  osb.samsungqbe.com
