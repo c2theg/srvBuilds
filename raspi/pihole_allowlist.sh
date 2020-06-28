@@ -90,7 +90,7 @@ pihole -w medium.com
 pihole -w highcharts.com
 pihole -w spclient.wg.spotify.com apresolve.spotify.com
 pihole -w s3.amazonaws.com
-pihole -w ocsp.godaddy.com ocsp.godaddy.com.lan ocsp.sca1b.amazontrust.com ocsp.pki.goog ocsp.digicert.com.lan ocsp.usertrust.com crl4.digicert.com  
+pihole -w ocsp.godaddy.com ocsp.godaddy.com.lan ocsp.sca1b.amazontrust.com ocsp.pki.goog ocsp.digicert.com.lan ocsp.usertrust.com crl4.digicert.com  cs9.wac.phicdn.net 
 
 #-- Charters.com
 pihole -w yottaa.net
