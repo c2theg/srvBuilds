@@ -26,8 +26,8 @@ https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.tx
 This really is meant to be run under Rasbian / PiHole / Ubuntu 20.04 LTS +
 
 
-Version:  0.0.19
-Last Updated:  6/5/2020
+Version:  0.0.20
+Last Updated:  6/28/2020
 
 "
 #--------------------------
@@ -44,7 +44,7 @@ pihole -w time.cloudflare.com time.google.com nist.gov pool.ntp.org
 
 #--- Google
 pihole -w clients2.google.com clients3.google.com clients4.google.com dl.google.com android.clients.google.com 
-pihole -w s.youtube.com video-stats.l.google.com
+pihole -w s.youtube.com video-stats.l.google.com youtu.be 
 pihole -w connectivitycheck.android.com connectivitycheck.gstatic.com
 pihole -w ajax.googleapis.com
 
@@ -65,7 +65,7 @@ pihole -w msftncsi.com www.msftncsi.com ipv6.msftncsi.com
 pihole -w www.facebook.com facebook.com static.xx.fbcdn.net fbcdn.net creative.ak.fbcdn.net scontent-lga3-1.xx.fbcdn.net edge-chat.facebook.com external-lhr0-1.xx.fbcdn.net external-lhr1-1.xx.fbcdn.net external-lhr10-1.xx.fbcdn.net external-lhr2-1.xx.fbcdn.net external-lhr3-1.xx.fbcdn.net external-lhr4-1.xx.fbcdn.net external-lhr5-1.xx.fbcdn.net external-lhr6-1.xx.fbcdn.net external-lhr7-1.xx.fbcdn.net external-lhr8-1.xx.fbcdn.net external-lhr9-1.xx.fbcdn.net fbcdn-creative-a.akamaihd.net scontent-lhr3-1.xx.fbcdn.net scontent.xx.fbcdn.net scontent.fgdl5-1.fna.fbcdn.net graph.facebook.com connect.facebook.com cdn.fbsbx.com
 
 #--- Twitter
-pihole -w twitter.com www.twitter.com mobile.twitter.com analytics.twitter.com
+pihole -w twitter.com www.twitter.com mobile.twitter.com analytics.twitter.com t.co
 
 #-- Plex
 pihole -w plex.tv tvdb2.plex.tv pubsub.plex.bz proxy.plex.bz proxy02.pop.ord.plex.bz cpms.spop10.ams.plex.bz meta-db-worker02.pop.ric.plex.bz meta.plex.bz tvthemes.plexapp.com.cdn.cloudflare.net tvthemes.plexapp.com 106c06cd218b007d-b1e8a1331f68446599e96a4b46a050f5.ams.plex.services meta.plex.tv cpms35.spop10.ams.plex.bz proxy.plex.tv metrics.plex.tv pubsub.plex.tv status.plex.tv www.plex.tv node.plexapp.com nine.plugins.plexapp.com staging.plex.tv app.plex.tv o1.email.plex.tv  o2.sg0.plex.tv dashboard.plex.tv
