@@ -5,7 +5,6 @@ www.tiktok.org
 api.tiktokv.com
 t.tiktok.com
 api-h2.tiktokv.com
-api.tiktokv.com
 api21-h2.tiktokv.com
 ib.tiktokv.com
 m.tiktok.com
@@ -17,6 +16,7 @@ p16-tiktokcdn-com.akamaized.net
 tiktokcdn-com.akamaized.net
 tiktokcdn.com
 tiktokv.com
+www.tiktokcdn.com
 www.tiktokv.com
 v16.tiktokcdn.com
 vt.tiktok.com
