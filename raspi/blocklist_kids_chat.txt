@@ -24,3 +24,4 @@ v19.tiktokcdn.com
 v16.tiktokcdn.com
 mon.tiktokv.com
 ib.tiktokv.com
+vm.tiktok.com
