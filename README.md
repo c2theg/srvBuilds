@@ -55,3 +55,10 @@ crontab -e   <br /> <br />
 ```
 curl -k -O https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_centos7.sh && chmod u+x update_centos7.sh && ./update_centos7.sh
 ```
+
+
+<h3>Wireguard</h3>
+Here is an awesome script someone else made. Works so good theres nothing i can do to improve it
+curl -L https://install.pivpn.io | bash
+
+
