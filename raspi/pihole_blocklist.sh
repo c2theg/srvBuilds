@@ -18,8 +18,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 
-Version:  0.3.3
-Last Updated:  5/11/2020
+Version:  0.3.4
+Last Updated:  8/18/2020
 
 "
 #---------------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ https://raw.githubusercontent.com/fredprod/host-file.net-backup/master/exp.txt
 https://www.spamhaus.org/drop/drop.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts
 
-## blocklist.site
+## - blocklist.site
 https://blocklist.site/app/dl/phishing
 https://blocklist.site/app/dl/fakenews
 https://blocklist.site/app/dl/malware
@@ -158,7 +158,10 @@ https://raw.githubusercontent.com/HorusTeknoloji/TR-PhishingList/master/url-list
 https://v.firebog.net/hosts/Airelle-hrsk.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
 
-## Personal - Must be at the end
+## - OpenPhish
+https://openphish.com/feed.txt
+
+## - Personal - Must be at the end
 #https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_kids_games.txt
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_kids_chat.txt
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/url_general_blocklist.txt
