@@ -159,7 +159,9 @@ https://urlhaus.abuse.ch/downloads/hostfile/
 https://raw.githubusercontent.com/HorusTeknoloji/TR-PhishingList/master/url-lists.txt
 https://v.firebog.net/hosts/Airelle-hrsk.txt
 https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
+
 https://raw.githubusercontent.com/kboghdady/youTube_ads_4_pi-hole/master/youtubelist.txt
+https://filters.adtidy.org/windows/filters/15.txt
 
 ## - OpenPhish
 https://openphish.com/feed.txt
