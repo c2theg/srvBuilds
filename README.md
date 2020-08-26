@@ -64,3 +64,5 @@ Here is an awesome script someone else made. Works so good theres nothing i can 
 curl -L https://install.pivpn.io | bash
 ```
 
+ Now run 'pivpn add' to create the client profiles. 
+ Run 'pivpn help' to see what else you can do!
