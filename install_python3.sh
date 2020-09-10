@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.10                             \r\n
-Last Updated:  4/24/2020
+Version:  1.4.11                             \r\n
+Last Updated:  9/10/2020
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -39,8 +39,12 @@ sudo apt-get install -y software-properties-common
 sudo -E apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties python3-yaml
-sudo -E apt-get install -y python3-dev
+sudo -E apt-get install -y python3-dev python3.8-dev
 sudo -E apt-get install -y python3.8 python3.8-venv python3.8-doc binfmt-support
+
+#-- sometimes need pythonn 3.6 --
+sudo -E apt-get install -y libpython3.6-dev
+
 python3 -V
 #----------- if issues with PIP install -------------------
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
