@@ -16,10 +16,10 @@ echo "Running update_kernel_u18.sh
 
 
 
-Version:  0.1.6 
-Last Updated:  4/7/2020
+Version:  0.1.7 
+Last Updated:  9/10/2020
 
-KERNEL - Mainline Build (STABLE) 5.4.28
+KERNEL - Mainline Build (STABLE) 5.8.0
 
 
 "
@@ -37,19 +37,27 @@ sudo apt list --upgradeable
 
 uname -msr
 
-sudo mkdir -p ~/latest_kernel
-cd ~/latest_kernel
+#sudo mkdir -p ~/latest_kernel
+#cd ~/latest_kernel
+cd /tmp/
 
-#echo "Clean up downloaded kernels... \r\n "
+echo "Clean up downloaded kernels... \r\n "
 #rm ~/latest_kernel/*
+rm /tmp/*.deb
 
 #----- download kernel's here ----->  https://kernel.ubuntu.com/~kernel-ppa/mainline/
-echo "visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n "
+echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n Downloading now.. \r\n \r\nn "
 
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428_5.4.28-050428.202003250833_all.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-image-unsigned-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-modules-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428_5.4.28-050428.202003250833_all.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-image-unsigned-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-modules-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
+
+#-- 5.8.0
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8/amd64/linux-headers-5.8.0-050800_5.8.0-050800.202008022230_all.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8/amd64/linux-headers-5.8.0-050800-generic_5.8.0-050800.202008022230_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8/amd64/linux-image-unsigned-5.8.0-050800-generic_5.8.0-050800.202008022230_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8/amd64/linux-modules-5.8.0-050800-generic_5.8.0-050800.202008022230_amd64.deb
 
 #-------------------------------------
 echo "Installing New Kernel... \r\n "
@@ -68,6 +76,8 @@ sudo update-grub
 #----------------------------------
 #echo "Clean up downloaded kernels... \r\n "
 #rm ~/latest_kernel/*
+rm /tmp/*.deb
+
 
 sudo apt --purge autoremove
 sudo dpkg --list | egrep -i --color 'linux-image|linux-headers'
