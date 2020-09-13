@@ -22,6 +22,7 @@ wg genpsk > preshared_key.psk
 ip a
 #Copy the name (in my case it was: "ovs_eth0" but it could be "eth0" )
 
+ip link add dev wg0 type wireguard
 
 #--- Create Config file ---
 touch wg0.conf
@@ -43,18 +44,14 @@ PublicKey = <Public Key from file>
 AllowedIPs = 10.6.0.2/32
 
 
-
-
-
 #------ CLIENT SIDE CONFIG -----------
 cat preshared_key.psk
-
 
 #--- Config ---
 [Interface]
 PrivateKey = <Private Key from file>
 Address = 10.6.0.3/24
-DNS = 10.6.0.1
+DNS = 10.6.0.1, 1.1.1.2, 9.9.9.9, 208.67.222.222, 8.8.8.8
 
 [Peer]
 PublicKey = <Public Key from file>
