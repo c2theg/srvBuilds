@@ -3,6 +3,9 @@
 # https://wiki.archlinux.org/index.php/WireGuard
 # # https://emanuelduss.ch/2018/09/wireguard-vpn-road-warrior-setup/
 
+#----- SSH into the NAS -----
+# ssh admin@10.1.1.5
+# if using a different port:  ssh admin@10.1.1.5 -p 10022
 
 mkdir /etc/wireguard/
 cd /etc/wireguard/
