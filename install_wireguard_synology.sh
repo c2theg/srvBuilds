@@ -27,6 +27,7 @@ ip a
 touch wg0.conf
 
 # --- Create Sample Server Config ---
+# Modify name of eth0 to match yours (in my case it was "ovs_eth0"
 vi wg0.conf 
 
 
