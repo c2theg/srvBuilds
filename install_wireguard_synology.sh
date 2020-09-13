@@ -1,7 +1,7 @@
 # --- Sources ---
 # APK - https://github.com/runfalk/synology-wireguard
 # https://wiki.archlinux.org/index.php/WireGuard
-
+# # https://emanuelduss.ch/2018/09/wireguard-vpn-road-warrior-setup/
 
 
 mkdir /etc/wireguard/
@@ -54,7 +54,8 @@ Address = 10.6.0.3/24
 DNS = 10.6.0.1, 1.1.1.2, 9.9.9.9, 208.67.222.222, 8.8.8.8
 
 [Peer]
+PersistentKeepalive = 25
 PublicKey = <Public Key from file>
 PresharedKey = < PRE SHARED KEY from file (preshared_key) >
-Endpoint = 10.11.1.50:61820
+Endpoint = example.com:51820
 AllowedIPs = 0.0.0.0/0, ::0/0
