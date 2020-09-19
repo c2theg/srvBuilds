@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.6                             \r\n
-Last Updated:  2/17/2020
+Version:  0.0.7                             \r\n
+Last Updated:  9/19/2020
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -31,10 +31,10 @@ Last Updated:  2/17/2020
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Installing gnupg, openssl.. "
-sudo apt-get install -y gnupg openssl
+sudo apt-get install -y gnupg
 
 echo "Adding Key... "
-wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
+wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
 
 #------------- OS Version Detection -------------
 if [ -f /etc/os-release ]; then
@@ -77,23 +77,32 @@ else
     	wait
     	echo "16.04"
      sudo apt-get install -y libcurl3
-     echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+     echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
     elif [ $VER = '18.04' ]; then
     	wait
     	echo "18.04"
      sudo apt-get install libcurl4
-     echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+     echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+    elif [ $VER = '20.04' ]; then
+    	wait
+    	echo "20.04"
+     sudo apt-get install libcurl4
+     echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+    
+    
     fi
 fi
 #-------------------------------------
 echo "Updating repo's... \r\n \r\n "
 sudo apt-get update
 
-MongoDBVersion=4.2.3
-echo "Install Mongodb $MongoDBVersion ... "
-sudo apt-get install -y mongodb-org=$MongoDBVersion mongodb-org-server=$MongoDBVersion mongodb-org-shell=$MongoDBVersion mongodb-org-mongos=$MongoDBVersion mongodb-org-tools=$MongoDBVersion
-
+#MongoDBVersion=4.4.1
+#echo "Install Mongodb $MongoDBVersion ... "
+#sudo apt-get install -y mongodb-org=$MongoDBVersion mongodb-org-server=$MongoDBVersion mongodb-org-shell=$MongoDBVersion mongodb-org-mongos=$MongoDBVersion mongodb-org-tools=$MongoDBVersion
+sudo apt-get install -y mongodb-org
 #----------------------------------
+ps --no-headers -o comm 1
+
 ps -e | grep mongo
 
 #sudo -E apt-get update
