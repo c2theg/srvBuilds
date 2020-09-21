@@ -15,10 +15,10 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.6.7                             \r\n
-Last Updated:  5/5/2020
+Version:  0.6.8                             \r\n
+Last Updated:  9/20/2020
 \r\n \r\n
-This is really meant for 16.04+ \r\n \r\n
+This is really meant for 16.04+ (works on 20.04.1+) \r\n \r\n
 
 Updating system first..."
 sudo -E apt-get update
@@ -39,8 +39,12 @@ curl -LO http://linux-packages.resilio.com/resilio-sync/key.asc && sudo apt-key 
 wait
 sudo apt update
 wait
-sudo apt install -y resilio-sync --allow-unauthenticated
+#sudo apt install -y resilio-sync --allow-unauthenticated
+#wait
+wget https://download-cdn.resilio.com/2.7.2.1375/Debian/resilio-sync_2.7.2.1375-1_amd64.deb
 wait
+sudo dpkg -i resilio-sync_2.7.2.1375-1_amd64.deb
+
 #---------------------------------------------------------------------------------------------------------
 #if [ -s "/etc/resilio-sync/config.json" ]
 #then
