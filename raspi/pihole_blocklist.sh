@@ -18,10 +18,11 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 
-Version:  0.3.5
-Last Updated:  8/25/2020
+Version:  0.3.6
+Last Updated:  9/20/2020
 Changed:
-   Added Youtube Ad blocking! 
+   Added Youtube Ad blocking!
+   SnapChat List
 
 "
 #---------------------------------------------------------------------------------------
@@ -165,6 +166,10 @@ https://filters.adtidy.org/windows/filters/15.txt
 
 ## - OpenPhish
 https://openphish.com/feed.txt
+
+## - Snapchat
+https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/list_snapchat.txt
+
 
 ## - Personal - Must be at the end
 #https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/blocklist_kids_games.txt
