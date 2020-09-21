@@ -16,6 +16,8 @@ sudo -E apt-get upgrade -y
 wait
 sudo -E apt-get install -y cockpit
 sudo systemctl start cockpit && sudo systemctl enable cockpit
+
+echo "Visit: https://<ServerIP>:9090 \r\n \r\n"
 #-----------------------
 echo "\r\n \r\n Install Webmin \r\n \r\n "
 wait
