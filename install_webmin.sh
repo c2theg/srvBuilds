@@ -1,9 +1,9 @@
 #!/bin/bash
 clear
 
-Version='1.953'
+Version='1.955'
 echo "
-Version:  1.3.1    \r\n
+Version:  1.3.2    \r\n
 Last Updated:  9/20/2020
 \r\n \r\n
 
