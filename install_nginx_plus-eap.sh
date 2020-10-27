@@ -1,5 +1,5 @@
 #!/bin/bash
-Version="0.1.15"
+Version="0.1.16"
 Updated="10/27/20"
 # --------------------------------------------
 #  SOURCES 
@@ -13,11 +13,9 @@ Updated="10/27/20"
 	# Debian 10 (“Buster”)
 	# Ubuntu 16.04 LTS (“Xenial”) (i386, x86_64, ppc64le, aarch64)
 	# Ubuntu 18.04 LTS (“Bionic”)
-	# Ubuntu 19.04 (“Disco”)
-	# Ubuntu 19.10 (“Eoan”)
-	# Ubuntu 20.04 (“focal”)
+	# Ubuntu 20.04 (“Focal”)
 # --------------------------------------------
-cls
+clear
 
 echo "
 
@@ -92,19 +90,15 @@ if [ -s "nginx-repo.key" ]; then
 
 		# deb https://plus-pkgs.nginx.com/ubuntu focal nginx-plus
 		# deb [trusted=yes] https://plus-pkgs.nginx.com/ubuntu focal nginx-plus
-		# deb [trusted=yes] https://plus-pkgs.nginx.com/ubuntu eoan nginx-plus
 
 		sudo apt-get install -y nginx-plus
 		wait
-
 
 
 		#**********************************************
 		#---      NGINX APP PROTECT - Install       ---
 		#**********************************************
 		sudo apt-get install -y app-protect
-		nginx -V
-
 
 		# Load the NGINX App Protect module on the main context in the nginx.conf file: (Add to nginx.conf)
 		#      load_module modules/ngx_http_app_protect_module.so;
@@ -127,10 +121,6 @@ if [ -s "nginx-repo.key" ]; then
 		#**********************************************
 		#--- Updating App Protect Threat Campaigns ---
 		#**********************************************
-		#printf "deb https://app-protect-security-updates.nginx.com/ubuntu/ `lsb_release -cs` nginx-plus\n" | sudo tee /etc/apt/sources.list.d/app-protect-security-updates.list
-		#sudo wget https://cs.nginx.com/static/keys/app-protect-security-updates.key && sudo apt-key add app-protect-security-updates.key
-		#sudo wget -P /etc/apt/apt.conf.d https://cs.nginx.com/static/files/90app-protect-security-updates
-		#sudo apt-get update && 
 		sudo apt-get install -y app-protect-threat-campaigns
 		
 
@@ -141,6 +131,7 @@ if [ -s "nginx-repo.key" ]; then
 
 
 		sudo service nginx restart
+		nginx -V
 	else
 
 		#------- REDHAT ----------
@@ -153,7 +144,6 @@ if [ -s "nginx-repo.key" ]; then
 		nginx -v
 		sudo systemctl enable nginx.service 
 		sudo systemctl start nginx.service
-
 	fi
 
 	echo "
@@ -172,5 +162,4 @@ else
 	Use your SCP client or other secure file transfer tools to place it on the server. Then re-run this script
 
 	"
-
 fi
