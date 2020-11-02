@@ -26,8 +26,8 @@ echo "
 This really is meant to be run under Ubuntu 16.04 LTS + or Pi-Hole
 
 \r\n \r\n
-Version:  0.0.2                            \r\n
-Last Updated:  9/12/2018
+Version:  0.0.3                            \r\n
+Last Updated:  11/1/2020
 \r\n \r\n"
 
 #---------------------------------------------------------------------------------------
@@ -38,6 +38,8 @@ FileText="#Additional blocklists config by: Christopher Gray\n\n#https://raw.git
 ##-----------------------------------------------\n
 https://raw.githubusercontent.com/chadmayfield/my-pihole-blocklists/master/lists/pi_blocklist_porn_all.list
 https://raw.githubusercontent.com/chadmayfield/pihole-blocklists/master/lists/pi_blocklist_porn_top1m.list
+https://blocklistproject.github.io/Lists/alt-version/porn-nl.txt
+
 \n\n
 "
 
