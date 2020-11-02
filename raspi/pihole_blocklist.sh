@@ -18,7 +18,7 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 
-Version:  0.3.7
+Version:  0.3.8
 Last Updated:  11/1/2020
 Changed:
    Added Youtube Ad blocking!
@@ -175,7 +175,7 @@ https://blocklistproject.github.io/Lists/alt-version/ads-nl.txt
 https://blocklistproject.github.io/Lists/alt-version/drugs-nl.txt
 https://blocklistproject.github.io/Lists/alt-version/gambling-nl.txt
 https://blocklistproject.github.io/Lists/alt-version/piracy-nl.txt
-
+https://blocklistproject.github.io/Lists/alt-version/youtube-nl.txt
 
 ## - OpenPhish
 https://openphish.com/feed.txt
