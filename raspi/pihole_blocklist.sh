@@ -18,8 +18,8 @@ echo "
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/raspi/pihole_blocklist.sh
 
 
-Version:  0.3.6
-Last Updated:  9/20/2020
+Version:  0.3.7
+Last Updated:  11/1/2020
 Changed:
    Added Youtube Ad blocking!
    SnapChat List
@@ -163,6 +163,19 @@ https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
 
 https://raw.githubusercontent.com/kboghdady/youTube_ads_4_pi-hole/master/youtubelist.txt
 https://filters.adtidy.org/windows/filters/15.txt
+
+
+## -- https://blocklistproject.github.io/Lists/
+https://blocklistproject.github.io/Lists/alt-version/malware-nl.txt
+https://blocklistproject.github.io/Lists/alt-version/phishing-nl.txt
+https://blocklistproject.github.io/Lists/alt-version/ransomware-nl.txt
+https://blocklistproject.github.io/Lists/alt-version/redirect-nl.txt
+https://blocklistproject.github.io/Lists/alt-version/scam-nl.txt
+https://blocklistproject.github.io/Lists/alt-version/ads-nl.txt
+https://blocklistproject.github.io/Lists/alt-version/drugs-nl.txt
+https://blocklistproject.github.io/Lists/alt-version/gambling-nl.txt
+https://blocklistproject.github.io/Lists/alt-version/piracy-nl.txt
+
 
 ## - OpenPhish
 https://openphish.com/feed.txt
