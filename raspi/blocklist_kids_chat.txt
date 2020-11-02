@@ -26,6 +26,7 @@ mon.tiktokv.com
 ib.tiktokv.com
 vm.tiktok.com
 
+#-- omegle.com --
 omegle.com
 omegle.onl
 www.omegle.com
@@ -35,3 +36,14 @@ www.camegle.net
 t.irtyd.com
 omegleadultchat.online
 jerkmate.com
+
+
+#-- Snapchat --
+feelinsonice-hrd.appspot.com
+feelinsonice.appspot.com
+feelinsonice.l.google.com
+appspot.l.google.com
+snapchat.com
+data.flurry.com
+feelinsonice.com
+cf-st.sc-cdn.net
