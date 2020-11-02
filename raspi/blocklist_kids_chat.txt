@@ -25,6 +25,27 @@ v16.tiktokcdn.com
 mon.tiktokv.com
 ib.tiktokv.com
 vm.tiktok.com
+mon-va.byteoversea.com
+mon.byteoversea.com
+abtest-va-tiktok.byteoversea.com
+dm-maliva16.byteoversea.com
+dm.bytedance.com
+ibytedtos.com
+mon-va.byteoversea.com
+mon.byteoversea.com
+p16-tiktokcdn-com.akamaized.net
+p16.hypstarcdn.com
+sf-tb-sg.ibytedtos.com
+sgali3.l.byteoversea.net
+tiktokcdn-com.akamaized.net
+tiktokcdn.com
+tiktokv.com
+v16-tiktokcdn-com.akamaized.net
+xlog-va.byteoversea.com
+verification-va.byteoversea.com
+www.tiktok.com
+s16.tiktokcdn.com
+
 
 #-- omegle.com --
 omegle.com
