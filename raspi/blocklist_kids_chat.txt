@@ -47,3 +47,6 @@ snapchat.com
 data.flurry.com
 feelinsonice.com
 cf-st.sc-cdn.net
+snapchat.appspot.com
+sc-analytics.appspot.com
+www.feelinsonice.com
