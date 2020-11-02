@@ -95,12 +95,12 @@ https://zerodot1.gitlab.io/CoinBlockerLists/hosts
 
 ## - blocklist.site
 https://blocklist.site/app/dl/phishing
-https://blocklist.site/app/dl/fakenews
+## https://blocklist.site/app/dl/fakenews
 https://blocklist.site/app/dl/malware
 https://blocklist.site/app/dl/piracy
 https://blocklist.site/app/dl/ransomware
 https://blocklist.site/app/dl/scam
-https://blocklist.site/app/dl/spam
+## https://blocklist.site/app/dl/spam
 https://blocklist.site/app/dl/tracking
 
 ## - https://discourse.pi-hole.net/t/auto-update-script/30698 --
@@ -117,9 +117,9 @@ https://hostsfile.org/Downloads/hosts.txt
 https://someonewhocares.org/hosts/zero/hosts
 https://raw.githubusercontent.com/vokins/yhosts/master/hosts
 https://winhelp2002.mvps.org/hosts.txt
-https://hosts.nfz.moe/basic/hosts
+## https://hosts.nfz.moe/basic/hosts
 https://raw.githubusercontent.com/RooneyMcNibNug/pihole-stuff/master/SNAFU.txt
-https://ssl.bblck.me/blacklists/hosts-file.txt
+## https://ssl.bblck.me/blacklists/hosts-file.txt
 https://hostsfile.mine.nu/hosts0.txt
 https://adblock.mahakala.is
 https://adaway.org/hosts.txt
