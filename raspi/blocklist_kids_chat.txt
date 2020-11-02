@@ -25,3 +25,8 @@ v16.tiktokcdn.com
 mon.tiktokv.com
 ib.tiktokv.com
 vm.tiktok.com
+
+omegle.com
+omegle.onl
+www.omegle.com
+www.omegle.onl
