@@ -37,6 +37,10 @@ sudo apt-get update
 sudo apt-get install suricata 
 
 
+#------ Update Rules -----------------------
 pip3 install --upgrade suricata-update
 suricata-update
 
+apt-get install -y oinkmaster
+# https://nsrc.org/workshops/2015/pacnog17-ws/attachments/ex-suricata-rules.htm
+# url = http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz
