@@ -37,3 +37,6 @@ sudo apt-get update
 sudo apt-get install suricata 
 
 
+pip3 install --upgrade suricata-update
+suricata-update
+
