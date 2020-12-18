@@ -1,5 +1,5 @@
+#-- Snap Chat ---
 snapchat.com
-*.snapchat.com
 www.snapchat.com
 feelinsonice.appspot.com
 feelinsonice.l.google.com
