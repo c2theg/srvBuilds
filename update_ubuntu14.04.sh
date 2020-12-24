@@ -21,8 +21,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.6                             \r\n
-Last Updated:  4/26/2020
+Version:  1.7.7                             \r\n
+Last Updated:  12/24/2020
 \r\n \r\n"
 wait
 # https://askubuntu.com/questions/759524/problem-with-ipv6-sudo-apt-get-update-upgrade
