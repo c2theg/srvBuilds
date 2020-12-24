@@ -175,8 +175,8 @@ rm /var/log/update_pihole_lists.log
 rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
 rm /var/log/update_elk_plugins.log
-
 rm /var/log/vmware-network.*
+rm /var/log/cloud-init.log
 #--- Resilio ---
 rm /var/lib/resilio-sync/sync.log
 rm /var/lib/resilio-sync/sync.log.*
