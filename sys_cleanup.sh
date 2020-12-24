@@ -220,8 +220,8 @@ sudo lsof | grep deleted
 #lsof +L1
 
 #echo "\r\n \r\n"
-echo " Returns a list of files that most inode usage have.. \r\n "
-find / -xdev -type f | cut -d "/" -f2 | sort | uniq -c | sort -n | less
+# echo " Returns a list of files that most inode usage have.. \r\n "
+# find / -xdev -type f | cut -d "/" -f2 | sort | uniq -c | sort -n | less
 
 #du -ah / | sort -nr | head -n 10
 echo "\r\n \r\n Your best option is to restart the server to release these files... \r\n \r\n"
