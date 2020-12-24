@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.8.2                             \r\n
-Last Updated:  5/11/2020
+Version:  1.8.3                             \r\n
+Last Updated:  12/24/2020
 
 "
 #--------------------------------------------------------------------------------------------
@@ -176,6 +176,7 @@ rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
 rm /var/log/update_elk_plugins.log
 
+rm /var/log/vmware-network.*
 #--- Resilio ---
 rm /var/lib/resilio-sync/sync.log
 rm /var/lib/resilio-sync/sync.log.*
