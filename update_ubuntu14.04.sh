@@ -21,8 +21,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.7                             \r\n
-Last Updated:  12/24/2020
+Version:  1.7.8                             \r\n
+Last Updated:  12/28/2020
 \r\n \r\n"
 wait
 # https://askubuntu.com/questions/759524/problem-with-ipv6-sudo-apt-get-update-upgrade
@@ -36,6 +36,10 @@ wait
 sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y
 wait
 sudo -E apt-get install -f -y
+wait
+sudo apt update
+wait
+sudo apt upgrade -y
 wait
 echo "Freeing up space"
 sudo apt-get autoremove -y
