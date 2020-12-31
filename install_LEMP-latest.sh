@@ -33,8 +33,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 INSTALLS  LEMP (Linux* Nginx Memcache PHP (Latest - 7.4)
 
 \r\n \r\n
-Version:  1.5.0                             \r\n
-Last Updated:  2/15/2020
+Version:  1.5.1                             \r\n
+Last Updated:  12/31/2020
 \r\n \r\n
 Updating system first..."
 
@@ -89,7 +89,8 @@ pecl install mongodb
 pear install PEAR
 
 #--- extras ---
-sudo apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev libsslcommon2-dev libmysqlclient-dev
+sudo apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev libsslcommon2-dev 
+# libmysqlclient-dev
 
 #--- install Composer ---
 # https://getcomposer.org/download/
