@@ -21,9 +21,14 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.8                             \r\n
-Last Updated:  12/28/2020
-\r\n \r\n"
+Version:  1.7.7                             \r\n
+Last Updated:  1/20/2021
+\r\n \r\n
+
+for Debian 8 / Ubuntu versions 14.04 - 20.04 ( ignore the file name :/ )
+
+\r\n \r\n
+"
 wait
 # https://askubuntu.com/questions/759524/problem-with-ipv6-sudo-apt-get-update-upgrade
 # echo 'Acquire::ForceIPv4 "true";' | sudo tee /etc/apt/apt.conf.d/99force-ipv4
