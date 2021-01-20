@@ -44,7 +44,7 @@ sudo -E apt-get install -f -y
 wait
 sudo apt update
 wait
-sudo apt upgrade -y
+sudo apt upgrade -y --allow-downgrades
 wait
 echo "Freeing up space"
 sudo apt-get autoremove -y
@@ -69,7 +69,7 @@ if pip -V | grep -q ' not '; then
     echo "Skipping pip update.. "
 else
     # False 
-    echo "Updating PIP... "
+    echo "\r\n \r\n ------------------------  \r\n \r\n Updating Python PIP packages... \r\n \r\n"
     sudo pip install -U pip
     sudo pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
