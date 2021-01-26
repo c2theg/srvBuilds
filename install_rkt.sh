@@ -43,11 +43,13 @@ if [ -f /etc/os-release ]; then
     . /etc/os-release
     OS=$NAME
     VER=$VERSION_ID
+    echo  "first os check \r\n"
 
 elif type lsb_release >/dev/null 2>&1; then
     # linuxbase.org
     OS=$(lsb_release -si)
     VER=$(lsb_release -sr)
+    echo "linuxbase.org... \r\n "
 
 elif [ -f /etc/lsb-release ]; then
     # For some versions of Debian/Ubuntu without lsb_release command
@@ -100,6 +102,7 @@ elif [ -f /etc/redhat-release ]; then
     wget https://github.com/rkt/rkt/releases/download/v1.29.0/rkt-1.29.0-1.x86_64.rpm.asc
     gpg --verify rkt-1.29.0-1.x86_64.rpm.asc
     sudo rpm -Uvh rkt-1.29.0-1.x86_64.rpm
+
 else
     echo "Fall back to uname, e.g. 'Linux <version>', also works for BSD, etc. "
     OS=$(uname -s)
