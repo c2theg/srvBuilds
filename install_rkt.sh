@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.5                             \r\n
+Version:  0.0.6                             \r\n
 Last Updated:  1/25/2021
 \r\n \r\n"
 #sudo -E apt-get update
@@ -38,22 +38,22 @@ echo "Adding Key... "
 gpg --recv-key 18AD5014C99EF7E3BA5F6CE950BDD3E0FC8A365E
 
 #------------- OS Version Detection -------------
-if [ -f /etc/os-release ]; then
-    # freedesktop.org and systemd
-    . /etc/os-release
-    OS=$NAME
-    VER=$VERSION_ID
-    echo  "first os check \r\n"
+# if [ -f /etc/os-release ]; then
+#     # freedesktop.org and systemd
+#     . /etc/os-release
+#     OS=$NAME
+#     VER=$VERSION_ID
+#     echo  "first os check \r\n"
 
-elif type lsb_release >/dev/null 2>&1; then
-    # linuxbase.org
-    OS=$(lsb_release -si)
-    VER=$(lsb_release -sr)
-    echo "linuxbase.org... \r\n "
+# elif type lsb_release >/dev/null 2>&1; then
+#     # linuxbase.org
+#     OS=$(lsb_release -si)
+#     VER=$(lsb_release -sr)
+#     echo "linuxbase.org... \r\n "
 
-elif [ -f /etc/lsb-release ]; then
+if [ -f /etc/lsb-release ]; then
     # For some versions of Debian/Ubuntu without lsb_release command
-    echo "Debian / Ubuntu without lsb_release... "
+    echo "Debian / Ubuntu lsb_release... \r\n "
     . /etc/lsb-release
     OS=$DISTRIB_ID
     VER=$DISTRIB_RELEASE
