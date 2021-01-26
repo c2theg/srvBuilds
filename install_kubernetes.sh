@@ -18,14 +18,16 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.6                             \r\n
-Last Updated:  10/5/2018
+Version:  0.0.7                             \r\n
+Last Updated:  1/25/2021
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
 wait
 sudo -E apt-get upgrade -y
 wait
+echo "Installing Wireguard VPN.. \r\n "
+sudo -E apt install wireguard
 
 # from: https://github.com/hobby-kube/guide
 echo "Installing Kubernetes....  \r\n"
@@ -54,6 +56,23 @@ With everything installed, go to the machine that will serve as the Kubernetes m
 
 # https://kubernetes.io/docs/tasks/access-application-cluster/service-access-application-cluster/
 kubectl version
+
+#------ Firewall Rules ------------
+
+ufw allow ssh # sshd on port 22, be careful to not get locked out!
+ufw allow 6443 # remote, secure Kubernetes API access
+ufw allow 80
+ufw allow 443
+# open VPN port on private network interface (use eth0 on Hetzner Cloud)
+ufw allow in on eth1 to any port 51820
+ufw allow in on eth1 to any port 61820
+# allow all traffic on VPN tunnel interface
+ufw allow in on wg0
+
+ufw default deny incoming # deny traffic on every other port, on any interface
+ufw enable
+
+#------- End of FW -----------------
 
 echo "Creating Hello World Cluster \r\n \r\n "
 kubectl run hello-world --replicas=2 --labels="run=load-balancer-example" --image=gcr.io/google-samples/node-hello:1.0  --port=8080
