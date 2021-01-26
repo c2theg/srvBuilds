@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.3                             \r\n
+Version:  0.0.4                             \r\n
 Last Updated:  1/25/2021
 \r\n \r\n"
 #sudo -E apt-get update
@@ -51,63 +51,66 @@ elif type lsb_release >/dev/null 2>&1; then
 
 elif [ -f /etc/lsb-release ]; then
     # For some versions of Debian/Ubuntu without lsb_release command
+    echo "Debian / Ubuntu without lsb_release... "
     . /etc/lsb-release
     OS=$DISTRIB_ID
     VER=$DISTRIB_RELEASE
 
     #------Do work ----------
+    #-----------------------------------------------
+    # if [ $VER = '14.04' ]; then
+    #     wait
+    #     echo "14.04"
+    #     echo "Mongo not supported on this version of Ubuntu"
+    # else
+    #     if [ $VER = '16.04' ]; then
+    #       wait
+    #       echo "16.04"
+    #      sudo apt-get install -y libcurl3
+    #      echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+    #     elif [ $VER = '18.04' ]; then
+    #       wait
+    #       echo "18.04"
+    #      sudo apt-get install libcurl4
+    #      echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+    #     elif [ $VER = '20.04' ]; then
+    #       wait
+    #       echo "20.04"
+    #      sudo apt-get install libcurl4
+    #      echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+    #     fi
+    # fi
+    #-------------------------------------
     wget https://github.com/rkt/rkt/releases/download/v1.29.0/rkt_1.29.0-1_amd64.deb
     wget https://github.com/rkt/rkt/releases/download/v1.29.0/rkt_1.29.0-1_amd64.deb.asc
     gpg --verify rkt_1.29.0-1_amd64.deb.asc
     sudo dpkg -i rkt_1.29.0-1_amd64.deb
 
 elif [ -f /etc/debian_version ]; then
-    # Older Debian/Ubuntu/etc.
+    echo "Older Debian / Ubuntu ... "
     OS=Debian
     VER=$(cat /etc/debian_version)
 
 elif [ -f /etc/SuSe-release ]; then
-    # Older SuSE/etc.
+    echo "Older SuSE / etc... "
 
 elif [ -f /etc/redhat-release ]; then
-    # Older Red Hat, CentOS, etc.
+    echo "Older Red Hat, CentOS, etc. "
     wget https://github.com/rkt/rkt/releases/download/v1.29.0/rkt-1.29.0-1.x86_64.rpm
     wget https://github.com/rkt/rkt/releases/download/v1.29.0/rkt-1.29.0-1.x86_64.rpm.asc
     gpg --verify rkt-1.29.0-1.x86_64.rpm.asc
     sudo rpm -Uvh rkt-1.29.0-1.x86_64.rpm
 
-else
-    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+else;
+    echo "Fall back to uname, e.g. 'Linux <version>', also works for BSD, etc. "
     OS=$(uname -s)
     VER=$(uname -r)
 
 fi
+
 echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
-#-----------------------------------------------
-# if [ $VER = '14.04' ]; then
-#     wait
-#     echo "14.04"
-#     echo "Mongo not supported on this version of Ubuntu"
-# else
-#     if [ $VER = '16.04' ]; then
-#     	wait
-#     	echo "16.04"
-#      sudo apt-get install -y libcurl3
-#      echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-#     elif [ $VER = '18.04' ]; then
-#     	wait
-#     	echo "18.04"
-#      sudo apt-get install libcurl4
-#      echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-#     elif [ $VER = '20.04' ]; then
-#     	wait
-#     	echo "20.04"
-#      sudo apt-get install libcurl4
-#      echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-    
-    
-#     fi
-# fi
-#-------------------------------------
 echo "Updating repo's... \r\n \r\n "
 sudo apt-get update
+
+
+echo " All Done! "
