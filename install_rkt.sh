@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.4                             \r\n
+Version:  0.0.5                             \r\n
 Last Updated:  1/25/2021
 \r\n \r\n"
 #sudo -E apt-get update
@@ -100,12 +100,10 @@ elif [ -f /etc/redhat-release ]; then
     wget https://github.com/rkt/rkt/releases/download/v1.29.0/rkt-1.29.0-1.x86_64.rpm.asc
     gpg --verify rkt-1.29.0-1.x86_64.rpm.asc
     sudo rpm -Uvh rkt-1.29.0-1.x86_64.rpm
-
-else;
+else
     echo "Fall back to uname, e.g. 'Linux <version>', also works for BSD, etc. "
     OS=$(uname -s)
     VER=$(uname -r)
-
 fi
 
 echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
