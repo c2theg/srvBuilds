@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.6                             \r\n
+Version:  0.0.7                             \r\n
 Last Updated:  1/25/2021
 \r\n \r\n"
 #sudo -E apt-get update
@@ -37,6 +37,8 @@ echo "Adding Key... "
 #wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
 gpg --recv-key 18AD5014C99EF7E3BA5F6CE950BDD3E0FC8A365E
 
+echo "Updating repo's... \r\n \r\n "
+sudo -E apt-get update
 #------------- OS Version Detection -------------
 # if [ -f /etc/os-release ]; then
 #     # freedesktop.org and systemd
@@ -53,11 +55,10 @@ gpg --recv-key 18AD5014C99EF7E3BA5F6CE950BDD3E0FC8A365E
 
 if [ -f /etc/lsb-release ]; then
     # For some versions of Debian/Ubuntu without lsb_release command
-    echo "Debian / Ubuntu lsb_release... \r\n "
+    echo "Debian / Ubuntu... \r\n "
     . /etc/lsb-release
     OS=$DISTRIB_ID
     VER=$DISTRIB_RELEASE
-
     #------Do work ----------
     #-----------------------------------------------
     # if [ $VER = '14.04' ]; then
@@ -107,11 +108,8 @@ else
     echo "Fall back to uname, e.g. 'Linux <version>', also works for BSD, etc. "
     OS=$(uname -s)
     VER=$(uname -r)
+
 fi
-
-echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
-echo "Updating repo's... \r\n \r\n "
-sudo apt-get update
-
-
+#--------------------------------------------------------------------
+#echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
 echo " All Done! "
