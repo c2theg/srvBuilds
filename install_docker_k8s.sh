@@ -20,6 +20,9 @@ wait
 sudo -E apt-get upgrade -y
 wait
 #--------------------------------------------
+# https://kubernetes.io/docs/setup/production-environment/container-runtimes/
+#
+#
 # (Install Docker CE)
 ## Set up the repository:
 ### Install packages to allow apt to use a repository over HTTPS
