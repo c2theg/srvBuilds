@@ -16,10 +16,10 @@ echo "Running update_kernel_u18.sh
 
 
 
-Version:  0.1.8 
-Last Updated:  9/19/2020
+Version:  0.1.9 
+Last Updated:  1/28/2022
 
-KERNEL - Mainline Build (STABLE) 5.8.9
+KERNEL - Mainline Build (STABLE) 5.10.5
 
 
 "
@@ -54,10 +54,16 @@ echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest.
 #wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-modules-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
 
 #-- 5.8.0
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-headers-5.8.9-050809_5.8.9-050809.202009120936_all.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-headers-5.8.9-050809-generic_5.8.9-050809.202009120936_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-image-unsigned-5.8.9-050809-generic_5.8.9-050809.202009120936_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-modules-5.8.9-050809-generic_5.8.9-050809.202009120936_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-headers-5.8.9-050809_5.8.9-050809.202009120936_all.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-headers-5.8.9-050809-generic_5.8.9-050809.202009120936_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-image-unsigned-5.8.9-050809-generic_5.8.9-050809.202009120936_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-modules-5.8.9-050809-generic_5.8.9-050809.202009120936_amd64.deb
+
+#-- 5.10.5
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.5/amd64/linux-headers-5.10.5-051005_5.10.5-051005.202101061537_all.deb 
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.5/amd64/linux-headers-5.10.5-051005-generic_5.10.5-051005.202101061537_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.5/amd64/linux-image-unsigned-5.10.5-051005-generic_5.10.5-051005.202101061537_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.5/amd64/linux-modules-5.10.5-051005-generic_5.10.5-051005.202101061537_amd64.deb
 
 #-------------------------------------
 echo "Installing New Kernel... \r\n "
