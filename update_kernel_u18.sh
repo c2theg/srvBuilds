@@ -17,7 +17,7 @@ echo "Running update_kernel_u18.sh
 
 
 Version:  0.1.9 
-Last Updated:  1/28/2022
+Last Updated:  1/28/2021
 
 KERNEL - Mainline Build (STABLE) 5.10.5
 
