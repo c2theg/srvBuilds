@@ -48,7 +48,7 @@ rm /tmp/*.deb
 #----- download kernel's here ----->  https://kernel.ubuntu.com/~kernel-ppa/mainline/
 echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n Downloading now.. \r\n \r\nn "
 
-#-- 5.8.0
+#-- 5.8.9
 #wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-headers-5.8.9-050809_5.8.9-050809.202009120936_all.deb
 #wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-headers-5.8.9-050809-generic_5.8.9-050809.202009120936_amd64.deb
 #wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-image-unsigned-5.8.9-050809-generic_5.8.9-050809.202009120936_amd64.deb
