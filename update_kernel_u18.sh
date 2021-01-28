@@ -48,11 +48,6 @@ rm /tmp/*.deb
 #----- download kernel's here ----->  https://kernel.ubuntu.com/~kernel-ppa/mainline/
 echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n Downloading now.. \r\n \r\nn "
 
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428_5.4.28-050428.202003250833_all.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-headers-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-image-unsigned-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.28/linux-modules-5.4.28-050428-generic_5.4.28-050428.202003250833_amd64.deb
-
 #-- 5.8.0
 #wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-headers-5.8.9-050809_5.8.9-050809.202009120936_all.deb
 #wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.9/amd64/linux-headers-5.8.9-050809-generic_5.8.9-050809.202009120936_amd64.deb
@@ -83,7 +78,6 @@ sudo update-grub
 #echo "Clean up downloaded kernels... \r\n "
 #rm ~/latest_kernel/*
 rm /tmp/*.deb
-
 
 sudo apt --purge autoremove
 sudo dpkg --list | egrep -i --color 'linux-image|linux-headers'
