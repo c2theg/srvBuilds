@@ -29,3 +29,8 @@ apt-get install -y nuitka
 echo "Updating PyPI... "
 #pip install -U nuitka
 pip3 install -U nuitka
+
+echo " Visit for more details:  https://nuitka.net/doc/user-manual.html#command-line "
+echo " \r\n \r\n \r\n"
+
+
