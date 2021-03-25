@@ -18,23 +18,14 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
- 
-|￣￣￣￣￣￣￣￣￣￣￣￣￣|
-|    GREAT ENGINEERS       |
-|     DO NOT GROW ON       |
-|         TREES            |
-|＿＿＿＿＿＿＿＿＿＿＿＿＿|
-          (\_❀) ||
-          (•ㅅ•) ||
-          / 　 づ
 
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 
 INSTALLS  LEMP (Linux* Nginx Memcache PHP (Latest - 7.4)
 
 \r\n \r\n
-Version:  1.5.1                             \r\n
-Last Updated:  12/31/2020
+Version:  1.5.2                             \r\n
+Last Updated:  3/25/2021
 \r\n \r\n
 Updating system first..."
 
@@ -84,7 +75,7 @@ sudo pear channel-update pear.php.net
 sudo pecl channel-update pecl.php.net
 
 sudo pear install mail Net_SMTP Auth_SASL2-0.1.0 mail_mime
-sudo apt-get install -y php-mongodb
+sudo apt-get install -y php-mongodb php7.4-mongodb
 pecl install mongodb
 pear install PEAR
 
@@ -126,6 +117,8 @@ wait
 echo "Restarting memcache service..."
 sudo /etc/init.d/memcached restart
 wait
+
+sudo apt-get install -y brotli
 #------- NGINX --------
 sudo apt-get install -y nginx nginx-common nginx-full fcgiwrap gcc make libpcre3-dev zlib1g-dev
 #sudo apt-get install -y nginx-plus-module-geoip2
