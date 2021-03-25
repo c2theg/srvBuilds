@@ -21,8 +21,8 @@ echo "Running install_redis.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1.3                             \r\n
-Last Updated:  6/6/2020
+Version:  0.1.4                             \r\n
+Last Updated:  3/25/2021
 \r\n \r\n"
 wait
 #sudo -E apt-get update
@@ -148,7 +148,8 @@ echo "Done!"
 if [ -d "/etc/php" ]
 then
     echo "installing PHP module... \r\n "
-    sudo apt-get install -y php-redis
+    # sudo apt-get install -y php-redis
+    sudo apt-get install -y php7.4-redis
     sudo bash -c "echo extension=redis.so > /etc/php/7.4/mods-available/redis.ini"
-    echo "Modify /etc/php/7.X/fpm/php.ini to configure redis servers... \r\n \r\n "
+    echo "Modify /etc/php/7.4/fpm/php.ini to configure redis servers... \r\n \r\n "
 fi
