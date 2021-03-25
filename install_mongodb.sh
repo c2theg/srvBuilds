@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.7                             \r\n
-Last Updated:  9/19/2020
+Version:  0.0.8                             \r\n
+Last Updated:  3/25/2021
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -100,6 +100,11 @@ sudo apt-get update
 #echo "Install Mongodb $MongoDBVersion ... "
 #sudo apt-get install -y mongodb-org=$MongoDBVersion mongodb-org-server=$MongoDBVersion mongodb-org-shell=$MongoDBVersion mongodb-org-mongos=$MongoDBVersion mongodb-org-tools=$MongoDBVersion
 sudo apt-get install -y mongodb-org
+
+
+# For NGINX / Apache - PHP
+# sudo apt-get install php7.4-mongodb
+
 #----------------------------------
 ps --no-headers -o comm 1
 
