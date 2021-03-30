@@ -25,8 +25,8 @@ echo "Running update_time.sh at $now
 # http://manpages.ubuntu.com/manpages/disco/en/man1/timedatectl.1.html
 
 \r\n \r\n
-Version:  0.0.9                             \r\n
-Last Updated:  4/28/2020
+Version:  0.0.10                             \r\n
+Last Updated:  3/30/2021
 \r\n \r\n"
 wait
 #--------------------------------------------------------------------------------------------
@@ -65,18 +65,19 @@ echo "sudo timedatectl set-timezone UTC \r\n \r\n "
 echo "sudo timedatectl set-timezone America/New_York  \r\n \r\n "
 
 #---- NTPDATE Service -------
-#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod +u ntp.conf
-#mv ntp.conf /etc/ntp.conf
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod +u ntp.conf
+mv ntp.conf /etc/ntp.conf
 #sudo ntpdate pool.ntp.org
 #sudo service ntp stop
-#sudo ntpdate -s time.google.com
+sudo ntpdate -s time.google.com
 #sudo service ntp start
 #wait
 #cat /etc/timezone
 #grep UTC /etc/default/rcS
 #date
+
 # hardware clock
-#sudo systemctl reload ntp.service
+sudo systemctl reload ntp.service
 #sudo /etc/init.d/ntp restart
 
 # https://help.ubuntu.com/lts/serverguide/NTP.html.en
