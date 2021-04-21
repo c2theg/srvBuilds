@@ -1,4 +1,3 @@
-
 #!/bin/sh
 #    If you update this from Windows, using Notepad ++, do the following:
 #       sudo apt-get -y install dos2unix
@@ -36,12 +35,28 @@ sudo systemctl start clamav-freshclam
 sudo systemctl enable clamav-freshclam
 
 
-# do a full scan!
+# Do a full scan!
 #sudo clamscan --infected --remove --recursive /
-sudo clamscan --infected --remove --recursive /home/ubuntu
-sudo clamscan --infected --remove --recursive /var/log/
-sudo clamscan --infected --remove --recursive /media/
-sudo clamscan --infected --remove --recursive /etc/
 
+echo "\r\n \r\n Scanning: /home/ \r\n \r\n"
+sudo clamscan --infected --remove --recursive /home/
+echo "\r\n \r\n Scanning: /var/ \r\n \r\n"
+sudo clamscan --infected --remove --recursive /var/
+echo "\r\n \r\n Scanning: /media/ \r\n \r\n"
+sudo clamscan --infected --remove --recursive /media/
+echo "\r\n \r\n Scanning: /etc/ \r\n \r\n"
+sudo clamscan --infected --remove --recursive /etc/
+echo "\r\n \r\n Scanning: /tmp/ \r\n \r\n"
+sudo clamscan --infected --remove --recursive /tmp/
+echo "\r\n \r\n Scanning: /sys/ \r\n \r\n"
+sudo clamscan --infected --remove --recursive /sys/
+echo "\r\n \r\n Scanning: /root/ \r\n \r\n"
+sudo clamscan --infected --remove --recursive /root/
+echo "\r\n \r\n Scanning: /opt/ \r\n \r\n"
+sudo clamscan --infected --remove --recursive /opt/
+echo "\r\n \r\n Scanning: /snap/ \r\n \r\n"
+sudo clamscan --infected --remove --recursive /snap/
+echo "\r\n \r\n Scanning: /mnt/ \r\n \r\n"
+sudo clamscan --infected --remove --recursive /mnt/
 
 echo "DONE! \r\n \r\n"
