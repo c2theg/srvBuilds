@@ -29,7 +29,6 @@ Last Updated:  4/21/2021
 \r\n \r\n"
 
 sudo apt-get update -y
-ß
 sudo apt-get install clamav clamav-daemon -y
 sudo systemctl stop clamav-freshclam
 sudo freshclam
