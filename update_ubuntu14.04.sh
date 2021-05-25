@@ -21,8 +21,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.7                             \r\n
-Last Updated:  1/20/2021
+Version:  1.7.8                             \r\n
+Last Updated:  5/25/2021
 \r\n \r\n
 
 for Debian 8 / Ubuntu versions 14.04 - 20.04 ( ignore the file name :/ )
@@ -70,8 +70,8 @@ if pip -V | grep -q ' not '; then
 else
     # False 
     echo "\r\n \r\n ------------------------  \r\n \r\n Updating Python PIP packages... \r\n \r\n"
-    sudo pip install -U pip
-    sudo pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+    pip install -U pip
+    pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
 
 #------------------------ Python PIP3 ---------------------------------
@@ -81,8 +81,8 @@ if pip3 -V | grep -q ' not '; then
 else
     # False 
     echo "Updating PIP3... "
-    sudo pip3 install -U pip
-    sudo pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+    pip3 install -U pip
+    pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
 
 #------------------------ Node JS ---------------------------------
