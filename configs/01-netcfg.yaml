@@ -1,5 +1,8 @@
-# Christopher Gray - 6/4/2020
-#   
+# Christopher Gray - 6/28/2021
+#   Cloudflare Family Sheild, OpenDNS Family, Quad9
+#     Both IPv4 and IPv6
+#
+# -------------------------------------------------------
 # Source: https://netplan.io/examples
 #
 # 1) to view interface use:
@@ -15,7 +18,7 @@
 # renderer: "networkd" or "NetworkManager"
 #
 # DEBUG: sudo netplan --debug apply
-#--------------------------------------------------------
+# -------------------------------------------------------
 network:
   version: 2
   renderer: networkd
@@ -25,4 +28,4 @@ network:
      addresses: [192.168.1.20/24]
      gateway4: 192.168.1.1
      nameservers:
-       addresses: [9.9.9.9,208.67.222.222,1.1.1.2,8.8.8.8]
+       addresses: [1.1.1.3,1.0.0.3,208.67.222.123,9.9.9.9,2606:4700:4700::1113,2620:119:35::123,2620:fe::fe]
