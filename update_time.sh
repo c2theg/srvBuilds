@@ -92,3 +92,6 @@ sudo systemctl reload ntp.service
 #ifconfig                    \r\n
 #ethtool -T eth0 or ens160   \r\n
 #ptp4l -i eth0 -m -S -A           \r\n"
+
+
+ntpq -p
