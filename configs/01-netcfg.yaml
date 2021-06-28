@@ -14,6 +14,8 @@
 # 4) save file
 # 5) netplan apply
 # 6) ping 1.1.1.1
+# 7) ping google.com
+#
 #
 # renderer: "networkd" or "NetworkManager"
 #
