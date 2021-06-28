@@ -25,17 +25,16 @@ echo "Running update_time.sh at $now
 # http://manpages.ubuntu.com/manpages/disco/en/man1/timedatectl.1.html
 
 \r\n \r\n
-Version:  0.0.10                             \r\n
-Last Updated:  3/30/2021
+Version:  0.0.11                             \r\n
+Last Updated:  6/28/2021
 \r\n \r\n"
 wait
 #--------------------------------------------------------------------------------------------
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/timesyncd.conf && chmod +u timesyncd.conf
 mv timesyncd.conf /etc/systemd/timesyncd.conf
 wait
+sudo ntpdate -s time.google.com
 
-echo "Setting NTP server to: time.cloudflare.com ... \r\n"
-sudo ntpdate -s time.cloudflare.com
 
 echo "Stopping NTP Services... \r\n"
 sudo service ntp stop
@@ -69,12 +68,16 @@ sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.
 mv ntp.conf /etc/ntp.conf
 #sudo ntpdate pool.ntp.org
 #sudo service ntp stop
-sudo ntpdate -s time.google.com
+
+echo "Setting NTP server to: time.cloudflare.com ... \r\n"
+sudo ntpdate -s time.cloudflare.com
+
 #sudo service ntp start
 #wait
 #cat /etc/timezone
 #grep UTC /etc/default/rcS
 #date
+
 
 # hardware clock
 sudo systemctl reload ntp.service
