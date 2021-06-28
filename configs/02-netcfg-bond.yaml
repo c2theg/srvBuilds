@@ -1,4 +1,4 @@
-# Christopher Gray - 5/11/2020
+# Christopher Gray - 6/28/2021
 #
 # Source: https://netplan.io/examples
 #
@@ -34,4 +34,4 @@ network:
    parameters:
      mode: 802.3ad
    nameservers:
-     addresses: [208.67.222.222,208.67.220.220]
+     addresses: [1.1.1.3,1.0.0.3,208.67.222.123,9.9.9.9,2606:4700:4700::1113,2620:119:35::123,2620:fe::fe]
