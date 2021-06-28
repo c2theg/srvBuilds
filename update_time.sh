@@ -48,21 +48,6 @@ sudo timedatectl set-local-rtc 0
 echo "Restarting services... \r\n "
 sudo systemctl restart systemd-timesyncd.service
 
-echo "Show status.. \r\n \r\n"
-sudo timedatectl status
-
-echo "\r\n \r\n Hardware Clock \r\n"
-sudo hwclock --show
-
-echo "For more details enter: \r\n \r\n  sudo systemctl status systemd-timesyncd.service \r\n \r\n"
-echo "Show current time.. \r\n"
-date
-
-echo "\r\n \r\n \r\n"
-echo "To update timezone, use the following command then re-run this script: \r\n \r\n "
-echo "sudo timedatectl set-timezone UTC \r\n \r\n "
-echo "sudo timedatectl set-timezone America/New_York  \r\n \r\n "
-
 #---- NTPDATE Service -------
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/ntp.conf && chmod +u ntp.conf
 mv ntp.conf /etc/ntp.conf
@@ -95,3 +80,18 @@ sudo systemctl reload ntp.service
 
 
 ntpq -p
+
+echo "Show status.. \r\n \r\n"
+sudo timedatectl status
+
+echo "\r\n \r\n Hardware Clock \r\n"
+sudo hwclock --show
+
+echo "For more details enter: \r\n \r\n  sudo systemctl status systemd-timesyncd.service \r\n \r\n"
+echo "Show current time.. \r\n"
+date
+
+echo "\r\n \r\n \r\n"
+echo "To update timezone, use the following command then re-run this script: \r\n \r\n "
+echo "sudo timedatectl set-timezone UTC \r\n \r\n "
+echo "sudo timedatectl set-timezone America/New_York  \r\n \r\n "
