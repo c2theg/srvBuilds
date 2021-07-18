@@ -21,7 +21,7 @@ Last Updated:  7/17/2021
 
 https://www.kernel.org/
 
-KERNEL - Mainline Build (STABLE) 5.10.50  (Longterm) 
+KERNEL - Mainline Build (LONGTERM) 5.10.50
 
 
 "
