@@ -52,7 +52,7 @@ echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest.
 
 #--- 5.12.17 ---
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.12.17/amd64/linux-headers-5.12.17-051217_5.12.17-051217.202107141836_all.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.12.17/amd64/linux-headers-5.12.17-051217-generic_5.12.17-051217.202107141836_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.12.17/amd64/linux-headers-5.12.17-051217-generic_5.12.17-051217.202107141836_amd64.deb
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.12.17/amd64/linux-image-unsigned-5.12.17-051217-generic_5.12.17-051217.202107141836_amd64.deb
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.12.17/amd64/linux-modules-5.12.17-051217-generic_5.12.17-051217.202107141836_amd64.deb
 
