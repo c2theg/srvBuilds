@@ -16,10 +16,12 @@ echo "Running update_kernel_u20.sh
 
 
 
-Version:  0.1.10
+Version:  0.1.11
 Last Updated:  7/17/2021
 
-KERNEL - Mainline Build (STABLE) 5.10.5
+KERNEL - Mainline Build (STABLE) 5.12.17
+
+https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.12.17/
 
 
 "
@@ -48,13 +50,7 @@ rm /tmp/*.deb
 #----- download kernel's here ----->  https://kernel.ubuntu.com/~kernel-ppa/mainline/
 echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n Downloading now.. \r\n \r\nn "
 
-#-- 5.10.5
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.5/amd64/linux-headers-5.10.5-051005_5.10.5-051005.202101061537_all.deb 
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.5/amd64/linux-headers-5.10.5-051005-generic_5.10.5-051005.202101061537_amd64.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.5/amd64/linux-image-unsigned-5.10.5-051005-generic_5.10.5-051005.202101061537_amd64.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.5/amd64/linux-modules-5.10.5-051005-generic_5.10.5-051005.202101061537_amd64.deb
-
-#-- 5.12.7
+#--- 5.12.17 ---
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.12.17/amd64/linux-headers-5.12.17-051217_5.12.17-051217.202107141836_all.deb
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.12.17/amd64/linux-headers-5.12.17-051217-generic_5.12.17-051217.202107141836_amd64.deb
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.12.17/amd64/linux-image-unsigned-5.12.17-051217-generic_5.12.17-051217.202107141836_amd64.deb
