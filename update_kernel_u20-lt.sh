@@ -16,8 +16,8 @@ echo "Running update_kernel_u20-lt.sh
 
 
 
-Version:  0.1.10
-Last Updated:  7/17/2021
+Version:  0.1.12
+Last Updated:  7/18/2021
 
 https://www.kernel.org/
 
@@ -52,7 +52,7 @@ echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest.
 
 #-- 5.10.50
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-headers-5.10.50-051050_5.10.50-051050.202107141531_all.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-headers-5.10.50-051050-generic_5.10.50-051050.202107141531_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-headers-5.10.50-051050-generic_5.10.50-051050.202107141531_amd64.deb
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-image-unsigned-5.10.50-051050-generic_5.10.50-051050.202107141531_amd64.deb
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-modules-5.10.50-051050-generic_5.10.50-051050.202107141531_amd64.deb
 
