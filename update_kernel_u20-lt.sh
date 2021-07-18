@@ -1,6 +1,6 @@
 #!/bin/sh
 clear
-echo "Running update_kernel_u20.sh
+echo "Running update_kernel_u20-lt.sh
 
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
