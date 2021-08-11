@@ -127,6 +127,7 @@ if [ -s "nginx-repo.key" ]; then
 		sudo apt-cache policy app-protect-threat-campaigns
 
 
+		# Check the latest version at: https://docs.nginx.com/nginx/releases/
 		sudo service nginx restart
 		nginx -V
 	else
