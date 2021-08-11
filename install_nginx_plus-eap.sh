@@ -1,6 +1,6 @@
 #!/bin/bash
-Version="0.1.16"
-Updated="10/27/20"
+Version="0.1.17"
+Updated="8/10/2021"
 # --------------------------------------------
 #  SOURCES 
 # https://cs.nginx.com/repo_setup
@@ -48,7 +48,6 @@ if [ -d "/etc/nginx/" ]; then
 fi
 
 if [ -s "nginx-repo.key" ]; then
-	#Create the /etc/ssl/nginx/ directory:
 	sudo mkdir -p /etc/ssl/nginx
 
 	cp nginx-repo.key /etc/ssl/nginx/
@@ -59,9 +58,7 @@ if [ -s "nginx-repo.key" ]; then
 		#--- UBUNTU  ---- by: christopher gray
 
 		#Download and add the NGINX signing key:
-		#sudo wget http://nginx.org/keys/nginx_signing.key 
-		#sudo apt-key add nginx_signing.key
-		#curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
+		curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
 		sudo wget https://cs.nginx.com/static/keys/nginx_signing.key && sudo apt-key add nginx_signing.keys
 
 		#Install apt utils:
