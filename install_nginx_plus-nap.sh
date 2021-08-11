@@ -28,7 +28,7 @@ Installation of
  | |\  | |__| |_| |_| |\  |/ . \ 
  |_| \_|\_____|_____|_| \_/_/ \_\
 
-    PLUS+  &  App Protect (EAP)
+    PLUS+  &  App Protect (NAP)
 
 
 Version: $Version
@@ -100,6 +100,7 @@ if [ -s "nginx-repo.key" ]; then
 
 		#**********************************************
 		#---      NGINX APP PROTECT - Install       ---
+		#--- https://docs.nginx.com/nginx-app-protect/releases/
 		#**********************************************
 		sudo apt-get install -y app-protect
 
