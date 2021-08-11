@@ -61,8 +61,8 @@ if [ -s "nginx-repo.key" ]; then
 	chmod 644 /etc/ssl/nginx/*
 
 	if [ -f /etc/lsb-release ]; then
-		#--- UBUNTU  ---- by: christopher gray
-
+		#--- UBUNTU  ---- by: Christopher Gray
+		
 		#Download and add the NGINX signing key:
 		curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
 		sudo wget https://cs.nginx.com/static/keys/nginx_signing.key && sudo apt-key add nginx_signing.keys
@@ -136,6 +136,16 @@ if [ -s "nginx-repo.key" ]; then
 		# Check the latest version at: https://docs.nginx.com/nginx/releases/
 		sudo service nginx restart
 		nginx -V
+		
+		sudo ufw allow 'Nginx Full'
+		sudo ufw delete allow 'Nginx HTTP'
+		sudo ufw status
+
+		echo "\r\n \r\n Lets Encrypt - Cert Bot \r\n \r\n "
+		sudo apt install -y certbot python3-certbot-nginx
+		
+		echo "\r\n \r\n \r\n To generate a FREE SSL/TLS Cert: sudo certbot --nginx -d example.com -d www.example.com"
+				
 	else
 
 		#------- REDHAT ----------
