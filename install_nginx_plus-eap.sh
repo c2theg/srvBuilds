@@ -1,5 +1,5 @@
 #!/bin/bash
-Version="0.1.17"
+Version="0.1.20"
 Updated="8/10/2021"
 # --------------------------------------------
 #  SOURCES 
@@ -49,7 +49,13 @@ fi
 
 if [ -s "nginx-repo.key" ]; then
 	sudo mkdir -p /etc/ssl/nginx
-
+	sudo mkdir -p /etc/nginx/sites-enabled/
+	sudo mkdir -p /etc/nginx/sites-available/
+	sudo mkdir -p /etc/nginx/certs/
+	sudo mkdir -p /etc/nginx/snippets/
+	
+	
+	wget -O /etc/nginx/certs/lets-encrypt-x3-cross-signed.pem "https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem" 
 	cp nginx-repo.key /etc/ssl/nginx/
 	cp nginx-repo.crt /etc/ssl/nginx/
 	chmod 644 /etc/ssl/nginx/*
