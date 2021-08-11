@@ -55,7 +55,7 @@ if [ -s "nginx-repo.key" ]; then
 	sudo mkdir -p /etc/nginx/snippets/
 	
 	
-	wget -O /etc/nginx/certs/lets-encrypt-x3-cross-signed.pem "https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem" 
+	wget -O /etc/ssl/nginx/lets-encrypt-x3-cross-signed.pem "https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem" 
 	cp nginx-repo.key /etc/ssl/nginx/
 	cp nginx-repo.crt /etc/ssl/nginx/
 	chmod 644 /etc/ssl/nginx/*
