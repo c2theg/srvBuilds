@@ -18,7 +18,7 @@ echo "
 Version:  0.6.9
 Last Updated:  8/11/2021
 \r\n \r\n
-This is really meant for 16.04+ (works on 20.04.1+) \r\n \r\n
+This is really meant for 18.04+ - 20.04+) \r\n \r\n
 
 Updating system first..."
 sudo -E apt-get update
