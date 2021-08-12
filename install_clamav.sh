@@ -30,6 +30,7 @@ Last Updated:  4/21/2021
 sudo apt-get update -y
 sudo apt-get install clamav clamav-daemon -y
 sudo systemctl stop clamav-freshclam
+#--- Update ClamAV Signatures ---
 sudo freshclam
 sudo systemctl start clamav-freshclam
 sudo systemctl enable clamav-freshclam
