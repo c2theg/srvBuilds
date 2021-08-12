@@ -19,10 +19,11 @@ echo "
                             |_|                                             |___|
 
 
-\r\n \r\n
-Version:  0.0.3                             \r\n
-Last Updated:  8/13/2019
-\r\n \r\n "
+
+Version:  0.0.4                             \r\n
+Last Updated:  8/11/2021
+
+"
 
 # ---- Add to crontab ----
 #  15 3 * * * /usr/bin/certbot renew --quiet --deploy-hook "systemctl restart nginx"
@@ -40,7 +41,7 @@ wait
 #./certbox-auto
 
 #--- OCSP Cert ---
-mkdir /etc/nginx/certs/
+mkdir -p /etc/nginx/certs/
 wget -O /etc/nginx/certs/lets-encrypt-x3-cross-signed.pem "https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem" 
 #--------------- Old below ------------------------------------
 clear
