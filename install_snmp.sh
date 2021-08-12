@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.3.6                             \r\n
-Last Updated:  5/27/2020
+Version:  1.3.7
+Last Updated:  8/11/2021
 \r\n \r\n
 #Updating system first..."
 #sudo -E apt-get update
@@ -46,14 +46,15 @@ sudo apt-get install -y lm-sensors fancontrol read-edid i2c-tools
 sudo apt-get install -y rrdtool libi2c-dev librrds-perl
 
 #-- VISIT  http://www.net-snmp.org/download.html  for the latest version --
-#wget http://sourceforge.net/projects/net-snmp/files/net-snmp/5.8/net-snmp-5.8.tar.gz
 #curl -O "net-snmp-5.8.tar.gz" "https://downloads.sourceforge.net/project/net-snmp/net-snmp/5.8/net-snmp-5.8.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fnet-snmp%2Ffiles%2Fnet-snmp%2F5.8%2Fnet-snmp-5.8.tar.gz%2Fdownload%3Fuse_mirror%3Dgigenet&ts=1587743687&use_mirror=gigenet"
 #- couldn't get a direct download link to work, so mirror to my github account
-wget https://github.com/c2theg/srvBuilds/raw/master/net-snmp-5.8.tar.gz
+wget https://github.com/c2theg/srvBuilds/raw/master/net-snmp-5.9.1.tar.gz
+
+
 wait
-tar -xvzf net-snmp-5.8.tar.gz
+tar -xvzf net-snmp-5.9.1.tar.gz
 wait
-mv net-snmp-5.8 net-snmp
+mv net-snmp-5.9.1 net-snmp
 wait
 cd net-snmp
 wait
