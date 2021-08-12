@@ -23,7 +23,7 @@ echo "
 
 This really is meant to be run under Ubuntu 20.04 LTS +
 \r\n \r\n
-Version:  0.0.5                             \r\n
+Version:  0.0.6                             \r\n
 Last Updated:  8/11/2021
 \r\n \r\n"
 
@@ -35,6 +35,14 @@ sudo freshclam
 sudo systemctl start clamav-freshclam
 sudo systemctl enable clamav-freshclam
 
+
+Cron_output=$(crontab -l | grep "install_clamav.sh")
+if [ -z "$Cron_output" ]
+then
+    line="5 3 * * 7 ~/install_clamav.sh >> /var/log/install_clamav.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+    /etc/init.d/cron restart  > /dev/null
+fi
 
 # Do a full scan!
 #sudo clamscan --infected --remove --recursive /
@@ -63,10 +71,4 @@ sudo clamscan --infected --remove --recursive /mnt/
 echo "DONE! \r\n \r\n"
 
 
-Cron_output=$(crontab -l | grep "install_clamav.sh")
-if [ -z "$Cron_output" ]
-then
-    line="5 3 * * 7 ~/install_clamav.sh >> /var/log/install_clamav.log 2>&1"
-    (crontab -u root -l; echo "$line" ) | crontab -u root -
-    /etc/init.d/cron restart  > /dev/null
-fi
+
