@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.6.8                             \r\n
-Last Updated:  9/20/2020
+Version:  0.6.9
+Last Updated:  8/11/2021
 \r\n \r\n
 This is really meant for 16.04+ (works on 20.04.1+) \r\n \r\n
 
@@ -30,20 +30,24 @@ echo "Downloading required dependencies...\r\n\r\n"
 # https://askubuntu.com/questions/284683/how-to-run-bittorrent-sync
 
 #--------------------------------------------------------------------------------------------
-echo " Creating directories... \r\n \r\n"
+echo "Installing ... \r\n \r\n"
 echo "deb http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" | sudo tee /etc/apt/sources.list.d/resilio-sync.list
 wait
 #sudo wget -qO - https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add -
-curl -LO http://linux-packages.resilio.com/resilio-sync/key.asc && sudo apt-key add ./key.asc
+#curl -LO http://linux-packages.resilio.com/resilio-sync/key.asc && sudo apt-key add ./key.asc
+curl -L https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add
 
 wait
 sudo apt update
 wait
 #sudo apt install -y resilio-sync --allow-unauthenticated
 #wait
-wget https://download-cdn.resilio.com/2.7.2.1375/Debian/resilio-sync_2.7.2.1375-1_amd64.deb
+#wget https://download-cdn.resilio.com/2.7.2.1375/Debian/resilio-sync_2.7.2.1375-1_amd64.deb
 wait
-sudo dpkg -i resilio-sync_2.7.2.1375-1_amd64.deb
+#sudo dpkg -i resilio-sync_2.7.2.1375-1_amd64.deb
+
+sudo apt-get install -y resilio-sync
+
 
 #---------------------------------------------------------------------------------------------------------
 #if [ -s "/etc/resilio-sync/config.json" ]
