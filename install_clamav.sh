@@ -61,3 +61,12 @@ echo "\r\n \r\n Scanning: /mnt/ \r\n \r\n"
 sudo clamscan --infected --remove --recursive /mnt/
 
 echo "DONE! \r\n \r\n"
+
+
+Cron_output=$(crontab -l | grep "install_clamav.sh")
+if [ -z "$Cron_output" ]
+then
+    line="5 3 * * 7 ~/install_clamav.sh >> /var/log/install_clamav.log 2>&1"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+    /etc/init.d/cron restart  > /dev/null
+fi
