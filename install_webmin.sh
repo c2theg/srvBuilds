@@ -1,11 +1,12 @@
 #!/bin/bash
 clear
 
-Version='1.955'
+
+Version='1.979'
 echo "
-Version:  1.3.2    \r\n
-Last Updated:  9/20/2020
-\r\n \r\n
+Version:  1.3.3
+Last Updated:  8/11/2021
+
 
 This will install version  $Version of Webmin \r\n \r\n
 Updating system first..."
