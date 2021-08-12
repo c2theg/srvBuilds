@@ -23,8 +23,8 @@ echo "
 
 This really is meant to be run under Ubuntu 20.04 LTS +
 \r\n \r\n
-Version:  0.0.1                             \r\n
-Last Updated:  4/21/2021
+Version:  0.0.5                             \r\n
+Last Updated:  8/11/2021
 \r\n \r\n"
 
 sudo apt-get update -y
