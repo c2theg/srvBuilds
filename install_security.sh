@@ -18,14 +18,14 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.6.2                             \r\n
-Last Updated:  6/27/2018
+Version:  0.6.3                             \r\n
+Last Updated:  8/11/2021
 \r\n \r\n"
 sudo -E apt-get update
 sudo -E apt-get upgrade -y
 #-------------------------------
 
-sudo -E apt-get install -y rkhunter fail2ban clamav clamav-daemon clamav-freshclam openssl-blacklist sshguard
+sudo -E apt-get install -y rkhunter fail2ban clamav clamav-daemon clamav-freshclam sshguard
 sudo freshclam
 
 #----- CSF Config Server Firewall ---------
