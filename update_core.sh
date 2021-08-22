@@ -26,7 +26,7 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.6.5                             \r\n
+Version:  1.6.6                             \r\n
 Last Updated:  8/22/2021
 \r\n \r\n"
 #sudo -E apt-get update
@@ -54,6 +54,7 @@ if nc -zw1 google.com 443; then
 		rm update_blocklists_local_servers.*
 		rm update_time.sh
 		rm update_kernel_u20-lt.sh
+		rm install_clamav.sh
 	fi
 	if [ -s "/root/update_core.sh" ]; then
 		echo "Deleting old files 2 \r\n"	
@@ -65,7 +66,7 @@ if nc -zw1 google.com 443; then
 		rm /root/install_monitoring.*
 		rm /root/sys_restart.*
 		rm /root/update_blocklists_local_servers.*
-		rm /root/update_time.sh	
+		rm /root/update_time.sh
 	fi
 	rm *.sh.1
 	echo "Downloading latest versions... \r\n\r\n"
@@ -78,6 +79,7 @@ if nc -zw1 google.com 443; then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod u+x update_time.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_kernel_u20-lt.sh && chmod u+x update_kernel_u20-lt.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_clamav.sh && chmod u+x install_clamav.sh
 	#wget -O - -q -t 1 --timeout=1 https://api.magnetoai.com/update_check.php?f=update_core > /dev/null
 	
 	if [ -s "install_docker.sh" ]; then
@@ -98,6 +100,7 @@ if nc -zw1 google.com 443; then
 		cp install_monitoring.sh /root/install_monitoring.sh
 		cp update_blocklists_local_servers.sh /root/update_blocklists_local_servers.sh
 		cp update_time.sh /root/update_time.sh
+		cp install_clamav.sh /root/install_clamav.sh
 	fi
 	
 	wait
