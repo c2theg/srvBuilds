@@ -26,8 +26,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.6.4                             \r\n
-Last Updated:  6/13/2020
+Version:  1.6.5                             \r\n
+Last Updated:  8/22/2021
 \r\n \r\n"
 #sudo -E apt-get update
 wait
@@ -53,6 +53,7 @@ if nc -zw1 google.com 443; then
 		rm install_monitoring.*
 		rm update_blocklists_local_servers.*
 		rm update_time.sh
+		rm update_kernel_u20-lt.sh
 	fi
 	if [ -s "/root/update_core.sh" ]; then
 		echo "Deleting old files 2 \r\n"	
@@ -76,6 +77,7 @@ if nc -zw1 google.com 443; then
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh && chmod u+x install_monitoring.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod u+x update_time.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_kernel_u20-lt.sh && chmod u+x update_kernel_u20-lt.sh
 	#wget -O - -q -t 1 --timeout=1 https://api.magnetoai.com/update_check.php?f=update_core > /dev/null
 	
 	if [ -s "install_docker.sh" ]; then
