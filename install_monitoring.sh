@@ -1,13 +1,9 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
 #
 clear
 echo "
-Version:  0.0.5         \r\n
-Last Updated:  9/20/2020
+Version:  0.0.6         \r\n
+Last Updated:  8/22/2021
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -21,6 +17,7 @@ echo "Visit: https://<ServerIP>:9090 \r\n \r\n"
 #-----------------------
 echo "\r\n \r\n Install Webmin \r\n \r\n "
 wait
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_webmin.sh
-chmod u+x install_webmin.sh
-sudo ./install_webmin.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_webmin.sh && chmod u+x install_webmin.sh && sudo ./install_webmin.sh
+sleep 10
+wait
+rm install_webmin.sh
