@@ -15,7 +15,7 @@ Updating system first..."
 #--------------------------------------------------------------------------------------------
 # https://code.luasoftware.com/tutorials/linux/upgrade-openssl-on-ubuntu-20/
 openssl version -a
-sudo cp -R /usr/lib/ssl /usr/lib/ssl-1.1.1h
+sudo cp -R /usr/lib/ssl /usr/lib/ssl-1.1.1-bk
 
 cd /home/ubuntu/
 
