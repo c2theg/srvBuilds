@@ -42,6 +42,6 @@ sudo ln -s /usr/local/bin/openssl /usr/bin/openssl
 
 sudo ldconfig
 
-openssl version
+openssl version -a
 
 echo "\r\n \r\n DONE \r\n \r\n "
