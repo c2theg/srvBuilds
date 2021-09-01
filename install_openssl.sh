@@ -4,8 +4,8 @@
 #
 clear
 echo "
-Version:  0.0.1          \r\n
-Last Updated:  8/28/2021
+Version:  0.0.2          \r\n
+Last Updated:  9/1/2021
 \r\n \r\n
 This is meant for Ubuntu 20.04+ \r\n \r\n
 Updating system first..."
@@ -45,3 +45,6 @@ sudo ldconfig
 openssl version -a
 
 echo "\r\n \r\n DONE \r\n \r\n "
+
+rm openssl-1.1.1l.tar.gz
+rm openssl-1.1.1l.tar.gz.sha256
