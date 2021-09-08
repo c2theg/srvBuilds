@@ -19,8 +19,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
 This really is meant to be run under Ubuntu 16.04 - 20.04 LTS
 
-Version:  1.7.19
-Last Updated:  5/18/2020
+Version:  1.7.20
+Last Updated:  9/8/2021
 
 Checking Internet status... 
 
@@ -50,7 +50,7 @@ if nc -zw1 google.com 443; then
 	sudo -E apt-get install -y sysstat dos2unix
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev whois traceroute htop sshguard build-essential libffi-dev nfs-common nfs-kernel-server speedometer watchdog
 	wait
-	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl net-tools
+	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iperf3 iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl net-tools
 	wait
 	if [ ! -f "$HOME/.config/neofetch/config.conf" ]; then
 		# Neofetch
