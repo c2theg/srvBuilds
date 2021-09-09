@@ -1,5 +1,5 @@
 # Christopher Gray - 6/28/2021
-#   Cloudflare Family Sheild, OpenDNS Family, Quad9
+#   Cloudflare Family Sheild, OpenDNS Family - (Servers dont need to access porn! HA),  Quad9
 #     Both IPv4 and IPv6
 #
 # -------------------------------------------------------
@@ -26,8 +26,8 @@ network:
   renderer: networkd
   ethernets:
     ens160:
-     dhcp4: no
-     addresses: [192.168.1.20/24]
-     gateway4: 192.168.1.1
+     dhcp4: yes
+#     addresses: [192.168.1.20/24]
+#     gateway4: 192.168.1.1
      nameservers:
        addresses: [1.1.1.3,1.0.0.3,208.67.222.123,9.9.9.9,2606:4700:4700::1113,2620:119:35::123,2620:fe::fe]
