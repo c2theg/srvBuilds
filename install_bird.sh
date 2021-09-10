@@ -15,11 +15,12 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.1
+Version:  0.0.3
 Last Updated:  9/10/2021
 
 "
 
+sudo apt-get install -y flex bison
 
 wget https://bird.network.cz/download/bird-2.0.8.tar.gz
 tar -xvzf bird-2.0.8.tar.gz
@@ -28,6 +29,13 @@ cd bird-2.0.8/
 ./configure
 make
 make install
-#vi /usr/local/etc/bird.conf
 bird --version
 
+echo "  
+
+Done Installing Bird!
+
+Edit config:
+    nano  /usr/local/etc/bird.conf
+
+"
