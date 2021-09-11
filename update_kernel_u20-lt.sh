@@ -16,12 +16,12 @@ echo "Running update_kernel_u20-lt.sh
 
 
 
-Version:  0.1.12
-Last Updated:  7/18/2021
+Version:  0.1.13
+Last Updated:  9/11/2021
 
 https://www.kernel.org/
 
-KERNEL - Mainline Build (LONGTERM) 5.10.50
+KERNEL - Mainline Build (LONGTERM) 5.10.63
 
 
 "
@@ -51,10 +51,16 @@ rm /tmp/*.deb
 echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n Downloading now.. \r\n \r\nn "
 
 #-- 5.10.50
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-headers-5.10.50-051050_5.10.50-051050.202107141531_all.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-headers-5.10.50-051050-generic_5.10.50-051050.202107141531_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-image-unsigned-5.10.50-051050-generic_5.10.50-051050.202107141531_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-modules-5.10.50-051050-generic_5.10.50-051050.202107141531_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-headers-5.10.50-051050_5.10.50-051050.202107141531_all.deb
+##wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-headers-5.10.50-051050-generic_5.10.50-051050.202107141531_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-image-unsigned-5.10.50-051050-generic_5.10.50-051050.202107141531_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.50/amd64/linux-modules-5.10.50-051050-generic_5.10.50-051050.202107141531_amd64.deb
+
+
+#-- 5.10.63
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.63/amd64/linux-headers-5.10.63-051063_5.10.63-051063.202109080732_all.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.63/amd64/linux-image-unsigned-5.10.63-051063-generic_5.10.63-051063.202109080732_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.63/amd64/linux-modules-5.10.63-051063-generic_5.10.63-051063.202109080732_amd64.deb
 
 #-------------------------------------
 echo "Installing New Kernel... \r\n "
