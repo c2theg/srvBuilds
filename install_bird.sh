@@ -15,8 +15,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.3
-Last Updated:  9/10/2021
+Version:  0.0.5
+Last Updated:  9/13/2021
 
 "
 
@@ -24,6 +24,7 @@ sudo apt-get install -y flex bison
 
 wget https://bird.network.cz/download/bird-2.0.8.tar.gz
 tar -xvzf bird-2.0.8.tar.gz
+rm bird-2.0.8.tar.gz
 cd bird-2.0.8/
 
 ./configure
