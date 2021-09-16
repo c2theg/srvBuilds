@@ -23,8 +23,8 @@ sudo cp -R /usr/lib/ssl /usr/lib/ssl-1.1.1-bk
 cd /home/ubuntu/
 
 # get the latest version
-wget https://www.openssl.org/source/openssl-3.0.0.tar.gz
-wget https://www.openssl.org/source/openssl-3.0.0.tar.gz.sha256
+wget --no-check-certificate https://www.openssl.org/source/openssl-3.0.0.tar.gz
+wget --no-check-certificate https://www.openssl.org/source/openssl-3.0.0.tar.gz.sha256
 echo "$(cat openssl-3.0.0.tar.gz.sha256) openssl-3.0.0.tar.gz" | sha256sum --check
 
 echo "\r\n \r\n ---- Installing ---- \r\n \r\n "
