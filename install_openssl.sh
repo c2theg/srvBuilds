@@ -4,7 +4,7 @@
 #
 clear
 echo "
-Version:  0.0.3          \r\n
+Version:  0.0.5          \r\n
 Last Updated:  9/15/2021
 \r\n \r\n
 This is meant for Ubuntu 20.04+ \r\n \r\n
@@ -12,6 +12,9 @@ Updating system first..."
 #sudo -E apt-get update
 #wait
 #sudo -E apt-get upgrade -y
+sudo apt-get install -y ca-certificates wget curl
+sudo update-ca-certificates
+
 #--------------------------------------------------------------------------------------------
 # https://code.luasoftware.com/tutorials/linux/upgrade-openssl-on-ubuntu-20/
 openssl version -a
