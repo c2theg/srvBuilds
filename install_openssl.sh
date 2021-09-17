@@ -4,8 +4,8 @@
 #
 clear
 echo "
-Version:  0.0.6          \r\n
-Last Updated:  9/16/2021
+Version:  0.0.7          \r\n
+Last Updated:  9/17/2021
 \r\n \r\n
 This is meant for Ubuntu 20.04+ \r\n \r\n
 Updating system first..."
@@ -49,5 +49,6 @@ openssl version -a
 
 echo "\r\n \r\n DONE \r\n \r\n "
 
+cd ..
 rm openssl-3.0.0.tar.gz
 rm openssl-3.0.0.tar.gz.sha256
