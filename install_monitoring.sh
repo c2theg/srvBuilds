@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-clear
 echo "
-Version:  0.0.7         \r\n
-Last Updated:  9/1/2021
-\r\n \r\n
+Version:  0.0.8         
+Last Updated:  9/21/2021
+
+
 Updating system first..."
 sudo -E apt-get update
 wait
