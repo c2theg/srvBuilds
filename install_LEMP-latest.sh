@@ -1,9 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
-#
 clear
 echo "
  _____             _         _    _          _                                   
@@ -21,12 +16,14 @@ echo "
 
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 
-INSTALLS  LEMP (Linux* Nginx Memcache PHP (Latest - 7.4)
+INSTALLS  LERP (Linux* Nginx Redis PHP (Latest - 7.4)
+-- As of 9/21/2021: Removing Memcached from install. Code is commited out, you can still add it if you want to. 
 
-\r\n \r\n
-Version:  1.5.2                             \r\n
-Last Updated:  3/25/2021
-\r\n \r\n
+
+Version:  1.5.3
+Last Updated:  9/21/2021
+
+
 Updating system first..."
 
 #---- Add Repo's -----
@@ -99,24 +96,30 @@ sudo ./install_php_composer.sh
 #--------------------------------------
 
 #--- PHP Memcached ----
-sudo apt-get install -y php-memcached memcached
-wait
+#sudo apt-get install -y php-memcached memcached
+#wait
 
-cd ~
-if [ -s "memcached.conf" ]; then
-	echo "Deleting file  memcached.conf "
-	rm memcached.conf
-fi
-echo "Downloading Memcache Config"
-wget -O "memcached.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/memcached.conf"
-wait
-sudo cp "memcached.conf" "/etc/memcached.conf"
-wait
-echo "Memcache Config Download Complete"
-wait
-echo "Restarting memcache service..."
-sudo /etc/init.d/memcached restart
-wait
+#cd ~
+#if [ -s "memcached.conf" ]; then
+#	echo "Deleting file  memcached.conf "
+#	rm memcached.conf
+#fi
+#echo "Downloading Memcache Config"
+#wget -O "memcached.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/memcached.conf"
+#wait
+#sudo cp "memcached.conf" "/etc/memcached.conf"
+#wait
+#echo "Memcache Config Download Complete"
+#wait
+#echo "Restarting memcache service..."
+#sudo /etc/init.d/memcached restart
+#wait
+#----- Redis -------
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_redis.sh
+chmod u+x install_redis.sh
+sudo ./install_redis.sh
+rm install_redis.sh
+#--------------------
 
 sudo apt-get install -y brotli
 #------- NGINX --------
