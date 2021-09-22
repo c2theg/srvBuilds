@@ -1,8 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
 #
 clear
 now=$(date)
@@ -21,8 +17,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.7.8                             \r\n
-Last Updated:  5/25/2021
+Version:  1.7.9                             \r\n
+Last Updated:  9/22/2021
 \r\n \r\n
 
 for Debian 8 / Ubuntu versions 14.04 - 20.04 ( ignore the file name :/ )
@@ -34,15 +30,23 @@ wait
 # echo 'Acquire::ForceIPv4 "true";' | sudo tee /etc/apt/apt.conf.d/99force-ipv4
 #
 #sudo -E apt-get update
-sudo -E apt-get -o Acquire::ForceIPv4=true update
-wait
 #sudo -E apt-get upgrade -y --force-yes
-#sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y --force-yes
-sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y
+
+#-- Force IPv4 update servers --
+sudo -E apt-get -o Acquire::ForceIPv4=true update
+#sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y
+sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y --force-yes
+
+#-- Force IPv6 update servers --
+#sudo -E apt-get -o Acquire::ForceIPv6=true update
+#sudo -E apt-get -o Acquire::ForceIPv6=true upgrade -y
+#sudo -E apt-get -o Acquire::ForceIPv6=true upgrade -y --force-yes
+
+#-------------------------------------------------------
 wait
 sudo -E apt-get install -f -y
 wait
-sudo apt update
+#sudo apt update
 wait
 sudo apt upgrade -y --allow-downgrades
 wait
