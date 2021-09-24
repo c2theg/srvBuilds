@@ -1,8 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
 #
 clear
 echo "
@@ -19,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.4                            \r\n
-Last Updated:  12/15/2019
+Version:  1.5.5                            \r\n
+Last Updated:  9/24/2021
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -38,20 +34,14 @@ cd ~
 
 
 # LTS
-curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 # Latest
-#curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+#curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 #--------------------------------------------------------------------------------------------
 wait
 sudo apt-get install -y nodejs
 
-#echo "\r\n \r\n Installing NPM \r\n "
-#sudo apt-get install -y npm
-#curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh
-#wait
-#sudo bash nodesource_setup.sh
-#wait
-
+echo "\r\n \r\n Installing NPM \r\n "
 sudo npm update npm -g
 
 echo "Install popular NPM modules... \r\n "
@@ -66,20 +56,27 @@ sudo npm install socket.io --save
 sudo npm install pem bcrypt aes-js md5 hash.js
 
 #--- Comms ---
-sudo npm install protobufjs grpc
+sudo npm install protobufjs
+sudo npm install grpc
 sudo npm install ping traceroute 
-sudo npm install react express debug async xml2js 
+sudo npm install react express debug async xml2js
 
 #--- Optional Packages ---
 sudo npm install validator jsonfile
 
 #---- Databases -----
-sudo npm install mysql
-sudo npm install bson kerberos node-gyp mongodb-core mongodb  
-sudo npm install memcache 
+sudo npm install bson kerberos node-gyp
+sudo npm install mongodb
+# mongodb-core
 sudo npm install redis
-sudo npm install elasticsearch
+
+
+#---- Other Databases ----
+#sudo npm install elasticsearch
 #sudo npm install influxdb-nodejs
+#sudo npm install mysql
+#sudo npm install memcache 
+
 
 #--- Sources ---
 # https://www.npmjs.com/package/protobufjs
