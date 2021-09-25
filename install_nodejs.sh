@@ -60,23 +60,29 @@ sudo npm install socket.io socket.io-redis socket.io-adapter socket.io-emitter s
 sudo npm install socket.io --save
 
 #-- Crypto
+sudo npm install crypto-js
+sudo npm install blake3
+sudo npm i pbkdf2
 sudo npm install pem bcrypt aes-js md5 hash.js
 
 #--- Comms ---
+sudo npm install got
 sudo npm install protobufjs
 sudo npm install grpc
 sudo npm install ping traceroute 
 sudo npm install react express debug async xml2js
+sudo npm install brotli
 
+sudo npm i dns-over-http-resolver
+sudo npm install axios
 #--- Optional Packages ---
 sudo npm install validator jsonfile
+sudo npm install kerberos node-gyp
 
 #---- Databases -----
-sudo npm install bson kerberos node-gyp
-sudo npm install mongodb
-# mongodb-core
+sudo npm install mongodb mongodb-core
+sudo npm install bson 
 sudo npm install redis
-
 
 #---- Other Databases ----
 #sudo npm install elasticsearch
@@ -84,11 +90,9 @@ sudo npm install redis
 #sudo npm install mysql
 #sudo npm install memcache 
 
-
-#--- Sources ---
-# https://www.npmjs.com/package/protobufjs
-# https://www.npmjs.com/package/hash.js
-
+#---- Extras ------
+npm i nginx-conf
+npm i nginx-access-log
 #--------------
 wait
 echo "Done installing Node.JS and NPM \r\n \r\n"
