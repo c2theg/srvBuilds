@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.6                            \r\n
-Last Updated:  9/24/2021
+Version:  1.5.7                            \r\n
+Last Updated:  9/25/2021
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -58,6 +58,7 @@ sudo npm install supervisor -g
 sudo npm install connect request emailjs colors forever cluster
 sudo npm install socket.io socket.io-redis socket.io-adapter socket.io-emitter socket.io-parser
 sudo npm install socket.io --save
+sudo npm i fs-extra
 
 #-- Crypto
 sudo npm install crypto-js
