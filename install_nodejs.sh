@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.7                            \r\n
-Last Updated:  9/25/2021
+Version:  1.5.8                            \r\n
+Last Updated:  9/26/2021
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -43,6 +43,8 @@ sudo apt-get install -y nodejs
 
 echo "\r\n \r\n Installing NPM \r\n "
 sudo npm update npm -g
+
+sudo npm install -g npm
 
 #----------------- YARN -----------------------------------
 ## To install the Yarn package manager, run:
