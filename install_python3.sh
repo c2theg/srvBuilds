@@ -1,8 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
 #
 clear
 echo "
@@ -19,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.12                             \r\n
-Last Updated:  2/16/2021
+Version:  1.4.12
+Last Updated:  10/5/2021
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -28,7 +24,9 @@ Last Updated:  2/16/2021
 #wait
 #echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "Installing Python 3.9+ latest... "
+echo "Installing Python 3.10
+
+"
 # deadsnakes
 sudo -E add-apt-repository -y ppa:deadsnakes/ppa
 sudo -E apt-get update
@@ -38,17 +36,13 @@ sudo -E apt-get install -y software-properties-common
 sudo -E apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties python3-yaml
-sudo -E apt-get install -y python3.9 python3.9-dev python3.9-venv python3.9-doc binfmt-support
+sudo -E apt-get install -y python3.10 python3.10-dev python3.10-venv python3.10-doc binfmt-support
 sudo -E apt install -y tox
-
-#-- sometimes need pythonn 3.6 --
-# sudo -E apt-get install -y libpython3.6-dev
-#sudo -E apt-get install -y python3-dev
 
 python3 -V
 #----------- if issues with PIP install -------------------
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-sudo python3 get-pip.py --force-reinstall
+#curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+#sudo python3 get-pip.py --force-reinstall
 #----------------------------------------------------------
 sudo -E apt-get install -y python3-pip python3-venv python3-setuptools python-virtualenv python3-virtualenv
 sudo -E pip3 install virtualenv
@@ -69,8 +63,18 @@ pip3 install requests
 #pip3 install bleach
 #-----------------------
 echo "Installing other PIP modules... https://hugovk.github.io/top-pypi-packages/ \r\n "
+pip3 install urllib3
+pip3 install setuptools
+pip3 install requests
+pip3 install python-dateutil
+pip3 install pyyaml
+pip3 install certifi
+pip3 install wheel
+pip3 install colorama
+pip3 install Jinja2
+
 #--- crypto ---
-pip3 install PyNaCl
+pip3 install pynacl
 pip3 install simp-AES
 pip3 install simple_aes
 pip3 install bcrypt
@@ -81,12 +85,7 @@ pip3 install curve25519
 pip3 install siphashc
 pip3 install hkdf
 pip3 install ecdsa
-#--- others ---
-pip3 install pynacl
-pip3 install urllib3
-pip3 install requests
-pip3 install pyyaml
-pip3 install setuptools
+pip3 install rsa
 #--- Specify projects - optional --
 #pip3 install scapy
 #pip3 install Twisted
