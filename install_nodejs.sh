@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.8                            \r\n
-Last Updated:  9/26/2021
+Version:  1.5.9                            \r\n
+Last Updated:  10/12/2021
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -50,7 +50,8 @@ sudo npm install -g npm
 ## To install the Yarn package manager, run:
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
 echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-sudo apt-get update && sudo apt-get install yarn
+sudo apt-get update
+sudo apt-get install -y yarn
 #--------------------------------------------------------------------------------------------     
 
 echo "Install popular NPM modules... \r\n "
