@@ -95,8 +95,8 @@ sudo npm install redis
 #sudo npm install memcache 
 
 #---- Extras ------
-npm i nginx-conf
-npm i nginx-access-log
+#npm i nginx-conf
+#npm i nginx-access-log
 #--------------
 wait
 echo "Done installing Node.JS and NPM \r\n \r\n"
