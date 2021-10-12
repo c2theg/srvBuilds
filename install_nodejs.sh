@@ -99,4 +99,8 @@ sudo npm install redis
 #npm i nginx-access-log
 #--------------
 wait
+
+npm audit
+
+
 echo "Done installing Node.JS and NPM \r\n \r\n"
