@@ -16,14 +16,14 @@ echo "Running update_ubuntu14.04.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
-Version:  1.7.9                             \r\n
-Last Updated:  9/22/2021
-\r\n \r\n
+
+Version:  1.7.10 
+Last Updated:  10/12/2021
+
 
 for Debian 8 / Ubuntu versions 14.04 - 20.04 ( ignore the file name :/ )
 
-\r\n \r\n
+
 "
 wait
 # https://askubuntu.com/questions/759524/problem-with-ipv6-sudo-apt-get-update-upgrade
@@ -96,6 +96,9 @@ if nodejs --version | grep -q ' not '; then
 else
     echo "Updating NPM.. "
     sudo npm update npm -g
+    sudo npm install -g npm
+    sudo npm audit
+    npm audit fix
 fi
 
 #------------------------ Crontab ---------------------------------
