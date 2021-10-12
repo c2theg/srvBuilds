@@ -101,6 +101,6 @@ sudo npm install redis
 wait
 
 npm audit
-
+npm audit fix
 
 echo "Done installing Node.JS and NPM \r\n \r\n"
