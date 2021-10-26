@@ -15,7 +15,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.10                            \r\n
+Version:  1.5.11                            \r\n
 Last Updated:  10/26/2021
 \r\n \r\n
 Updating system first..."
@@ -24,8 +24,7 @@ wait
 sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
-touch /root/package.json
-chmod u+x /root/package.json
+
 #--------------------------------------------------------------------------------------------
 sudo -E apt-get install -y build-essential libssl-dev
 
@@ -54,6 +53,10 @@ sudo apt-get update
 sudo apt-get install -y yarn
 #--------------------------------------------------------------------------------------------     
 
+#touch /root/package.json
+#chmod u+x /root/package.json
+npm init
+
 echo "Install popular NPM modules... \r\n "
 sudo npm install ws --ws:native
 sudo npm install bleach
@@ -63,36 +66,50 @@ sudo npm install socket.io socket.io-redis socket.io-adapter socket.io-emitter s
 sudo npm install socket.io --save
 sudo npm i fs-extra
 
-#-- Crypto
-sudo npm install crypto-js
-sudo npm install blake3
+#--- Crypto ---
+sudo npm i crypto-js
+sudo npm i blake3
 sudo npm i pbkdf2
-sudo npm install pem bcrypt aes-js md5 hash.js
+sudo npm i pem 
+sudo npm i bcrypt 
+sudo npm i aes-js 
+sudo npm i md5 
+sudo npm i hash.js
 
 #--- Comms ---
+sudo npm install -g express
+
+sudo npm install debug
+sudo npm install async
 sudo npm install got
 sudo npm install protobufjs
 sudo npm install grpc
 sudo npm install ping traceroute 
-sudo npm install react express debug async xml2js
+#sudo npm install react
+sudo npm install xml2js
 sudo npm install brotli
 
 sudo npm i dns-over-http-resolver
 sudo npm install axios
 #--- Optional Packages ---
-sudo npm install validator jsonfile
-sudo npm install kerberos node-gyp
+sudo npm install validator 
+sudo npm install jsonfile
+sudo npm install kerberos 
+sudo npm install node-gyp
 
 #---- Databases -----
-sudo npm install mongodb mongodb-core
-sudo npm install bson 
-sudo npm install redis
+sudo npm i mongodb mongodb-core
+sudo npm i bson 
+
+#---- Caching layer ----
+sudo npm i redis
+#sudo npm install memcache 
 
 #---- Other Databases ----
 #sudo npm install elasticsearch
 #sudo npm install influxdb-nodejs
 #sudo npm install mysql
-#sudo npm install memcache 
+#sudo npm i neo4j-driver
 
 #---- Extras ------
 #npm i nginx-conf
