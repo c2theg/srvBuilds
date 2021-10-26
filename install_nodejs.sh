@@ -41,6 +41,8 @@ curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 wait
 sudo apt-get install -y nodejs
 
+sudo apt install -y npm
+
 echo "\r\n \r\n Installing NPM \r\n "
 sudo npm update npm -g
 
