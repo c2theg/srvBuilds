@@ -15,7 +15,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.11                            \r\n
+Version:  1.5.12                            \r\n
 Last Updated:  10/26/2021
 \r\n \r\n
 Updating system first..."
@@ -117,7 +117,8 @@ sudo npm i redis
 #--------------
 wait
 
-npm audit
-npm audit fix
+sudo npm audit
+sudo npm audit fix
+sudo npm install npm@latest -g
 
 echo "Done installing Node.JS and NPM \r\n \r\n"
