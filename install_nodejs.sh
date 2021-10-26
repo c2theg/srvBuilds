@@ -15,7 +15,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.12                            \r\n
+Version:  1.5.13                            \r\n
 Last Updated:  10/26/2021
 \r\n \r\n
 Updating system first..."
@@ -37,6 +37,10 @@ cd ~
 curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 # Latest
 #curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -
+
+#--- NVM ---  https://github.com/nvm-sh/nvm
+#curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+#nvm use 14
 #--------------------------------------------------------------------------------------------
 wait
 sudo apt-get install -y nodejs
@@ -121,4 +125,6 @@ sudo npm audit
 sudo npm audit fix
 sudo npm install npm@latest -g
 
+node -v
+npm -v
 echo "Done installing Node.JS and NPM \r\n \r\n"
