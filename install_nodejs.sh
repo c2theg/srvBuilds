@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.9                            \r\n
-Last Updated:  10/12/2021
+Version:  1.5.10                            \r\n
+Last Updated:  10/26/2021
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -32,11 +32,10 @@ cd ~
 # https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
 # https://github.com/nodesource/distributions
 
-
 # LTS
 curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 # Latest
-#curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+#curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -
 #--------------------------------------------------------------------------------------------
 wait
 sudo apt-get install -y nodejs
