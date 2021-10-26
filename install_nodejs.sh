@@ -41,13 +41,10 @@ curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 wait
 sudo apt-get install -y nodejs
 
+echo "\r\n \r\n Installing NPM \r\n "
 sudo apt install -y npm
 
-echo "\r\n \r\n Installing NPM \r\n "
 sudo npm update npm -g
-
-sudo npm install -g npm
-
 #----------------- YARN -----------------------------------
 ## To install the Yarn package manager, run:
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
