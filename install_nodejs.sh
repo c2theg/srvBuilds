@@ -24,6 +24,8 @@ wait
 sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
+touch /root/package.json
+chmod u+x /root/package.json
 #--------------------------------------------------------------------------------------------
 sudo -E apt-get install -y build-essential libssl-dev
 
