@@ -62,6 +62,10 @@ sudo apt-get install -y openssl-blacklist ssl-cert libmcrypt-dev
 sudo apt-get install -y php7.4 php7.4-cli php7.4-fpm php7.4-curl php7.4-json php7.4-gd php7.4-mbstring php7.4-dev
 sudo apt-get install -y php7.4-common php7.4-opcache php7.4-readline php7.4-soap php7.4-ldap php7.4-bcmath php7.4-zip php7.4-xml php7.4-bz2 php7.4-xmlrpc php7.4-mcrypt
 
+sudo apt-get install -y php7.4-mysql
+sudo apt-get install -y php-mongodb 
+sudo apt-get install -y php7.4-mongodb
+
 #--- PHP 8.x --- https://packages.ubuntu.com/search?keywords=php8.0php8.0-opcache -------
 sudo apt-get install -y php8.0 php8.0-cli php8.0-fpm php8.0-gd php8.0-dev
 sudo apt-get install -y php8.0-curl php8.0-mbstring
@@ -108,10 +112,7 @@ sudo pear channel-update pear.php.net
 sudo pear install mail Net_SMTP Auth_SASL2-0.1.0 mail_mime
 pear install PEAR
 
-#--- Install PHP Databases ---
-sudo apt-get install -y php7.4-mysql
-sudo apt-get install -y php-mongodb 
-sudo apt-get install -y php7.4-mongodb
+
 
 #--- extras ---
 sudo apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev libsslcommon2-dev 
