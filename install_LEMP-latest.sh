@@ -16,13 +16,10 @@ echo "
 
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 
-INSTALLS  LERP (Linux* Nginx Redis PHP (Latest - 7.4)
--- As of 9/21/2021: Removing Memcached from install. Code is commited out, you can still add it if you want to. 
+INSTALLS  LERP (Linux* Nginx Redis PHP (7.4.x & 8.x)
 
-
-Version:  1.5.6
-Last Updated:  11/1/2021
-
+Version:  1.6.0
+Last Updated:  11/2/2021
 
 Updating system first..."
 
@@ -57,12 +54,27 @@ sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute h
 #---------- PYTHON STUFF ----------------------------------
 #sudo apt-get install -y python2-virtualenv python3-virtualenv libicu-dev python-software-properties python python-pip python-dev python3-setuptools
 #wait
-#--- PHP ---
 
-sudo apt-get install -y openssl-blacklist ssl-cert libmcrypt-dev mcrypt 
-sudo apt-get install -y php7.4 php7.4-cli php7.4-fpm php7.4-curl php7.4-json php7.4-gd php7.4-mbstring php7.4-dev zip unzip
-sudo apt-get install -y php7.4-common php7.4-opcache php7.4-readline php7.4-soap php7.4-ldap php-pear php-xdebug php-apcu php-ssh2 php-geoip php7.4-bcmath php7.4-zip php7.4-xml php-xml php-mailparse php7.4-bz2 php7.4-xmlrpc
-#php7.4-mcrypt
+sudo apt-get install -y mcrypt zip unzip
+sudo apt-get install -y openssl-blacklist ssl-cert libmcrypt-dev
+
+#--- PHP 7.4 ---
+sudo apt-get install -y php7.4 php7.4-cli php7.4-fpm php7.4-curl php7.4-json php7.4-gd php7.4-mbstring php7.4-dev
+sudo apt-get install -y php7.4-common php7.4-opcache php7.4-readline php7.4-soap php7.4-ldap php7.4-bcmath php7.4-zip php7.4-xml php7.4-bz2 php7.4-xmlrpc php7.4-mcrypt
+
+#--- PHP 8.x --- https://packages.ubuntu.com/search?keywords=php8.0php8.0-opcache -------
+sudo apt-get install -y php8.0 php8.0-cli php8.0-fpm php8.0-gd php8.0-dev
+sudo apt-get install -y php8.0-curl php8.0-mbstring
+sudo apt-get install -y php8.0-common php8.0-opcache php8.0-readline  php8.0-ldap php8.0-bcmath  php8.0-bz2 php8.0-xmlrpc 
+sudo apt-get install -y php8.0-mcrypt
+sudo apt-get install -y php8.0-soap php8.0-xml php8.0-zip
+
+sudo apt-get install -y php8.0-pgsql php8.0-mysql php8.0-mongodb
+sudo apt-get install -y php8.0-opcache 
+sudo apt-get install -y php8.0-snmp
+
+#---- Others ------
+sudo apt-get install -y php-ssh2 php-geoip php-pear php-xdebug php-apcu php-xml php-mailparse
 
 #--- Pecl ----
 wget http://curl.haxx.se/ca/cacert.pem --no-check-certificate
