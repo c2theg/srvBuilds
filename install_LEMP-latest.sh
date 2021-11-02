@@ -20,8 +20,8 @@ INSTALLS  LERP (Linux* Nginx Redis PHP (Latest - 7.4)
 -- As of 9/21/2021: Removing Memcached from install. Code is commited out, you can still add it if you want to. 
 
 
-Version:  1.5.4
-Last Updated:  9/22/2021
+Version:  1.5.6
+Last Updated:  11/1/2021
 
 
 Updating system first..."
@@ -41,6 +41,7 @@ sudo -E apt-get -y update
 #sudo -E apt-get upgrade -y
 #wait
 echo "Downloading required dependencies...\r\n\r\n"
+
 #--------------------------------------------------------------------------------------------
 #sudo apt-get -y dist-upgrade
 wait
@@ -57,11 +58,33 @@ sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute h
 #sudo apt-get install -y python2-virtualenv python3-virtualenv libicu-dev python-software-properties python python-pip python-dev python3-setuptools
 #wait
 #--- PHP ---
+
 sudo apt-get install -y openssl-blacklist ssl-cert libmcrypt-dev mcrypt 
-sudo apt-get install -y php7.4 php7.4-cli php7.4-fpm php7.4-curl php7.4-json php7.4-gd php7.4-mysql php7.4-mbstring php7.4-dev zip unzip
+sudo apt-get install -y php7.4 php7.4-cli php7.4-fpm php7.4-curl php7.4-json php7.4-gd php7.4-mbstring php7.4-dev zip unzip
 sudo apt-get install -y php7.4-common php7.4-opcache php7.4-readline php7.4-soap php7.4-ldap php-pear php-xdebug php-apcu php-ssh2 php-geoip php7.4-bcmath php7.4-zip php7.4-xml php-xml php-mailparse php7.4-bz2 php7.4-xmlrpc
 #php7.4-mcrypt
-sudo pecl install mcrypt-1.0.4
+
+#--- Pecl ----
+wget http://curl.haxx.se/ca/cacert.pem --no-check-certificate
+mv cacert.pem /usr/local/ssl/cert.pem
+sudo pecl channel-update pecl.php.net
+
+#-- installs --
+pecl upgrade
+pecl update-channels
+
+sudo pecl install mcrypt
+sudo pecl install libsodium
+
+sudo pecl install mongodb
+sudo pecl install redis
+
+sudo pecl install geoip
+sudo pecl install ip2location
+sudo pecl install ip2proxy
+sudo pecl install gRPC
+#-- mail --
+#sudo pecl install mailparse
 
 wait
 #--- pear ---
@@ -69,12 +92,14 @@ wait
 wget http://pear.php.net/go-pear.phar
 php go-pear.phar
 sudo pear channel-update pear.php.net
-sudo pecl channel-update pecl.php.net
 
 sudo pear install mail Net_SMTP Auth_SASL2-0.1.0 mail_mime
-sudo apt-get install -y php-mongodb php7.4-mongodb
-pecl install mongodb
 pear install PEAR
+
+#--- Install PHP Databases ---
+sudo apt-get install -y php7.4-mysql
+sudo apt-get install -y php-mongodb 
+sudo apt-get install -y php7.4-mongodb
 
 #--- extras ---
 sudo apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev libsslcommon2-dev 
