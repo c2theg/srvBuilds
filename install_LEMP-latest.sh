@@ -268,6 +268,8 @@ echo "Restarting Nginx... "
 
 echo "Restarting PHP-FPM... "
 /etc/init.d/php7.4-fpm restart
+
+/etc/init.d/php8.0-fpm restart
 echo "Done All! \r\n \r\n"
 
 echo "You will need to update the NGINX config at:  /etc/nginx/sites-enabled/ \r\n \r\n"
