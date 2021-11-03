@@ -56,14 +56,15 @@ sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute h
 #wait
 
 sudo apt-get install -y mcrypt zip unzip
-sudo apt-get install -y openssl-blacklist ssl-cert libmcrypt-dev
+sudo apt-get install -y openssl-blacklist 
+sudo apt-get install -y ssl-cert 
+sudo apt-get install -y libmcrypt-dev
 
 #--- PHP 7.4 ---
 sudo apt-get install -y php7.4 php7.4-cli php7.4-fpm php7.4-curl php7.4-json php7.4-gd php7.4-mbstring php7.4-dev
 sudo apt-get install -y php7.4-common php7.4-opcache php7.4-readline php7.4-soap php7.4-ldap php7.4-bcmath php7.4-zip php7.4-xml php7.4-bz2 php7.4-xmlrpc php7.4-mcrypt
 
 sudo apt-get install -y php7.4-mysql
-sudo apt-get install -y php-mongodb 
 sudo apt-get install -y php7.4-mongodb
 
 #--- PHP 8.x --- https://packages.ubuntu.com/search?keywords=php8.0php8.0-opcache -------
@@ -78,7 +79,9 @@ sudo apt-get install -y php8.0-opcache
 sudo apt-get install -y php8.0-snmp
 
 #---- Others ------
-sudo apt-get install -y php-ssh2 php-geoip php-pear php-xdebug php-apcu php-xml php-mailparse
+sudo apt-get install -y php-pear
+sudo apt-get install -y php-mongodb
+sudo apt-get install -y php-ssh2 php-geoip php-xdebug php-apcu php-xml php-mailparse
 
 #--- Pecl ----
 wget http://curl.haxx.se/ca/cacert.pem --no-check-certificate
