@@ -17,8 +17,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.10 
-Last Updated:  10/12/2021
+Version:  1.7.11
+Last Updated:  11/3/2021
 
 
 for Debian 8 / Ubuntu versions 14.04 - 20.04 ( ignore the file name :/ )
@@ -41,6 +41,8 @@ sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y --force-yes
 #sudo -E apt-get -o Acquire::ForceIPv6=true update
 #sudo -E apt-get -o Acquire::ForceIPv6=true upgrade -y
 #sudo -E apt-get -o Acquire::ForceIPv6=true upgrade -y --force-yes
+
+sudo -E apt-get dist-upgrade -y
 
 #-------------------------------------------------------
 wait
