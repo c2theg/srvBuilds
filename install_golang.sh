@@ -14,8 +14,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  1.2.5
-Last Updated:  7/21/2021
+Version:  1.2.6
+Last Updated:  11/4/2021
 
 "
 
@@ -26,10 +26,12 @@ wait
 sudo -E apt-get update
 wait
 
-sudo -E apt-get install -y golang-go golang-go.tools
+sudo -E apt-get install -y golang-go
+#sudo -E apt-get install -y golang-go.tools
+
 wait
 
-echo ‘PATH=”/usr/lib/go-1.10/bin:$PATH”‘ >> ~/.profile
+echo ‘PATH=”/usr/lib/go-1.17/bin:$PATH”‘ >> ~/.profile
 source ~/.profile
 wait
 
