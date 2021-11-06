@@ -21,8 +21,8 @@ echo "Running install_redis.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1.4                             \r\n
-Last Updated:  3/25/2021
+Version:  0.1.5                             \r\n
+Last Updated:  11/6/2021
 \r\n \r\n"
 wait
 #sudo -E apt-get update
@@ -111,7 +111,8 @@ touch /etc/redis/cluster_nodes.conf
 mv /etc/redis/redis.conf /etc/redis/redis_bk.conf
 mv redis_standalone.conf /etc/redis/redis_standalone.conf
 cp redis_cluster.conf /etc/redis/redis_cluster.conf
-mv redis_cluster.conf /etc/redis/redis.conf
+cp /etc/redis/redis_standalone.conf /etc/redis/redis.conf
+
 wait
 sudo chown redis /etc/redis/* && sudo chmod u+x /etc/redis/*
 
