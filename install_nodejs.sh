@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.13                            \r\n
-Last Updated:  10/26/2021
+Version:  1.5.14                            \r\n
+Last Updated:  11/13/2021
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -34,7 +34,7 @@ cd ~
 # https://github.com/nodesource/distributions
 
 # LTS
-curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 # Latest
 #curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -
 
@@ -56,6 +56,7 @@ echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/deb
 sudo apt-get update
 sudo apt-get install -y yarn
 #--------------------------------------------------------------------------------------------     
+#---- https://www.npmjs.com/ ----
 
 #touch /root/package.json
 #chmod u+x /root/package.json
@@ -71,6 +72,7 @@ sudo npm install socket.io --save
 sudo npm i fs-extra
 
 #--- Crypto ---
+sudo npm i libsodium
 sudo npm i crypto-js
 sudo npm i blake3
 sudo npm i pbkdf2
@@ -95,6 +97,9 @@ sudo npm install brotli
 
 sudo npm i dns-over-http-resolver
 sudo npm install axios
+
+sudo npm i @grpc/grpc-js
+
 #--- Optional Packages ---
 sudo npm install validator 
 sudo npm install jsonfile
