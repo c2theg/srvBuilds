@@ -18,8 +18,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 
 INSTALLS  LERP (Linux* Nginx Redis PHP (7.4.x & 8.x)
 
-Version:  1.6.0
-Last Updated:  11/2/2021
+Version:  1.6.1
+Last Updated:  11/28/2021
 
 Updating system first..."
 
@@ -78,11 +78,13 @@ sudo apt-get install -y php8.0-pgsql php8.0-mysql php8.0-mongodb
 sudo apt-get install -y php8.0-opcache 
 sudo apt-get install -y php8.0-snmp
 
+
 #---- Others ------
 sudo apt-get install -y php-pear
 sudo apt-get install -y php-mongodb
 sudo apt-get install -y php-ssh2 php-geoip php-xdebug php-apcu php-xml php-mailparse
-
+sudo apt-get install -y libgmp-dev
+sudo apt-get install -y php-gmp
 #--- Pecl ----
 wget http://curl.haxx.se/ca/cacert.pem --no-check-certificate
 mv cacert.pem /usr/local/ssl/cert.pem
