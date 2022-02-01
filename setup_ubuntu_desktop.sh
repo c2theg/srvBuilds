@@ -19,13 +19,17 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.10                             \r\n
+Version:  0.0.12                             \r\n
 Last Updated:  2/1/2022
 \r\n \r\n"
+
 wait
+sudo apt autoremove -y
 
 sudo add-apt-repository universe
+sudo apt-get install -y linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04 linux-image-generic-hwe-20.04
 
+#------------
 sudo apt install -y software-properties-common apt-transport-https
 sudo apt-get update
 sudo apt-get upgrade -y
@@ -57,11 +61,18 @@ sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump tcl8.6 ncat gimp wg
 #Password too long - only the first 8 characters will be used
 #sudo vncserver
 
-# Themes and looks
+# --- Themes and looks ---
 # https://www.howtogeek.com/358049/how-to-install-desktop-themes-on-ubuntu-18.04-lts/
 sudo apt install -y gnome-tweaks gnome-shell-extensions unity-tweak-tool
 sudo apt install -y adwaita-icon-theme-full
 sudo apt install -y numix-gtk-theme numix-icon-theme arc-theme
+
+# --- Hot corners --- https://ubuntuhandbook.org/index.php/2020/07/set-up-hot-corners-ubuntu-20-04/
+sudo apt install -y chrome-gnome-shell
+echo "Go To in Firefox or chome:  https://extensions.gnome.org/extension/1362/custom-hot-corners/ "
+# https://luanlmd.medium.com/ubuntu-20-04-enable-hot-corners-82b15b542a8
+gsettings set org.gnome.desktop.interface enable-hot-corners true
+
 
 #-- Bonus Screensavers
 #sudo apt-get install -y xscreensaver xscreensaver-gl-extra xscreensaver-data-extra
@@ -78,6 +89,9 @@ gnome-session-properties
 echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
+#-- delete after installing ---
+rm google-chrome-stable_current_amd64.deb
+
 
 #--- Download VSCode ---
 #sudo snap install code --classic
@@ -85,8 +99,7 @@ wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add
 sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
 sudo apt upgrade
 sudo apt install code
-code
-
+# Run with:  code
 
 #--- Postman ---
 sudo snap install -y postman
