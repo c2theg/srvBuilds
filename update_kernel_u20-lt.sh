@@ -16,12 +16,12 @@ echo "Running update_kernel_u20-lt.sh
 
 
 
-Version:  0.1.14
-Last Updated:  10/26/2021
+Version:  0.1.15
+Last Updated:  2/12/2022
 
 https://www.kernel.org/
 
-KERNEL - Mainline Build (LONGTERM) 5.10.75
+KERNEL - Mainline Build (LONGTERM) 5.15.23
 
 
 "
@@ -50,17 +50,15 @@ rm /tmp/*.deb
 #----- download kernel's here ----->  https://kernel.ubuntu.com/~kernel-ppa/mainline/
 echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n Downloading now.. \r\n \r\nn "
 
-#-- 5.10.63
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.63/amd64/linux-headers-5.10.63-051063_5.10.63-051063.202109080732_all.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.63/amd64/linux-image-unsigned-5.10.63-051063-generic_5.10.63-051063.202109080732_amd64.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.63/amd64/linux-modules-5.10.63-051063-generic_5.10.63-051063.202109080732_amd64.deb
-
 #-- 5.10.75
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.75/amd64/linux-headers-5.10.75-051075-generic_5.10.75-051075.202110201038_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.75/amd64/linux-image-unsigned-5.10.75-051075-generic_5.10.75-051075.202110201038_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.75/amd64/linux-modules-5.10.75-051075-generic_5.10.75-051075.202110201038_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.75/amd64/linux-headers-5.10.75-051075-generic_5.10.75-051075.202110201038_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.75/amd64/linux-image-unsigned-5.10.75-051075-generic_5.10.75-051075.202110201038_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.10.75/amd64/linux-modules-5.10.75-051075-generic_5.10.75-051075.202110201038_amd64.deb
 
-
+#-- 5.15.23
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.23/amd64/linux-headers-5.15.23-051523-generic_5.15.23-051523.202202110435_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.23/amd64/linux-image-unsigned-5.15.23-051523-generic_5.15.23-051523.202202110435_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.23/amd64/linux-modules-5.15.23-051523-generic_5.15.23-051523.202202110435_amd64.deb
 
 #-------------------------------------
 echo "Installing New Kernel... \r\n "
