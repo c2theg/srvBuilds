@@ -82,8 +82,7 @@ pip3 install pynacl
 pip3 install simp-AES
 pip3 install simple_aes
 pip3 install bcrypt
-pip3 install blake2b-py
-pip3 install blake2
+pip3 install blake3
 pip3 install chacha20poly1305
 pip3 install curve25519
 pip3 install siphashc
