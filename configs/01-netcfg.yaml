@@ -1,6 +1,10 @@
-# Christopher Gray - 9/9/2021
-#   Cloudflare Family Sheild, OpenDNS Family - (Servers dont need to access porn! HA),  Quad9
+# Christopher Gray - 2/12/2022
+#
+#   Cloudflare Family Sheild, OpenDNS Family - (Servers dont need to access porn! HA)
 #     Both IPv4 and IPv6
+#
+#  Install:
+#     wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/01-netcfg.yaml && mv 01-netcfg.yaml /etc/netplan/00-installer-config.yaml cd /etc/netplan/
 #
 # -------------------------------------------------------
 # Source: https://netplan.io/examples
@@ -30,4 +34,4 @@ network:
 #     addresses: [192.168.1.20/24]
 #     gateway4: 192.168.1.1
      nameservers:
-       addresses: [1.1.1.3,1.0.0.3,208.67.222.123,9.9.9.9,2606:4700:4700::1113,2620:119:35::123,2620:fe::fe]
+       addresses: [1.1.1.3,1.0.0.3,208.67.222.123,2606:4700:4700::1113,2620:119:35::123,2620:fe::fe]
