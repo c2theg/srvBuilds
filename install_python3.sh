@@ -15,7 +15,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.13
+Version:  1.4.14
 Last Updated:  2/12/2022
 \r\n \r\n"
 #sudo -E apt-get update
@@ -37,6 +37,8 @@ sudo -E apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev liblcms2-dev lib
 sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties python3-yaml
 sudo -E apt-get install -y python3.10 python3.10-dev python3.10-venv python3.10-doc binfmt-support
+sudo -E apt-get install -y python3-crypto python3-dnspython python3-gpg
+
 sudo -E apt install -y tox
 
 python3 -V
