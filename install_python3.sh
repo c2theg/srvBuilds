@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.12
-Last Updated:  10/5/2021
+Version:  1.4.13
+Last Updated:  2/12/2022
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -44,8 +44,12 @@ python3 -V
 #curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 #sudo python3 get-pip.py --force-reinstall
 #----------------------------------------------------------
-sudo -E apt-get install -y python3-pip python3-venv python3-setuptools python-virtualenv python3-virtualenv
+sudo -E apt-get install -y python3-setuptools
+sudo -E apt-get install -y python3-pip 
+sudo -E apt-get install -y python3-venv
+sudo -E apt-get install -y python3-virtualenv
 sudo -E pip3 install virtualenv
+
 #virtualenv venv
 #python3 -m venv myenv
 wait
