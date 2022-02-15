@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.14
-Last Updated:  2/12/2022
+Version:  1.4.15
+Last Updated:  2/15/2022
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -24,7 +24,7 @@ Last Updated:  2/12/2022
 #wait
 #echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "Installing Python 3.10
+echo "Installing Python 3.x... -> latest for your platform
 
 "
 # deadsnakes
@@ -72,6 +72,8 @@ echo "Installing other PIP modules... https://hugovk.github.io/top-pypi-packages
 pip3 install urllib3
 pip3 install setuptools
 pip3 install requests
+pip3 install aiohttp
+
 pip3 install python-dateutil
 pip3 install pyyaml
 pip3 install certifi
