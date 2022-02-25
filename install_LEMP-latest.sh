@@ -18,8 +18,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 
 INSTALLS  LERP (Linux* Nginx Redis PHP (7.4.x & 8.x)
 
-Version:  1.6.1
-Last Updated:  11/28/2021
+Version:  1.6.2
+Last Updated:  2/25/2022
 
 Updating system first..."
 
@@ -68,15 +68,16 @@ sudo apt-get install -y php7.4-mysql
 sudo apt-get install -y php7.4-mongodb
 
 #--- PHP 8.x --- https://packages.ubuntu.com/search?keywords=php8.0php8.0-opcache -------
-sudo apt-get install -y php8.0 php8.0-cli php8.0-fpm php8.0-gd php8.0-dev
-sudo apt-get install -y php8.0-curl php8.0-mbstring
-sudo apt-get install -y php8.0-common php8.0-opcache php8.0-readline  php8.0-ldap php8.0-bcmath  php8.0-bz2 php8.0-xmlrpc 
-sudo apt-get install -y php8.0-mcrypt
-sudo apt-get install -y php8.0-soap php8.0-xml php8.0-zip
+sudo apt-get install -y php8.1 php8.1-cli php8.1-fpm php8.1-gd php8.1-dev
+sudo apt-get install -y php8.1-curl php8.1-mbstring
+sudo apt-get install -y php8.1-common php8.1-readline
+sudo apt-get install -y php8.1-ldap php8.1-bcmath php8.1-bz2 php8.1-xmlrpc 
+sudo apt-get install -y php8.1-mcrypt
+sudo apt-get install -y php8.1-soap php8.1-xml php8.1-zip
 
-sudo apt-get install -y php8.0-pgsql php8.0-mysql php8.0-mongodb
-sudo apt-get install -y php8.0-opcache 
-sudo apt-get install -y php8.0-snmp
+sudo apt-get install -y php8.1-mongodb php8.1-pgsql php8.1-mysql
+sudo apt-get install -y php8.1-opcache
+sudo apt-get install -y php8.1-snmp
 
 
 #---- Others ------
@@ -86,8 +87,8 @@ sudo apt-get install -y php-ssh2 php-geoip php-xdebug php-apcu php-xml php-mailp
 sudo apt-get install -y libgmp-dev
 sudo apt-get install -y php-gmp
 #--- Pecl ----
-wget http://curl.haxx.se/ca/cacert.pem --no-check-certificate
-mv cacert.pem /usr/local/ssl/cert.pem
+#wget http://curl.haxx.se/ca/cacert.pem --no-check-certificate
+#mv cacert.pem /usr/local/ssl/cert.pem
 sudo pecl channel-update pecl.php.net
 
 #-- installs --
@@ -116,8 +117,7 @@ sudo pear channel-update pear.php.net
 
 sudo pear install mail Net_SMTP Auth_SASL2-0.1.0 mail_mime
 pear install PEAR
-
-
+rm go-pear.phar
 
 #--- extras ---
 sudo apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev libsslcommon2-dev 
@@ -195,6 +195,19 @@ wget -O "php-fpm.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/maste
 sudo mv "php-fpm.conf" "/etc/php/7.4/fpm/php-fpm.conf"
 wait
 #--------------------------------------------------
+
+
+echo "Downloading PHP-FPM Configs"
+wget -O  "php.ini" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php.ini"
+sudo mv "php.ini" "/etc/php/8.1/fpm/php.ini"
+wait
+#--------------------------------------------------
+wget -O "php-fpm.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/php-fpm-8.1.conf"
+sudo mv "php-fpm.conf" "/etc/php/8.1/fpm/php-fpm.conf"
+wait
+#--------------------------------------------------
+
+
 wget -O "php_browscap.ini" "https://browscap.org/stream?q=PHP_BrowsCapINI"
 sudo mv "php_browscap.ini" "/media/data/php_browscap.ini"
 wait
@@ -274,7 +287,7 @@ echo "Restarting Nginx... "
 echo "Restarting PHP-FPM... "
 /etc/init.d/php7.4-fpm restart
 
-/etc/init.d/php8.0-fpm restart
+/etc/init.d/php8.1-fpm restart
 echo "Done All! \r\n \r\n"
 
 echo "You will need to update the NGINX config at:  /etc/nginx/sites-enabled/ \r\n \r\n"
