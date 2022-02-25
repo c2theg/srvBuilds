@@ -138,25 +138,7 @@ sudo ./install_php_composer.sh
 # Use it: php composer.phar
 #--------------------------------------
 
-#--- PHP Memcached ----
-#sudo apt-get install -y php-memcached memcached
-#wait
 
-#cd ~
-#if [ -s "memcached.conf" ]; then
-#	echo "Deleting file  memcached.conf "
-#	rm memcached.conf
-#fi
-#echo "Downloading Memcache Config"
-#wget -O "memcached.conf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/memcached.conf"
-#wait
-#sudo cp "memcached.conf" "/etc/memcached.conf"
-#wait
-#echo "Memcache Config Download Complete"
-#wait
-#echo "Restarting memcache service..."
-#sudo /etc/init.d/memcached restart
-#wait
 #----- Redis -------
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_redis.sh
 chmod u+x install_redis.sh
