@@ -55,7 +55,7 @@ echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest.
 #wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.23/amd64/linux-image-unsigned-5.15.23-051523-generic_5.15.23-051523.202202110435_amd64.deb
 #wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.23/amd64/linux-modules-5.15.23-051523-generic_5.15.23-051523.202202110435_amd64.deb
 
-#-- 5.15.23
+#-- 5.15.30
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.30/amd64/linux-headers-5.15.30-051530-generic_5.15.30-051530.202203190935_amd64.deb
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.30/amd64/linux-image-unsigned-5.15.30-051530-generic_5.15.30-051530.202203190935_amd64.deb
 wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.30/amd64/linux-modules-5.15.30-051530-generic_5.15.30-051530.202203190935_amd64.deb
