@@ -4,7 +4,7 @@
 #
 clear
 echo "
-Version:  0.0.8          \r\n
+Version:  0.0.9          \r\n
 Last Updated:  3/24/2022
 \r\n \r\n
 This is meant for Ubuntu 20.04+ \r\n \r\n
@@ -44,6 +44,8 @@ sudo mv /usr/bin/openssl /usr/bin/openssl-3.0.2
 sudo ln -s /usr/local/bin/openssl /usr/bin/openssl
 
 sudo ldconfig
+sudo ldconfig /usr/local/lib64/
+
 
 openssl version -a
 
