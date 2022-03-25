@@ -5,7 +5,7 @@
 clear
 echo "
 Version:  0.0.9          \r\n
-Last Updated:  3/24/2022
+Last Updated:  3/25/2022
 \r\n \r\n
 This is meant for Ubuntu 20.04+ \r\n \r\n
 Updating system first..."
