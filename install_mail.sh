@@ -31,5 +31,5 @@ apt-get install -y  dovecot-common resolvconf
 
 apt-get install -y  openssl-blacklist
 
-#sudo dkpg-reconfigure ssl-cert
+#sudo dpkg-reconfigure ssl-cert
 
