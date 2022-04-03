@@ -25,7 +25,10 @@ sudo cp -R /usr/lib/ssl /usr/lib/ssl-prev-version-bk
 
 cd /home/ubuntu/
 
-# get the latest version
+# get the latest version - 
+echo "\r\n \r\n \r\n"
+echo "To get the latest version, visit: https://www.openssl.org/source/  \r\n \r\n \r\n "
+
 wget --no-check-certificate https://www.openssl.org/source/openssl-3.0.2.tar.gz
 wget --no-check-certificate https://www.openssl.org/source/openssl-3.0.2.tar.gz.sha256
 echo "$(cat openssl-3.0.2.tar.gz.sha256) openssl-3.0.2.tar.gz" | sha256sum --check
