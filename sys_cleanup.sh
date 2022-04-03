@@ -90,6 +90,7 @@ rm /var/log/ubuntu-advantage.log.*
 rm /var/log/ubuntu-advantage-timer.log.*
 rm /var/log/vmware-vmsvc-root.*
 rm /var/log/vmware-vmtoolsd-root.*
+rm /var/log/dmesg.*
 
 
 #------ Security ----------------------------------------------------------
