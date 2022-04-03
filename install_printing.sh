@@ -24,6 +24,7 @@ Last Updated:  4/2/2022
 
 sudo apt-get update -y
 sudo apt-get install -y cups cups-bsd printer-driver-cups-pdf unpaper
+sudo apt install -y imagemagick
 
 cd ~
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/cupsd.conf
