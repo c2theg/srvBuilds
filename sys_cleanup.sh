@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.8.3                             \r\n
-Last Updated:  12/24/2020
+Version:  1.8.4                             \r\n
+Last Updated:  4/24/2022
 
 "
 #--------------------------------------------------------------------------------------------
@@ -86,6 +86,11 @@ rm /var/log/messages
 rm /var/log/vmware-vmsvc-root.*
 rm /var/log/unattended-upgrades/*
 rm /var/log/kern.log
+rm /var/log/ubuntu-advantage.log.*
+rm /var/log/ubuntu-advantage-timer.log.*
+rm /var/log/vmware-vmsvc-root.*
+rm /var/log/vmware-vmtoolsd-root.*
+
 
 #------ Security ----------------------------------------------------------
 rm /var/log/syslog.*
@@ -97,23 +102,24 @@ rm /var/log/fail2ban.log.*
 rm /var/log/letsencrypt/letsencrypt.log.*
 #------ DBs ----------------------------------------------------------
 #rm /var/log/mysql/*
-rm /var/log/mysql.log.*
-rm /var/log/mysql/mysql_error.log
-rm /var/log/mysql/error.log
+#rm /var/log/mysql.log.*
+#rm /var/log/mysql/mysql_error.log
+#rm /var/log/mysql/error.log
 
-rm /var/log/mongodb/*
-rm /var/log/redis/*
-rm /var/log/neo4j/*
+#rm /var/log/mongodb/*
+#rm /var/log/redis/*
+#rm /var/log/neo4j/*
 
 #-- Restart Services --
-/etc/init.d/redis-server restart
+#/etc/init.d/redis-server restart
 #------ ELK ----------------------------------------------------------
-rm /var/log/kibana/*
-rm /var/log/elasticsearch/*
-rm /var/log/logstash/*
-rm /var/log/metricbeat/*
+#rm /var/log/kibana/*
+#rm /var/log/elasticsearch/*
+#rm /var/log/logstash/*
+#rm /var/log/metricbeat/*
 
-/etc/init.d/elasticsearch restart
+#/etc/init.d/elasticsearch restart
+#rm /var/log/update_elk_plugins.log
 #------ Mail ----------------------------------------------------------
 rm /var/log/mail.log
 rm /var/log/mail.log.*
@@ -123,58 +129,48 @@ rm /var/mail/www-data/*
 rm /var/mail/ubuntu/*
 /etc/init.d/sendmail restart
 #------ Web / HTTP -------------------------------------------------------
-rm /var/log/apache2/*
-rm /var/log/lighttpd/*
+#rm /var/log/apache2/*
+#rm /var/log/lighttpd/*
 #----------------------------------------------------------------
 echo "\r\n \r\n Removing Nginx and PHP logs, then restarting both services.. \r\n \r\n "
 rm -rf /var/log/nginx/*
 #rm /var/log/php5-fpm.log.*
-#rm /var/log/php7.0-fpm.log
-#rm /var/log/php7.0-fpm.log.*
-#rm /var/log/php7.1-fpm.log
-#rm /var/log/php7.1-fpm.log.*
-rm /var/log/php7.2-fpm.log
-rm /var/log/php7.2-fpm.log.*
-rm /var/log/php7.3-fpm.log
-rm /var/log/php7.3-fpm.log.*
 rm /var/log/php7.4-fpm.log
 rm /var/log/php7.4-fpm.log.*
 
-#/etc/init.d/php7.0-fpm restart
-#/etc/init.d/php7.1-fpm restart
-/etc/init.d/php7.2-fpm restart
-/etc/init.d/php7.3-fpm restart
 /etc/init.d/php7.4-fpm restart
 
 /etc/init.d/nginx restart
 #------- PI-Hole / DNS releated ----------
-pihole -f
+#pihole -f
 wait
-sudo service pihole-FTL stop
-sudo service dnsmasq stop
+#sudo service pihole-FTL stop
+#sudo service dnsmasq stop
 wait
-rm /var/log/dmesg.*
-rm /var/log/pihole.log.*
-rm /var/log/pihole-FTL.log.*
-kill $(lsof -t -i:53)
-wait
-/etc/init.d/lighttpd restart
+#rm /var/log/dmesg.*
+#rm /var/log/pihole.log.*
+#rm /var/log/pihole-FTL.log.*
+#kill $(lsof -t -i:53)
+#wait
+#/etc/init.d/lighttpd restart
 #/etc/init.d/dnsmasq restart
 #sudo service dnsmasq start
 wait
-sudo service pihole-FTL start
+#sudo service pihole-FTL start
 #sudo systemctl restart pihole-FTL
 #-------
 #sudo service lighttpd status
 #sudo service dnsmasq status
-sudo service pihole-FTL status
+#sudo service pihole-FTL status
 
 rm /var/log/update_blocklists_local_servers.log
-rm /var/log/update_pihole_lists.log
+#rm /var/log/update_pihole_lists.log
 #---------- MISC ------------------------------------------------------
 rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
-rm /var/log/update_elk_plugins.log
+rm /var/log/sys_cleanup.log*
+
+
 rm /var/log/vmware-network.*
 rm /var/log/cloud-init.log
 #--- Resilio ---
