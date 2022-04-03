@@ -18,12 +18,19 @@ echo "
 
 This really is meant to be run under Ubuntu 20.04 LTS +
 \r\n \r\n
-Version:  0.0.2                             \r\n
+Version:  0.0.5                             \r\n
 Last Updated:  4/2/2022
 \r\n \r\n"
 
 sudo apt-get update -y
-
 sudo apt-get install -y cups cups-bsd printer-driver-cups-pdf unpaper
 
-# zeroconf imagemagic
+cd ~
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/cupsd.conf
+mv cupsd.conf /etc/cups/cupsd.conf
+wait
+
+sudo systemctl start cups && sudo systemctl enable cups
+
+echo "\r\n \r\n Visit: http://192.168.1.3:631/   \r\n \r\n \r\n "
+
