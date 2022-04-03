@@ -72,6 +72,7 @@ sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute h
 sudo apt-get install -y openssl-blacklist ssl-cert libmcrypt-dev mcrypt 
 sudo apt-get install -y php7.4 php7.4-cli php7.4-fpm php7.4-curl php7.4-json php7.4-gd php7.4-mysql php7.4-mbstring php7.4-dev zip unzip
 sudo apt-get install -y php7.4-common php7.4-opcache php7.4-readline php7.4-soap php7.4-ldap php7.4-pear php-xdebug php-apcu php-ssh2 php-geoip php7.4-bcmath php7.4-zip php7.4-xml php-xml php-mailparse php7.4-bz2 php7.4-xmlrpc php7.4-mcrypt
+sudo apt-get install -y php7.4-memcached
 wait
 #--- pear ---
 # https://pear.php.net/manual/en/installation.getting.php
@@ -103,8 +104,8 @@ sudo ./install_php_composer.sh
 # Use it: php composer.phar
 #--------------------------------------
 
-#--- PHP Memcached ----
-sudo apt-get install -y php-memcached memcached
+#--- Memcached ----
+sudo apt-get install -y memcached
 wait
 
 cd ~
