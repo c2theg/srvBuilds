@@ -4,8 +4,8 @@
 #
 clear
 echo "
-Version:  0.0.9          \r\n
-Last Updated:  3/25/2022
+Version:  0.0.10          \r\n
+Last Updated:  4/2/2022
 \r\n \r\n
 This is meant for Ubuntu 20.04+ \r\n \r\n
 Updating system first..."
@@ -46,6 +46,8 @@ sudo ln -s /usr/local/bin/openssl /usr/bin/openssl
 sudo ldconfig
 sudo ldconfig /usr/local/lib64/
 
+#-- fix error (RAND_write_file) - https://superuser.com/questions/1485171/cant-load-root-rnd-into-rng-where-can-i-find-it-or-how-to-create-it
+cd ~/; openssl rand -writerand .rnd
 
 openssl version -a
 
