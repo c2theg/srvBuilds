@@ -31,12 +31,11 @@ echo "Downloading required dependencies...\r\n\r\n"
 
 #--------------------------------------------------------------------------------------------
 cd ~
+
+sudo apt install -y gnupg2
 wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
 sudo dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
-sudo percona-release setup ps80
-sudo -E apt-get update
-wait
-#sudo apt-get install -y percona-server-server
+sudo apt update
 sudo apt install -y percona-server-server-5.7
 
 wait
