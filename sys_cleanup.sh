@@ -30,7 +30,15 @@ sudo apt-get upgrade && sudo apt-get dist-upgrade
 sudo dpkg-reconfigure -a
 sudo dpkg --configure -a
 
+# Remove bad package
+#   rm /var/lib/dpkg/info/some-package*
+
 #---------------------------------
+sudo du -sh /var/cache/apt
+
+sudo apt-get clean
+
+
 sudo rm /var/lib/apt/lists/lock
 sudo rm /var/cache/apt/archives/lock
 sudo rm /var/lib/dpkg/lock
