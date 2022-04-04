@@ -17,11 +17,20 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.8.4                             \r\n
-Last Updated:  4/24/2022
+Version:  1.8.5                             \r\n
+Last Updated:  4/4/2022
 
 "
 #--------------------------------------------------------------------------------------------
+sudo apt-get autoremove
+sudo apt-get --purge remove && sudo apt-get autoclean
+sudo apt-get -f install
+sudo apt-get update
+sudo apt-get upgrade && sudo apt-get dist-upgrade
+sudo dpkg-reconfigure -a
+sudo dpkg --configure -a
+
+#---------------------------------
 sudo rm /var/lib/apt/lists/lock
 sudo rm /var/cache/apt/archives/lock
 sudo rm /var/lib/dpkg/lock
