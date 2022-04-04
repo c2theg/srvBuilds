@@ -38,6 +38,8 @@ sudo dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
 sudo apt update
 sudo apt install -y percona-server-server-5.7
 
+#  percona-server-client-5.7 percona-server-common-5.7 percona-server-server-5.7
+
 wait
 mkdir -p /var/log/mysql/replication/
 sudo chmod -R 755 /var/log/mysql/ && sudo chown -R mysql:mysql /var/log/mysql/
