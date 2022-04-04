@@ -1,8 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
 #
 clear
 echo "
@@ -18,8 +14,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.4                             \r\n
-Last Updated:  3/15/2020
+Version:  0.0.5                             \r\n
+Last Updated:  4/4/2022
 \r\n \r\n
 Updating system first..."
 #sudo -E apt-get update
@@ -68,6 +64,7 @@ echo "\r\n Percona Config Download Complete \r\n"
 #mysql> SHOW SLAVE STATUS;
 #mysql> SHOW MASTER STATUS;
 #"
+
 
 echo " \r\n \r\n To setup remote logins: \r\n \r\n
 
