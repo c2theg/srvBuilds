@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.4                             \r\n
+Version:  0.0.5                             \r\n
 Last Updated:  4/4/2022
 \r\n \r\n
 Updating system first..."
@@ -42,16 +42,18 @@ sudo apt install -y percona-server-server-5.7
 
 wait
 mkdir -p /var/log/mysql/replication/
+
+
 sudo chmod -R 755 /var/log/mysql/ && sudo chown -R mysql:mysql /var/log/mysql/
 
-#echo "\r\n Downloading Config \r\n"
-#wget -O "mysqld.cnf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/mysqld.cnf"
-#wait
-#sudo mv "mysqld.cnf" "/etc/mysql/percona-server.conf.d/mysqld.cnf"
+echo "\r\n Downloading Config \r\n"
+wget -O "mysqld.cnf" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/mysqld.cnf"
+wait
+sudo mv "mysqld.cnf" "/etc/mysql/percona-server.conf.d/mysqld.cnf"
 wait
 echo "\r\n Percona Config Download Complete \r\n"
 
-#sudo /etc/init.d/mysql restart
+sudo /etc/init.d/mysql restart
 #echo "\r\n \r\n \r\n \r\n"
 #echo "To create a remote connection use the following: \r\n \r\n"
 #echo " mysql --user=root --password=* mysql  \r\n\r\n"
