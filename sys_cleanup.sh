@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.8.5                             \r\n
-Last Updated:  4/4/2022
+Version:  1.8.6                             \r\n
+Last Updated:  4/11/2022
 
 "
 #--------------------------------------------------------------------------------------------
@@ -82,7 +82,7 @@ echo "---- removing old logs from /var/log  -----
 rm /var/log/error.*
 rm /var/log/network.log
 rm /var/log/pm-powersave.log*
-rm /var/log/cups/*
+rm -rf /var/log/cups/*
 rm /var/log/alternatives.log.*
 rm /var/log/dpkg.log.*
 rm /var/log/kern.log.*
@@ -97,18 +97,17 @@ rm /var/log/apt/term.log.*
 rm /var/log/apt/history.log.*
 rm /var/log/unattended-upgrades/unattended-upgrades-dpkg_*
 rm /var/log/unattended-upgrades/unattended-upgrades.log.*
-rm /var/log/upstart/*
-rm /var/log/syslog
-rm /var/log/messages
+rm -rf /var/log/upstart/*
+rm -rf /var/log/syslog
+rm -rf /var/log/messages
 rm /var/log/vmware-vmsvc-root.*
-rm /var/log/unattended-upgrades/*
+rm -rf /var/log/unattended-upgrades/*
 rm /var/log/kern.log
 rm /var/log/ubuntu-advantage.log.*
 rm /var/log/ubuntu-advantage-timer.log.*
 rm /var/log/vmware-vmsvc-root.*
 rm /var/log/vmware-vmtoolsd-root.*
 rm /var/log/dmesg.*
-
 
 #------ Security ----------------------------------------------------------
 rm /var/log/syslog.*
@@ -119,10 +118,11 @@ rm /var/log/clamav/freshclam.log.*
 rm /var/log/fail2ban.log.*
 rm /var/log/letsencrypt/letsencrypt.log.*
 #------ DBs ----------------------------------------------------------
-#rm /var/log/mysql/*
+rm -rf /var/log/mysql/*
 #rm /var/log/mysql.log.*
 #rm /var/log/mysql/mysql_error.log
 #rm /var/log/mysql/error.log
+/etc/init.d/mysql restart
 
 #rm /var/log/mongodb/*
 #rm /var/log/redis/*
@@ -142,9 +142,9 @@ rm /var/log/letsencrypt/letsencrypt.log.*
 rm /var/log/mail.log
 rm /var/log/mail.log.*
 rm /var/log/mail.err.*
-rm /var/mail/root/*
-rm /var/mail/www-data/*
-rm /var/mail/ubuntu/*
+rm -rf /var/mail/root/*
+rm -rf /var/mail/www-data/*
+rm -rf /var/mail/ubuntu/*
 /etc/init.d/sendmail restart
 #------ Web / HTTP -------------------------------------------------------
 #rm /var/log/apache2/*
@@ -157,7 +157,6 @@ rm /var/log/php7.4-fpm.log
 rm /var/log/php7.4-fpm.log.*
 
 /etc/init.d/php7.4-fpm restart
-
 /etc/init.d/nginx restart
 #------- PI-Hole / DNS releated ----------
 #pihole -f
@@ -187,7 +186,6 @@ rm /var/log/update_blocklists_local_servers.log
 rm /var/log/update_core.log
 rm /var/log/update_ubuntu.log
 rm /var/log/sys_cleanup.log*
-
 
 rm /var/log/vmware-network.*
 rm /var/log/cloud-init.log
