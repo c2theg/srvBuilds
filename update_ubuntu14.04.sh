@@ -32,8 +32,8 @@ wait
 #sudo -E apt-get update
 #sudo -E apt-get upgrade -y --force-yes
 
-#--- Broken Python3.10 packages, require forced remove for now - 5/19/2022 - Will remove in a few months
-sudo apt --fix-missing purge $(dpkg -l -y | grep 'python3\.1[01]' | awk '{print $2}')
+#--- Broken Python3.10 packages, require forced remove for now - 5/19/2022 - Will remove in a week
+sudo apt --fix-missing purge $(dpkg -l | grep 'python3\.1[01]' | awk '{print $2}')
 sudo apt --fix-broken install
 sudo apt upgrade
 
