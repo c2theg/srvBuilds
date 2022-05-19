@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.13
+Version:  1.7.14
 Last Updated:  5/19/2022
 
 
@@ -33,7 +33,7 @@ wait
 #sudo -E apt-get upgrade -y --force-yes
 
 #--- Broken Python3.10 packages, require forced remove for now - 5/19/2022 - Will remove in a few months
-sudo apt --fix-missing purge $(dpkg -l | grep 'python3\.1[01]' | awk '{print $2}')
+sudo apt --fix-missing purge $(dpkg -l -y | grep 'python3\.1[01]' | awk '{print $2}')
 sudo apt --fix-broken install
 sudo apt upgrade
 
