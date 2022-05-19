@@ -17,8 +17,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.12
-Last Updated:  2/12/2022
+Version:  1.7.13
+Last Updated:  5/19/2022
 
 
 for Debian 8 / Ubuntu versions 14.04 - 20.04 ( ignore the file name :/ )
@@ -31,6 +31,12 @@ wait
 #
 #sudo -E apt-get update
 #sudo -E apt-get upgrade -y --force-yes
+
+#--- Broken Python3.10 packages, require forced remove for now - 5/19/2022 - Will remove in a few months
+sudo apt --fix-missing purge $(dpkg -l | grep 'python3\.1[01]' | awk '{print $2}')
+sudo apt --fix-broken install
+sudo apt upgrade
+
 
 #-- Force IPv4 update servers --
 sudo -E apt-get -o Acquire::ForceIPv4=true update
