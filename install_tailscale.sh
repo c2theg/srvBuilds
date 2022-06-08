@@ -15,7 +15,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.1                            \r\n
+Version:  0.0.5                            \r\n
 Last Updated:  6/8/2022
 
 "
@@ -32,4 +32,5 @@ sudo -E apt-get install -y tailscale
 #-------------------------------------
 sudo tailscale up
 
+echo "\r\n \r\n Your TailScale IP is: "
 tailscale ip -4
