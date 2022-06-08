@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.4.6                             \r\n
-Last Updated:  11/8/2017
+Version:  0.4.7                             \r\n
+Last Updated:  6/8/2022
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -30,73 +30,26 @@ wait
 #
 #
 #  https://www.linuxbabe.com/ubuntu/install-syncthing-ubuntu-16-04-via-official-deb-repository
-#  
-#
+#  https://apt.syncthing.net/
 #
 #
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-
-#------------- Version Detection -------------
-if [ -f /etc/os-release ]; then
-    # freedesktop.org and systemd
-    . /etc/os-release
-    OS=$NAME
-    VER=$VERSION_ID
-elif type lsb_release >/dev/null 2>&1; then
-    # linuxbase.org
-    OS=$(lsb_release -si)
-    VER=$(lsb_release -sr)
-elif [ -f /etc/lsb-release ]; then
-    # For some versions of Debian/Ubuntu without lsb_release command
-    . /etc/lsb-release
-    OS=$DISTRIB_ID
-    VER=$DISTRIB_RELEASE
-elif [ -f /etc/debian_version ]; then
-    # Older Debian/Ubuntu/etc.
-    OS=Debian
-    VER=$(cat /etc/debian_version)
-elif [ -f /etc/SuSe-release ]; then
-    # Older SuSE/etc.
-    ...
-elif [ -f /etc/redhat-release ]; then
-    # Older Red Hat, CentOS, etc.
-    ...
-else
-    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
-    OS=$(uname -s)
-    VER=$(uname -r)
-fi
-echo " Detected: OS: $OS, Version: $VER \r\n \r\n"
-#-----------------------------------------------
-sudo apt-get install curl apt-transport-https
+sudo apt-get install -y curl apt-transport-https
+sudo apt-get install -y ca-certificates
 wait
 
-curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
+# Add the release PGP keys:
+#curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
+sudo curl -o /usr/share/keyrings/syncthing-archive-keyring.gpg https://syncthing.net/release-key.gpg
 
-if [ $VER = '14.04' ]; then
-    #-------- Ubuntu 14.04 ------------------------
-    sudo add-apt-repository -y ppa:ytvwld/syncthing
-elif [ $VER = '16.04' || $VER = '18.04' ]; then
-    #-------- Ubuntu 16.04 ------------------------
-    echo "deb http://apt.syncthing.net/ syncthing release" | sudo tee /etc/apt/sources.list.d/syncthing.list
-fi
-#---------------------------------------------------------------------
-sudo -E apt-get update
-wait
-sudo -E apt-get install -y syncthing
-echo "Starting Syncthing..."
-#-------------- Configure and start it -------------------------------
-if [ $VER = '14.04' ]; then
-    #-------- Ubuntu 14.04 ------------------------
-    syncthing  >> /var/log/syncthing.log &
-elif [ $VER = '16.04' ]; then
-    #-------- Ubuntu 16.04 ------------------------
-    sudo systemctl enable syncthing@
-    ubuntu.service
-    sudo systemctl start syncthing@ubuntu.service
-    systemctl status syncthing@ubuntu.service
-fi
+# Add the "stable" channel to your APT sources:
+echo "deb [signed-by=/usr/share/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list
+
+# Update and install syncthing:
+sudo apt-get update
+sudo apt-get install -y syncthing
+
 #----------------------------------------------------------------------
 echo "Done. Configure remote access via the config file. \r\n \r\n "
 echo "Config: /root/.config/syncthing/config.xml  \r\n \r\n "
@@ -111,10 +64,8 @@ echo "
     </gui>
 "
 
-echo "Username: admin,  password: syncthing  \r\n \r\n "
-
+echo " \r\n \r\n \r\n  Username: admin,  password: syncthing  \r\n \r\n "
 echo "Then Restart the service:  \r\n \t  ps aux | grep syncthing  \r\n kill (ID) \r\n \r\n "
-#nano ~/.config/syncthing/config.xml    
 
 ifconfig
 echo "\r\n \r\n \r\n"
