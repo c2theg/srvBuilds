@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.8.6                             \r\n
-Last Updated:  4/11/2022
+Version:  1.8.7                             \r\n
+Last Updated:  5/29/2022
 
 "
 #--------------------------------------------------------------------------------------------
@@ -90,6 +90,8 @@ rm /var/log/debug.*
 rm /var/log/daemon.log.*
 rm /var/log/cron.log.*
 rm /var/log/messages.*
+rm /var/log/daemon.log
+rm /var/log/apport.log
 rm /var/log/apport.log.*
 rm /var/log/aptitude.*
 rm /var/log/vmware-vmsvc.*
@@ -156,7 +158,16 @@ rm -rf /var/log/nginx/*
 rm /var/log/php7.4-fpm.log
 rm /var/log/php7.4-fpm.log.*
 
+rm /var/log/php8.0-fpm.log
+rm /var/log/php8.0-fpm.log.*
+
+rm /var/log/php8.1-fpm.log
+rm /var/log/php8.1-fpm.log.*
+
 /etc/init.d/php7.4-fpm restart
+/etc/init.d/php8.0-fpm restart
+/etc/init.d/php8.1-fpm restart
+
 /etc/init.d/nginx restart
 #------- PI-Hole / DNS releated ----------
 #pihole -f
