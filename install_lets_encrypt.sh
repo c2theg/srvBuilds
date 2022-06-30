@@ -20,7 +20,7 @@ echo "
 
 
 
-Version:  0.0.5                             \r\n
+Version:  0.0.6                             \r\n
 Last Updated:  6/30/2022
 
 "
@@ -49,7 +49,8 @@ mkdir -p /etc/nginx/certs/
 wget -O /etc/nginx/certs/lets-encrypt-x3-cross-signed.pem "https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem" 
 #--------------- Old below ------------------------------------
 clear
-sudo add-apt-repository -y ppa:certbot/certbot
+#sudo add-apt-repository -y ppa:certbot/certbot
+sudo apt-add-repository -r ppa:certbot/certbot
 wait
 sudo apt-get update 
 wait
