@@ -20,8 +20,8 @@ echo "
 
 
 
-Version:  0.0.4                             \r\n
-Last Updated:  8/11/2021
+Version:  0.0.5                             \r\n
+Last Updated:  6/30/2022
 
 "
 
@@ -40,6 +40,10 @@ chmod u+x certbox-auto
 wait
 #./certbox-auto
 
+#--- fix OpenSSL ---
+sudo ldconfig
+sudo ldconfig /usr/local/lib64/
+
 #--- OCSP Cert ---
 mkdir -p /etc/nginx/certs/
 wget -O /etc/nginx/certs/lets-encrypt-x3-cross-signed.pem "https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem" 
@@ -49,7 +53,7 @@ sudo add-apt-repository -y ppa:certbot/certbot
 wait
 sudo apt-get update 
 wait
-sudo apt-get install -y python-certbot-nginx
+sudo apt-get install -y python3-certbot-nginx
 wait
 
 echo -e "\r\n \r\n \r\n";
