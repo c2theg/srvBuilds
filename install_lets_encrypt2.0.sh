@@ -1,9 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
-#
 clear
 echo "
  _____             _         _    _          _                                   
@@ -20,10 +15,11 @@ echo "
 
 
 
-Version:  0.0.2                             \r\n
+Version:  0.0.3 
 Last Updated:  6/30/2022
 
 "
+# https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal
 
 mkdir -p /etc/nginx/certs/
 
