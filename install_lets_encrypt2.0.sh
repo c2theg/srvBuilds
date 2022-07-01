@@ -15,50 +15,44 @@ echo "
 
 
 
-Version:  0.0.3 
+Version:  0.0.4 
 Last Updated:  6/30/2022
 
 "
 # https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal
+# https://github.com/certbot/certbot/issues/8182
 
 
 mkdir -p /etc/nginx/certs/
 
-
 #--- Remove old CertBot 1.0 ---
 sudo apt-get remove -y certbot
-
 
 #--- fix OpenSSL ---
 sudo ldconfig
 sudo ldconfig /usr/local/lib64/
 
-
 #--- Install SNAP ---
 sudo snap install core 
 sudo snap refresh core
 
-
 #--- Install Certbot ---
-sudo snap install --classic certbot
-
-
-#--- Prepare the Certbot command
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-
-
-#--- Confirm plugin containment level ---
+sudo snap install --beta --classic certbot
 sudo snap set certbot trust-plugin-with-root=ok
-
 
 #--- Install correct DNS plugin ---
 # https://certbot-dns-cloudflare.readthedocs.io/en/stable/
-sudo snap install certbot-dns-cloudflare
+
+sudo snap install --beta certbot-dns-cloudflare
+sudo snap connect certbot:plugin certbot-dns-cloudflare
+
+#--- Create Cert ONLY ---
+sudo certbot certonly --nginx
 
 
 #--- Test automatic renewal ---
-sudo certbot renew --dry-run
+#sudo certbot renew --dry-run
 
 
 #--- OCSP Cert ---
-wget -O /etc/nginx/certs/lets-encrypt-x3-cross-signed.pem "https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem" 
+#wget -O /etc/nginx/certs/lets-encrypt-x3-cross-signed.pem "https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem" 
