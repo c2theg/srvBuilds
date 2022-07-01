@@ -20,7 +20,7 @@ echo "
 
 
 
-Version:  0.0.1                             \r\n
+Version:  0.0.2                             \r\n
 Last Updated:  6/30/2022
 
 "
@@ -37,9 +37,13 @@ sudo ldconfig
 sudo ldconfig /usr/local/lib64/
 
 
-#--- Install Cert Box ---
+#--- Install SNAP ---
 sudo snap install core 
 sudo snap refresh core
+
+
+#--- Install Certbot ---
+sudo snap install --classic certbot
 
 
 #--- Prepare the Certbot command
