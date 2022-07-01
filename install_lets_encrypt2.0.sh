@@ -21,6 +21,7 @@ Last Updated:  6/30/2022
 "
 # https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal
 
+
 mkdir -p /etc/nginx/certs/
 
 
@@ -51,6 +52,7 @@ sudo snap set certbot trust-plugin-with-root=ok
 
 
 #--- Install correct DNS plugin ---
+# https://certbot-dns-cloudflare.readthedocs.io/en/stable/
 sudo snap install certbot-dns-cloudflare
 
 
