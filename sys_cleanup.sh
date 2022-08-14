@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.8.7                             \r\n
-Last Updated:  5/29/2022
+Version:  1.8.8                             \r\n
+Last Updated:  7/14/2022
 
 "
 #--------------------------------------------------------------------------------------------
@@ -110,7 +110,7 @@ rm /var/log/ubuntu-advantage-timer.log.*
 rm /var/log/vmware-vmsvc-root.*
 rm /var/log/vmware-vmtoolsd-root.*
 rm /var/log/dmesg.*
-
+rm /var/log/netserver.debug_*
 #------ Security ----------------------------------------------------------
 rm /var/log/syslog.*
 rm /var/log/user.log.*
