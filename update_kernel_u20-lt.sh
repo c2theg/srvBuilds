@@ -16,12 +16,12 @@ echo "Running update_kernel_u20-lt.sh
 
 
 
-Version:  0.1.17
-Last Updated:  5/4/2022
+Version:  0.1.18
+Last Updated:  8/29/2022
 
 https://www.kernel.org/
 
-KERNEL - Mainline Build (LONGTERM) 5.15.37
+KERNEL - Mainline Build (LONGTERM) 5.15.63
 
 
 "
@@ -50,15 +50,16 @@ rm /tmp/*.deb
 #----- download kernel's here ----->  https://kernel.ubuntu.com/~kernel-ppa/mainline/
 echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n Downloading now.. \r\n \r\nn "
 
-#--- 5.15.37
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.37/amd64/linux-headers-5.15.37-051537-generic_5.15.37-051537.202205011631_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.37/amd64/linux-image-unsigned-5.15.37-051537-generic_5.15.37-051537.202205011631_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.37/amd64/linux-modules-5.15.37-051537-generic_5.15.37-051537.202205011631_amd64.deb
+#--- 5.15.63
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.63/amd64/linux-headers-5.15.63-051563-generic_5.15.63-051563.202208251151_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.63/amd64/linux-image-unsigned-5.15.63-051563-generic_5.15.63-051563.202208251151_amd64.deb
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.63/amd64/linux-modules-5.15.63-051563-generic_5.15.63-051563.202208251151_amd64.deb
 
-#--- 5.15.30
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.30/amd64/linux-headers-5.15.30-051530-generic_5.15.30-051530.202203190935_amd64.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.30/amd64/linux-image-unsigned-5.15.30-051530-generic_5.15.30-051530.202203190935_amd64.deb
-#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.30/amd64/linux-modules-5.15.30-051530-generic_5.15.30-051530.202203190935_amd64.deb
+
+#--- 5.15.37
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.37/amd64/linux-headers-5.15.37-051537-generic_5.15.37-051537.202205011631_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.37/amd64/linux-image-unsigned-5.15.37-051537-generic_5.15.37-051537.202205011631_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.37/amd64/linux-modules-5.15.37-051537-generic_5.15.37-051537.202205011631_amd64.deb
 
 #-------------------------------------
 echo "Installing New Kernel... \r\n "
