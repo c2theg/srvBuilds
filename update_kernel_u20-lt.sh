@@ -88,6 +88,9 @@ dpkg --list | grep linux-image
 #apt-get --purge remove linux-image-XXX
 sudo update-grub2
 
+
+apt --fix-broken install
+
 echo "
 
 
