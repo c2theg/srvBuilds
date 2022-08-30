@@ -67,6 +67,8 @@ echo "Downloading required dependencies...\r\n\r\n"
 #sudo apt-get -y dist-upgrade
 wait
 sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute htop sysstat iptraf iftop speedometer ncdu nload
+sudo apt install -y linuxptp
+
 #---- Email -----
 #wait
 #sudo apt-get install -y postfix procmail postfix-pcre sasl2-bin postfix-cdb postfix-doc
