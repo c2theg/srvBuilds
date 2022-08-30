@@ -18,14 +18,31 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 
 INSTALLS  LERP (Linux* Nginx Redis PHP (7.4.x & 8.x)
 
-Version:  1.6.2
-Last Updated:  2/25/2022
+Version:  1.6.3
+Last Updated:  8/30/2022
 
 Updating system first..."
 
 #---- Add Repo's -----
-sudo add-apt-repository -y ppa:chris-lea/nginx-devel
-sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+#--- Chris Lea repo has not been updated in 18 months. switching back to nginx.org repo ---
+#sudo add-apt-repository -y ppa:chris-lea/nginx-devel
+#sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+
+#--- nginx.org ---
+sudo apt install -y curl gnupg2 ca-certificates lsb-release ubuntu-keyring
+curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor \
+    | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+
+#--- Stable (prod) Branch ---
+echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] \
+http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
+    | sudo tee /etc/apt/sources.list.d/nginx.list
+
+#--- Mainline (beta) Branch ---
+#echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] \
+#http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx" \
+#    | sudo tee /etc/apt/sources.list.d/nginx.list
+
 
 #--- Create Filesystem  ----
 mkdir "/media/data/"
