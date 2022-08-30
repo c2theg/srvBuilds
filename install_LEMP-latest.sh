@@ -44,6 +44,9 @@ http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
 #    | sudo tee /etc/apt/sources.list.d/nginx.list
 
 
+echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" \
+    | sudo tee /etc/apt/preferences.d/99nginx
+
 #--- Create Filesystem  ----
 mkdir "/media/data/"
 mkdir "/var/www/html/"
