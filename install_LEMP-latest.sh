@@ -26,7 +26,7 @@ Updating system first..."
 #---- Add Repo's -----
 #--- Chris Lea repo has not been updated in 18 months. switching back to nginx.org repo ---
 #sudo add-apt-repository -y ppa:chris-lea/nginx-devel
-#sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 
 #--- nginx.org ---
 sudo apt install -y curl gnupg2 ca-certificates lsb-release ubuntu-keyring
@@ -46,6 +46,10 @@ http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
 
 echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" \
     | sudo tee /etc/apt/preferences.d/99nginx
+
+
+sudo apt update
+sudo apt install -y nginx
 
 #--- Create Filesystem  ----
 mkdir "/media/data/"
