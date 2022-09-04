@@ -19,8 +19,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
 This really is meant to be run under Ubuntu 16.04 - 20.04 LTS
 
-Version:  1.7.21
-Last Updated:  2/12/2022
+Version:  1.7.22
+Last Updated:  9/2/2022
 
 Checking Internet status... 
 
@@ -52,6 +52,13 @@ if nc -zw1 google.com 443; then
 	wait
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iperf3 iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl net-tools
 	wait
+	echo "Start PTP using:  ptp4l -i <INTERFACE> -m \r\n \r\n"
+	service ptp4l start
+	ptp4l -i eth3 -m -A
+	
+	
+	service ptp4l start
+	
 	if [ ! -f "$HOME/.config/neofetch/config.conf" ]; then
 		# Neofetch
 		sudo add-apt-repository -y ppa:dawidd0811/neofetch
