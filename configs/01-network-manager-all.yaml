@@ -1,9 +1,12 @@
 # Christopher Gray - 9/25/2022
 #
+#   USED IN  Ubuntu 22.04
+#
+#
 #   Cloudflare Family Sheild, OpenDNS Family - (Servers dont need to access porn! HA)
 #     Both IPv4 and IPv6
 #
-#  Install:
+#   Install:
 #     wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/01-network-manager-all.yaml && mv 01-network-manager-all.yaml /etc/netplan/01-network-manager-all.yaml
 #     cd /etc/netplan/
 #
