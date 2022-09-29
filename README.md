@@ -7,6 +7,7 @@ wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && chmod u+x update_core
 ```
 <hr />
 <h3 Update Ubuntu 22.04 (Server or Desktop) </h3>
+
 ```
 wget https://bit.ly/ubuntu2204update && mv ubuntudeskmin ubuntudeskmin.sh && chmod u+x ubuntudeskmin.sh && ./ubuntudeskmin.sh
 ```
