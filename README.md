@@ -5,13 +5,12 @@ A set of shell scripts I use to deploy various ubuntu servers.
 ```
 wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && chmod u+x update_core.sh && ./update_core.sh && ./install_common.sh
 ```
-
 <hr />
-<h3> update_ubuntu_18.04-Desktop-min </h3>
+<h3 Update Ubuntu 22.04 (Server or Desktop) </h3>
+```
+wget https://bit.ly/ubuntu2204update && mv ubuntudeskmin ubuntudeskmin.sh && chmod u+x ubuntudeskmin.sh && ./ubuntudeskmin.sh
+```
 
-```
-wget http://bit.ly/ubuntudeskmin && mv ubuntudeskmin update_ubuntu_18.04-Desktop-min.sh && chmod u+x update_ubuntu_18.04-Desktop-min.sh && ./update_ubuntu_18.04-Desktop-min.sh
-```
 
 <h3>Docker</h3>
 
@@ -20,7 +19,7 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh
 ```
 
 
-<h3>Resilio (Formally BTSync) </h3>
+<h3>Resilio-Sync (Formally BTSync) </h3>
 
 ```
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_resilio.sh && chmod u+x install_resilio.sh && ./install_resilio.sh
