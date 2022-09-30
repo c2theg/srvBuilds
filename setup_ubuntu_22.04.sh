@@ -19,8 +19,8 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.2                             \r\n
-Last Updated:  9/23/2022
+Version:  0.0.3                             \r\n
+Last Updated:  9/29/2022
 \r\n \r\n"
 
 wait
@@ -82,6 +82,10 @@ sudo ufw allow ssh
 sudo ufw enable && sudo ufw reload
 
 
+sudo -E apt-get install -y openssl libssl-dev whois traceroute htop sshguard build-essential libffi-dev nfs-common nfs-kernel-server speedometer watchdog zip unzip neofetch
+wait
+sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iperf3 iftop slurm tcptrack bmon nethogs nload parallel gnupg libcurl4 curl net-tools
+
 #--- VPN's ----
 #-- Wireguard --
 #sudo apt install -y wireguard
@@ -93,6 +97,14 @@ sudo ufw enable && sudo ufw reload
 #curl -fsSL https://tailscale.com/install.sh | sh
 #curl -o 'tailscale.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_tailscale.sh && chmod u+x tailscale.sh && ./tailscale.sh
 
+
+#--- download additional scripts ---
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod +u update_time.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh && chmod u+x install_monitoring.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_clamav.sh && chmod u+x install_clamav.sh
+
+ 
 #--- Encryption ---
 sudo add-apt-repository -y ppa:unit193/encryption
 sudo apt update
