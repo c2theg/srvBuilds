@@ -103,8 +103,9 @@ sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod +u update_time.sh
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh && chmod u+x install_monitoring.sh
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_clamav.sh && chmod u+x install_clamav.sh
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh && chmod u+x install_docker.sh
 
- 
+
 #--- Encryption ---
 sudo add-apt-repository -y ppa:unit193/encryption
 sudo apt update
