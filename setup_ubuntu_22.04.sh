@@ -19,8 +19,8 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.3                             \r\n
-Last Updated:  9/29/2022
+Version:  0.0.6                             \r\n
+Last Updated:  10/1/2022
 \r\n \r\n"
 
 wait
@@ -85,6 +85,8 @@ sudo ufw enable && sudo ufw reload
 sudo -E apt-get install -y openssl libssl-dev whois traceroute htop sshguard build-essential libffi-dev nfs-common nfs-kernel-server speedometer watchdog zip unzip neofetch
 wait
 sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iperf3 iftop slurm tcptrack bmon nethogs nload parallel gnupg libcurl4 curl net-tools
+wait
+sudo -E apt install -y python3-pip
 
 #--- VPN's ----
 #-- Wireguard --
