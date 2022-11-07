@@ -162,7 +162,7 @@ rm -rf /var/log/mysql/*
 #curl -X DELETE 'http://localhost:9200/*'
 
 #--  Delete  yesturday's  index --
-#Yesterday = date -d "yesterday 13:00" '+%Y.%m.%d'
+#Yesterday=$(date -d "yesterday" '+%Y.%m.%d')
 #echo "Deleting Yesterday's elasticsearch index...  http://localhost:9200/index-${Yesterday} ";
 #curl -X DELETE "http://localhost:9200/index-${Yesterday}"
 
