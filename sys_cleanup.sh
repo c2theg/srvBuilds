@@ -17,9 +17,9 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.8.8                             \r\n
-Last Updated:  7/14/2022
-
+Version:  1.8.9                             \r\n
+Last Updated:  11/6/2022
+--- Github: https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 "
 #--------------------------------------------------------------------------------------------
 sudo apt-get autoremove
