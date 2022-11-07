@@ -134,12 +134,37 @@ rm -rf /var/log/mysql/*
 #/etc/init.d/redis-server restart
 #------ ELK ----------------------------------------------------------
 #rm /var/log/kibana/*
-#rm /var/log/elasticsearch/*
+#systemctl restart kibana
+
+
 #rm /var/log/logstash/*
+#rm /var/log/logstash/logstash-deprecation-*.log.gz
+#rm /var/log/logstash/logstash-plain-*.log.gz
+#systemctl restart logstash
+
+
+#rm /var/log/elasticsearch/*
+#rm /var/log/elasticsearch/elasticsearch-*.log.gz
+#rm /var/log/elasticsearch/elasticsearch-*.json.gz
+#rm /var/log/elasticsearch/gc.log.*
+#rm /var/log/elasticsearch/elasticsearch_deprecation.log
+#rm /var/log/elasticsearch/elasticsearch_deprecation.json
+#/etc/init.d/elasticsearch restart
+#systemctl restart elasticsearch
+#systemctl status elasticsearch
+
+
 #rm /var/log/metricbeat/*
 
-#/etc/init.d/elasticsearch restart
-#rm /var/log/update_elk_plugins.log
+#-- Delete indexs---
+#curl -X DELETE 'https://localhost:9200/_all'
+#curl -X DELETE 'http://localhost:9200/*'
+
+#--  Delete  yesturday's  index --
+#Yesterday = date -d "yesterday 13:00" '+%Y.%m.%d'
+#echo "Deleting Yesterday's elasticsearch index...  http://localhost:9200/index-${Yesterday} ";
+#curl -X DELETE "http://localhost:9200/index-${Yesterday}"
+
 #------ Mail ----------------------------------------------------------
 rm /var/log/mail.log
 rm /var/log/mail.log.*
