@@ -4,8 +4,8 @@
 #
 clear
 echo "
-Version:  0.0.10          \r\n
-Last Updated:  4/2/2022
+Version:  0.0.11          \r\n
+Last Updated:  11/8/2022
 \r\n \r\n
 This is meant for Ubuntu 20.04+ \r\n \r\n
 Updating system first..."
@@ -29,21 +29,25 @@ cd /home/ubuntu/
 echo "\r\n \r\n \r\n"
 echo "To get the latest version, visit: https://www.openssl.org/source/  \r\n \r\n \r\n "
 
-wget --no-check-certificate https://www.openssl.org/source/openssl-3.0.2.tar.gz
-wget --no-check-certificate https://www.openssl.org/source/openssl-3.0.2.tar.gz.sha256
-echo "$(cat openssl-3.0.2.tar.gz.sha256) openssl-3.0.2.tar.gz" | sha256sum --check
+Version=3.0.7
+
+echo "\r\n \r\n Downloading OpenSSL ${Version} \r\n \r\n "
+
+wget --no-check-certificate https://www.openssl.org/source/openssl-${Version}.tar.gz
+wget --no-check-certificate https://www.openssl.org/source/openssl-${Version}.tar.gz.sha256
+echo "$(cat openssl-${Version}.tar.gz.sha256) openssl-${Version}.tar.gz" | sha256sum --check
 
 echo "\r\n \r\n ---- Installing ---- \r\n \r\n "
 
-tar -zxf openssl-3.0.2.tar.gz
-cd openssl-3.0.2
+tar -zxf openssl-${Version}.tar.gz
+cd openssl-${Version}
 ./config
 make
 make test
 sudo make install
 
 #-- Change symbolic link
-sudo mv /usr/bin/openssl /usr/bin/openssl-3.0.2
+sudo mv /usr/bin/openssl /usr/bin/openssl-${Version}
 sudo ln -s /usr/local/bin/openssl /usr/bin/openssl
 
 sudo ldconfig
@@ -56,8 +60,8 @@ openssl version -a
 
 
 cd ..
-rm openssl-3.0.2.tar.gz
-rm openssl-3.0.2.tar.gz.sha256
+rm openssl-${Version}.tar.gz
+rm openssl-${Version}.tar.gz.sha256
 
 
 echo "\r\n \r\n DONE \r\n \r\n "
