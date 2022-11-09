@@ -13,7 +13,11 @@
 #--- On Ubuntu, disable caching DNS stub resolver
 sudo sed -r -i.orig 's/#?DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
 sudo sh -c 'rm /etc/resolv.conf && ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf'
-systemctl restart systemd-resolved
+#systemctl restart systemd-resolved
+
+sudo systemctl stop systemd-resolved.service
+sudo systemctl disable systemd-resolved.service
+
 
 #----- Normal install below ----------
 
