@@ -44,6 +44,9 @@ sudo apt-get install ufw
 sudo ufw status numbered
 sudo ufw app list
 
+echo "\r\n \r\n Turning on Firewall logging, which uses: rsyslog. Use: \r\n \r\n sudo service rsyslog status  \r\n \r\n "
+sudo ufw logging on
+
 #sudo ufw default deny incoming
 #sudo ufw default allow outgoing
 #------------------------------------------------------------------------------------
