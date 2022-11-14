@@ -94,36 +94,43 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 10000,9090
 
 #--- Databases ----
 #- MySQL -
+#echo "Adding MySQL (3306) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 3306
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 3306
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 3306
 
 #- PostgreSQL -
+#echo "Adding PostgreSQL (5432) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 5432
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 5432
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 5432
 
 #- ElasticSearch -
+#echo "Adding ElasticSearch (9200, 9300) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 9200, 9300
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 9200, 9300
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 9200, 9300
 
 #- Kibana -
+#echo "Adding Kibana (5601) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 5601
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 5601
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 5601
 
 #- MongoDB -
+#echo "Adding MongoDB (27017,27018,27019) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 27017,27018,27019
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 27017,27018,27019
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 27017,27018,27019
 
 #- Redis - https://docs.redis.com/latest/rs/networking/port-configurations/
+#echo "Adding Redis (6379,16379,26379) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 6379,16379,26379
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 6379,16379,26379
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 6379,16379,26379
 
 #- Memcached -
+#echo "Adding Memcached (11211) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 11211
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 11211
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 11211
