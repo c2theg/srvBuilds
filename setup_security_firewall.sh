@@ -22,7 +22,7 @@ Current working dir: $SCRIPTPATH
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-Version:  0.1.15                             
+Version:  0.1.16                             
 Last Updated:  11/14/2022
 
 Update Using:
@@ -48,6 +48,7 @@ sudo ufw app list
 #sudo ufw default allow outgoing
 #------------------------------------------------------------------------------------
 #--- SSH ---
+echo "Removing SSH access from Anywhere, and restricting it to only RFC 1918 address space... \r\n "
 sudo ufw delete allow 22/tcp
 sudo ufw allow from 10.0.0.0/8 proto tcp to any port 22
 sudo ufw allow from 172.16.0.0/12 proto tcp to any port 22
@@ -55,12 +56,14 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 22
 
 
 #--- HTTP/s ---
+echo "Adding 80/443 access from and to Anywhere \r\n "
 sudo ufw allow proto tcp from any to any port 80
 sudo ufw allow proto tcp from any to any port 443 # TCP 
 sudo ufw allow proto udp from any to any port 443 # UDP (HTTP3 / Quik)
 
 
 #--- SNMP ---
+echo "Adding SNMP access from only RFC 1918 address space.. \r\n "
 sudo ufw allow from 10.0.0.0/8 proto tcp to any port 161,162
 sudo ufw allow from 172.16.0.0/12 proto tcp to any port 161,162
 sudo ufw allow from 192.168.0.0/16 proto tcp to any port 161,162
@@ -80,6 +83,7 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 161,162
 
 
 #--- Management (Webmin, Cockpit) ---
+echo "Adding Remote Management Apps (Webmin & Cockpit) access from only RFC 1918 address space.. \r\n "
 sudo ufw allow from 10.0.0.0/8 proto tcp to any port 10000,9090
 sudo ufw allow from 172.16.0.0/12 proto tcp to any port 10000,9090
 sudo ufw allow from 192.168.0.0/16 proto tcp to any port 10000,9090
