@@ -18,7 +18,7 @@ Current working dir: $SCRIPTPATH \r\n \r\n
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-Version:  0.0.12                             \r\n
+Version:  0.0.13                             \r\n
 Last Updated:  11/13/2022
 \r\n \r\n"
 #
@@ -54,6 +54,12 @@ sudo ufw allow proto udp from any to any port 443 # UDP (HTTP3 / Quik)
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 161,162
 
 
+#--- DNS ---
+#sudo ufw allow from 10.0.0.0/8 proto tcp to any port 53
+#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 53
+#sudo ufw allow from 192.168.0.0/16 proto tcp to any port 53
+
+
 #-- NTP Server ---
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 123
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 123
@@ -73,25 +79,46 @@ sudo ufw allow proto udp from any to any port 443 # UDP (HTTP3 / Quik)
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 3306
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 3306
 
+#- PostgreSQL -
+#sudo ufw allow from 10.0.0.0/8 proto tcp to any port 5432
+#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 5432
+#sudo ufw allow from 192.168.0.0/16 proto tcp to any port 5432
+
+#- ElasticSearch -
+#sudo ufw allow from 10.0.0.0/8 proto tcp to any port 9200, 9300
+#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 9200, 9300
+#sudo ufw allow from 192.168.0.0/16 proto tcp to any port 9200, 9300
+
+#- Kibana -
+#sudo ufw allow from 10.0.0.0/8 proto tcp to any port 5601
+#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 5601
+#sudo ufw allow from 192.168.0.0/16 proto tcp to any port 5601
+
 #- MongoDB -
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 27017,27018,27019
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 27017,27018,27019
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 27017,27018,27019
 
-#- Redis -
+#- Redis - https://docs.redis.com/latest/rs/networking/port-configurations/
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 6379,16379,26379
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 6379,16379,26379
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 6379,16379,26379
 
+#- Memcached -
+#sudo ufw allow from 10.0.0.0/8 proto tcp to any port 11211
+#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 11211
+#sudo ufw allow from 192.168.0.0/16 proto tcp to any port 11211
+
+#- Wireguard -
+#sudo ufw allow 51820/udp
 
 #--- Resilio ---
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 8888/tcp
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 8888/tcp
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 8888/tcp
 #sudo ufw allow 3000
-#sudo ufw allow 3000/tcp
-#sudo ufw allow 3000/udp
 
 
 #--- Restart UFW ---
 sudo ufw reload
+echo "\r\n \r\n Firewall Updated! \r\n \r\n "
