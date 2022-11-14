@@ -5,8 +5,12 @@ SCRIPT=$(readlink -f "$0")
 # Absolute path this script is in, thus /home/user/bin
 SCRIPTPATH=$(dirname "$SCRIPT")
 now=$(date)
-echo "Running setup_security_firewall.sh at $now \r\n
-Current working dir: $SCRIPTPATH \r\n \r\n
+echo "
+
+Running setup_security_firewall.sh at $now 
+
+Current working dir: $SCRIPTPATH
+
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
@@ -18,9 +22,16 @@ Current working dir: $SCRIPTPATH \r\n \r\n
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-Version:  0.0.14                             \r\n
+Version:  0.0.14                             
 Last Updated:  11/14/2022
-\r\n \r\n"
+
+Update Using:
+
+   wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/setup_security_firewall.sh  &&  chmod u+x setup_security_firewall.sh && ./setup_security_firewall.sh
+ 
+
+
+"
 #
 # Sources:
 #   https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu-14-04
