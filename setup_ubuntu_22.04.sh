@@ -19,8 +19,8 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.6                             \r\n
-Last Updated:  10/1/2022
+Version:  0.0.9                             \r\n
+Last Updated:  11/13/2022
 \r\n \r\n"
 
 wait
@@ -114,11 +114,6 @@ sudo apt update
 sudo apt install -y veracrypt
 
 
-
 #--- Open Firewall Rules ----
-sudo ufw allow 22
-sudo ufw allow 8888
-sudo ufw allow 10000
-sudo ufw allow 9090
-sudo ufw allow 80
-sudo ufw allow 443
+sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/setup_security_firewall.sh && chmod u+x setup_security_firewall.sh
+
