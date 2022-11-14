@@ -22,7 +22,7 @@ Current working dir: $SCRIPTPATH
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-Version:  0.0.14                             
+Version:  0.1.15                             
 Last Updated:  11/14/2022
 
 Update Using:
@@ -61,9 +61,9 @@ sudo ufw allow proto udp from any to any port 443 # UDP (HTTP3 / Quik)
 
 
 #--- SNMP ---
-#sudo ufw allow from 10.0.0.0/8 proto tcp to any port 161,162
-#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 161,162
-#sudo ufw allow from 192.168.0.0/16 proto tcp to any port 161,162
+sudo ufw allow from 10.0.0.0/8 proto tcp to any port 161,162
+sudo ufw allow from 172.16.0.0/12 proto tcp to any port 161,162
+sudo ufw allow from 192.168.0.0/16 proto tcp to any port 161,162
 
 
 #--- DNS ---
@@ -80,9 +80,9 @@ sudo ufw allow proto udp from any to any port 443 # UDP (HTTP3 / Quik)
 
 
 #--- Management (Webmin, Cockpit) ---
-#sudo ufw allow from 10.0.0.0/8 proto tcp to any port 10000,9090
-#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 10000,9090
-#sudo ufw allow from 192.168.0.0/16 proto tcp to any port 10000,9090
+sudo ufw allow from 10.0.0.0/8 proto tcp to any port 10000,9090
+sudo ufw allow from 172.16.0.0/12 proto tcp to any port 10000,9090
+sudo ufw allow from 192.168.0.0/16 proto tcp to any port 10000,9090
 
 
 #--- Databases ----
@@ -122,7 +122,7 @@ sudo ufw allow proto udp from any to any port 443 # UDP (HTTP3 / Quik)
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 11211
 
 #- Wireguard -
-#sudo ufw allow 51820/udp
+#sudo ufw allow 51820
 
 #--- Resilio ---
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 8888/tcp
@@ -138,4 +138,4 @@ echo "\r\n \r\n Firewall Updated! \r\n \r\n "
 sudo ufw status verbose
 sudo ufw app list
 
-echo "\r\n \r\n \r\n "
+echo "\r\n \r\n This script has alot of commited out rules that can be used to quickly add access. please modify and re-run to expand rules \r\n \r\n "
