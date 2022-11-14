@@ -18,11 +18,8 @@ sudo apt install -y zfsutils-linux
 
 sudo apt install -y zfs-initramfs
 
+clear
 echo "\r\n \r\n Done installing ZFS tools... \r\n \r\n "
-
 zpool list
-
 sudo lsblk
-
 sudo fdisk -l
-
