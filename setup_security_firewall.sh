@@ -1,6 +1,25 @@
+#!/bin/sh
+SCRIPTPATH=$(dirname "$SCRIPT")
+now=$(date)
+echo "Running setup_security_firewall.sh at $now \r\n
+Current working dir: $SCRIPTPATH \r\n \r\n
+ _____             _         _    _          _                                   
+|     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
+|   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
+|_____|_| |___|__,|_| |___|___|  |___|_  |  |_|                                  
+                                     |___|                                       
+                                                                                 
+ _____ _       _     _           _              _____    __    _____             
+|     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _ 
+|   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
+|_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
+                            |_|                                             |___|
+Version:  0.0.12                             \r\n
+Last Updated:  11/13/2022
+\r\n \r\n"
+#
 # Sources:
 #   https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu-14-04
-#
 #
 #------------------------------------------------------------------------------------
 
