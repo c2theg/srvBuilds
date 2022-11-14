@@ -18,8 +18,8 @@ Current working dir: $SCRIPTPATH \r\n \r\n
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-Version:  0.0.13                             \r\n
-Last Updated:  11/13/2022
+Version:  0.0.14                             \r\n
+Last Updated:  11/14/2022
 \r\n \r\n"
 #
 # Sources:
@@ -29,13 +29,15 @@ Last Updated:  11/13/2022
 sudo apt-get update
 sudo apt-get install ufw
 
-sudo ufw status verbose
+#sudo ufw status verbose
+sudo ufw status numbered
 sudo ufw app list
 
 #sudo ufw default deny incoming
 #sudo ufw default allow outgoing
 #------------------------------------------------------------------------------------
 #--- SSH ---
+sudo ufw delete allow 22/tcp
 sudo ufw allow from 10.0.0.0/8 proto tcp to any port 22
 sudo ufw allow from 172.16.0.0/12 proto tcp to any port 22
 sudo ufw allow from 192.168.0.0/16 proto tcp to any port 22
@@ -121,3 +123,8 @@ sudo ufw allow proto udp from any to any port 443 # UDP (HTTP3 / Quik)
 #--- Restart UFW ---
 sudo ufw reload
 echo "\r\n \r\n Firewall Updated! \r\n \r\n "
+
+sudo ufw status verbose
+sudo ufw app list
+
+echo "\r\n \r\n \r\n "
