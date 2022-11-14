@@ -20,8 +20,9 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 22
 
 
 #--- HTTP/s ---
-sudo ufw allow proto tcp from any to any port 80/tcp
-sudo ufw allow proto tcp from any to any port 443 # both UDP (HTTP3 / Quik) and TCP 
+sudo ufw allow proto tcp from any to any port 80
+sudo ufw allow proto tcp from any to any port 443 # TCP 
+sudo ufw allow proto udp from any to any port 443 # UDP (HTTP3 / Quik)
 
 
 #--- SNMP ---
