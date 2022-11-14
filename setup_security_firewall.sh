@@ -26,9 +26,8 @@ Last Updated:  11/13/2022
 #   https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu-14-04
 #
 #------------------------------------------------------------------------------------
-
 sudo apt-get update
-sudo apt-get install wget git nano ufw
+sudo apt-get install ufw
 
 sudo ufw status verbose
 sudo ufw app list
