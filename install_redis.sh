@@ -171,6 +171,8 @@ sudo systemctl restart redis-server
 
 sudo systemctl status redis-server
 
+ss -plnt4
+
 \r\n \r\n "
 
 
