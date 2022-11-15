@@ -14,7 +14,7 @@ echo "
                             |_|                                             |___|
 
 
-https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh && chmod u+x install_LEMP-latest.sh && ./install_LEMP-latest.sh
 
 INSTALLS  LERP (Linux* Nginx Redis PHP (7.4.x & 8.x)
 
