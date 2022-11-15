@@ -21,7 +21,7 @@ echo "Running install_redis.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1.6                             \r\n
+Version:  0.1.7                             \r\n
 Last Updated:  11/15/2022
 \r\n \r\n"
 wait
@@ -119,6 +119,11 @@ cp /etc/redis/redis_standalone.conf /etc/redis/redis.conf
 wait
 sudo chown redis /etc/redis/* && sudo chmod u+x /etc/redis/*
 
+#--- create log location if not already exist and set rights ---
+mkdir -p /var/log/redis/
+touch /var/log/redis/redis.log
+sudo chown redis /var/log/redis/redis.log && sudo chmod u+x /var/log/redis/redis.log
+
 echo "--------------------------------------------------------------------"
 echo "\r\n Starting.... \r\n \r\n "
 echo "  sudo /usr/bin/redis-server /etc/redis/redis.conf "
@@ -157,3 +162,17 @@ then
     sudo bash -c "echo extension=redis.so > /etc/php/7.4/mods-available/redis.ini"
     echo "Modify /etc/php/7.4/fpm/php.ini to configure redis servers... \r\n \r\n "
 fi
+
+echo "\r\n \r\n ---- Troubleshooting ---- \r\n \r\n 
+
+journalctl -xeu redis-server.service
+
+sudo systemctl restart redis-server
+
+sudo systemctl status redis-server
+
+\r\n \r\n "
+
+
+
+
