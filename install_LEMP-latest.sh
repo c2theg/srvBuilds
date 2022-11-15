@@ -18,43 +18,36 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_LEMP-latest.sh
 
 INSTALLS  LERP (Linux* Nginx Redis PHP (7.4.x & 8.x)
 
-Version:  1.6.3
-Last Updated:  8/30/2022
+Version:  1.6.6
+Last Updated:  11/15/2022
 
 Updating system first..."
 
 #---- Add Repo's -----
-#--- Chris Lea repo has not been updated in 18 months. switching back to nginx.org repo ---
-#sudo add-apt-repository -y ppa:chris-lea/nginx-devel
+#- PHP 7.4
 sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 
-#--- nginx.org ---
-sudo apt install -y curl gnupg2 ca-certificates lsb-release ubuntu-keyring
-curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor \
-    | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+
+#--- Chris Lea repo has not been updated in 18 months. switching back to nginx.org repo ---
+#sudo add-apt-repository -y ppa:chris-lea/nginx-devel
+
+#--- nginx.org --- https://www.linuxcapable.com/how-to-install-nginx-mainline-on-ubuntu-22-04-lts/
+wget -O- https://nginx.org/keys/nginx_signing.key | sudo gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg
 
 #--- Stable (prod) Branch ---
-echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] \
-http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
-    | sudo tee /etc/apt/sources.list.d/nginx.list
+echo deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu `lsb_release -cs` nginx | sudo tee /etc/apt/sources.list.d/nginx-stable.list
 
 #--- Mainline (beta) Branch ---
-#echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] \
-#http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx" \
-#    | sudo tee /etc/apt/sources.list.d/nginx.list
+#echo deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx | sudo tee /etc/apt/sources.list.d/nginx-mainline.list
 
-
-echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" \
+echo "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" \
     | sudo tee /etc/apt/preferences.d/99nginx
 
 
-sudo apt update
-sudo apt install -y nginx
-
 #--- Create Filesystem  ----
-mkdir "/media/data/"
-mkdir "/var/www/html/"
-mkdir "/var/log/nginx/"
+mkdir -p "/media/data/"
+mkdir -p "/var/www/html/"
+mkdir -p "/var/log/nginx/"
 
 #----- Update ------
 sudo -E apt-get -y update
@@ -65,9 +58,11 @@ echo "Downloading required dependencies...\r\n\r\n"
 
 #--------------------------------------------------------------------------------------------
 #sudo apt-get -y dist-upgrade
+sudo apt install -y wget gnupg2 ca-certificates lsb-release ubuntu-keyring software-properties-common -y
 wait
 sudo apt-get install -y ntp ntpdate ssh openssh-server screen whois traceroute htop sysstat iptraf iftop speedometer ncdu nload
 sudo apt install -y linuxptp
+
 
 #---- Email -----
 #wait
@@ -164,6 +159,8 @@ sudo ./install_php_composer.sh
 # Use it: php composer.phar
 #--------------------------------------
 
+
+sudo apt install -y nginx
 
 #----- Redis -------
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_redis.sh
