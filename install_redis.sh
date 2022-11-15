@@ -21,8 +21,8 @@ echo "Running install_redis.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1.5                             \r\n
-Last Updated:  11/6/2021
+Version:  0.1.6                             \r\n
+Last Updated:  11/15/2022
 \r\n \r\n"
 wait
 #sudo -E apt-get update
@@ -37,7 +37,10 @@ wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "This installs redis-server to your box... \r\n"
-sudo add-apt-repository -y ppa:chris-lea/redis-server
+#sudo add-apt-repository -y ppa:chris-lea/redis-server
+# Removing Chris-lea since he stopped working! - as of 8/1/2020 - BUM! https://launchpad.net/~chris-lea/+archive/ubuntu/redis-server
+sudo add-apt-repository -y ppa:redislabs/redis
+
 wait
 sudo -E apt-get update
 wait
