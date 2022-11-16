@@ -26,7 +26,7 @@ Updating system first..."
 #---- Add Repo's -----
 #- PHP 7.4
 sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
-
+sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/nginx-mainline
 
 #--- Chris Lea repo has not been updated in 18 months. switching back to nginx.org repo ---
 #sudo add-apt-repository -y ppa:chris-lea/nginx-devel
