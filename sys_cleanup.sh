@@ -17,13 +17,14 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.8.9                             \r\n
-Last Updated:  11/6/2022
+Version:  1.9.0                             \r\n
+Last Updated:  11/16/2022
 --- Github: https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 "
 #--------------------------------------------------------------------------------------------
 sudo apt-get autoremove
-sudo apt-get --purge remove && sudo apt-get autoclean
+#sudo apt-get --purge remove  # Removes important software in Ubuntu 22.04. do not use! (zpool, netplan)
+sudo apt-get autoclean
 sudo apt-get -f install
 sudo apt-get update
 sudo apt-get upgrade -y
