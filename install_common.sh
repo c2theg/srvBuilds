@@ -19,8 +19,8 @@ https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
 This really is meant to be run under Ubuntu 16.04 - 20.04 LTS
 
-Version:  1.7.22
-Last Updated:  9/2/2022
+Version:  1.7.23
+Last Updated:  11/23/2022
 
 Checking Internet status... 
 
@@ -36,15 +36,15 @@ if nc -zw1 google.com 443; then
 	sudo -E apt-get upgrade -y
 	wait
 	echo "Freeing up space"
-	sudo apt-get autoremove -y
+	#sudo apt-get autoremove -y
 	wait
 	echo "Downloading required dependencies...
 	
 	"
 	#--------------------------------------------------------------------------------------------
 	#--- Networking related ---
-	sudo -E apt-get install -y network-manager
-	sudo -E apt-get install -y ifenslave # LACP - https://www.snel.com/support/how-to-set-up-lacp-bonding-on-ubuntu-18-04-with-netplan/
+	#sudo -E apt-get install -y network-manager
+	#sudo -E apt-get install -y ifenslave # LACP - https://www.snel.com/support/how-to-set-up-lacp-bonding-on-ubuntu-18-04-with-netplan/
 
 	#--- Everything else ---
 	sudo -E apt-get install -y sysstat dos2unix
@@ -52,19 +52,17 @@ if nc -zw1 google.com 443; then
 	wait
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iperf3 iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl net-tools
 	wait
-	echo "Start PTP using:  ptp4l -i <INTERFACE> -m \r\n \r\n"
-	service ptp4l start
-	ptp4l -i eth3 -m -A
-	
-	
-	service ptp4l start
+	#echo "Start PTP using:  ptp4l -i <INTERFACE> -m \r\n \r\n"
+	#service ptp4l start
+	#ptp4l -i eth3 -m -A
+	#service ptp4l start
 	
 	if [ ! -f "$HOME/.config/neofetch/config.conf" ]; then
 		# Neofetch
-		sudo add-apt-repository -y ppa:dawidd0811/neofetch
-		sudo -E apt-get update
-		wait
-		sudo -E apt-get install -y neofetch
+		#sudo add-apt-repository -y ppa:dawidd0811/neofetch
+		#sudo -E apt-get update
+		#wait
+		sudo -E apt-get install -y neofetch		
 		neofetch
 		echo "neofetch" >> ~/.bashrc
 		wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/neofetch-config.conf
@@ -97,7 +95,7 @@ if nc -zw1 google.com 443; then
 	echo "Downloading latest versions... \r\n\r\n"	
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod +u update_time.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
+	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf
 	cp resolv_base.conf /etc/resolv.conf
 	cp resolv_base.conf /etc/resolvconf/resolv.conf.d/base
