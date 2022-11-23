@@ -53,4 +53,9 @@ docker run \
     --restart=always \
     -d portainer/portainer-ce:alpine
     
-    
+ 
+ docker ps
+ 
+ echo "Visit: http://<server ip>:9000/ to access Portainer"
+ 
+ 
