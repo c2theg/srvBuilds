@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.8                             \r\n
-Last Updated:  11/4/2021
+Version:  1.5.9                             \r\n
+Last Updated:  11/23/2022
 
 "
 echo "Downloading required dependencies...\r\n\r\n"
@@ -25,7 +25,7 @@ echo "Downloading required dependencies...\r\n\r\n"
 sudo apt-get install -y apt-transport-https software-properties-common ca-certificates
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
 # curl -fsSL https://get.docker.com/ | sh
 sudo -E apt-get update
@@ -39,3 +39,7 @@ sudo systemctl start docker
 sudo systemctl enable docker
 #wait
 #sudo systemctl status docker
+
+
+#-------------------------------------
+docker pull portainer/portainer-ce:latest
