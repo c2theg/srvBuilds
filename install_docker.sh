@@ -43,3 +43,14 @@ sudo systemctl enable docker
 
 #-------------------------------------
 docker pull portainer/portainer-ce:latest
+
+docker volume create portainer_data
+docker run \
+    --name "Portainer1" \
+    -p 8000:8000 -p 9000:9000 \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v portainer_data:/data \
+    --restart=always \
+    -d portainer/portainer-ce:alpine
+    
+    
