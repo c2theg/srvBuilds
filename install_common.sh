@@ -17,7 +17,7 @@ echo "
 
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
-This really is meant to be run under Ubuntu 16.04 - 20.04 LTS
+This really is meant to be run under Ubuntu 16.04 - 22.04 LTS
 
 Version:  1.7.23
 Last Updated:  11/23/2022
