@@ -1,9 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
-#
 clear
 echo "Running setup_bbr.sh 
 
@@ -20,20 +15,11 @@ echo "Running setup_bbr.sh
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.2                             \r\n
-Last Updated:  12/30/2019
+Version:  0.0.3                            
+Last Updated:  11/24/2022
 \r\n \r\n"
-wait
-# https://gist.github.com/xterat/cefccb42f7d4b2055368ebb00454861f
-
+# https://wiki.crowncloud.net/?How_to_enable_BBR_on_Ubuntu_22_04
 #--------------------------------------------------------------------------------------------
-
-uname -r
-echo "Make sure kernel version is 4.9 or newer. if not, press Ctrl+c now! "
-wait 10
-
-# apt install --install-recommends linux-generic-hwe-16.04
-
 modprobe tcp_bbr
 echo "tcp_bbr" >> /etc/modules-load.d/modules.conf
 echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
