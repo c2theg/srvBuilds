@@ -22,8 +22,8 @@ Current working dir: $SCRIPTPATH
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-Version:  0.1.17                             
-Last Updated:  11/14/2022
+Version:  0.1.18                             
+Last Updated:  11/25/2022
 
 Update Using:
 
@@ -85,11 +85,17 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 161,162
 #sudo ufw allow 123
 
 
-#--- Management (Webmin, Cockpit) ---
+#--- Management (Webmin, Cockpit) ---  https://www.webmin.com/    |   https://cockpit-project.org/
 echo "Adding Remote Management Apps (Webmin & Cockpit) access from only RFC 1918 address space.. \r\n "
 sudo ufw allow from 10.0.0.0/8 proto tcp to any port 10000,9090
 sudo ufw allow from 172.16.0.0/12 proto tcp to any port 10000,9090
 sudo ufw allow from 192.168.0.0/16 proto tcp to any port 10000,9090
+
+# - Portainer -  https://www.portainer.io/
+#echo "Adding Remote Management Apps (Portainer) access from only RFC 1918 address space.. \r\n "
+#sudo ufw allow from 10.0.0.0/8 proto tcp to any port 9000
+#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 9000
+#sudo ufw allow from 192.168.0.0/16 proto tcp to any port 9000
 
 
 #--- Databases ----
