@@ -15,10 +15,10 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.6.9
-Last Updated:  8/11/2021
+Version:  0.6.10
+Last Updated:  11/29/2022
 \r\n \r\n
-This is really meant for 18.04+ - 20.04+) \r\n \r\n
+This is really meant for 18.04+ - 22.04+) \r\n \r\n
 
 Updating system first..."
 sudo -E apt-get update
@@ -35,7 +35,12 @@ echo "deb http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-fr
 wait
 #sudo wget -qO - https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add -
 #curl -LO http://linux-packages.resilio.com/resilio-sync/key.asc && sudo apt-key add ./key.asc
-curl -L https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add
+#curl -L https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add
+
+#-- for Ubuntu 22.04 --
+wget -qO - https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add -
+
+
 
 wait
 sudo apt update
@@ -47,7 +52,6 @@ wait
 #sudo dpkg -i resilio-sync_2.7.2.1375-1_amd64.deb
 
 sudo apt-get install -y resilio-sync
-
 
 #---------------------------------------------------------------------------------------------------------
 #if [ -s "/etc/resilio-sync/config.json" ]
