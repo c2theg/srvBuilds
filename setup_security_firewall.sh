@@ -22,8 +22,8 @@ Current working dir: $SCRIPTPATH
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-Version:  0.1.18                             
-Last Updated:  11/25/2022
+Version:  0.1.19                             
+Last Updated:  11/28/2022
 
 Update Using:
 
@@ -51,7 +51,7 @@ sudo ufw logging on
 #sudo ufw default allow outgoing
 #------------------------------------------------------------------------------------
 #--- SSH ---
-echo "Removing SSH access from Anywhere, and restricting it to only RFC 1918 address space... \r\n "
+echo "\r\n \r\n Removing SSH access from Anywhere, and restricting it to only RFC 1918 address space... \r\n "
 sudo ufw delete allow 22/tcp
 sudo ufw allow from 10.0.0.0/8 proto tcp to any port 22
 sudo ufw allow from 172.16.0.0/12 proto tcp to any port 22
@@ -59,14 +59,14 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 22
 
 
 #--- HTTP/s ---
-echo "Adding 80/443 access from and to Anywhere \r\n "
+echo "\r\n \r\n Adding 80/443 access from and to Anywhere \r\n "
 sudo ufw allow proto tcp from any to any port 80
 sudo ufw allow proto tcp from any to any port 443 # TCP 
 sudo ufw allow proto udp from any to any port 443 # UDP (HTTP3 / Quik)
 
 
 #--- SNMP ---
-echo "Adding SNMP access from only RFC 1918 address space.. \r\n "
+echo "\r\n \r\n Adding SNMP access from only RFC 1918 address space.. \r\n "
 sudo ufw allow from 10.0.0.0/8 proto tcp to any port 161,162
 sudo ufw allow from 172.16.0.0/12 proto tcp to any port 161,162
 sudo ufw allow from 192.168.0.0/16 proto tcp to any port 161,162
@@ -86,13 +86,13 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 161,162
 
 
 #--- Management (Webmin, Cockpit) ---  https://www.webmin.com/    |   https://cockpit-project.org/
-echo "Adding Remote Management Apps (Webmin & Cockpit) access from only RFC 1918 address space.. \r\n "
+echo "\r\n \r\n Adding Remote Management Apps (Webmin & Cockpit) access from only RFC 1918 address space.. \r\n "
 sudo ufw allow from 10.0.0.0/8 proto tcp to any port 10000,9090
 sudo ufw allow from 172.16.0.0/12 proto tcp to any port 10000,9090
 sudo ufw allow from 192.168.0.0/16 proto tcp to any port 10000,9090
 
 # - Portainer -  https://www.portainer.io/
-#echo "Adding Remote Management Apps (Portainer) access from only RFC 1918 address space.. \r\n "
+#echo "\r\n \r\n Adding Remote Management Apps (Portainer) access from only RFC 1918 address space.. \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 9000
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 9000
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 9000
@@ -100,43 +100,43 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 10000,9090
 
 #--- Databases ----
 #- MySQL -
-#echo "Adding MySQL (3306) \r\n \r\n "
+#echo "\r\n \r\n Adding MySQL (3306) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 3306
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 3306
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 3306
 
 #- PostgreSQL -
-#echo "Adding PostgreSQL (5432) \r\n \r\n "
+#echo "\r\n \r\n Adding PostgreSQL (5432) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 5432
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 5432
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 5432
 
 #- ElasticSearch -
-#echo "Adding ElasticSearch (9200, 9300) \r\n \r\n "
+#echo "\r\n \r\n Adding ElasticSearch (9200, 9300) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 9200, 9300
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 9200, 9300
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 9200, 9300
 
 #- Kibana -
-#echo "Adding Kibana (5601) \r\n \r\n "
+#echo "\r\n \r\n Adding Kibana (5601) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 5601
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 5601
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 5601
 
 #- MongoDB -
-#echo "Adding MongoDB (27017,27018,27019) \r\n \r\n "
+#echo "\r\n \r\n Adding MongoDB (27017,27018,27019) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 27017,27018,27019
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 27017,27018,27019
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 27017,27018,27019
 
 #- Redis - https://docs.redis.com/latest/rs/networking/port-configurations/
-#echo "Adding Redis (6379,16379,26379) \r\n \r\n "
+#echo "\r\n \r\n Adding Redis (6379,16379,26379) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 6379,16379,26379
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 6379,16379,26379
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 6379,16379,26379
 
 #- Memcached -
-#echo "Adding Memcached (11211) \r\n \r\n "
+#echo "\r\n \r\n Adding Memcached (11211) \r\n \r\n "
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 11211
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 11211
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 11211
@@ -145,11 +145,11 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 10000,9090
 #sudo ufw allow 51820
 
 #--- Resilio ---
-#echo "Allowing Resilio WebUI (:8888)! Please configure Resilio to a port in the range of 32010 - 32020 \r\n \r\n "
-#sudo ufw allow 32010:32020/tcp
-#sudo ufw allow from 10.0.0.0/8 proto tcp to any port 8888/tcp
-#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 8888/tcp
-#sudo ufw allow from 192.168.0.0/16 proto tcp to any port 8888/tcp
+#echo "\r\n \r\n Allowing Resilio WebUI (:8888)! Please configure Resilio to a port in the range of 32010 - 32020 \r\n \r\n "
+#sudo ufw allow 32010:32020
+#sudo ufw allow from 10.0.0.0/8 proto tcp to any port 8888
+#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 8888
+#sudo ufw allow from 192.168.0.0/16 proto tcp to any port 8888
 
 
 #--- Restart UFW ---
