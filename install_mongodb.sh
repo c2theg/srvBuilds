@@ -1,8 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
 #
 clear
 echo "
@@ -18,23 +14,23 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.8                             \r\n
-Last Updated:  3/25/2021
+Version:  0.0.9                             \r\n
+Last Updated:  12/12/2022
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
 #sudo -E apt-get upgrade -y
 #wait
 
-#echo "Source: https://www.howtoforge.com/tutorial/install-mongodb-on-ubuntu/  \r\n ";
+# Source: https://techviewleo.com/install-mongodb-on-ubuntu-linux/
 
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Installing gnupg, openssl.. "
-sudo apt-get install -y gnupg
+sudo apt install -y wget curl gnupg2 software-properties-common apt-transport-https ca-certificates lsb-release
 
 echo "Adding Key... "
-wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/mongodb-6.gpg
 
 #------------- OS Version Detection -------------
 if [ -f /etc/os-release ]; then
@@ -73,53 +69,62 @@ if [ $VER = '14.04' ]; then
     echo "14.04"
     echo "Mongo not supported on this version of Ubuntu"
 else
-    if [ $VER = '16.04' ]; then
-    	wait
-    	echo "16.04"
-     sudo apt-get install -y libcurl3
-     echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-    elif [ $VER = '18.04' ]; then
-    	wait
-    	echo "18.04"
-     sudo apt-get install libcurl4
-     echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-    elif [ $VER = '20.04' ]; then
-    	wait
-    	echo "20.04"
-     sudo apt-get install libcurl4
-     echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-    
+    if [ $VER = '20.04' ]; then
+    	   wait
+    	   echo "20.04"
+        sudo apt-get install libcurl4
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+
+    elif [ $VER = '22.04' ]; then
+        wait
+    	   echo "22.04"
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+        wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.16_amd64.deb
+        sudo dpkg -i ./libssl1.1_1.1.1f-1ubuntu2.16_amd64.deb
+   
     
     fi
 fi
 #-------------------------------------
 echo "Updating repo's... \r\n \r\n "
-sudo apt-get update
+#sudo apt-get update
+#sudo apt-get install -y mongodb-org
 
-#MongoDBVersion=4.4.1
-#echo "Install Mongodb $MongoDBVersion ... "
-#sudo apt-get install -y mongodb-org=$MongoDBVersion mongodb-org-server=$MongoDBVersion mongodb-org-shell=$MongoDBVersion mongodb-org-mongos=$MongoDBVersion mongodb-org-tools=$MongoDBVersion
-sudo apt-get install -y mongodb-org
+sudo apt update
+sudo apt install -y mongodb-org
+       
 
 
 # For NGINX / Apache - PHP
 # sudo apt-get install php7.4-mongodb
 
 #----------------------------------
-ps --no-headers -o comm 1
+cd /var/log/mongodb
+sudo chown -R mongodb:mongodb .
+cd /var/lib/mongodb
+sudo chown -R mongodb:mongodb .
 
-ps -e | grep mongo
+
+#ps --no-headers -o comm 1
+#ps -e | grep mongo
 
 #sudo -E apt-get update
 #sudo apt-get install -y mongodb-org --allow-unauthenticated
 
-systemctl start mongod
-systemctl enable mongod
-netstat -plntu
+#systemctl start mongod
+#systemctl enable mongod
+#netstat -plntu
+
+
+sudo systemctl enable --now mongod
+mongod --version
+#sudo systemctl restart mongod
+
 
 echo "Done. Starting Mongo (from config: /etc/mongod.conf) ..."
 #sudo service mongod start
 sudo -u mongodb mongod --config /etc/mongod.conf
+
 
 sudo service mongod status
 
