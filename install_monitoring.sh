@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 echo "
-Version:  0.0.9         
+Version:  0.0.10        
 Last Updated:  12/17/2022
 
 
@@ -21,6 +21,7 @@ sudo usermod -aG docker $USER
 sudo -E apt-get -y install cockpit
 sudo systemctl start cockpit && sudo systemctl enable cockpit
 
+sudo apt install -y samba
 
 echo "Adding Plugins..  https://cockpit-project.org/applications.html.   \r\n \r\n"
 
