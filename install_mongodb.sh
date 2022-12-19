@@ -14,8 +14,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.9                             \r\n
-Last Updated:  12/12/2022
+Version:  0.0.10                             \r\n
+Last Updated:  12/19/2022
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -92,8 +92,6 @@ echo "Updating repo's... \r\n \r\n "
 
 sudo apt update
 sudo apt install -y mongodb-org
-       
-
 
 # For NGINX / Apache - PHP
 # sudo apt-get install php7.4-mongodb
@@ -121,15 +119,20 @@ mongod --version
 #sudo systemctl restart mongod
 
 
+#-- backup original copy and replace with custom config --
+mv /etc/mongod.conf /etc/mongod_original.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/mongodb_standalone.conf
+mv mongodb_standalone.conf /etc/mongod.conf
+
+
 echo "Done. Starting Mongo (from config: /etc/mongod.conf) ..."
-#sudo service mongod start
-sudo -u mongodb mongod --config /etc/mongod.conf
+sudo service mongod start
+#sudo -u mongodb mongod --config /etc/mongod.conf
 
-
-sudo service mongod status
+#sudo service mongod status
 
 echo " Use any of the following to get info from Mongo: \r\n
-mongo -port 27017   \r\n \r\n
+mongo -port 27018   \r\n \r\n
  
 db.version()     \r\n
 rs.status()     \r\n
@@ -138,4 +141,6 @@ db.isMaster()     \r\n \r\n
 "
 
 #connect to mongo
-mongo -port 27017
+#mongo -port 27018
+
+echo "\r\n \r\n Or use Mongo Compass! \r\n \r\n "
