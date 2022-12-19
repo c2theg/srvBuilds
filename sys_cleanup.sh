@@ -24,9 +24,13 @@ Last Updated:  12/19/2022
 
 Add to Crontab: (Every Sunday at 2:10 AM)
 
+crontab -e
 
 10 2 * * 7 /home/ubuntu/sys_cleanup.sh
 
+(Save and close) - Ctrl + X,  then Save ( y ), then Enter key
+
+/etc/init.d/cron restart
 
 "
 #--------------------------------------------------------------------------------------------
