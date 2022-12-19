@@ -17,9 +17,17 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.0                             \r\n
-Last Updated:  11/16/2022
---- Github: https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
+Version:  1.9.1                             \r\n
+Last Updated:  12/19/2022
+--- Github: 
+   wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
+
+Add to Crontab: (Every Sunday at 2:10 AM)
+
+
+10 2 * * 7 /home/ubuntu/sys_cleanup.sh
+
+
 "
 #--------------------------------------------------------------------------------------------
 sudo apt-get autoremove
@@ -120,13 +128,13 @@ rm /var/log/auth.log.*
 rm /var/log/clamav/clamav.log.*
 rm /var/log/clamav/freshclam.log.*
 rm /var/log/fail2ban.log.*
-rm /var/log/letsencrypt/letsencrypt.log.*
+#rm /var/log/letsencrypt/letsencrypt.log.*
 #------ DBs ----------------------------------------------------------
-rm -rf /var/log/mysql/*
+#rm -rf /var/log/mysql/*
 #rm /var/log/mysql.log.*
 #rm /var/log/mysql/mysql_error.log
 #rm /var/log/mysql/error.log
-/etc/init.d/mysql restart
+#/etc/init.d/mysql restart
 
 #rm /var/log/mongodb/*
 #rm /var/log/redis/*
@@ -171,10 +179,10 @@ rm -rf /var/log/mysql/*
 rm /var/log/mail.log
 rm /var/log/mail.log.*
 rm /var/log/mail.err.*
-rm -rf /var/mail/root/*
-rm -rf /var/mail/www-data/*
-rm -rf /var/mail/ubuntu/*
-/etc/init.d/sendmail restart
+#rm -rf /var/mail/root/*
+#rm -rf /var/mail/www-data/*
+#rm -rf /var/mail/ubuntu/*
+#/etc/init.d/sendmail restart
 #------ Web / HTTP -------------------------------------------------------
 #rm /var/log/apache2/*
 #rm /var/log/lighttpd/*
@@ -185,14 +193,14 @@ rm -rf /var/log/nginx/*
 rm /var/log/php7.4-fpm.log
 rm /var/log/php7.4-fpm.log.*
 
-rm /var/log/php8.0-fpm.log
-rm /var/log/php8.0-fpm.log.*
+#rm /var/log/php8.0-fpm.log
+#rm /var/log/php8.0-fpm.log.*
 
 rm /var/log/php8.1-fpm.log
 rm /var/log/php8.1-fpm.log.*
 
 /etc/init.d/php7.4-fpm restart
-/etc/init.d/php8.0-fpm restart
+#/etc/init.d/php8.0-fpm restart
 /etc/init.d/php8.1-fpm restart
 
 /etc/init.d/nginx restart
@@ -201,7 +209,6 @@ rm /var/log/php8.1-fpm.log.*
 wait
 #sudo service pihole-FTL stop
 #sudo service dnsmasq stop
-wait
 #rm /var/log/dmesg.*
 #rm /var/log/pihole.log.*
 #rm /var/log/pihole-FTL.log.*
@@ -231,7 +238,7 @@ rm /var/log/cloud-init.log
 rm /var/lib/resilio-sync/sync.log
 rm /var/lib/resilio-sync/sync.log.*
 #----- DOCKER ------
-echo " From: https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images \r\n \r\n "
+#echo " From: https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images \r\n \r\n "
 # Clean up old containers before images..
 #docker ps --no-trunc -aqf "status=exited" | xargs docker rm
 #docker images --no-trunc -aqf "dangling=true" | xargs docker rmi
