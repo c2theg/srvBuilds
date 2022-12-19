@@ -21,8 +21,8 @@ echo "Running install_redis.sh at $now
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.1.7                             \r\n
-Last Updated:  11/15/2022
+Version:  0.1.8                             \r\n
+Last Updated:  12/19/2022
 \r\n \r\n"
 wait
 #sudo -E apt-get update
@@ -173,8 +173,8 @@ sudo systemctl status redis-server
 
 ss -plnt4
 
-\r\n \r\n "
+\r\n \r\n  Version: \r\n \r\n "
 
+redis-server --version
 
-
-
+echo "\r\n \r\n"
