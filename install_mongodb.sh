@@ -97,11 +97,7 @@ sudo apt install -y mongodb-org
 # sudo apt-get install php7.4-mongodb
 
 #----------------------------------
-cd /var/log/mongodb
-sudo chown -R mongodb:mongodb .
-cd /var/lib/mongodb
-sudo chown -R mongodb:mongodb .
-
+sudo chown -R mongodb:mongodb /var/log/mongodb/*
 
 #ps --no-headers -o comm 1
 #ps -e | grep mongo
@@ -113,19 +109,21 @@ sudo chown -R mongodb:mongodb .
 #systemctl enable mongod
 #netstat -plntu
 
-
 sudo systemctl enable --now mongod
 mongod --version
-#sudo systemctl restart mongod
-
+#
 
 #-- backup original copy and replace with custom config --
 mv /etc/mongod.conf /etc/mongod_original.conf
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/mongodb_standalone.conf
 mv mongodb_standalone.conf /etc/mongod.conf
 
+mkdir -p /media/data/mongodb/shards/c1
+sudo chown -R mongodb:mongodb /media/data/mongodb/shards/c1/*
+
 
 echo "Done. Starting Mongo (from config: /etc/mongod.conf) ..."
+#sudo systemctl restart mongod
 sudo service mongod start
 #sudo -u mongodb mongod --config /etc/mongod.conf
 
