@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.1                             \r\n
-Last Updated:  12/19/2022
+Version:  1.9.2                             \r\n
+Last Updated:  12/20/2022
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 
@@ -102,6 +102,7 @@ rm /var/log/dpkg.log.*
 rm /var/log/kern.log.*
 rm /var/log/debug.*
 rm /var/log/daemon.log.*
+rm /var/log/cron.log
 rm /var/log/cron.log.*
 rm /var/log/messages.*
 rm /var/log/daemon.log
@@ -128,6 +129,7 @@ rm /var/log/netserver.debug_*
 #------ Security ----------------------------------------------------------
 rm /var/log/syslog.*
 rm /var/log/user.log.*
+rm /var/log/auth.log
 rm /var/log/auth.log.*
 rm /var/log/clamav/clamav.log.*
 rm /var/log/clamav/freshclam.log.*
@@ -141,11 +143,11 @@ rm /var/log/fail2ban.log.*
 #/etc/init.d/mysql restart
 
 #rm /var/log/mongodb/*
-#rm /var/log/redis/*
+rm /var/log/redis/*
 #rm /var/log/neo4j/*
 
 #-- Restart Services --
-#/etc/init.d/redis-server restart
+/etc/init.d/redis-server restart
 #------ ELK ----------------------------------------------------------
 #rm /var/log/kibana/*
 #systemctl restart kibana
@@ -194,13 +196,13 @@ rm /var/log/mail.err.*
 echo "\r\n \r\n Removing Nginx and PHP logs, then restarting both services.. \r\n \r\n "
 rm -rf /var/log/nginx/*
 #rm /var/log/php5-fpm.log.*
-rm /var/log/php7.4-fpm.log
+#rm /var/log/php7.4-fpm.log
 rm /var/log/php7.4-fpm.log.*
 
 #rm /var/log/php8.0-fpm.log
-#rm /var/log/php8.0-fpm.log.*
+rm /var/log/php8.0-fpm.log.*
 
-rm /var/log/php8.1-fpm.log
+#rm /var/log/php8.1-fpm.log
 rm /var/log/php8.1-fpm.log.*
 
 /etc/init.d/php7.4-fpm restart
