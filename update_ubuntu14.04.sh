@@ -17,12 +17,11 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.14
-Last Updated:  5/19/2022
+Version:  1.7.15
+Last Updated:  12/22/2022
 
 
-for Debian 8 / Ubuntu versions 14.04 - 20.04 ( ignore the file name :/ )
-
+for Debian 8 / Ubuntu versions 20.04 - 22.04 ( ignore the file name :/ )
 
 "
 wait
@@ -33,10 +32,9 @@ wait
 #sudo -E apt-get upgrade -y --force-yes
 
 #--- Broken Python3.10 packages, require forced remove for now - 5/19/2022 - Will remove in a week
-sudo apt --fix-missing purge $(dpkg -l | grep 'python3\.1[01]' | awk '{print $2}')
-sudo apt --fix-broken install
-sudo apt upgrade
-
+#sudo apt --fix-missing purge $(dpkg -l | grep 'python3\.1[01]' | awk '{print $2}')
+#sudo apt --fix-broken install
+#sudo apt upgrade
 
 #-- Force IPv4 update servers --
 sudo -E apt-get -o Acquire::ForceIPv4=true update
@@ -48,7 +46,7 @@ sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y
 #sudo -E apt-get -o Acquire::ForceIPv6=true upgrade -y
 #sudo -E apt-get -o Acquire::ForceIPv6=true upgrade -y
 
-sudo -E apt-get dist-upgrade -y
+#sudo -E apt-get dist-upgrade -y
 
 #-------------------------------------------------------
 wait
@@ -58,21 +56,21 @@ wait
 wait
 sudo apt upgrade -y --allow-downgrades
 wait
-echo "Freeing up space"
-sudo apt-get autoremove -y
+#echo "Freeing up space"
+#sudo apt-get autoremove -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo -E apt-get -y install unattended-upgrades
 wait
-apt-get dist-upgrade -y
+#apt-get dist-upgrade -y
 wait
 sudo dpkg --configure -a
 wait
 echo "-----------------------------------------------------------------------"
 sudo apt-get autoclean
 wait
-sudo apt-get autoremove -y
+#sudo apt-get autoremove -y
 wait
 
 #------------------------ Python PIP ---------------------------------
