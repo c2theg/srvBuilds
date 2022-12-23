@@ -35,3 +35,4 @@ sudo tailscale up --ssh
 echo "\r\n \r\n Your TailScale IP is: "
 tailscale ip -4
 tailscale ip -6
+tailscale netcheck
