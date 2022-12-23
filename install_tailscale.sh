@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.5                            \r\n
-Last Updated:  6/8/2022
+Version:  0.0.6                            \r\n
+Last Updated:  12/22/2022
 
 "
 echo "Downloading required dependencies...\r\n\r\n"
@@ -28,9 +28,10 @@ curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.tailscale-keyring.list
 sudo -E apt-get update
 sudo -E apt-get install -y tailscale
 
-
 #-------------------------------------
-sudo tailscale up
+#sudo tailscale up
+sudo tailscale up --ssh
 
 echo "\r\n \r\n Your TailScale IP is: "
 tailscale ip -4
+tailscale ip -6
