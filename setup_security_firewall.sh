@@ -50,6 +50,13 @@ sudo ufw logging on
 #sudo ufw default deny incoming
 #sudo ufw default allow outgoing
 #------------------------------------------------------------------------------------
+#--- HTTP/s ---
+echo "\r\n \r\n Adding 80/443 access from and to Anywhere \r\n "
+sudo ufw allow proto tcp from any to any port 80
+sudo ufw allow proto tcp from any to any port 443 # TCP 
+sudo ufw allow proto udp from any to any port 443 # UDP (HTTP3 / Quik)
+
+
 #--- SSH ---
 echo "\r\n \r\n Removing SSH access from Anywhere, and restricting it to only RFC 1918 address space... \r\n "
 sudo ufw delete allow 22/tcp
@@ -58,17 +65,10 @@ sudo ufw allow from 172.16.0.0/12 proto tcp to any port 22
 sudo ufw allow from 192.168.0.0/16 proto tcp to any port 22
 
 
-#--- HTTP/s ---
-echo "\r\n \r\n Adding 80/443 access from and to Anywhere \r\n "
-sudo ufw allow proto tcp from any to any port 80
-sudo ufw allow proto tcp from any to any port 443 # TCP 
-sudo ufw allow proto udp from any to any port 443 # UDP (HTTP3 / Quik)
-
-
 #--- SNMP ---
 echo "\r\n \r\n Adding SNMP access from only RFC 1918 address space.. \r\n "
 sudo ufw allow from 10.0.0.0/8 proto tcp to any port 161,162
-sudo ufw allow from 172.16.0.0/12 proto tcp to any port 161,162
+#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 161,162
 sudo ufw allow from 192.168.0.0/16 proto tcp to any port 161,162
 
 
@@ -88,14 +88,15 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 161,162
 #--- Management (Webmin, Cockpit) ---  https://www.webmin.com/    |   https://cockpit-project.org/
 echo "\r\n \r\n Adding Remote Management Apps (Webmin & Cockpit) access from only RFC 1918 address space.. \r\n "
 sudo ufw allow from 10.0.0.0/8 proto tcp to any port 10000,9090
-sudo ufw allow from 172.16.0.0/12 proto tcp to any port 10000,9090
+#sudo ufw allow from 172.16.0.0/12 proto tcp to any port 10000,9090
 sudo ufw allow from 192.168.0.0/16 proto tcp to any port 10000,9090
 
+
 # - Portainer -  https://www.portainer.io/
-#echo "\r\n \r\n Adding Remote Management Apps (Portainer) access from only RFC 1918 address space.. \r\n "
-#sudo ufw allow from 10.0.0.0/8 proto tcp to any port 9000
+echo "\r\n \r\n Adding Remote Management Apps (Portainer) access from only RFC 1918 address space.. \r\n "
+sudo ufw allow from 10.0.0.0/8 proto tcp to any port 9000
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 9000
-#sudo ufw allow from 192.168.0.0/16 proto tcp to any port 9000
+sudo ufw allow from 192.168.0.0/16 proto tcp to any port 9000
 
 
 #--- Databases ----
@@ -142,9 +143,11 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 10000,9090
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 11211
 
 #- Wireguard -
+#echo "\r\n \r\n Adding Wireguard (51820) \r\n \r\n "
 #sudo ufw allow 51820
 
 #- Tailscale -
+#echo "\r\n \r\n Adding Tailscale (41641) \r\n \r\n "
 #sudo ufw allow 41641/udp
 #sudo ufw allow 3478/udp
 
