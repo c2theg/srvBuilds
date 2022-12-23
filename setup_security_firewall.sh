@@ -22,8 +22,8 @@ Current working dir: $SCRIPTPATH
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-Version:  0.1.19                             
-Last Updated:  11/28/2022
+Version:  0.1.20                             
+Last Updated:  12/22/2022
 
 Update Using:
 
@@ -144,13 +144,16 @@ sudo ufw allow from 192.168.0.0/16 proto tcp to any port 10000,9090
 #- Wireguard -
 #sudo ufw allow 51820
 
+#- Tailscale -
+#sudo ufw allow 41641/udp
+#sudo ufw allow 3478/udp
+
 #--- Resilio ---
 #echo "\r\n \r\n Allowing Resilio WebUI (:8888)! Please configure Resilio to a port in the range of 32010 - 32020 \r\n \r\n "
 #sudo ufw allow 32010:32020
 #sudo ufw allow from 10.0.0.0/8 proto tcp to any port 8888
 #sudo ufw allow from 172.16.0.0/12 proto tcp to any port 8888
 #sudo ufw allow from 192.168.0.0/16 proto tcp to any port 8888
-
 
 #--- Restart UFW ---
 sudo ufw reload
