@@ -12,9 +12,6 @@
 echo "Fixing Permissions on various dir's. This may take a minute...
 
 "
-#--- Resilio ---
-#sudo chown -R rslsync:rslsync /var/www/
-
 
 if [ -d "/media/data/sync/" ]
 then
@@ -30,7 +27,7 @@ then
     "
 fi
 
-# fixes http permissions - 640 or 755
+# Fixes http permissions - 640 or 755
 if [ -d "/var/www" ]
 then
     echo " working on: /var/www/* ...  "
