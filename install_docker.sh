@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.9                             \r\n
-Last Updated:  11/23/2022
+Version:  1.5.10                             \r\n
+Last Updated:  1/5/2023
 
 "
 echo "Downloading required dependencies...\r\n\r\n"
@@ -59,3 +59,10 @@ docker run \
  echo "Visit: http://<server ip>:9000/ to access Portainer"
  
  
+#---- Other good tools ----
+# docker stats
+
+#-- https://hub.docker.com/r/nicolargo/glances
+# docker pull nicolargo/glances
+
+#-- 
