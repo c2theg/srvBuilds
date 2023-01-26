@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.10                             \r\n
-Last Updated:  1/5/2023
+Version:  1.5.11                             \r\n
+Last Updated:  1/26/2023
 
 "
 echo "Downloading required dependencies...\r\n\r\n"
@@ -45,18 +45,19 @@ sudo systemctl enable docker
 docker pull portainer/portainer-ce:latest
 
 docker volume create portainer_data
+
 docker run \
     --name "Portainer1" \
-    -p 8000:8000 -p 9000:9000 \
+    -p 8000:8000 \
+    -p 9443:9443 \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v portainer_data:/data \
     --restart=always \
-    -d portainer/portainer-ce:alpine
-    
+    -d portainer/portainer-ce:latest
+
+docker ps
  
- docker ps
- 
- echo "Visit: http://<server ip>:9000/ to access Portainer"
+echo "Visit: http://<server ip>:9000/ to access Portainer"
  
  
 #---- Other good tools ----
