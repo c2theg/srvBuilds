@@ -33,7 +33,8 @@ curl -sSL https://repo.45drives.com/setup | sudo bash
 sudo apt-get update
 sudo apt install -y cockpit-file-sharing
 sudo apt-get install -y cockpit-pcp
-sudo dnf install cockpit-podman -y
+sudo apt-get install -y cockpit-podman
+sudo apt-get install -y containers-storage
 
 
 wget https://github.com/45Drives/cockpit-navigator/releases/download/v0.5.10/cockpit-navigator_0.5.10-1focal_all.deb
