@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 echo "
-Version:  0.0.11        
+Version:  0.0.12       
 Last Updated:  1/26/2023
 
 
@@ -33,6 +33,8 @@ curl -sSL https://repo.45drives.com/setup | sudo bash
 sudo apt-get update
 sudo apt install -y cockpit-file-sharing
 sudo apt-get install -y cockpit-pcp
+sudo dnf install cockpit-podman -y
+
 
 wget https://github.com/45Drives/cockpit-navigator/releases/download/v0.5.10/cockpit-navigator_0.5.10-1focal_all.deb
 apt install ./cockpit-navigator_0.5.10-1focal_all.deb
