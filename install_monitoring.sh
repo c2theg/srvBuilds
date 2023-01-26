@@ -21,6 +21,7 @@ sudo usermod -aG docker $USER
 sudo -E apt-get -y install cockpit
 sudo systemctl start cockpit && sudo systemctl enable cockpit
 
+# needed for ZFS to work from 45 Drives
 sudo apt install -y samba
 
 echo "Adding Plugins..  https://cockpit-project.org/applications.html.   \r\n \r\n"
@@ -28,21 +29,15 @@ echo "Adding Plugins..  https://cockpit-project.org/applications.html.   \r\n \r
 git clone https://github.com/45drives/cockpit-zfs-manager.git
 sudo cp -r cockpit-zfs-manager/zfs /usr/share/cockpit
 
-
 curl -sSL https://repo.45drives.com/setup | sudo bash
 sudo apt-get update
 sudo apt install -y cockpit-file-sharing
 sudo apt-get install -y cockpit-pcp
 
-# needed for ZFS to work from 45 Drives
-sudo apt-get install -y samba
-
 wget https://github.com/45Drives/cockpit-navigator/releases/download/v0.5.10/cockpit-navigator_0.5.10-1focal_all.deb
 apt install ./cockpit-navigator_0.5.10-1focal_all.deb
 
-
 echo "Visit: https://<ServerIP>:9090 \r\n \r\n"
-
 
 #-----------------------
 echo "\r\n \r\n Install Webmin \r\n \r\n "
