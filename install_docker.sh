@@ -57,9 +57,10 @@ docker run \
 
 docker ps
  
-echo "Visit: http://<server ip>:9000/ to access Portainer"
- 
- 
+echo "Visit: https://<server ip>:9443/ to access Portainer"
+
+# Reset Portainer Username: https://omar2cloud.github.io/rasp/psswd/
+
 #---- Other good tools ----
 # docker stats
 
