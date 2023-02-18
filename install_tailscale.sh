@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.6                            \r\n
-Last Updated:  12/22/2022
+Version:  0.0.7                            \r\n
+Last Updated:  2/18/2023
 
 "
 echo "Downloading required dependencies...\r\n\r\n"
@@ -37,3 +37,10 @@ tailscale ip -4
 tailscale ip -6
 tailscale netcheck
 tailscale status
+
+#--- Exit Node ---- https://tailscale.com/kb/1103/exit-nodes/?tab=linux
+echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
+echo 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
+sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
+
+sudo tailscale up --advertise-exit-node --ssh
