@@ -2,7 +2,7 @@
 # https://www.digitalocean.com/community/tutorials/how-to-install-composer-on-ubuntu-20-04-quickstart
 
 sudo apt update
-sudo apt install php-cli unzip
+sudo apt install php-cli unzip -y
 
 cd ~
 curl -sS https://getcomposer.org/installer -o composer-setup.php
