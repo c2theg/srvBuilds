@@ -17,8 +17,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.15
-Last Updated:  12/22/2022
+Version:  1.7.16
+Last Updated:  4/3/2023
 
 
 for Debian 8 / Ubuntu versions 20.04 - 22.04 ( ignore the file name :/ )
@@ -72,6 +72,7 @@ sudo apt-get autoclean
 wait
 #sudo apt-get autoremove -y
 wait
+sudo apt autoremove -y
 
 #------------------------ Python PIP ---------------------------------
 if pip -V | grep -q ' not '; then
