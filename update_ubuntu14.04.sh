@@ -143,3 +143,14 @@ fi
 
 echo "Done "
 echo "\r\n \r\n "
+
+echo " 
+
+IF you receive the error message: 'The following packages have been kept back', then use the following command.  \r\n 
+for i in $(apt list --upgradable | cut -d '/' -f 1,1); do sudo apt-get install $i -y ; done    \r\n   \r\n 
+
+";
+
+
+
+
