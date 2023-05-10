@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.2                             \r\n
-Last Updated:  12/20/2022
+Version:  1.9.3                             \r\n
+Last Updated:  5/10/2023
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 
@@ -104,6 +104,7 @@ rm /var/log/debug.*
 rm /var/log/daemon.log.*
 rm /var/log/cron.log
 rm /var/log/cron.log.*
+rm /var/log/boot.log.*
 rm /var/log/messages.*
 rm /var/log/daemon.log
 rm /var/log/apport.log
@@ -126,6 +127,8 @@ rm /var/log/vmware-vmsvc-root.*
 rm /var/log/vmware-vmtoolsd-root.*
 rm /var/log/dmesg.*
 rm /var/log/netserver.debug_*
+rm /var/log/samba/log.nmbd.*
+rm /var/log/samba/log.smbd.*
 #------ Security ----------------------------------------------------------
 rm /var/log/syslog.*
 rm /var/log/user.log.*
@@ -142,7 +145,8 @@ rm /var/log/fail2ban.log.*
 #rm /var/log/mysql/error.log
 #/etc/init.d/mysql restart
 
-#rm /var/log/mongodb/*
+rm /var/log/mongodb/*
+rm /var/log/mongdb/*
 rm /var/log/redis/*
 #rm /var/log/neo4j/*
 
@@ -152,12 +156,10 @@ rm /var/log/redis/*
 #rm /var/log/kibana/*
 #systemctl restart kibana
 
-
 #rm /var/log/logstash/*
 #rm /var/log/logstash/logstash-deprecation-*.log.gz
 #rm /var/log/logstash/logstash-plain-*.log.gz
 #systemctl restart logstash
-
 
 #rm /var/log/elasticsearch/*
 #rm /var/log/elasticsearch/elasticsearch-*.log.gz
@@ -168,7 +170,6 @@ rm /var/log/redis/*
 #/etc/init.d/elasticsearch restart
 #systemctl restart elasticsearch
 #systemctl status elasticsearch
-
 
 #rm /var/log/metricbeat/*
 
