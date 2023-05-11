@@ -75,6 +75,7 @@ wait
 sudo apt autoremove -y
 
 #------------------------ Python PIP ---------------------------------
+python -m pip install --upgrade pip
 if pip -V | grep -q ' not '; then
     # True
     echo "Skipping pip update.. "
@@ -86,6 +87,7 @@ else
 fi
 
 #------------------------ Python PIP3 ---------------------------------
+python3 -m pip install --upgrade pip
 if pip3 -V | grep -q ' not '; then
     # True
     echo "Skipping pip3 update.. "
