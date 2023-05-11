@@ -24,6 +24,9 @@ Last Updated:  5/11/2023
 for Debian 8 / Ubuntu versions 20.04 - 22.04 ( ignore the file name :/ )
 
 "
+# wget https://github.com/c2theg/srvBuilds/blob/master/update_ubuntu14.04.sh
+
+
 wait
 # https://askubuntu.com/questions/759524/problem-with-ipv6-sudo-apt-get-update-upgrade
 # echo 'Acquire::ForceIPv4 "true";' | sudo tee /etc/apt/apt.conf.d/99force-ipv4
