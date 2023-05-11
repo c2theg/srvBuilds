@@ -24,7 +24,7 @@ Last Updated:  5/11/2023
 for Debian 8 / Ubuntu versions 20.04 - 22.04 ( ignore the file name :/ )
 
 "
-# wget https://github.com/c2theg/srvBuilds/blob/master/update_ubuntu14.04.sh
+# wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh
 
 
 wait
