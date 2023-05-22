@@ -17,8 +17,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.17
-Last Updated:  5/11/2023
+Version:  1.7.18
+Last Updated:  5/22/2023
 
 
 for Debian 8 / Ubuntu versions 20.04 - 22.04 ( ignore the file name :/ )
@@ -76,6 +76,10 @@ wait
 #sudo apt-get autoremove -y
 wait
 sudo apt autoremove -y
+
+#--- RUST ---
+rustup check
+rustup update
 
 #------------------------ Python PIP ---------------------------------
 python -m pip install --upgrade pip
