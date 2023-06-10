@@ -1,7 +1,7 @@
 #!/bin/sh
 clear
-# Version: 0.0.6
-# Updated: 7/7/2021
+# Version: 0.0.7
+# Updated: 5/10/2023
 
 # https://www.speedtest.net/apps/cli
 sudo -E apt-get install -y gnupg1 apt-transport-https dirmngr
@@ -22,5 +22,5 @@ sudo apt-get update
 sudo -E apt-get install -y speedtest-cli
 wait
 #echo " "
-speedtest
-#speedtest --format=json > speedtest_results.json &
+speedtest --secure
+#speedtest --secure --format=json > speedtest_results.json &
