@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.3                             \r\n
-Last Updated:  5/10/2023
+Version:  1.9.4                             \r\n
+Last Updated:  9/12/2023
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 
@@ -258,6 +258,8 @@ rm /var/lib/resilio-sync/sync.log.*
 #docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 
 docker system prune -f
+docker image prune -f 
+
 #----- End Docker ------
 history -c
 
