@@ -1,9 +1,4 @@
-#!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
-#
+#!/bin/bash
 clear
 echo "
  _____             _         _    _          _                                   
@@ -18,12 +13,23 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
-Version:  0.7                             \r\n
-Last Updated:  8/11/2018
-\r\n \r\n"
+
+Version:  0.7.2
+Last Updated:  9/21/2023
+
+"
 #--------------------------------------------------------------------------------------------
-echo "\r\n \r\n Waiting a random time before restarting... \r\n \r\n"
-sleep 10$(( RANDOM \% 2000 ))s;
-echo "See you soon!!!  Bye-Bye! \r\n "
-sudo shutdown now -r
+RandomNum=$(( $RANDOM % 10 + 40 ));
+echo "Waiting $RandomNum seconds before restarting... ";
+sleep $RandomNum;
+echo "
+
+
+Rebooting!
+
+Goodbye!
+
+
+
+"
+sudo reboot
