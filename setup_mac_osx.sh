@@ -40,10 +40,13 @@ brew install nload
 #--- GUI Apps ---
 
 #-- General --
+brew install --cask google-chrome
 brew install --cask vlc
 brew install --cask macfuse
 brew install --cask veracrypt
 brew install wireguard-go
+brew install python
+# https://www.python.org/ftp/python/3.12.0/python-3.12.0-macos11.pkg
 
 
 #--- Dev Apps ---
@@ -58,6 +61,8 @@ brew install nmap
 #-- databases --
 brew install --cask dbeaver-community
 brew install --cask sqlpro-for-sqlite
+brew install --cask mongodb-compass
+
 
 #-- remove viewers --
 brew install --cask vnc-viewer
