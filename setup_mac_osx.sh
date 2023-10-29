@@ -32,7 +32,6 @@ brew update --auto-update
 brew cask install docker
 brew install --cask docker-toolbox
 
-
 #--- CLI apps ---
 brew install gping
 brew install nload
@@ -40,13 +39,19 @@ brew install nload
 #--- GUI Apps ---
 
 #-- General --
-brew install --cask google-chrome
-brew install --cask vlc
-brew install --cask macfuse
-brew install --cask veracrypt
-brew install wireguard-go
 brew install python
 # https://www.python.org/ftp/python/3.12.0/python-3.12.0-macos11.pkg
+
+brew install --cask google-chrome
+brew install --cask veracrypt
+brew install wireguard-go
+brew install --cask vlc
+brew install --cask macfuse
+
+
+#-- remove viewers --
+brew install --cask vnc-viewer
+brew install --cask microsoft-remote-desktop
 
 
 #--- Dev Apps ---
@@ -62,8 +67,3 @@ brew install nmap
 brew install --cask dbeaver-community
 brew install --cask sqlpro-for-sqlite
 brew install --cask mongodb-compass
-
-
-#-- remove viewers --
-brew install --cask vnc-viewer
-brew install --cask microsoft-remote-desktop
