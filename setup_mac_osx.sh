@@ -43,6 +43,7 @@ brew install nload
 brew install --cask vlc
 brew install --cask macfuse
 brew install --cask veracrypt
+brew install wireguard-go
 
 
 #--- Dev Apps ---
