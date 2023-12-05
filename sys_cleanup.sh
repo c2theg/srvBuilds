@@ -93,6 +93,7 @@ echo "---- removing old logs from /var/log  -----
 
 "
 #------ Core ----------------------------------------------------------
+rm /var/log/error
 rm /var/log/error.*
 rm /var/log/network.log
 rm /var/log/pm-powersave.log*
