@@ -264,6 +264,7 @@ rm /var/lib/resilio-sync/sync.log.*
 
 docker system prune -f
 docker image prune -f 
+docker volume rm $(docker volume ls -qf dangling=true)
 
 #----- End Docker ------
 history -c
