@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.4                             \r\n
-Last Updated:  9/12/2023
+Version:  1.9.5                             \r\n
+Last Updated:  12/4/2023
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 
@@ -190,6 +190,10 @@ rm /var/log/mail.err.*
 #rm -rf /var/mail/www-data/*
 #rm -rf /var/mail/ubuntu/*
 #/etc/init.d/sendmail restart
+#--- wipe / purge all email que --
+postsuper -d ALL
+/etc/init.d/postfix restart
+
 #------ Web / HTTP -------------------------------------------------------
 #rm /var/log/apache2/*
 #rm /var/log/lighttpd/*
