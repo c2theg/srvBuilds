@@ -26,6 +26,9 @@ https://formulae.brew.sh/cask/
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 brew update --auto-update
 
+# Install RUST 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustc --version
 
 #--- install apps ---
 brew cask install docker
