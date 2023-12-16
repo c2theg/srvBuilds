@@ -15,9 +15,8 @@ echo "Running setup_mac_osx.sh
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.1                            
-Last Updated:  10/29/2023
-
+Version:  0.0.2                            
+Last Updated:  12/16/2023
 
 https://formulae.brew.sh/cask/
 
@@ -32,6 +31,9 @@ brew update --auto-update
 brew cask install docker
 brew install --cask docker-toolbox
 
+brew install qt5
+pip3 install pyqt5
+
 #--- CLI apps ---
 brew install gping
 brew install nload
@@ -39,7 +41,7 @@ brew install nload
 #--- GUI Apps ---
 
 #-- General --
-brew install python
+brew install python3
 # https://www.python.org/ftp/python/3.12.0/python-3.12.0-macos11.pkg
 
 brew install --cask google-chrome
@@ -67,3 +69,7 @@ brew install nmap
 brew install --cask dbeaver-community
 brew install --cask sqlpro-for-sqlite
 brew install --cask mongodb-compass
+
+
+
+
