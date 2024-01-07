@@ -3,8 +3,8 @@ clear
 
 
 echo "
-Version:  2.0.1
-Last Updated:  9/1/2021
+Version:  2.0.2
+Last Updated:  1/7/2024
 
 
 This will install the latest version of Webmin
@@ -23,6 +23,9 @@ wget https://www.webmin.com/download/deb/webmin-current.deb
 wait
 #sudo dpkg --install webmin_${Version}_all.deb
 sudo dpkg --install webmin-current.deb
+
+/etc/webmin/restart-by-force-kill
+
 echo "Done! \r\n \r\n"
 
 rm webmin-current.deb
