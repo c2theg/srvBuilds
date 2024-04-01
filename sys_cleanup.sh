@@ -130,8 +130,8 @@ rm /var/log/dmesg.*
 rm /var/log/netserver.debug_*
 rm /var/log/samba/log.nmbd.*
 rm /var/log/samba/log.smbd.*
+rm /var/log/samba/log.*
 rm /var/log/apcupsd.events
-
 #------ Security ----------------------------------------------------------
 rm /var/log/syslog.*
 rm /var/log/user.log.*
