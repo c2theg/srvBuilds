@@ -132,6 +132,8 @@ rm /var/log/samba/log.nmbd.*
 rm /var/log/samba/log.smbd.*
 rm /var/log/samba/log.*
 rm /var/log/apcupsd.events
+
+rm /var/log/install_clamav.log
 #------ Security ----------------------------------------------------------
 rm /var/log/syslog.*
 rm /var/log/user.log.*
