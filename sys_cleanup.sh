@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.7                             \r\n
+Version:  1.9.8                             \r\n
 Last Updated:  4/1/2024
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
@@ -130,6 +130,8 @@ rm /var/log/dmesg.*
 rm /var/log/netserver.debug_*
 rm /var/log/samba/log.nmbd.*
 rm /var/log/samba/log.smbd.*
+rm /var/log/apcupsd.events
+
 #------ Security ----------------------------------------------------------
 rm /var/log/syslog.*
 rm /var/log/user.log.*
