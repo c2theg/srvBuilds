@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.5                             \r\n
-Last Updated:  12/4/2023
+Version:  1.9.6                             \r\n
+Last Updated:  4/1/2023
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 
@@ -152,7 +152,7 @@ rm /var/log/redis/*
 #rm /var/log/neo4j/*
 
 #-- Restart Services --
-/etc/init.d/redis-server restart
+# /etc/init.d/redis-server restart
 #------ ELK ----------------------------------------------------------
 #rm /var/log/kibana/*
 #systemctl restart kibana
@@ -215,10 +215,12 @@ rm /var/log/php8.1-fpm.log.*
 #/etc/init.d/php8.0-fpm restart
 /etc/init.d/php8.1-fpm restart
 
+rm -rf /var/log/letsencrypt/letsencrypt.log.*
+
 /etc/init.d/nginx restart
 #------- PI-Hole / DNS releated ----------
 #pihole -f
-wait
+#wait
 #sudo service pihole-FTL stop
 #sudo service dnsmasq stop
 #rm /var/log/dmesg.*
@@ -229,7 +231,7 @@ wait
 #/etc/init.d/lighttpd restart
 #/etc/init.d/dnsmasq restart
 #sudo service dnsmasq start
-wait
+#wait
 #sudo service pihole-FTL start
 #sudo systemctl restart pihole-FTL
 #-------
@@ -265,6 +267,10 @@ rm /var/lib/resilio-sync/sync.log.*
 docker system prune -f
 docker image prune -f 
 docker volume rm $(docker volume ls -qf dangling=true)
+
+#-- docker logs --
+# cd /var/lib/docker/containers/
+# rm /var/lib/docker/containers/*/*.-json.log
 
 #----- End Docker ------
 history -c
