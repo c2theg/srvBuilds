@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.15
-Last Updated:  2/15/2022
+Version:  1.4.16
+Last Updated:  5/18/2024
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -28,7 +28,7 @@ echo "Installing Python 3.x... -> latest for your platform
 
 "
 # deadsnakes
-sudo -E add-apt-repository -y ppa:deadsnakes/ppa
+#sudo -E add-apt-repository -y ppa:deadsnakes/ppa
 sudo -E apt-get update
 #--------------------------------------------------------------------------------------------
 sudo apt --fix-broken install -y python-pycurl python-apt
