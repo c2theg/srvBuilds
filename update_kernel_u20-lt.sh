@@ -16,12 +16,12 @@ echo "Running update_kernel_u20-lt.sh
 
 
 
-Version:  0.1.18
-Last Updated:  8/29/2022
+Version:  0.1.19
+Last Updated:  5/24/2024
 
 https://www.kernel.org/
 
-KERNEL - Mainline Build (LONGTERM) 5.15.63
+KERNEL - Mainline Build (LONGTERM) 5.15.159
 
 
 "
@@ -49,12 +49,22 @@ rm /tmp/*.deb
 
 #----- download kernel's here ----->  https://kernel.ubuntu.com/~kernel-ppa/mainline/
 echo "Visit https://kernel.ubuntu.com/~kernel-ppa/mainline/  to find the latest... \r\n \r\n Downloading now.. \r\n \r\nn "
+# -- all AMD64
+# headers - generic
+# unsigned
+# modules
+
+# https://kernel.ubuntu.com/mainline/v5.15.159/
+#---- 5.15.159
+wget -c https://kernel.ubuntu.com/mainline/v5.15.159/amd64/linux-headers-5.15.159-0515159-generic_5.15.159-0515159.202405171055_amd64.deb
+wget -c https://kernel.ubuntu.com/mainline/v5.15.159/amd64/linux-image-unsigned-5.15.159-0515159-generic_5.15.159-0515159.202405171055_amd64.deb
+wget -c https://kernel.ubuntu.com/mainline/v5.15.159/amd64/linux-modules-5.15.159-0515159-generic_5.15.159-0515159.202405171055_amd64.deb
+
 
 #--- 5.15.63
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.63/amd64/linux-headers-5.15.63-051563-generic_5.15.63-051563.202208251151_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.63/amd64/linux-image-unsigned-5.15.63-051563-generic_5.15.63-051563.202208251151_amd64.deb
-wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.63/amd64/linux-modules-5.15.63-051563-generic_5.15.63-051563.202208251151_amd64.deb
-
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.63/amd64/linux-headers-5.15.63-051563-generic_5.15.63-051563.202208251151_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.63/amd64/linux-image-unsigned-5.15.63-051563-generic_5.15.63-051563.202208251151_amd64.deb
+#wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.63/amd64/linux-modules-5.15.63-051563-generic_5.15.63-051563.202208251151_amd64.deb
 
 #--- 5.15.37
 #wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.37/amd64/linux-headers-5.15.37-051537-generic_5.15.37-051537.202205011631_amd64.deb
