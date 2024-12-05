@@ -15,7 +15,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.1                            \r\n
+Version:  0.0.2                            \r\n
 Last Updated:  12/5/2024
 
 "
@@ -38,4 +38,22 @@ ollama pull llava:7b
 ollama pull nomic-embed-text
 #ollama pull mxbai-embed-large
 
+ollama list
+
+
+#--- Install Python Packages ---
+pip3 install requests
+pip3 install ollama
+pip3 install pdfplumber
+pip3 install langchain langchain-core langchain-ollama langchain-community langchain_text_splitters
+pip3 install unstructured unstructured[all-docs]
+pip3 install fastembed
+pip3 install sentence-transformers
+pip3 install elevenlabs
+
+#--- Vector Databases ---
+pip3 install chromadb
+#pip3 install elasticsearch
+
+#-------------------------------
 ollama list
