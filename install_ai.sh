@@ -52,7 +52,12 @@ pip3 install sentence-transformers
 pip3 install elevenlabs
 
 #--- Vector Databases ---
+#Best
+pip3 install -U pymilvus
+
+#works, but only supports localhose. not scaling
 pip3 install chromadb
+
 #pip3 install elasticsearch
 
 #-------------------------------
