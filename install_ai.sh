@@ -55,9 +55,11 @@ pip3 install pandas
 pip3 install numpy
 
 #--- Vector Databases ---
-# Milvus 
+# Milvus lite (10k - 100k vectors)
+pip3 install milvus
+# Milvus Standalone (single machine (1M - 10M Vectors) / Milvus-cluster (10B vectors)
 pip3 install -U pymilvus
-#works, in memory vector database, single box
+#in memory vector database, single node
 pip3 install chromadb
 #-------------------------------
 ollama list
