@@ -51,14 +51,13 @@ pip3 install fastembed
 pip3 install sentence-transformers
 pip3 install elevenlabs
 
+pip3 install pandas
+pip3 install numpy
+
 #--- Vector Databases ---
-#Best
+# Milvus 
 pip3 install -U pymilvus
-
-#works, but only supports localhose. not scaling
+#works, in memory vector database, single box
 pip3 install chromadb
-
-#pip3 install elasticsearch
-
 #-------------------------------
 ollama list
