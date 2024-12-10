@@ -65,7 +65,7 @@ pip3 install chromadb
 #-------------------------------
 ollama list
 ollama --version
-
+service ollama status
 
 #---- LLAMA Web UI ---
 # pip3 install open-webui
