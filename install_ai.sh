@@ -15,12 +15,13 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.2                            \r\n
-Last Updated:  12/5/2024
+Version:  0.0.8                            \r\n
+Last Updated:  12/10/2024
 
 "
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
+# Install & Update Ollama to latest version using: 
 curl -fsSL https://ollama.com/install.sh | sh
 ollama list
 
@@ -63,3 +64,13 @@ pip3 install -U pymilvus
 pip3 install chromadb
 #-------------------------------
 ollama list
+ollama --version
+
+
+#---- LLAMA Web UI ---
+# pip3 install open-webui
+# open-webui serve
+# -- or docker version --
+# docker pull ghcr.io/open-webui/open-webui:main
+# docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+# Access it from the hostip:8080
