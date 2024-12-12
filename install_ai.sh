@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.8                            \r\n
-Last Updated:  12/10/2024
+Version:  0.0.10                            \r\n
+Last Updated:  12/12/2024
 
 "
 echo "Downloading required dependencies...\r\n\r\n"
@@ -67,7 +67,7 @@ ollama list
 ollama --version
 service ollama status
 
-#---- LLAMA Web UI ---
+#---- LLAMA Web UI --- https://github.com/open-webui/open-webui#troubleshooting
 # pip3 install open-webui
 # open-webui serve
 # -- or docker version --
