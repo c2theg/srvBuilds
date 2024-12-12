@@ -17,8 +17,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.18
-Last Updated:  5/22/2023
+Version:  1.7.19
+Last Updated:  12/12/2024
 
 
 for Debian 8 / Ubuntu versions 20.04 - 22.04 ( ignore the file name :/ )
@@ -78,6 +78,8 @@ wait
 sudo apt autoremove -y
 
 #--- RUST ---
+echo "Updating Rust... \r\n \r\n"
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup check
 rustup update
 
@@ -87,6 +89,7 @@ if pip -V | grep -q ' not '; then
     # True
     echo "Skipping pip update.. "
 else
+    pip3 list --outdated
     # False 
     echo "\r\n \r\n ------------------------  \r\n \r\n Updating Python PIP packages... \r\n \r\n"
     pip install -U pip
