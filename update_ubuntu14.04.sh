@@ -79,11 +79,13 @@ sudo apt autoremove -y
 
 #--- RUST ---
 echo "Updating Rust... \r\n \r\n"
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup check
 rustup update
 
 #------------------------ Python PIP ---------------------------------
+apt install python3-pip -y
+
 python -m pip install --upgrade pip
 if pip -V | grep -q ' not '; then
     # True
@@ -96,6 +98,8 @@ else
     pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
 
+apt install python3-requests -y
+apt install python3-setuptools -y
 #------------------------ Python PIP3 ---------------------------------
 python3 -m pip install --upgrade pip
 if pip3 -V | grep -q ' not '; then
