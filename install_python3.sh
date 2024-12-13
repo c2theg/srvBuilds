@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.16
-Last Updated:  5/18/2024
+Version:  1.4.17
+Last Updated:  12/13/2024
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -36,7 +36,8 @@ sudo -E apt-get install -y software-properties-common
 sudo -E apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 sudo -E apt-get install -y build-essential checkinstall libgmp3-dev python-software-properties python3-yaml
-sudo -E apt-get install -y python3.10 python3.10-dev python3.10-venv python3.10-doc binfmt-support
+#  python3.10 python3.10-dev python3.10-venv python3.10-doc
+sudo -E apt-get install -y binfmt-support
 sudo -E apt-get install -y python3-crypto python3-dnspython python3-gpg
 
 sudo -E apt install -y tox
