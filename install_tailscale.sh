@@ -34,7 +34,8 @@ sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
 
 #-------------------------------------
 #sudo tailscale up --ssh
-sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=192.168.1.0/24 --ssh --accept-risk=lose-ssh
+sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --ssh --accept-risk=lose-ssh
+#sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=192.168.1.0/24 --ssh --accept-risk=lose-ssh
 tailscale set --auto-update
 
 echo "\r\n \r\n Your TailScale IP is:  \r\n"
