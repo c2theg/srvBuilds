@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.17
-Last Updated:  12/13/2024
+Version:  1.4.18
+Last Updated:  12/18/2024
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -53,8 +53,13 @@ sudo -E apt-get install -y python3-venv
 sudo -E apt-get install -y python3-virtualenv
 sudo -E pip3 install virtualenv
 
+
 #virtualenv venv
 #python3 -m venv myenv
+python3 -m venv DevEnv1
+source DevEnv1/bin/activate
+
+
 wait
 pip install --upgrade pip
 pip3 install --upgrade pip
@@ -70,6 +75,8 @@ pip3 install requests
 #pip3 install bleach
 #-----------------------
 echo "Installing other PIP modules... https://hugovk.github.io/top-pypi-packages/ \r\n "
+# pip install -U -r requirements.txt
+
 pip3 install urllib3
 pip3 install setuptools
 pip3 install requests
