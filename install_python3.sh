@@ -15,7 +15,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.18
+Version:  1.4.19
 Last Updated:  12/18/2024
 \r\n \r\n"
 #sudo -E apt-get update
@@ -53,12 +53,11 @@ sudo -E apt-get install -y python3-venv
 sudo -E apt-get install -y python3-virtualenv
 sudo -E pip3 install virtualenv
 
+wait
 
 #virtualenv venv
-#python3 -m venv myenv
 python3 -m venv DevEnv1
 source DevEnv1/bin/activate
-
 
 wait
 pip install --upgrade pip
@@ -66,6 +65,8 @@ pip3 install --upgrade pip
 python3 -m pip install --upgrade pip
 #--------------------------------------------------------------------------------------------
 pip3 install pip
+pip3 install python-dotenv
+
 #----- Install Flask ------------
 #echo "Installing Flask... \r\n "
 #pip3 install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
@@ -76,7 +77,10 @@ pip3 install requests
 #-----------------------
 echo "Installing other PIP modules... https://hugovk.github.io/top-pypi-packages/ \r\n "
 # pip install -U -r requirements.txt
+pip3 install json
+pip3 install jsonify
 
+pip3 install asyncio
 pip3 install urllib3
 pip3 install setuptools
 pip3 install requests
@@ -88,8 +92,11 @@ pip3 install certifi
 pip3 install wheel
 pip3 install colorama
 pip3 install Jinja2
+pip3 install validators
 
+pip3 install rich
 #--- crypto ---
+pip3 install cryptography
 pip3 install pynacl
 pip3 install simp-AES
 pip3 install simple_aes
@@ -129,6 +136,10 @@ pip3 install rsa
 #pip3 install pytraceroute
 #pip3 install pyang
 #pip3 install netconf
+
+pip3 install numpy
+
+
 #-----------------------
 #echo "Installing pexpect... \r\n "
 #pip3 install pexpect
