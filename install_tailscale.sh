@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.7                            \r\n
-Last Updated:  2/18/2023
+Version:  0.0.10                            \r\n
+Last Updated:  12/18/2024
 
 "
 echo "Downloading required dependencies...\r\n\r\n"
@@ -43,4 +43,6 @@ echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
 echo 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
 sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
 
-sudo tailscale up --advertise-exit-node --ssh
+
+sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=192.168.1.0/24 --ssh --accept-risk=lose-ssh
+tailscale set --auto-update
