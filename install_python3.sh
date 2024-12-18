@@ -67,19 +67,15 @@ python3 -m pip install --upgrade pip
 pip3 install pip
 pip3 install python-dotenv
 
+# pip install -U -r requirements.txt
+
 #----- Install Flask ------------
 #echo "Installing Flask... \r\n "
 #pip3 install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
 #--- Web API stuff ----
-#-- REST --
-pip3 install requests
-#pip3 install bleach
-#-----------------------
 echo "Installing other PIP modules... https://hugovk.github.io/top-pypi-packages/ \r\n "
-# pip install -U -r requirements.txt
 pip3 install json
 pip3 install jsonify
-
 pip3 install asyncio
 pip3 install urllib3
 pip3 install setuptools
