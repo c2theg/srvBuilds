@@ -15,7 +15,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.15                            \r\n
+Version:  0.0.20                            \r\n
 Last Updated:  12/18/2024
 
 "
@@ -32,10 +32,15 @@ echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
 echo 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
 sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
 
+#  https://tailscale.com/kb/1320/performance-best-practices#ethtool-configuration
+printf '#!/bin/sh\n\nethtool -K %s rx-udp-gro-forwarding on rx-gro-list off \n' "$(ip -o route get 8.8.8.8 | cut -f 5 -d " ")" | sudo tee /etc/networkd-dispatcher/routable.d/50-tailscale
+sudo chmod 755 /etc/networkd-dispatcher/routable.d/50-tailscale
+
 #-------------------------------------
 #sudo tailscale up --ssh
 sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --ssh --accept-risk=lose-ssh
 #sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=192.168.1.0/24 --ssh --accept-risk=lose-ssh
+#sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=10.1.1.0/24 --ssh --accept-risk=lose-ssh
 tailscale set --auto-update
 
 echo "\r\n \r\n Your TailScale IP is:  \r\n"
