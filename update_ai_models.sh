@@ -3,6 +3,8 @@
 # https://github.com/ollama/ollama/issues/1890
 # https://github.com/ollama/ollama/blob/main/docs/linux.md
 echo "
+
+
  _____             _         _    _          _
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _
@@ -15,12 +17,17 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
-Version:  0.0.16                            \r\n
+
+Version:  0.0.17
 Last Updated:  1/10/2025
+
 
 Install:
   wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
+
+
+Recommended (first):
+  wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
 
 
 Crontab:
@@ -30,13 +37,26 @@ Crontab:
 "
 
 ollama --version
-# service ollama status
+#service ollama status
+
+echo "
 
 
-echo "\r\n \r\n \r\n"
-echo "Updating Ollama.. be reinstalling it... \r\n \r\n "
+Updating Ollama or re-installing it...
+
+
+"
 curl -fsSL https://ollama.com/install.sh | sh
 ollama -v
+
+echo "
+
+
+Installing AMD GPU Drivers...
+
+"
+curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
+sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
 
 
 #echo "Installing Nvidia CUDA Drivers... \r\n \r\n "
@@ -51,30 +71,46 @@ ollama -v
 # sudo apt-get install -y nvidia-open
 
 
-echo "Installing AMD GPU Drivers... \r\n "
-curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
-sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
-
-
 # echo "Installing ARM64 (Apple Mac, Pi, etc.)... \r\n "
 # curl -L https://ollama.com/download/ollama-linux-arm64.tgz -o ollama-linux-arm64.tgz
 # sudo tar -C /usr -xzf ollama-linux-arm64.tgz
 
 
-echo "\r\n \r\n \r\n"
-echo "Listing AI Models... \r\n \r\n \r\n"
+
+echo "
+
+
+Listing AI Models...
+
+
+"
 ollama list
 
 
-echo "\r\n \r\n \r\n"
-echo "Updating all AI Models... \r\n \r\n \r\n "
+
+echo "
+
+
+Updating all AI Models...
+
+
+"
 ollama list | tail -n +2 | awk '{print $1}' | while read -r model; do
   ollama pull $model
 done
 
 
-echo "Listing All updated AI Models... \r\n \r\n \r\n"
+echo "
+
+Listing All updated AI Models...
+
+"
 ollama list
 
 
-echo "\r\n \r\n DONE! \r\n \r\n"
+echo "
+
+DONE!
+
+
+"
