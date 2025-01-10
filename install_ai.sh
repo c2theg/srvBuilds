@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.12
+Version:  0.0.13
 Last Updated:  1/10/2025
 
 
@@ -42,7 +42,7 @@ ollama pull gemma2:9b       # 9b    - Google
 #ollama pull gemma2:2b      # 2b    - Google
 ollama pull phi3.5          # 3.8b  - Microsoft
 #ollama pull phi4           # 14b   - Microsoft
-ollama run mistral         # 7b    - Apache
+ollama pull mistral         # 7b    - Apache
 #ollama run qwen:7b         # 7b  (from 0.5b - 110b) - Alibaba Cloud
 #ollama run tinyllama       # 1.1b
 #ollama run nemotron-mini   # 4b - Nvidia
@@ -64,7 +64,7 @@ ollama pull nomic-embed-text
 
 
 #--- Security (Prompt) ----
-ollama run llama-guard3   # 8b - Meta
+ollama pull llama-guard3   # 8b - Meta
 #ollama run shieldgemma    # 9b - Google
 
 
