@@ -18,16 +18,16 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.18
+Version:  0.0.19
 Last Updated:  1/10/2025
 
 
 Install:
-  wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
+  rm update_ai_models.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
 
 
 Recommended (first):
-  wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
+  rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
 
 
 Crontab:
@@ -35,6 +35,10 @@ Crontab:
 
 
 "
+
+#-- update yourself! --
+rm update_ai_models.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
+
 
 ollama --version
 #service ollama status
@@ -48,45 +52,6 @@ Updating Ollama or re-installing it...
 "
 curl -fsSL https://ollama.com/install.sh | sh
 ollama -v
-
-echo "
-
-
-Downloading and Installing AMD GPU Drivers...
-
-
-"
-curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
-sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
-
-echo "
-
-
-Deleting Temp download...
-
-
-"
-rm ollama-linux-amd64-rocm.tgz
-
-
-
-
-#echo "Installing Nvidia CUDA Drivers... \r\n \r\n "
-# Nvidia CUDA - https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local
-# wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
-# sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
-# wget https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/cuda-repo-ubuntu2204-12-6-local_12.6.3-560.35.05-1_amd64.deb
-# sudo dpkg -i cuda-repo-ubuntu2204-12-6-local_12.6.3-560.35.05-1_amd64.deb
-# sudo cp /var/cuda-repo-ubuntu2204-12-6-local/cuda-*-keyring.gpg /usr/share/keyrings/
-# sudo apt-get update
-# sudo apt-get -y install cuda-toolkit-12-6
-# sudo apt-get install -y nvidia-open
-
-
-# echo "Installing ARM64 (Apple Mac, Pi, etc.)... \r\n "
-# curl -L https://ollama.com/download/ollama-linux-arm64.tgz -o ollama-linux-arm64.tgz
-# sudo tar -C /usr -xzf ollama-linux-arm64.tgz
-
 
 
 echo "
