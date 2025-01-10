@@ -18,7 +18,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.17
+Version:  0.0.18
 Last Updated:  1/10/2025
 
 
@@ -52,11 +52,23 @@ ollama -v
 echo "
 
 
-Installing AMD GPU Drivers...
+Downloading and Installing AMD GPU Drivers...
+
 
 "
 curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
 sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
+
+echo "
+
+
+Deleting Temp download...
+
+
+"
+rm ollama-linux-amd64-rocm.tgz
+
+
 
 
 #echo "Installing Nvidia CUDA Drivers... \r\n \r\n "
