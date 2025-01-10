@@ -21,6 +21,13 @@ Version:  0.0.12
 Last Updated:  1/10/2025
 
 
+Install:
+    wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
+
+
+Recommended (after):
+    wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
+
 "
 #--------------------------------------------------------------------------------------------
 # Install & Update Ollama to latest version using:
@@ -31,11 +38,11 @@ ollama list
 
 #-- good for Text
 ollama pull llama3.2        # 3b    - Meta
-#ollama pull gemma2:2b      # 2b    - Google
 ollama pull gemma2:9b       # 9b    - Google
+#ollama pull gemma2:2b      # 2b    - Google
 ollama pull phi3.5          # 3.8b  - Microsoft
 #ollama pull phi4           # 14b   - Microsoft
-#ollama run mistral         # 7b    - Apache
+ollama run mistral         # 7b    - Apache
 #ollama run qwen:7b         # 7b  (from 0.5b - 110b) - Alibaba Cloud
 #ollama run tinyllama       # 1.1b
 #ollama run nemotron-mini   # 4b - Nvidia
