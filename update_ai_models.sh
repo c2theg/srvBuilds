@@ -30,7 +30,7 @@ Crontab:
 "
 
 ollama --version
-service ollama status
+# service ollama status
 
 
 echo "\r\n \r\n \r\n"
