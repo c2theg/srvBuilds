@@ -88,14 +88,38 @@ rm ollama-linux-amd64-rocm.tgz
 # https://ollama.com/search
 
 ollama list
+echo "
 
+"
 
 #-- good for Text
+echo "
+
+Downloading llama3.2...
+
+"
 ollama pull llama3.2        # 3b    - Meta
+echo "
+
+Downloading gemma2:9b
+
+"
 ollama pull gemma2:9b       # 9b    - Google
 #ollama pull gemma2:2b      # 2b    - Google
+
+echo "
+
+Downloading phi3.5...
+
+"
 ollama pull phi3.5          # 3.8b  - Microsoft
 #ollama pull phi4           # 14b   - Microsoft
+
+echo "
+
+Downloading mistral...
+
+"
 ollama pull mistral         # 7b    - Apache
 #ollama run qwen:7b         # 7b  (from 0.5b - 110b) - Alibaba Cloud
 #ollama run tinyllama       # 1.1b
@@ -107,20 +131,39 @@ ollama pull mistral         # 7b    - Apache
 
 #-- good for Images
 #ollama pull llama3.2-vision:11b    # 11b
+
+echo "
+
+Downloading llava:7b...
+
+"
 ollama pull llava:7b
 #ollama pull llava-llama3
 
 
 #--- EMBEDDINGS (RAG) -------
+echo "
+
+Downloading nomic-embed-text...
+
+"
 ollama pull nomic-embed-text
 #ollama pull mxbai-embed-large
 #ollama pull snowflake-arctic-embed
 
 
 #--- Security (Prompt) ----
+echo "
+
+Downloading llama-guard3t...
+
+"
 ollama pull llama-guard3   # 8b - Meta
 #ollama run shieldgemma    # 9b - Google
 
+echo "
+
+"
 ollama list
 
 #--- Install Python Packages ---
