@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.14
-Last Updated:  1/10/2025
+Version:  0.0.16
+Last Updated:  1/18/2025
 
 
 Install:
@@ -38,12 +38,16 @@ rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs
 curl -fsSL https://ollama.com/install.sh | sh
 
 echo "
+grep MemTotal /proc/meminfo
 
 
 Downloading and Installing AMD GPU Drivers...
 
-
 "
+
+lspci -k | grep -EA3 'VGA|3D|Display'
+lspci | grep VGA
+
 curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
 sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
 
@@ -57,7 +61,13 @@ Deleting Temp download...
 rm ollama-linux-amd64-rocm.tgz
 
 
-#echo "Installing Nvidia CUDA Drivers... \r\n \r\n "
+# echo "
+
+# Installing Nvidia CUDA Drivers...
+
+# lspci | grep -i nvidia
+
+# "
 # Nvidia CUDA - https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local
 # wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
 # sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
@@ -111,8 +121,6 @@ ollama pull nomic-embed-text
 ollama pull llama-guard3   # 8b - Meta
 #ollama run shieldgemma    # 9b - Google
 
-
-
 ollama list
 
 #--- Install Python Packages ---
@@ -125,9 +133,6 @@ pip3 install fastembed
 pip3 install sentence-transformers
 pip3 install elevenlabs
 
-pip3 install pandas
-pip3 install numpy
-
 #--- Vector Databases ---
 # Milvus lite (10k - 100k vectors)
 pip3 install milvus
@@ -136,6 +141,14 @@ pip3 install -U pymilvus
 #in memory vector database, single node
 pip3 install chromadb
 #-------------------------------
+pip3 install pandas
+pip3 install scikit-learn
+pip3 install tensorflow
+pip3 install matplotlib
+pip3 install seaborn
+pip3 install numpy
+
+#------------------------------
 ollama list
 ollama --version
 #service ollama status
