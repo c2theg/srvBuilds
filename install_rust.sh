@@ -45,12 +45,26 @@ cd hello_world
 
 #----- install libs ----------
 # https://tokio.rs/tokio/tutorial/setup
-cargo add tokio
 cargo add regex-syntax
 cargo add regex
 cargo add libc
 cargo add memchr
 
-#------ install programs ----------
+#------ install programs  https://crates.io/  ----------
 cargo install mini-redis
+cargo add base64
+cargo add rustls
+cargo add socket2
+cargo add tokio
+cargo add tokio-rustls
+cargo add h2
+cargo add bytes
+cargo add rustls-native-certs
 
+echo "
+
+
+DONE! 
+
+
+"
