@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.1
+Version:  0.0.3
 Last Updated:  1/22/2025
 
 
@@ -33,5 +33,6 @@ rm install_apc.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/ref
 
 apt install apcupsd -y
 # sudo nano /etc/apcupsd/apcupsd.conf
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/apcupsd.conf && mv apcupsd.conf /etc/apcupsd/apcupsd.conf
 sudo systemctl restart apcupsd
 apcaccess status
