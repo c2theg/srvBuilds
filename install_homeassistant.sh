@@ -29,6 +29,7 @@ Last Updated:  2/1/2025
 
 "
 
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_homeassistant.sh && chmod u+x install_homeassistant.sh
 
 apt update && apt upgrade -y
 dpkg --configure -a
