@@ -69,7 +69,8 @@ pip3 install homeassistant==2025.1.3
 hass
 
 #------------------------------
-wget homeassistanct_file
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/homeassistant
+# cd homeassistant /etc/init.d/homeassistant
 #------------------------------
 
 
