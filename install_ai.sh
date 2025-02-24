@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.20
+Version:  0.0.21
 Last Updated:  2/24/2025
 
 
@@ -241,7 +241,7 @@ pip3 install pyro-ppl # -> https://pyro.ai/examples/intro_long.html
 pip3 install opencv-python # https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
 # Darknet # https://github.com/mdv3101/darknet-yolov3 |  https://pjreddie.com/darknet/
 # pip3 install YOLOv3 # -> https://pjreddie.com/darknet/yolo/ | https://viso.ai/deep-learning/yolov3-overview/
-
+# pip3 install yolo-v4 #-> https://github.com/philipperemy/python-darknet-yolo-v4
 
 
 #-----------------------------
