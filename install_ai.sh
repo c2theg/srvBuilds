@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.16
-Last Updated:  1/18/2025
+Version:  0.0.17
+Last Updated:  2/24/2025
 
 
 Install:
@@ -183,15 +183,50 @@ pip3 install milvus
 pip3 install -U pymilvus
 #in memory vector database, single node
 pip3 install chromadb
-#-------------------------------
-pip3 install pandas
-pip3 install scikit-learn
-pip3 install tensorflow
+#------- Install Data Science libs -------
 pip3 install matplotlib
-pip3 install seaborn
 pip3 install numpy
+pip3 install pandas
+pip3 install scipy
+python -m pip install "dask[complete]"
 
-#------------------------------
+#- visuals -
+pip3 install bokeh # https://bokeh.org/
+pip3 install seaborn # https://seaborn.pydata.org/installing.html
+pip3 install plotly # https://plotly.com/python/getting-started/
+
+
+#------- Install Machine Learning libs -------
+pip3 install tensorflow
+pip3 install scikit-learn
+pip3 install torch torchvision
+
+#pip3 install catboost
+# LightGBM -> https://lightgbm.readthedocs.io/en/stable/Installation-Guide.html
+pip3 install keras # Yolo3 requirement
+#pip3 install gym  # -> https://github.com/openai/gym
+#pip3 install xgboost # -> https://xgboost.readthedocs.io/en/stable/install.html
+
+
+#------- Generative AI -------
+pip3 install dalle2-pytorch # -> https://github.com/lucidrains/DALLE2-pytorch
+pip3 install pyro-ppl # -> https://pyro.ai/examples/intro_long.html
+#pip3 install glm_saga # -> https://pytorch.org/blog/empowering-models-performance/
+# pip install imageai --upgrade   |  ImageAI #-> https://imageai.readthedocs.io/en/latest/#:~:text=ImageAI%20is%20a%20python%20library,and%20few%20lines%20of%20code.
+# StyleGen #-> https://github.com/NVlabs/stylegan2
+#pip3 install flax # -> https://flax.readthedocs.io/en/latest/
+#pip3 install -U jax # -> Many Install options depending on hardware -> https://github.com/jax-ml/jax
+# NeRF -> https://github.com/bmild/nerf
+
+
+#-- Computer Vision / Real-Time Object Detection --
+pip3 install opencv-python # https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
+# Darknet # https://github.com/mdv3101/darknet-yolov3 |  https://pjreddie.com/darknet/
+# pip3 install YOLOv3 # -> https://pjreddie.com/darknet/yolo/ | https://viso.ai/deep-learning/yolov3-overview/
+
+
+
+#-----------------------------
 ollama list
 ollama --version
 #service ollama status
