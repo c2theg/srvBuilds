@@ -100,6 +100,12 @@ Downloading DeepSeek-R1-Distill-Llama-8B ...
 "
 ollama run deepseek-r1:8b
 
+echo "
+
+DeepSeek-R1-Distill-Qwen-7B (Alibaba Cloud)
+
+"
+# ollama run deepseek-r1:7b
 
 echo "
 
@@ -136,15 +142,6 @@ ollama pull mistral         # 7b    - Apache
 #ollama run llama3-chatqa     # 8b - Nvidia - ChatQA
 #ollama run granite3-dense:8b # 8b - IBM RAG
 
-
-
-
-echo "
-
-DeepSeek-R1-Distill-Qwen-7B
-
-"
-# ollama run deepseek-r1:7b
 
 
 #-- good for Images
@@ -214,6 +211,7 @@ pip3 install seaborn # https://seaborn.pydata.org/installing.html
 pip3 install plotly # https://plotly.com/python/getting-started/
 
 
+
 #------- Install Machine Learning libs -------
 pip3 install tensorflow
 pip3 install scikit-learn
@@ -224,6 +222,7 @@ pip3 install torch torchvision
 pip3 install keras # Yolo3 requirement
 #pip3 install gym  # -> https://github.com/openai/gym
 #pip3 install xgboost # -> https://xgboost.readthedocs.io/en/stable/install.html
+
 
 
 #------- Generative AI -------
@@ -237,7 +236,8 @@ pip3 install pyro-ppl # -> https://pyro.ai/examples/intro_long.html
 # NeRF -> https://github.com/bmild/nerf
 
 
-#-- Computer Vision / Real-Time Object Detection --
+
+#------- Computer Vision / Real-Time Object Detection -------
 pip3 install opencv-python # https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
 # Darknet # https://github.com/mdv3101/darknet-yolov3 |  https://pjreddie.com/darknet/
 # pip3 install YOLOv3 # -> https://pjreddie.com/darknet/yolo/ | https://viso.ai/deep-learning/yolov3-overview/
