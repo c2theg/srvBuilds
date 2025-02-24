@@ -137,6 +137,16 @@ ollama pull mistral         # 7b    - Apache
 #ollama run granite3-dense:8b # 8b - IBM RAG
 
 
+
+
+echo "
+
+DeepSeek-R1-Distill-Qwen-7B
+
+"
+# ollama run deepseek-r1:7b
+
+
 #-- good for Images
 #ollama pull llama3.2-vision:11b    # 11b
 
