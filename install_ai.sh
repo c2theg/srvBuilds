@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.17
+Version:  0.0.20
 Last Updated:  2/24/2025
 
 
