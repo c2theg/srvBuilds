@@ -95,6 +95,14 @@ echo "
 #-- good for Text
 echo "
 
+Downloading DeepSeek-R1-Distill-Llama-8B ...
+
+"
+ollama run deepseek-r1:8b
+
+
+echo "
+
 Downloading llama3.2...
 
 "
