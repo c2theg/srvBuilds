@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.21
-Last Updated:  2/24/2025
+Version:  0.0.22
+Last Updated:  2/25/2025
 
 
 Install:
@@ -242,6 +242,10 @@ pip3 install opencv-python # https://docs.opencv.org/4.x/d6/d00/tutorial_py_root
 # Darknet # https://github.com/mdv3101/darknet-yolov3 |  https://pjreddie.com/darknet/
 # pip3 install YOLOv3 # -> https://pjreddie.com/darknet/yolo/ | https://viso.ai/deep-learning/yolov3-overview/
 # pip3 install yolo-v4 #-> https://github.com/philipperemy/python-darknet-yolo-v4
+
+
+#- https://huggingface.co/datasets?task_categories=task_categories%3Aimage-to-text
+# google/imageinwords  # https://huggingface.co/datasets/google/imageinwords
 
 
 #-----------------------------
