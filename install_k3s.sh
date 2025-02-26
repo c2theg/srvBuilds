@@ -29,7 +29,7 @@ Install:
 Sources:
     https://www.digitalocean.com/community/tutorials/how-to-setup-k3s-kubernetes-cluster-on-ubuntu
     https://docs.k3s.io/quick-start
-
+    https://www.youtube.com/watch?v=X9fSMGkjtug
   
 "
 
