@@ -40,6 +40,9 @@ rm install_k3s.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/ref
 # https://docs.k3s.io/datastore/cluster-loadbalancer?ext-load-balancer=HAProxy
 sudo apt-get install haproxy keepalived -y
 
+#-- download haproxy configs --
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/haproxy-k3s.cfg
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/haproxy-keepalived-k3s.cfg
 
 
 
