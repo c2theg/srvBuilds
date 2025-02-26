@@ -44,6 +44,12 @@ sudo apt-get install haproxy keepalived -y
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/haproxy-k3s.cfg
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/haproxy-keepalived-k3s.cfg
 
+cp haproxy-k3s.cfg /etc/haproxy/haproxy.cfg
+cp haproxy-keepalived-k3s.cfg /etc/keepalived/keepalived.conf
+
+wait 5
+systemctl restart haproxy
+systemctl restart keepalived
 
 
 echo "Un REM the install you want to do "
@@ -72,9 +78,7 @@ echo "Un REM the install you want to do "
 #  --tls-san=<FIXED_IP> # Optional, needed if using a fixed registration address
 
   
-
-
-wait(10)
+wait 5
 systemctl status k3s
 
 sudo kubectl get all -n kube-system
