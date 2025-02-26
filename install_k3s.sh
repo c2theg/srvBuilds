@@ -51,6 +51,12 @@ echo "Un REM the install you want to do "
 # curl -sfL https://get.k3s.io | K3S_URL=https://myserver:6443 K3S_TOKEN=mynodetoken sh -
 
 
+#--- High Availability Embedded etcd  -  https://docs.k3s.io/datastore/ha-embedded  ---
+# curl -sfL https://get.k3s.io | K3S_TOKEN=SECRET sh -s - server \
+#    --cluster-init \
+#    --tls-san=<FIXED_IP> # Optional, needed if using a fixed registration address
+
+
 
 
 
