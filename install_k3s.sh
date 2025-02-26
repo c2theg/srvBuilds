@@ -37,6 +37,12 @@ Sources:
 rm install_k3s.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_k3s.sh && chmod u+x install_k3s.sh
 
 #--------------------------------------------------------------------------------------------
+# https://docs.k3s.io/datastore/cluster-loadbalancer?ext-load-balancer=HAProxy
+sudo apt-get install haproxy keepalived -y
+
+
+
+
 echo "Un REM the install you want to do "
 
 #--- Install on Master / Primary Node ---
@@ -56,8 +62,13 @@ echo "Un REM the install you want to do "
 #    --cluster-init \
 #    --tls-san=<FIXED_IP> # Optional, needed if using a fixed registration address
 
+#--- High Availability External DB -  https://docs.k3s.io/datastore/ha  ---
+#curl -sfL https://get.k3s.io | sh -s - server \
+#  --token=SECRET \
+#  --datastore-endpoint="mysql://username:password@tcp(hostname:3306)/database-name" \
+#  --tls-san=<FIXED_IP> # Optional, needed if using a fixed registration address
 
-
+  
 
 
 wait(10)
