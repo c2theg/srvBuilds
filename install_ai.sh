@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.22
-Last Updated:  2/25/2025
+Version:  0.0.23
+Last Updated:  3/7/2025
 
 
 Install:
@@ -260,3 +260,26 @@ ollama --version
 # docker pull ghcr.io/open-webui/open-webui:main
 # docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
 # Access it from the hostip:8080
+
+
+
+#------ RAG ------------
+#--- Malvius ----
+# https://milvus.io/docs/install_standalone-docker.md
+
+# apt-get install fio -y
+# mkdir test-data fio --rw=write --ioengine=sync --fdatasync=1 --directory=test-data --size=2200m --bs=2300 --name=mytest
+# curl -sfL https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh -o standalone_embed.sh
+# bash standalone_embed.sh start
+# Stop Milvus
+# bash standalone_embed.sh stop
+# Delete Milvus data
+# bash standalone_embed.sh delete
+
+# upgrade Milvus
+# bash standalone_embed.sh upgrade
+pip3 install -U pymilvus
+
+
+
+
