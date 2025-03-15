@@ -29,6 +29,8 @@ First time setup / downloads
 https://konstakang.com/devices/rpi5/
 https://konstakang.com/devices/rpi5/LineageOS22/
 
+Resize the OS
+https://app.filen.io/#/d/359e14ab-fe03-4fa5-8382-d8bab79de308%23OcYCkizytCC8RXhUGHoeP1c3ejocPZDr
 
 
 Widevine L3 - for Netflix, Spotify etc.
