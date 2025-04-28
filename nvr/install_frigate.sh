@@ -18,9 +18,11 @@ sudo apt-get install -y apt-transport-https software-properties-common ca-certif
 # - Recommend installing all updates first
 # wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh && ./update_ubuntu14.04.sh
 
-
 # Install Docker first! 
 # wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
+
+docker --version
+docker-compose -v
 
 #--- create dir structure ---
 mkdir -p /media/frigate/config
@@ -34,6 +36,7 @@ mkdir -p /dev/shm
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/nvr/frigate_docker-compose.yml
 cp frigate_docker-compose.yml docker-compose.yml
 
-# docker compose up
-docker-compose -f docker-compose.yml up --remove-orphans
+# docker-compose -f docker-compose.yml up --remove-orphans
+docker compose up
 
+docker image prune -f
