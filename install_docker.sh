@@ -14,25 +14,34 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
-Version:  1.5.11                             \r\n
-Last Updated:  1/26/2023
+
+
+Version:  1.5.15
+Last Updated:  4/28/2025
 
 "
-echo "Downloading required dependencies...\r\n\r\n"
+echo "Downloading required dependencies...
+
+"
 #--------------------------------------------------------------------------------------------
-# Source: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04
-sudo apt-get install -y apt-transport-https software-properties-common ca-certificates
+# Source: 
+#   https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04
+#   https://docs.docker.com/engine/install/ubuntu/
+
+sudo apt-get update
+sudo apt-get install -y apt-transport-https software-properties-common ca-certificates curl
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
 # curl -fsSL https://get.docker.com/ | sh
 sudo -E apt-get update
-apt-cache policy docker-ce
-sudo -E apt-get install -y docker-ce
-sudo -E apt install -y docker-compose
+#apt-cache policy docker-ce
+#sudo -E apt-get install -y docker-ce
+#sudo -E apt install -y docker-compose
 
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo -E apt install -y docker-compose
 #-------------------------------------
 sudo systemctl start docker
 #sudo systemctl status docker
@@ -40,6 +49,8 @@ sudo systemctl enable docker
 #wait
 #sudo systemctl status docker
 
+docker --version
+docker-compose -v
 
 #-------------------------------------
 docker pull portainer/portainer-ce:latest
