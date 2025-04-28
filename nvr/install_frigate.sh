@@ -61,7 +61,8 @@ You WILL need to edit the file:
 
 
 
-Once your done, start by using: 'docker compose up'  
+Once your done, start by using: 'docker compose up'
+ONCE you know your config works correctly. Auto start docker compose on startup with:  'docker compose up -d'
 
 
 Visit Frigate at:  <IP-Address>:5000
@@ -70,8 +71,5 @@ Visit Frigate at:  <IP-Address>:5000
 -- starting anyway - use: ctrl+c to stop containers
 
 
-
 "
-
-
 docker compose up
