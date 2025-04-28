@@ -6,6 +6,7 @@
 #       https://docs.frigate.video/configuration/#common-configuration-examples
 #       https://docs.frigate.video/configuration/cameras
 #       https://docs.frigate.video/configuration/camera_specific/
+#       https://docs.frigate.video/configuration/object_detectors/
 #-------------------------------------------------------------------------
 
 mqtt:
@@ -39,7 +40,7 @@ detectors:
 
 
 record:
-  enabled: True
+  enabled: False
   retain:
     days: 7
     mode: motion
@@ -50,10 +51,12 @@ record:
     retain:
       days: 30
 
+
 snapshots:
-  enabled: True
+  enabled: False
   retain:
     default: 30
+
 
 cameras:
   driveway_cam: # <------ Name the camera
@@ -61,11 +64,11 @@ cameras:
     ffmpeg:
       inputs:
 #        - path: rtsp://192.168.1.10:554/rtsp # <----- The stream you want to use for detection
-        - path: rtsp://USERNAME:PASSWORD@192.168.1.10:554/cam/realmonitor?channel=1&subtype=2 # higher end cameras support a third stream with a mid resolution (1280x720, 1920x1080) # <----- Add stream you want to record from
+        - path: rtsp://USERNAME:PASSWORD@192.168.1.10:554/cam/realmonitor?channel=1&subtype=0 # higher end cameras support a third stream with a mid resolution (1280x720, 1920x1080) # <----- Add stream you want to record from
           roles:
             - detect
 
-        - path: rtsp://USERNAME:PASSWORD@192.168.1.10:554/cam/realmonitor?channel=1&subtype=2 # higher end cameras support a third stream with a mid resolution (1280x720, 1920x1080) # <----- Add stream you want to record from
+        - path: rtsp://USERNAME:PASSWORD@192.168.1.10:554/cam/realmonitor?channel=1&subtype=0 # higher end cameras support a third stream with a mid resolution (1280x720, 1920x1080) # <----- Add stream you want to record from
           roles:
             - record
 
@@ -76,12 +79,11 @@ cameras:
       fps: 5
 
     record: # <----- Enable recording
-      enabled: True
+      enabled: False
 
-    motion:
-      mask:
-        - 0,461,3,0,1919,0,1919,843,1699,492,1344,458,1346,336,973,317,869,375,866,432
-
+#    motion:
+#      mask:
+#        - 0,461,3,0,1919,0,1919,843,1699,492,1344,458,1346,336,973,317,869,375,866,432
 
 
 #-------------------------------------------------------------------------
