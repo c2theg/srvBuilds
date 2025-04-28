@@ -1,13 +1,94 @@
+#   By: Chris Gray
+#   Version 0.0.20
+#   Updated: 4/27/2025
+#
+#   Source:
+#       https://docs.frigate.video/configuration/#common-configuration-examples
+#       https://docs.frigate.video/configuration/cameras
+#       https://docs.frigate.video/configuration/camera_specific/
+#-------------------------------------------------------------------------
+
 mqtt:
   enabled: False
+  #host: 192.168.X.X # <---- same mqtt broker that home assistant uses
+  #host: core-mosquitto
+  #user: mqtt-user
+  #password: xxxxxxxxxx
+
+
+ffmpeg:
+  hwaccel_args: preset-vaapi         # Intel MiniPC
+#  hwaccel_args: preset-rpi-64-h264  # <-- Raspberry Pi
+
+
+detectors:
+  coral:
+    type: edgetpu
+    device: usb
+#  ov:
+#    type: openvino
+#    device: AUTO
+
+# model:
+#   width: 300
+#   height: 300
+#   input_tensor: nhwc
+#   input_pixel_format: bgr
+#   path: /openvino-model/ssdlite_mobilenet_v2.xml
+#   labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+
+
+record:
+  enabled: True
+  retain:
+    days: 7
+    mode: motion
+  alerts:
+    retain:
+      days: 30
+  detections:
+    retain:
+      days: 30
+
+snapshots:
+  enabled: True
+  retain:
+    default: 30
 
 cameras:
-  name_of_your_camera: # <------ Name the camera
+  driveway_cam: # <------ Name the camera
     enabled: True
     ffmpeg:
       inputs:
-        - path: rtsp://192.168.1.10:554/rtsp # <----- The stream you want to use for detection
+#        - path: rtsp://192.168.1.10:554/rtsp # <----- The stream you want to use for detection
+        - path: rtsp://USERNAME:PASSWORD@192.168.1.10:554/cam/realmonitor?channel=1&subtype=2 # higher end cameras support a third stream with a mid resolution (1280x720, 1920x1080) # <----- Add stream you want to record from
           roles:
             - detect
+
+        - path: rtsp://USERNAME:PASSWORD@192.168.1.10:554/cam/realmonitor?channel=1&subtype=2 # higher end cameras support a third stream with a mid resolution (1280x720, 1920x1080) # <----- Add stream you want to record from
+          roles:
+            - record
+
     detect:
       enabled: False # <---- disable detection until you have a working camera feed
+      width: 1280
+      height: 720
+      fps: 5
+
+    record: # <----- Enable recording
+      enabled: True
+
+    motion:
+      mask:
+        - 0,461,3,0,1919,0,1919,843,1699,492,1344,458,1346,336,973,317,869,375,866,432
+
+
+
+#-------------------------------------------------------------------------
+camera_groups:
+  front:
+    cameras:
+      - driveway_cam
+#      - garage_cam
+    icon: LuCar
+    order: 0
