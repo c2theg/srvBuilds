@@ -7,6 +7,10 @@
 #  Sources:
 #		https://docs.frigate.video/frigate/installation/
 #
+#
+#	Install This:
+#	    wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/nvr/install_frigate.sh && chmod u+x install_frigate.sh && ./install_frigate.sh
+#
 #---------------------------
 sudo apt-get update && apt-get upgrade -y
 sudo apt-get install -y apt-transport-https software-properties-common ca-certificates
@@ -29,5 +33,7 @@ mkdir -p /dev/shm
 #----- setup frigate docker container ------
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/nvr/frigate_docker-compose.yml
 cp frigate_docker-compose.yml docker-compose.yml
-#   docker compose up
+
+# docker compose up
 docker-compose -f docker-compose.yml up --remove-orphans
+
