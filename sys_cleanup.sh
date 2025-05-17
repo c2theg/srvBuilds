@@ -33,7 +33,7 @@ crontab -e
 /etc/init.d/cron restart
 
 "
-
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
 
 # Remove bad package
 #   rm /var/lib/dpkg/info/some-package*
