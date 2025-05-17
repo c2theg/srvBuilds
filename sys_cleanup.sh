@@ -31,9 +31,16 @@ crontab -e
 (Save and close) - Ctrl + X,  then Save ( y ), then Enter key
 
 /etc/init.d/cron restart
+--- DNS Error ---
+If you get the error:  (raw.githubusercontent.com)... failed: Temporary failure in name resolution.
+
+Do the following:
+    cd / 
+
 
 "
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
+
+rm sys_cleanup.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
 
 # Remove bad package
 #   rm /var/lib/dpkg/info/some-package*
