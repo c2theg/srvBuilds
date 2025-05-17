@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.8                             \r\n
-Last Updated:  4/1/2024
+Version:  1.9.9                             \r\n
+Last Updated:  5/16/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 
@@ -33,16 +33,7 @@ crontab -e
 /etc/init.d/cron restart
 
 "
-#--------------------------------------------------------------------------------------------
-sudo apt-get autoremove
-#sudo apt-get --purge remove  # Removes important software in Ubuntu 22.04. do not use! (zpool, netplan)
-sudo apt-get autoclean
-sudo apt-get -f install
-sudo apt-get update
-sudo apt-get upgrade -y
-sudo apt-get dist-upgrade -y
-sudo dpkg-reconfigure -a
-sudo dpkg --configure -a
+
 
 # Remove bad package
 #   rm /var/lib/dpkg/info/some-package*
@@ -67,20 +58,20 @@ dpkg --list | grep linux-image | awk '{ print $2 }' | sort -V | sed -n '/'`uname
 wait
 dpkg --list | grep linux-image-extra | awk '{ print $2 }' | sort -V | sed -n '/'`uname -r`'/q;p' | xargs sudo apt-get -y purge
 wait
-sudo update-grub2
-wait
-sudo apt-get -f install
-wait
-sudo apt-get autoclean -y
-wait
-sudo apt-get clean -y
-wait
-sudo apt-get autoremove -y
-wait
-sudo apt-get -f install
-wait
-sudo dpkg --configure -a
-wait
+#sudo update-grub2
+#wait
+#sudo apt-get -f install
+#wait
+#sudo apt-get autoclean -y
+#wait
+#sudo apt-get clean -y
+#wait
+#sudo apt-get autoremove -y
+#wait
+#sudo apt-get -f install
+#wait
+#sudo dpkg --configure -a
+#wait
 sudo update-grub2
 wait
 #sudo -E apt-get update
@@ -223,21 +214,25 @@ rm -rf /var/log/letsencrypt/letsencrypt.log.*
 
 /etc/init.d/nginx restart
 #------- PI-Hole / DNS releated ----------
-#pihole -f
-#wait
-#sudo service pihole-FTL stop
-#sudo service dnsmasq stop
-#rm /var/log/dmesg.*
-#rm /var/log/pihole.log.*
-#rm /var/log/pihole-FTL.log.*
+pihole -f
+wait
+sudo service pihole-FTL stop
+sudo service dnsmasq stop
+rm /var/log/dmesg.*
+
+rm /var/log/pihole/webserver.log.*
+rm /var/log/pihole/pihole.log.*
+rm /var/log/pihole/FTL.log.*
+rm /var/log/pihole/pihole_updateGravity.log
+
 #kill $(lsof -t -i:53)
 #wait
 #/etc/init.d/lighttpd restart
-#/etc/init.d/dnsmasq restart
-#sudo service dnsmasq start
-#wait
-#sudo service pihole-FTL start
-#sudo systemctl restart pihole-FTL
+/etc/init.d/dnsmasq restart
+sudo service dnsmasq start
+wait
+sudo service pihole-FTL start
+sudo systemctl restart pihole-FTL
 #-------
 #sudo service lighttpd status
 #sudo service dnsmasq status
@@ -307,3 +302,16 @@ sudo lsof | grep deleted
 
 #du -ah / | sort -nr | head -n 10
 echo "\r\n \r\n Your best option is to restart the server to release these files... \r\n \r\n"
+
+
+
+#--------------------------------------------------------------------------------------------
+sudo apt-get autoremove
+#sudo apt-get --purge remove  # Removes important software in Ubuntu 22.04. do not use! (zpool, netplan)
+sudo apt-get autoclean
+sudo apt-get -f install
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt-get dist-upgrade -y
+sudo dpkg-reconfigure -a
+sudo dpkg --configure -a
