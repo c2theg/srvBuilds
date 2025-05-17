@@ -310,8 +310,6 @@ sudo lsof | grep deleted
 #du -ah / | sort -nr | head -n 10
 echo "\r\n \r\n Your best option is to restart the server to release these files... \r\n \r\n"
 
-
-
 #--------------------------------------------------------------------------------------------
 sudo apt-get autoremove
 #sudo apt-get --purge remove  # Removes important software in Ubuntu 22.04. do not use! (zpool, netplan)
@@ -320,5 +318,8 @@ sudo apt-get -f install
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get dist-upgrade -y
-sudo dpkg-reconfigure -a
+#sudo dpkg-reconfigure -a
 sudo dpkg --configure -a
+
+
+echo "\r\n \r\n Your best option is to restart the server to release these files...  \r\n DONE! \r\n \r\n"
