@@ -172,7 +172,7 @@ fi
 
 if [ -d "/var/log/redis/" ]; then
     rm /var/log/redis/*
-    /etc/init.d/redis-server restart
+    #/etc/init.d/redis-server restart
 fi
 #rm /var/log/neo4j/*
 
