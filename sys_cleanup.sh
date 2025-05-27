@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.12                             \r\n
+Version:  1.9.13                             \r\n
 Last Updated:  5/27/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
@@ -149,10 +149,12 @@ rm /var/log/syslog.*
 rm /var/log/user.log.*
 rm /var/log/auth.log
 rm /var/log/auth.log.*
-rm /var/log/clamav/clamav.log.*
-rm /var/log/clamav/freshclam.log.*
 rm /var/log/fail2ban.log.*
-#rm /var/log/letsencrypt/letsencrypt.log.*
+
+if [ -d "/var/log/clamav/" ]; then
+    rm /var/log/clamav/clamav.log.*
+    rm /var/log/clamav/freshclam.log.*
+fi
 #------ DBs ----------------------------------------------------------
 if [ -d "/var/log/mongodb/" ]; then
      rm -rf /var/log/mysql/*
@@ -286,9 +288,7 @@ if [ -d "/var/log/pihole/" ]; then
     
     rm /var/log/update_blocklists_local_servers.log
     #rm /var/log/update_pihole_lists.log
-
 fi
-
 
 #---------- MISC ------------------------------------------------------
 rm /var/log/update_core.log
