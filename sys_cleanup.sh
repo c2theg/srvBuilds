@@ -347,7 +347,7 @@ echo "\r\n \r\n Your best option is to restart the server to release these files
 sudo apt-get autoremove
 #sudo apt-get --purge remove  # Removes important software in Ubuntu 22.04. do not use! (zpool, netplan)
 sudo apt-get autoclean
-sudo apt-get -f install
+sudo apt-get -f install -y
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get dist-upgrade -y
