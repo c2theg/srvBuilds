@@ -38,7 +38,14 @@ Do the following:
     cd / 
 "
 
-rm sys_cleanup.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
+#--- self updating ---
+if test -f "/root/sys_cleanup.sh"; then
+  #echo "File exists"
+  rm sys_cleanup.sh
+fi
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
+#--- end self updating ---
+
 
 # Remove bad package
 #   rm /var/lib/dpkg/info/some-package*
