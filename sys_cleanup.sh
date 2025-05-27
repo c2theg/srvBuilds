@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.13                             \r\n
+Version:  1.9.14                             \r\n
 Last Updated:  5/27/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
@@ -48,13 +48,11 @@ sudo du -sh /var/cache/apt
 
 sudo apt-get clean
 
-
 sudo rm /var/lib/apt/lists/lock
 sudo rm /var/cache/apt/archives/lock
 sudo rm /var/lib/dpkg/lock
 
 echo " --- Running System cleanup...  
-
 
 "
 sudo df -h
@@ -142,8 +140,6 @@ if [ -d "/var/log/samba/" ]; then
 fi
 
 rm /var/log/apcupsd.events
-
-rm /var/log/install_clamav.log
 #------ Security ----------------------------------------------------------
 rm /var/log/syslog.*
 rm /var/log/user.log.*
@@ -154,6 +150,7 @@ rm /var/log/fail2ban.log.*
 if [ -d "/var/log/clamav/" ]; then
     rm /var/log/clamav/clamav.log.*
     rm /var/log/clamav/freshclam.log.*
+    rm /var/log/install_clamav.log
 fi
 #------ DBs ----------------------------------------------------------
 if [ -d "/var/log/mongodb/" ]; then
@@ -176,6 +173,7 @@ if [ -d "/var/log/redis/" ]; then
     rm /var/log/redis/*
     #/etc/init.d/redis-server restart
 fi
+
 #rm /var/log/neo4j/*
 
 #------ ELK ----------------------------------------------------------
@@ -355,6 +353,5 @@ sudo apt-get upgrade -y
 sudo apt-get dist-upgrade -y
 #sudo dpkg-reconfigure -a
 sudo dpkg --configure -a
-
 
 echo "\r\n \r\n Your best option is to restart the server to release these files...  \r\n DONE! \r\n \r\n"
