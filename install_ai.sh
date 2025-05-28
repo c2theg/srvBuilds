@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.23
-Last Updated:  3/7/2025
+Version:  0.0.24
+Last Updated:  5/27/2025
 
 
 Install:
@@ -100,6 +100,7 @@ Downloading DeepSeek-R1-Distill-Llama-8B ...
 "
 ollama run deepseek-r1:8b
 
+
 echo "
 
 DeepSeek-R1-Distill-Qwen-7B (Alibaba Cloud)
@@ -109,39 +110,46 @@ DeepSeek-R1-Distill-Qwen-7B (Alibaba Cloud)
 
 echo "
 
-Downloading llama3.2...
+Downloading llama3.2:latest ...
 
 "
-ollama pull llama3.2        # 3b    - Meta
+ollama pull llama3.2:latest        # 3b    - Meta
+
 echo "
 
-Downloading gemma2:9b
 
+Downloading Gemma...
+   - https://ollama.com/library/gemma3
+   
 "
-ollama pull gemma2:9b       # 9b    - Google
+#ollama pull gemma2:9b       # 9b    - Google
 #ollama pull gemma2:2b      # 2b    - Google
 
+ollama pull gemma3:4b       # 4b
+#ollama pull gemma3:12b      # 12b
+
 echo "
 
-Downloading phi3.5...
+Downloading Phi...
 
 "
-ollama pull phi3.5          # 3.8b  - Microsoft
+#ollama pull phi3.5          # 3.8b  - Microsoft
 #ollama pull phi4           # 14b   - Microsoft
+ollama pull phi4-mini-reasoning  # 3.8b - Microsoft
+
 
 echo "
 
-Downloading mistral...
+Downloading Mistral...
 
 "
-ollama pull mistral         # 7b    - Apache
-#ollama run qwen:7b         # 7b  (from 0.5b - 110b) - Alibaba Cloud
-#ollama run tinyllama       # 1.1b
-#ollama run nemotron-mini   # 4b - Nvidia
-#ollama run mistral-nemo    # 12b - Mistral - Nvidia
+ollama pull llama3.2:latest   # 7b    - Apache
+#ollama run qwen:7b           # 7b  (from 0.5b - 110b) - Alibaba Cloud
+#ollama run tinyllama         # 1.1b
+#ollama run nemotron-mini     # 4b - Nvidia
+#ollama run mistral-nemo      # 12b - Mistral - Nvidia
 #ollama run llama3-chatqa     # 8b - Nvidia - ChatQA
 #ollama run granite3-dense:8b # 8b - IBM RAG
-
 
 
 #-- good for Images
@@ -173,8 +181,8 @@ echo "
 Downloading llama-guard3t...
 
 "
-ollama pull llama-guard3   # 8b - Meta
-#ollama run shieldgemma    # 9b - Google
+ollama pull llama-guard3:latest  # 8b - Meta
+#ollama run shieldgemma:latest   # 9b - Google
 
 echo "
 
