@@ -14,11 +14,19 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.7.2
-Last Updated:  9/21/2023
+Version:  0.7.4
+Last Updated:  5/28/2025
+
+
+--- add to crontab ---
+15 2 1 * * /root/sys_restart.sh > /var/log/sys_restart.log 2>&1
+
 
 "
 #--------------------------------------------------------------------------------------------
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_restart.sh && chmod u+x sys_restart.sh
+
+
 RandomNum=$(( $RANDOM % 10 + 40 ));
 echo "Waiting $RandomNum seconds before restarting... ";
 sleep $RandomNum;
