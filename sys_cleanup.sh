@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.14                             \r\n
+Version:  1.9.15                             \r\n
 Last Updated:  5/27/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
@@ -27,6 +27,9 @@ Add to Crontab: (Every Sunday at 2:10 AM)
 crontab -e
 
 10 2 * * 7 /home/ubuntu/sys_cleanup.sh
+  # - or -
+10 2 * * 7 /root/sys_cleanup.sh
+
 
 (Save and close) - Ctrl + X,  then Save ( y ), then Enter key
 
@@ -160,7 +163,7 @@ if [ -d "/var/log/clamav/" ]; then
     rm /var/log/install_clamav.log
 fi
 #------ DBs ----------------------------------------------------------
-if [ -d "/var/log/mongodb/" ]; then
+if [ -d "/var/log/mysql/" ]; then
      rm -rf /var/log/mysql/*
      rm /var/log/mysql.log.*
      rm /var/log/mysql/mysql_error.log
@@ -306,7 +309,7 @@ rm /var/log/cloud-init.log
 #--- Resilio ---
 if [ -d "/var/lib/resilio-sync/" ]; then
     rm /var/lib/resilio-sync/sync.log
-    rm /var/lib/resilio-sync/sync.log.*
+    rm /var/lib/resilio-sync/sync.log.*  
 fi
 
 #----- DOCKER ------
@@ -319,6 +322,19 @@ if [ -d "/var/lib/resilio-sync/" ]; then
     rm /var/lib/docker/containers/*/*.log
 fi
 #----- End Docker ------
+
+#----- AI - Ollama ------
+if [ -d "/usr/share/ollama/.ollama/models/blobs/" ]; then
+    echo "Deleting old OLLAMA Models... "
+    # ollama list | awk 'NR>2 {print $1}' | xargs -I {} ollama rm {}
+
+    TARGET_DIR="/usr/share/ollama/.ollama/models/blobs"
+    # Find and delete files older than 90 days
+    find "$TARGET_DIR" -type f -mtime +90 -exec rm -f {} \;
+fi
+
+
+
 history -c
 
 echo " -------------- Done Cleaning system -------- "
