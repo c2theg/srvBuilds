@@ -313,7 +313,7 @@ if [ -d "/var/lib/resilio-sync/" ]; then
 fi
 
 #----- DOCKER ------
-if [ -d "/var/lib/resilio-sync/" ]; then
+if [ -d "/var/lib/docker/" ]; then
     # Clean up old containers before images..
     docker system prune -f
     docker image prune -f 
