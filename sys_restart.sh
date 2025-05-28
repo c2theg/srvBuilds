@@ -14,7 +14,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.7.4
+Version:  0.7.5
 Last Updated:  5/28/2025
 
 
@@ -24,7 +24,14 @@ Last Updated:  5/28/2025
 
 "
 #--------------------------------------------------------------------------------------------
+#--- self updating ---
+if test -f "/root/sys_restart.sh"; then
+  #echo "File exists"
+  rm sys_restart.sh
+fi
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_restart.sh && chmod u+x sys_restart.sh
+#--- end self updating ---
+
 
 
 RandomNum=$(( $RANDOM % 10 + 40 ));
