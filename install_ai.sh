@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.26
+Version:  0.0.27
 Last Updated:  7/22/2025
 
 # https://ollama.com/search
@@ -100,8 +100,7 @@ echo "
 Downloading DeepSeek-R1-Distill-Llama-8B ...
 
 "
-
-ollama run deepseek-r1:latest   # deepseek-r1:8b
+#ollama pull deepseek-r1:latest   # deepseek-r1:8b
 
 
 echo "
@@ -109,9 +108,7 @@ echo "
 Qwen-8B (Alibaba Cloud)
 
 "
-# ollama run deepseek-r1:7b
-#ollama run qwen3:latest       # 8b  (from 0.5b - 110b) - Alibaba Cloud
-
+#ollama pull qwen3:latest       # 8b  (from 0.5b - 110b) - Alibaba Cloud
 
 
 echo "
@@ -120,7 +117,6 @@ Downloading llama3.2:latest ...
 
 "
 ollama pull llama3.2:latest        # 3b    - Meta
-# llama3.1:8b
 
 
 
@@ -131,6 +127,7 @@ Downloading Gemma...
    - https://ollama.com/library/gemma3
 
    7.5GB  32K
+   
 "
 ollama pull gemma3n:latest
 
@@ -140,9 +137,8 @@ echo "
 Downloading Phi...
 
 "
-#ollama pull phi3.5          # 3.8b  - Microsoft
 #ollama pull phi4           # 14b   - Microsoft
-ollama pull phi4-mini-reasoning  # 3.8b - Microsoft
+# ollama pull phi4-mini-reasoning  # 3.8b - Microsoft
 
 
 echo "
