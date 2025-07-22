@@ -17,8 +17,10 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.24
-Last Updated:  5/27/2025
+Version:  0.0.26
+Last Updated:  7/22/2025
+
+# https://ollama.com/search
 
 
 Install:
@@ -98,15 +100,19 @@ echo "
 Downloading DeepSeek-R1-Distill-Llama-8B ...
 
 "
-ollama run deepseek-r1:8b
+
+ollama run deepseek-r1:latest   # deepseek-r1:8b
 
 
 echo "
 
-DeepSeek-R1-Distill-Qwen-7B (Alibaba Cloud)
+Qwen-8B (Alibaba Cloud)
 
 "
 # ollama run deepseek-r1:7b
+#ollama run qwen3:latest       # 8b  (from 0.5b - 110b) - Alibaba Cloud
+
+
 
 echo "
 
@@ -114,19 +120,20 @@ Downloading llama3.2:latest ...
 
 "
 ollama pull llama3.2:latest        # 3b    - Meta
+# llama3.1:8b
+
+
 
 echo "
 
 
 Downloading Gemma...
    - https://ollama.com/library/gemma3
-   
-"
-#ollama pull gemma2:9b       # 9b    - Google
-#ollama pull gemma2:2b      # 2b    - Google
 
-ollama pull gemma3:4b       # 4b
-#ollama pull gemma3:12b      # 12b
+   7.5GB  32K
+"
+ollama pull gemma3n:latest
+
 
 echo "
 
@@ -143,8 +150,9 @@ echo "
 Downloading Mistral...
 
 "
-ollama pull llama3.2:latest   # 7b    - Apache
-#ollama run qwen:7b           # 7b  (from 0.5b - 110b) - Alibaba Cloud
+ollama pull mistral:7b
+
+#------------------------------------------------------------
 #ollama run tinyllama         # 1.1b
 #ollama run nemotron-mini     # 4b - Nvidia
 #ollama run mistral-nemo      # 12b - Mistral - Nvidia
@@ -155,12 +163,12 @@ ollama pull llama3.2:latest   # 7b    - Apache
 #-- good for Images
 #ollama pull llama3.2-vision:11b    # 11b
 
-echo "
+# echo "
 
-Downloading llava:7b...
+# Downloading llava:7b...
 
-"
-ollama pull llava:7b
+# "
+#ollama pull llava:7b
 #ollama pull llava-llama3
 
 
@@ -219,7 +227,6 @@ pip3 install seaborn # https://seaborn.pydata.org/installing.html
 pip3 install plotly # https://plotly.com/python/getting-started/
 
 
-
 #------- Install Machine Learning libs -------
 pip3 install tensorflow
 pip3 install scikit-learn
@@ -230,7 +237,6 @@ pip3 install torch torchvision
 pip3 install keras # Yolo3 requirement
 #pip3 install gym  # -> https://github.com/openai/gym
 #pip3 install xgboost # -> https://xgboost.readthedocs.io/en/stable/install.html
-
 
 
 #------- Generative AI -------
@@ -262,13 +268,16 @@ ollama --version
 #service ollama status
 
 #---- LLAMA Web UI --- https://github.com/open-webui/open-webui#troubleshooting
-# pip3 install open-webui
-# open-webui serve
+#pip3 install open-webui
+#open-webui serve
 # -- or docker version --
 # docker pull ghcr.io/open-webui/open-webui:main
-# docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
-# Access it from the hostip:8080
+docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+echo "
 
+Access it from the hostip:8080 
+
+"
 
 
 #------ RAG ------------
@@ -287,7 +296,3 @@ ollama --version
 # upgrade Milvus
 # bash standalone_embed.sh upgrade
 pip3 install -U pymilvus
-
-
-
-
