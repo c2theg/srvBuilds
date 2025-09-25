@@ -15,7 +15,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.22
+Version:  1.4.23
 Last Updated:  9/24/2025
 \r\n \r\n"
 #sudo -E apt-get update
@@ -76,6 +76,9 @@ pip3 install python-dotenv
 #pip3 install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
 #--- Web API stuff ----
 echo "Installing other PIP modules... https://hugovk.github.io/top-pypi-packages/ \r\n "
+
+pip3 install redis pymongo PyYAML psutil tldextract python-whois validators ping3 netaddr maxminddb certifi requests psutil
+
 
 pip3 install setuptools
 pip3 install requests
