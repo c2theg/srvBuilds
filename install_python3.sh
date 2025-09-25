@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.19
-Last Updated:  12/18/2024
+Version:  1.4.22
+Last Updated:  9/24/2025
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -51,15 +51,17 @@ sudo -E apt-get install -y python3-setuptools
 sudo -E apt-get install -y python3-pip 
 sudo -E apt-get install -y python3-venv
 sudo -E apt-get install -y python3-virtualenv
-sudo -E pip3 install virtualenv
 
 wait
 
 #virtualenv venv
 python3 -m venv DevEnv1
-source DevEnv1/bin/activate
-
 wait
+source DevEnv1/bin/activate
+wait
+
+#sudo -E pip3 install virtualenv
+
 pip install --upgrade pip
 pip3 install --upgrade pip
 python3 -m pip install --upgrade pip
@@ -74,17 +76,19 @@ pip3 install python-dotenv
 #pip3 install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
 #--- Web API stuff ----
 echo "Installing other PIP modules... https://hugovk.github.io/top-pypi-packages/ \r\n "
-pip3 install json
-pip3 install jsonify
-pip3 install asyncio
-pip3 install urllib3
+
 pip3 install setuptools
 pip3 install requests
+pip3 install urllib3
+pip3 install certifi
+
+pip3 install jsonify
+pip3 install asyncio
 pip3 install aiohttp
 
 pip3 install python-dateutil
 pip3 install pyyaml
-pip3 install certifi
+
 pip3 install wheel
 pip3 install colorama
 pip3 install Jinja2
