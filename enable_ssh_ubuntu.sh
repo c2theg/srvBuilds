@@ -20,7 +20,7 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.0.2                             \r\n
+Version:  0.0.3                             \r\n
 Last Updated:  9/30/2025
 \r\n \r\n"
 wait
@@ -44,5 +44,21 @@ sudo ufw reload
 ip a
 hostname -I
 
-echo "Done. You should be able to ssh into this machine now ";
-    
+echo "Done. You should be able to ssh into this machine now "
+echo "\r\n \r\n \r\n "
+
+echo "If you still cant access the server, edit the following:
+
+nano /etc/ssh/sshd_config
+
+set: 
+
+PubkeyAuthentication no
+
+- Save and close -
+
+sudo systemctl restart sshd
+
+
+
+"    
