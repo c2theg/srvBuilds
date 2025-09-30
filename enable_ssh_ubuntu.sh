@@ -60,5 +60,9 @@ PubkeyAuthentication no
 sudo systemctl restart sshd
 
 
+-- If you forgot the password --
+https://askubuntu.com/questions/24006/how-do-i-reset-a-lost-administrative-password
+
+
 
 "    
