@@ -20,7 +20,7 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  0.0.1                             \r\n
+Version:  0.0.2                             \r\n
 Last Updated:  9/30/2025
 \r\n \r\n"
 wait
@@ -41,8 +41,8 @@ sudo systemctl status ssh
 sudo ufw allow ssh
 sudo ufw reload
 
-
-ipconfig -a
+ip a
+hostname -I
 
 echo "Done. You should be able to ssh into this machine now ";
     
