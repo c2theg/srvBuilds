@@ -31,7 +31,7 @@ echo "Installing Python 3.x... -> latest for your platform
 #sudo -E add-apt-repository -y ppa:deadsnakes/ppa
 sudo -E apt-get update
 #--------------------------------------------------------------------------------------------
-sudo apt --fix-broken install -y python-pycurl python-apt
+#sudo apt --fix-broken install -y python-pycurl python-apt
 sudo -E apt-get install -y software-properties-common
 sudo -E apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 sudo -E apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
