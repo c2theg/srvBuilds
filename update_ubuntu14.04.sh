@@ -17,11 +17,11 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.19
-Last Updated:  12/12/2024
+Version:  1.7.20
+Last Updated:  10/1/2025
 
 
-for Debian 8 / Ubuntu versions 20.04 - 22.04 ( ignore the file name :/ )
+for Debian 8 / Ubuntu versions 20.04 - 24.04 ( ignore the file name :/ )
 
 "
 # wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
@@ -84,13 +84,14 @@ rustup check
 rustup update
 
 #------------------------ Python PIP ---------------------------------
-apt install python3-pip -y
-
-python -m pip install --upgrade pip
 if pip -V | grep -q ' not '; then
     # True
     echo "Skipping pip update.. "
 else
+    apt install python3-pip -y
+    
+    python -m pip install --upgrade pip
+
     pip3 list --outdated
     # False 
     echo "\r\n \r\n ------------------------  \r\n \r\n Updating Python PIP packages... \r\n \r\n"
@@ -98,14 +99,15 @@ else
     pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
 
-apt install python3-requests -y
-apt install python3-setuptools -y
+#apt install python3-requests -y
+#apt install python3-setuptools -y
 #------------------------ Python PIP3 ---------------------------------
-python3 -m pip install --upgrade pip
+
 if pip3 -V | grep -q ' not '; then
     # True
     echo "Skipping pip3 update.. "
 else
+    python3 -m pip install --upgrade pip
     # False 
     echo "Updating PIP3... "
     pip3 install -U pip
