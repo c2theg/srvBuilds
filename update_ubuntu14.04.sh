@@ -95,6 +95,14 @@ else
     pip3 list --outdated
     # False 
     echo "\r\n \r\n ------------------------  \r\n \r\n Updating Python PIP packages... \r\n \r\n"
+
+    #------ virtualenv venv ----------
+    python3 -m venv DevEnv1
+    wait
+    source DevEnv1/bin/activate
+    wait
+    #--------------------------------
+    
     pip install -U pip
     pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
