@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.20
+Version:  1.7.21
 Last Updated:  10/1/2025
 
 
