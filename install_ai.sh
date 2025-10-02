@@ -299,4 +299,4 @@ Access it from the hostip:8080
 
 # upgrade Milvus
 # bash standalone_embed.sh upgrade
-pip3 install -U pymilvus
+# pip3 install -U pymilvus
