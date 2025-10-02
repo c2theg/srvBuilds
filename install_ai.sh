@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.27
-Last Updated:  7/22/2025
+Version:  0.0.28
+Last Updated:  10/2/2025
 
 # https://ollama.com/search
 
@@ -95,19 +95,19 @@ echo "
 "
 
 #-- good for Text
-echo "
+# echo "
 
-Downloading DeepSeek-R1-Distill-Llama-8B ...
+# Downloading DeepSeek-R1-Distill-Llama-8B ...
 
-"
+# "
 #ollama pull deepseek-r1:latest   # deepseek-r1:8b
 
 
-echo "
+# echo "
 
-Qwen-8B (Alibaba Cloud)
+# Qwen-8B (Alibaba Cloud)
 
-"
+# "
 #ollama pull qwen3:latest       # 8b  (from 0.5b - 110b) - Alibaba Cloud
 
 
@@ -120,25 +120,25 @@ ollama pull llama3.2:latest        # 3b    - Meta
 
 
 
-echo "
+# echo "
 
 
-Downloading Gemma...
-   - https://ollama.com/library/gemma3
+# Downloading Gemma...
+#    - https://ollama.com/library/gemma3
 
-   7.5GB  32K
+#    7.5GB  32K
    
-"
-ollama pull gemma3n:latest
+# "
+# ollama pull gemma3n:latest
 
 
-echo "
+# echo "
 
-Downloading Phi...
+# Downloading Phi...
 
-"
-#ollama pull phi4           # 14b   - Microsoft
-# ollama pull phi4-mini-reasoning  # 3.8b - Microsoft
+# "
+# #ollama pull phi4           # 14b   - Microsoft
+# # ollama pull phi4-mini-reasoning  # 3.8b - Microsoft
 
 
 echo "
@@ -194,6 +194,14 @@ echo "
 ollama list
 
 #--- Install Python Packages ---
+
+#------ virtualenv venv ----------
+python3 -m venv DevEnv1
+wait
+source DevEnv1/bin/activate
+wait
+#--------------------------------
+
 pip3 install requests
 pip3 install ollama
 pip3 install pdfplumber
