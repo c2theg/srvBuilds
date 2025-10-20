@@ -14,7 +14,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.1.0                             \r\n
+Version:  0.1.1                             \r\n
 Last Updated:  10/20/2025
 \r\n \r\n
 Updating system first..."
@@ -89,7 +89,10 @@ sudo kubeadm init --pod-network-cidr=10.244.0.0/16 # Or your chosen CNI's CIDR
 echo "\r\n \r\n Follow the instructions in the output to configure kubectl for your user.
 Install Network Plugin (e.g., Calico):
 \r\n \r\n"
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+
+# VERY Slow to load sometimes, so hosting in my repo
+# kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+kubectl apply -f https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/calico.yaml
 
 
 
@@ -108,3 +111,6 @@ echo "\r\n \r\n Verification: \r\n \r\n"
 echo "On the control plane node, verify the cluster status: \r\n \r\n"
 kubectl get nodes
 kubectl get pods -A
+
+
+
