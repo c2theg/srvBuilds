@@ -14,7 +14,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.1.1                             \r\n
+Version:  0.1.2                             \r\n
 Last Updated:  10/20/2025
 \r\n \r\n
 Updating system first..."
@@ -92,8 +92,8 @@ Install Network Plugin (e.g., Calico):
 
 # VERY Slow to load sometimes, so hosting in my repo
 # kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-kubectl apply -f https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/calico.yaml
-
+# kubectl apply -f https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/calico.yaml
+kubectl apply -f  https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/calico_v3-25.yaml
 
 
 echo "\r\n \r\n Remove Taint (Optional): If you want to schedule pods on the control plane node. \r\n \r\n "
