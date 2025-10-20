@@ -16,8 +16,8 @@ echo "
 
 
 
-Version:  1.5.15
-Last Updated:  4/28/2025
+Version:  1.5.16
+Last Updated:  10/20/2025
 
 "
 echo "Downloading required dependencies...
@@ -40,7 +40,7 @@ sudo -E apt-get update
 #sudo -E apt-get install -y docker-ce
 #sudo -E apt install -y docker-compose
 
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo -E apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 sudo -E apt install -y docker-compose
 #-------------------------------------
 sudo systemctl start docker
