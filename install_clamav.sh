@@ -23,10 +23,14 @@ echo "
 
 This really is meant to be run under Ubuntu 20.04 LTS +
 \r\n \r\n
-Version:  0.0.27                             \r\n
+Version:  0.0.30                             \r\n
 Last Updated:  10/27/2025
 \r\n \r\n"
 
+#-- update yourself! (for the next load) --
+rm install_clamav.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_clamav.sh && chmod u+x install_clamav.sh
+
+#---- update system -----
 sudo apt-get update -y
 sudo apt-get install clamav clamav-daemon -y
 sudo systemctl stop clamav-freshclam
