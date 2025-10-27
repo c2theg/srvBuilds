@@ -1,9 +1,14 @@
 A set of shell scripts I use to deploy various ubuntu servers.
 
-<h1>TL:DR;  - Will do most of what you want. Not ready for 22.04 YET</h1>
+<h1>TL:DR;  - Will do most of what you want</h1>
 
 ```
 wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && chmod u+x update_core.sh && ./update_core.sh && ./install_common.sh
+
+or direct...
+
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh && ./update_core.sh && ./install_common.sh
+
 ```
 
 
