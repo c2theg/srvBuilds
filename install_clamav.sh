@@ -23,17 +23,25 @@ echo "
 
 This really is meant to be run under Ubuntu 20.04 LTS +
 \r\n \r\n
-Version:  0.0.7                             \r\n
-Last Updated:  8/11/2021
+Version:  0.0.25                             \r\n
+Last Updated:  10/27/2025
 \r\n \r\n"
 
 sudo apt-get update -y
 sudo apt-get install clamav clamav-daemon -y
 sudo systemctl stop clamav-freshclam
+sudo apt install -y rkhunter
+sudo apt install -y chkrootkit
+
 #--- Update ClamAV Signatures ---
+echo "Update ClamAV Database... \r\n"
 sudo freshclam
 sudo systemctl start clamav-freshclam
 sudo systemctl enable clamav-freshclam
+
+
+echo "Update Rootkit Hunter Database... \r\n"
+sudo rkhunter --propupd
 
 
 Cron_output=$(crontab -l | grep "install_clamav.sh")
@@ -44,6 +52,15 @@ then
     /etc/init.d/cron restart  > /dev/null
 fi
 
+echo "\r\n \r\n Scanning: RAM \r\n \r\n"
+sudo clamscan --memory
+
+echo "\r\n \r\n Rootkit Hunter Scanning... \r\n \r\n"
+sudo rkhunter --check
+
+echo "\r\n \r\n Check Rootkit Scanning... \r\n \r\n"
+sudo chkrootkit
+#---- File system -----
 # Do a full scan!
 #sudo clamscan --infected --remove --recursive /
 
