@@ -17,10 +17,10 @@ echo "
 
 https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
 
-This really is meant to be run under Ubuntu 16.04 - 22.04 LTS
+This really is meant to be run under Ubuntu 16.04 - 24.04 LTS
 
-Version:  1.7.23
-Last Updated:  11/23/2022
+Version:  1.7.24
+Last Updated:  11/3/2025
 
 Checking Internet status... 
 
@@ -51,6 +51,7 @@ if nc -zw1 google.com 443; then
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev whois traceroute htop sshguard build-essential libffi-dev nfs-common nfs-kernel-server speedometer watchdog zip unzip
 	wait
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iperf3 iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl net-tools
+	sudo -E apt-get install -y s-tui neofetch
 	wait
 	#echo "Start PTP using:  ptp4l -i <INTERFACE> -m \r\n \r\n"
 	#service ptp4l start
