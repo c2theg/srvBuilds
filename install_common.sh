@@ -51,14 +51,8 @@ if nc -zw1 google.com 443; then
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev whois traceroute htop sshguard build-essential libffi-dev nfs-common nfs-kernel-server speedometer watchdog zip unzip
 	wait
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iperf3 iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl net-tools
-	sudo -E apt-get install -y s-tui neofetch
+	sudo -E apt-get install -y s-tui
 
-	#--- add neofetch to terminal login ---
-	# nano ~/.bashrc
-	# neofetch   # At the bottom of the file. save and close!
-
-
-	
 	wait
 	#echo "Start PTP using:  ptp4l -i <INTERFACE> -m \r\n \r\n"
 	#service ptp4l start
@@ -75,6 +69,11 @@ if nc -zw1 google.com 443; then
 		echo "neofetch" >> ~/.bashrc
 		wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/neofetch-config.conf
 		mv neofetch-config.conf $HOME/.config/neofetch/config.conf
+
+		#--- add neofetch to terminal login ---
+		# nano ~/.bashrc
+		# neofetch   # At the bottom of the file. save and close!
+	
 	fi
 	#----------------------------------------------------------------------------------------------
 	if [ -s "install_snmp.sh" ] 
