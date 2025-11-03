@@ -52,6 +52,13 @@ if nc -zw1 google.com 443; then
 	wait
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iperf3 iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl net-tools
 	sudo -E apt-get install -y s-tui neofetch
+
+	#--- add neofetch to terminal login ---
+	# nano ~/.bashrc
+	# neofetch   # At the bottom of the file. save and close!
+
+
+	
 	wait
 	#echo "Start PTP using:  ptp4l -i <INTERFACE> -m \r\n \r\n"
 	#service ptp4l start
