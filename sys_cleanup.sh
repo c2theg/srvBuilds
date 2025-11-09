@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.17                             \r\n
+Version:  1.9.18                           \r\n
 Last Updated:  11/9/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
@@ -368,6 +368,8 @@ echo "\r\n \r\n \r\n \r\n"
 
 echo "Showing files still left open, as they could not be deleted until they are closed. \r\n \r\n"
 sudo lsof | grep deleted
+
+ollama list
 
 #echo "\r\n \r\n"
 #lsof +L1
