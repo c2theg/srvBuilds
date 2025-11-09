@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.15                             \r\n
-Last Updated:  5/27/2025
+Version:  1.9.16                             \r\n
+Last Updated:  11/9/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
 
@@ -40,6 +40,11 @@ If you get the error:  (raw.githubusercontent.com)... failed: Temporary failure 
 Do the following:
     cd / 
 "
+
+
+echo "Find all files larger then 500mb... \r\n \r\n "
+find / -type f -size +500M
+
 
 #--- self updating ---
 if test -f "/root/sys_cleanup.sh"; then
@@ -378,3 +383,7 @@ sudo apt-get dist-upgrade -y
 sudo dpkg --configure -a
 
 echo "\r\n \r\n Your best option is to restart the server to release these files...  \r\n DONE! \r\n \r\n"
+
+
+echo "Find all files larger then 500mb... \r\n \r\n "
+find / -type f -size +500M
