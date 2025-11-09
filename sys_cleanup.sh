@@ -40,12 +40,18 @@ If you get the error:  (raw.githubusercontent.com)... failed: Temporary failure 
 Do the following:
     cd / 
 "
-
+echo "\r\n \r\n \r\n"
 
 echo "Find all files larger then 500mb... \r\n \r\n "
 find / -type f -size +500M
 
+echo "\r\n \r\n \r\n"
+du -sxh * | sort -n
 
+echo "
+
+
+"
 #--- self updating ---
 if test -f "/root/sys_cleanup.sh"; then
   #echo "File exists"
