@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.19                           \r\n
+Version:  1.9.20                           \r\n
 Last Updated:  11/9/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
@@ -347,6 +347,18 @@ if [ -d "/usr/share/ollama/.ollama/models/blobs/" ]; then
     # Find and delete files older than 90 days
     find "$TARGET_DIR" -type f -mtime +90 -exec rm -f {} \;
 fi
+
+
+#--- SNAP -----
+# Remove old revisions of snaps
+snap list --all | awk '/disabled/{print $1, $3}' |
+    while read -r snapname revision; do
+        echo -e "${YELLOW}Removing $snapname (revision $revision)...${NC}"
+        snap remove "$snapname" --revision="$revision"
+        sleep 1  # Optional: Add a short delay for better visibility
+    done
+
+#-----------
 
 
 echo "
