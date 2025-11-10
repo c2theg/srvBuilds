@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.21                           \r\n
+Version:  1.9.22                           \r\n
 Last Updated:  11/9/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
@@ -52,13 +52,7 @@ echo "
 
 
 "
-#--- self updating ---
-if test -f "/root/sys_cleanup.sh"; then
-  echo "File existed, so deleting it!   \r\n \r\n"
-  rm sys_cleanup.sh
-fi
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
-#--- end self updating ---
+
 
 
 # Remove bad package
@@ -418,3 +412,20 @@ echo "\r\n \r\n Your best option is to restart the server to release these files
 
 echo "Find all files larger then 500mb... \r\n \r\n "
 find / -type f -size +500M
+
+
+
+echo " 
+
+
+Update script...
+
+
+"
+#--- self updating ---
+if test -f "/root/sys_cleanup.sh"; then
+  echo "File existed, so deleting it!   \r\n \r\n"
+  rm sys_cleanup.sh
+fi
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
+#--- end self updating ---
