@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.20                           \r\n
+Version:  1.9.21                           \r\n
 Last Updated:  11/9/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
@@ -54,7 +54,7 @@ echo "
 "
 #--- self updating ---
 if test -f "/root/sys_cleanup.sh"; then
-  #echo "File exists"
+  echo "File existed, so deleting it!   \r\n \r\n"
   rm sys_cleanup.sh
 fi
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
