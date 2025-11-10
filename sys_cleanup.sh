@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.24                           \r\n
+Version:  1.9.25                           \r\n
 Last Updated:  11/9/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
@@ -462,5 +462,16 @@ To run an interactive filesize viewer use:   ncdu /
 
 
 DONE!
+
+
+#--- DEPRECATION NOTE ----
+
+if you get the error ' DEPRECATION section in apt-key(8) '  issue the following commands to fix it
+
+cd /etc/apt
+sudo cp trusted.gpg trusted.gpg.d
+
+
+
 
 "
