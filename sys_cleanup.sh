@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.23                           \r\n
+Version:  1.9.24                           \r\n
 Last Updated:  11/9/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
@@ -408,6 +408,9 @@ sudo apt-get dist-upgrade -y
 #sudo dpkg-reconfigure -a
 sudo dpkg --configure -a
 
+sudo apt-get install ncdu -y
+#ncdu /
+
 echo "\r\n \r\n Your best option is to restart the server to release these files...  \r\n DONE! \r\n \r\n"
 
 
@@ -449,3 +452,15 @@ if test -f "/root/sys_cleanup.sh"; then
 fi
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
 #--- end self updating ---
+
+
+echo " 
+
+
+To run an interactive filesize viewer use:   ncdu /
+
+
+
+DONE!
+
+"
