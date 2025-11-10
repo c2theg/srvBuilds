@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.18                           \r\n
+Version:  1.9.19                           \r\n
 Last Updated:  11/9/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
