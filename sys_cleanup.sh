@@ -331,7 +331,7 @@ if [ -d "/var/lib/docker/" ]; then
     docker system prune -f
     docker image prune -f 
 
-    docker system prune -a --volumes
+    docker system prune -a --volumes -f
     #-- docker logs --
     # cd /var/lib/docker/containers/
     rm /var/lib/docker/containers/*/*.log
