@@ -20,8 +20,8 @@ echo "
 Version:  1.9.23                           \r\n
 Last Updated:  11/9/2025
 --- Github: 
-   wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh
-
+   wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
+   
 Add to Crontab: (Every Sunday at 2:10 AM)
 
 crontab -e
