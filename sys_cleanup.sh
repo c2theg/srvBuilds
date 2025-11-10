@@ -330,6 +330,8 @@ if [ -d "/var/lib/docker/" ]; then
     # Clean up old containers before images..
     docker system prune -f
     docker image prune -f 
+
+    docker system prune -a --volumes
     #-- docker logs --
     # cd /var/lib/docker/containers/
     rm /var/lib/docker/containers/*/*.log
@@ -346,6 +348,13 @@ if [ -d "/usr/share/ollama/.ollama/models/blobs/" ]; then
     find "$TARGET_DIR" -type f -mtime +90 -exec rm -f {} \;
 fi
 
+
+echo "
+
+Delete any files larger then 1Gb
+
+"
+sudo find /var/log -type f -name "*.log" -size +1G -delete
 
 
 history -c
