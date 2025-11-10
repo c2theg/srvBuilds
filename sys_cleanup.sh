@@ -408,7 +408,7 @@ sudo apt-get dist-upgrade -y
 #sudo dpkg-reconfigure -a
 sudo dpkg --configure -a
 
-sudo apt-get install ncdu -y
+sudo apt-get install ncdu traceroute -y
 #ncdu /
 
 echo "\r\n \r\n Your best option is to restart the server to release these files...  \r\n DONE! \r\n \r\n"
