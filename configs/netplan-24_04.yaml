@@ -29,6 +29,12 @@
 # renderer: "networkd" or "NetworkManager"
 #
 # DEBUG: sudo netplan --debug apply
+#  or apply it with:   netplan apply
+#
+#
+#  if you get error: ' Permissions for /etc/netplan/01-network-manager-all.yaml are too open. Netplan configuration should NOT be accessible by others.' 
+#	sudo chmod 600 /etc/netplan/01-network-manager-all.yaml
+#
 # -------------------------------------------------------
 network:
   version: 2
