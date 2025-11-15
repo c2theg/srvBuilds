@@ -128,3 +128,28 @@ sudo apt-get dist-upgrade -y
 apt-get autoclean -y
 apt-get autoremove -y
 apt autoremove -y
+
+
+
+#---- Download ISO's ----
+cd /var/lib/vz/template/iso
+
+
+#--- ubuntu ---  https://releases.ubuntu.com/
+#wget https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso
+wget https://releases.ubuntu.com/24.04/ubuntu-24.04.3-live-server-amd64.iso
+
+
+#-- debian. - https://www.debian.org/distrib/
+# wget https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.2.0-amd64-netinst.iso
+
+
+#--- rocky --- https://rockylinux.org/download
+# wget https://download.rockylinux.org/pub/rocky/9/isos/aarch64/Rocky-9.6-aarch64-minimal.iso
+# wget https://download.rockylinux.org/pub/rocky/10/isos/aarch64/Rocky-10.0-aarch64-minimal.iso
+
+
+#------
+ls -l
+
+echo "\r\n \r\n Done!, it is highly recommended to reboot the system.\r\n"
