@@ -1,8 +1,14 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.20
+# Version:  0.0.25
 # Last Updated:  11/15/2025
+#--------------------------------------
+#
+#  Quick start script for initial setup of Proxmox VE 10+
+#
+#
+#
 #--------------------------------------
 # wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/init_proxmox_install.sh && chmod +x /root/init_proxmox_install.sh && /root/init_proxmox_install.sh
 
@@ -130,24 +136,36 @@ apt-get autoremove -y
 apt autoremove -y
 
 
+#--- Download LXC templates --- https://pve.proxmox.com/wiki/Linux_Container
+pveam update
+pveam available
 
-#---- Download ISO's ----
+#pveam download local debian-12-standard_12.12-1_amd64.tar.zst
+pveam download local debian-13-standard_13.1-2_amd64.tar.zst
+
+#pveam download local ubuntu-24.04-standard_24.04-2_amd64.tar.zst
+#pveam download local alpine-3.22-default_20250617_amd64.tar.xz
+#pveam download local rockylinux-9-default_20240912_amd64.tar.xz
+#pveam download local rockylinux-10-default_20251001_amd64.tar.xz
+
+pveam list local
+
+#--- create LXC ---
+#pct create 999 local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst
+
+#---- Download ISO's for Virtual Machines ----
 cd /var/lib/vz/template/iso
-
 
 #--- ubuntu ---  https://releases.ubuntu.com/
 #wget https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso
 wget https://releases.ubuntu.com/24.04/ubuntu-24.04.3-live-server-amd64.iso
 
-
 #-- debian. - https://www.debian.org/distrib/
 # wget https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.2.0-amd64-netinst.iso
-
 
 #--- rocky --- https://rockylinux.org/download
 # wget https://download.rockylinux.org/pub/rocky/9/isos/aarch64/Rocky-9.6-aarch64-minimal.iso
 # wget https://download.rockylinux.org/pub/rocky/10/isos/aarch64/Rocky-10.0-aarch64-minimal.iso
-
 
 #------
 ls -l
