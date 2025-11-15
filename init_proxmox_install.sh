@@ -1,56 +1,57 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.15
+# Version:  0.0.20
 # Last Updated:  11/15/2025
 #--------------------------------------
 # wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/init_proxmox_install.sh && chmod +x /root/init_proxmox_install.sh && /root/init_proxmox_install.sh
 
-#-- add cleanup scripts --
+#-- System Cleanup --
 # wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/sys_cleanup.sh && chmod +x /root/sys_cleanup.sh && /root/sys_cleanup.sh
+
 #-- Update Time (chronyd) --
 # https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/ntp.conf
 timedatectl set-timezone America/New_York
-#echo 'server 0.pool.ntp.org iburst' | sudo tee /etc/chrony/sources.d/nist.sources
+#echo 'server 0.pool.ntp.org iburst' > /etc/chrony/sources.d/nist.sources
 
 #--------- US based NTP servers ---------------------------
 # https://gist.github.com/mutin-sa/eea1c396b1e610a2da1e5550d94b0453
 #-- Cloudflare --
-echo 'server time.cloudflare.com iburst' | sudo tee /etc/chrony/sources.d/cloudflare.sources
-echo 'server 162.159.200.1 iburst' | sudo tee /etc/chrony/sources.d/cloudflare.sources
-echo 'server 162.159.200.123 iburst' | sudo tee /etc/chrony/sources.d/cloudflare.sources
-echo 'server 2606:4700:f1::1 iburst' | sudo tee /etc/chrony/sources.d/cloudflare.sources
-echo 'server 2606:4700:f1::123 iburst' | sudo tee /etc/chrony/sources.d/cloudflare.sources
+echo 'server time.cloudflare.com iburst' >> /etc/chrony/sources.d/cloudflare.sources
+echo 'server 162.159.200.1 iburst' >> /etc/chrony/sources.d/cloudflare.sources
+echo 'server 162.159.200.123 iburst' >> /etc/chrony/sources.d/cloudflare.sources
+echo 'server 2606:4700:f1::1 iburst' >> /etc/chrony/sources.d/cloudflare.sources
+echo 'server 2606:4700:f1::123 iburst' >> /etc/chrony/sources.d/cloudflare.sources
 
 #-- Google -- https://developers.google.com/time
-echo 'server time.google.com iburst' | sudo tee /etc/chrony/sources.d/google.sources
-echo 'server 216.239.35.4 iburst' | sudo tee /etc/chrony/sources.d/google.sources
-echo 'server 216.239.35.8 iburst' | sudo tee /etc/chrony/sources.d/google.sources
-echo 'server 2606:4700:f1::1 iburst' | sudo tee /etc/chrony/sources.d/google.sources
-echo 'server 2606:4700:f1::123 iburst' | sudo tee /etc/chrony/sources.d/google.sources
+echo 'server time.google.com iburst' >> /etc/chrony/sources.d/google.sources
+echo 'server 216.239.35.4 iburst' >> /etc/chrony/sources.d/google.sources
+echo 'server 216.239.35.8 iburst' >> /etc/chrony/sources.d/google.sources
+echo 'server 2606:4700:f1::1 iburst' >> /etc/chrony/sources.d/google.sources
+echo 'server 2606:4700:f1::123 iburst' >> /etc/chrony/sources.d/google.sources
 
 #-- NIST -- https://tf.nist.gov/tf-cgi/servers.cgi
-echo 'server time-d-g.nist.gov iburst' | sudo tee /etc/chrony/sources.d/nist.sources
-echo 'server time-d-wwv.nist.gov iburst' | sudo tee /etc/chrony/sources.d/nist.sources
-echo 'server time-d-b.nist.gov iburst' | sudo tee /etc/chrony/sources.d/nist.sources
-echo 'server time.nist.gov iburst' | sudo tee /etc/chrony/sources.d/nist.sources
+echo 'server time-d-g.nist.gov iburst' >> /etc/chrony/sources.d/nist.sources
+echo 'server time-d-wwv.nist.gov iburst' >> /etc/chrony/sources.d/nist.sources
+echo 'server time-d-b.nist.gov iburst' >> /etc/chrony/sources.d/nist.sources
+echo 'server time.nist.gov iburst' >> /etc/chrony/sources.d/nist.sources
 
-echo 'server 132.163.96.1 iburst' | sudo tee /etc/chrony/sources.d/nist.sources
-echo 'server 129.6.15.25 iburst' | sudo tee /etc/chrony/sources.d/nist.sources
-echo 'server 129.6.15.29 iburst' | sudo tee /etc/chrony/sources.d/nist.sources
-echo 'server 2610:20:6f97:97::4 iburst' | sudo tee /etc/chrony/sources.d/nist.sources
-echo 'server 2610:20:6f15:15::27 iburst' | sudo tee /etc/chrony/sources.d/nist.sources
+echo 'server 132.163.96.1 iburst' >> /etc/chrony/sources.d/nist.sources
+echo 'server 129.6.15.25 iburst' >> /etc/chrony/sources.d/nist.sources
+echo 'server 129.6.15.29 iburst' >> /etc/chrony/sources.d/nist.sources
+echo 'server 2610:20:6f97:97::4 iburst' >> /etc/chrony/sources.d/nist.sources
+echo 'server 2610:20:6f15:15::27 iburst' >> /etc/chrony/sources.d/nist.sources
 
 
 #---- Cloud NTP Servers ----
 #-- AWS --
-#echo 'server 169.254.169.123 iburst' | sudo tee /etc/chrony/sources.d/aws.sources
-#echo 'server fd00:ec2::123 iburst' | sudo tee /etc/chrony/sources.d/aws.sources
+#echo 'server 169.254.169.123 iburst' > /etc/chrony/sources.d/aws.sources
+#echo 'server fd00:ec2::123 iburst' > /etc/chrony/sources.d/aws.sources
 #-- GCP --
-#echo 'server time.google.com iburst' | sudo tee /etc/chrony/sources.d/gcp.sources
-#echo 'server 216.239.32.15 iburst' | sudo tee /etc/chrony/sources.d/gcp.sources
+#echo 'server time.google.com iburst' > /etc/chrony/sources.d/gcp.sources
+#echo 'server 216.239.32.15 iburst' > /etc/chrony/sources.d/gcp.sources
 #-- Azure --
-#echo 'server time.windows.com iburst' | sudo tee /etc/chrony/sources.d/azure.sources
+#echo 'server time.windows.com iburst' > /etc/chrony/sources.d/azure.sources
 
 
 systemctl restart chronyd
@@ -59,18 +60,21 @@ chronyc sources -v
 chronyc tracking
 chronyc activity
 
-#---- DNS ----
+#---- DNS ---- (3 DNS servers only allowed)
+# by default, Proxmox uses the local dns server found during setup 192.168.1.1
+
 #-- Cloudflare -- https://blog.cloudflare.com/introducing-1-1-1-1-for-families/
-echo 'nameserver 1.1.1.3' | sudo tee /etc/resolv.conf
-echo 'nameserver 1.0.0.3' | sudo tee /etc/resolv.conf
-echo 'nameserver 2606:4700:4700::1113' | sudo tee /etc/resolv.conf
-echo 'nameserver 2606:4700:4700::1003' | sudo tee /etc/resolv.conf
+#echo 'nameserver 1.1.1.3' >> /etc/resolv.conf
+echo 'nameserver 1.0.0.3' >> /etc/resolv.conf
+#echo 'nameserver 2606:4700:4700::1113' >> /etc/resolv.conf
+#echo 'nameserver 2606:4700:4700::1003' >> /etc/resolv.conf
 
 #-- OpenDNS - Family Shield --- https://www.opendns.com/family-shield/
-echo 'nameserver 208.67.222.123' | sudo tee /etc/resolv.conf
-echo 'nameserver 208.67.220.123' | sudo tee /etc/resolv.conf
-echo 'nameserver 2620:0:ccc::2' | sudo tee /etc/resolv.conf
-echo 'nameserver 2620:0:ccd::2' | sudo tee /etc/resolv.conf
+#echo 'nameserver 208.67.222.123' >> /etc/resolv.conf
+#echo 'nameserver 208.67.220.123' >> /etc/resolv.conf
+#echo 'nameserver 2620:0:ccc::2' >> /etc/resolv.conf
+echo 'nameserver 2620:0:ccd::2' >> /etc/resolv.conf
+
 
 #--------------------------------------
 # Username: root 
