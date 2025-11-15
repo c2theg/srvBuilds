@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.1
+# Version:  0.0.2
 # Last Updated:  11/15/2025
 #--------------------------------------
 # wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/init_proxmox_install.sh && chmod +x /root/init_proxmox_install.sh && /root/init_proxmox_install.sh
@@ -44,8 +44,8 @@ Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg" > /etc/apt/sources.l
 
 
 #--- update system ---
-sudo apt update
-sudo apt-get install apt-transport-https
-sudo apt-get upgrade -y
+apt update
+apt-get install apt-transport-https
+apt-get upgrade -y
 
 #https://github.com/CarmineCodes/Proxmox-No-Subscription-No-Problem
