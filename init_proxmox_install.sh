@@ -1,20 +1,20 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.10
+# Version:  0.0.15
 # Last Updated:  11/15/2025
 #--------------------------------------
 # wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/init_proxmox_install.sh && chmod +x /root/init_proxmox_install.sh && /root/init_proxmox_install.sh
 
-
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/sys_cleanup.sh && chmod +x /root/sys_cleanup.sh && /root/sys_cleanup.sh
-
+#-- add cleanup scripts --
+# wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/sys_cleanup.sh && chmod +x /root/sys_cleanup.sh && /root/sys_cleanup.sh
 #-- Update Time (chronyd) --
 # https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/ntp.conf
 timedatectl set-timezone America/New_York
 #echo 'server 0.pool.ntp.org iburst' | sudo tee /etc/chrony/sources.d/nist.sources
 
 #--------- US based NTP servers ---------------------------
+# https://gist.github.com/mutin-sa/eea1c396b1e610a2da1e5550d94b0453
 #-- Cloudflare --
 echo 'server time.cloudflare.com iburst' | sudo tee /etc/chrony/sources.d/cloudflare.sources
 echo 'server 162.159.200.1 iburst' | sudo tee /etc/chrony/sources.d/cloudflare.sources
@@ -22,14 +22,14 @@ echo 'server 162.159.200.123 iburst' | sudo tee /etc/chrony/sources.d/cloudflare
 echo 'server 2606:4700:f1::1 iburst' | sudo tee /etc/chrony/sources.d/cloudflare.sources
 echo 'server 2606:4700:f1::123 iburst' | sudo tee /etc/chrony/sources.d/cloudflare.sources
 
-#-- Google --
+#-- Google -- https://developers.google.com/time
 echo 'server time.google.com iburst' | sudo tee /etc/chrony/sources.d/google.sources
 echo 'server 216.239.35.4 iburst' | sudo tee /etc/chrony/sources.d/google.sources
 echo 'server 216.239.35.8 iburst' | sudo tee /etc/chrony/sources.d/google.sources
 echo 'server 2606:4700:f1::1 iburst' | sudo tee /etc/chrony/sources.d/google.sources
 echo 'server 2606:4700:f1::123 iburst' | sudo tee /etc/chrony/sources.d/google.sources
 
-#-- NIST --
+#-- NIST -- https://tf.nist.gov/tf-cgi/servers.cgi
 echo 'server time-d-g.nist.gov iburst' | sudo tee /etc/chrony/sources.d/nist.sources
 echo 'server time-d-wwv.nist.gov iburst' | sudo tee /etc/chrony/sources.d/nist.sources
 echo 'server time-d-b.nist.gov iburst' | sudo tee /etc/chrony/sources.d/nist.sources
@@ -58,6 +58,20 @@ systemctl restart chronyd
 chronyc sources -v
 chronyc tracking
 chronyc activity
+
+#---- DNS ----
+#-- Cloudflare -- https://blog.cloudflare.com/introducing-1-1-1-1-for-families/
+echo 'nameserver 1.1.1.3' | sudo tee /etc/resolv.conf
+echo 'nameserver 1.0.0.3' | sudo tee /etc/resolv.conf
+echo 'nameserver 2606:4700:4700::1113' | sudo tee /etc/resolv.conf
+echo 'nameserver 2606:4700:4700::1003' | sudo tee /etc/resolv.conf
+
+#-- OpenDNS - Family Shield --- https://www.opendns.com/family-shield/
+echo 'nameserver 208.67.222.123' | sudo tee /etc/resolv.conf
+echo 'nameserver 208.67.220.123' | sudo tee /etc/resolv.conf
+echo 'nameserver 2620:0:ccc::2' | sudo tee /etc/resolv.conf
+echo 'nameserver 2620:0:ccd::2' | sudo tee /etc/resolv.conf
+
 #--------------------------------------
 # Username: root 
 # Password: The password you set during the Proxmox installation 
