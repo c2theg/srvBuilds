@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.25
+# Version:  0.0.26
 # Last Updated:  11/15/2025
 #--------------------------------------
 #
@@ -160,6 +160,11 @@ cd /var/lib/vz/template/iso
 #--- ubuntu ---  https://releases.ubuntu.com/
 #wget https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso
 wget https://releases.ubuntu.com/24.04/ubuntu-24.04.3-live-server-amd64.iso
+
+#-- arch linux -- https://archlinux.org/releng/releases/
+# Downloads - https://archlinux.org/download/
+wget https://fastly.mirror.pkgbuild.com/iso/2025.11.01/archlinux-x86_64.iso
+
 
 #-- debian. - https://www.debian.org/distrib/
 # wget https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.2.0-amd64-netinst.iso
