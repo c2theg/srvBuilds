@@ -172,3 +172,7 @@ wget https://releases.ubuntu.com/24.04/ubuntu-24.04.3-live-server-amd64.iso
 ls -l
 
 echo "\r\n \r\n Done!, it is highly recommended to reboot the system.\r\n"
+
+# admin guide
+# https://pve.proxmox.com/pve-docs/chapter-sysadmin.html#system_software_updates
+
