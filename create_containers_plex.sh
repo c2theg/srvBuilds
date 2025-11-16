@@ -56,8 +56,7 @@ docker run -d \
 #--- install Youtarr ---
 # https://github.com/DialmasterOrg/Youtarr
 
-#--- Create Transmission Bittorrent Client ----
-# create Alpine container 
-
-
+#--- Create Bittorrent Client ----
+# https://www.turnkeylinux.org/torrentserver
+pveam download local debian-12-turnkey-torrentserver_18.0-1_amd64.tar.gz
 
