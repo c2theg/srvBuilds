@@ -1,3 +1,11 @@
+#!/bin/bash
+#  Copyright © 2026 Christopher Gray 
+#--------------------------------------
+# Version:  0.0.25
+# Last Updated:  11/15/2025
+#--------------------------------------
+
+
 # apt update && apt upgrade -y
 
 # curl -sS https://downloads.plex.tv/plex-keys/PlexSign.key | gpg --dearmor | tee /usr/share/keyrings/plex.gpg > /dev/null
