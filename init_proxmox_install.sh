@@ -1,13 +1,11 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.26
+# Version:  0.0.27
 # Last Updated:  11/15/2025
 #--------------------------------------
 #
 #  Quick start script for initial setup of Proxmox VE 10+
-#
-#
 #
 #--------------------------------------
 # wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/init_proxmox_install.sh && chmod +x /root/init_proxmox_install.sh && /root/init_proxmox_install.sh
@@ -163,10 +161,9 @@ wget https://releases.ubuntu.com/24.04/ubuntu-24.04.3-live-server-amd64.iso
 
 #-- arch linux -- https://archlinux.org/releng/releases/
 # Downloads - https://archlinux.org/download/
-wget https://fastly.mirror.pkgbuild.com/iso/2025.11.01/archlinux-x86_64.iso
+# wget https://fastly.mirror.pkgbuild.com/iso/2025.11.01/archlinux-x86_64.iso
 
-
-#-- debian. - https://www.debian.org/distrib/
+#-- debian -- https://www.debian.org/distrib/
 # wget https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.2.0-amd64-netinst.iso
 
 #--- rocky --- https://rockylinux.org/download
@@ -180,4 +177,3 @@ echo "\r\n \r\n Done!, it is highly recommended to reboot the system.\r\n"
 
 # admin guide
 # https://pve.proxmox.com/pve-docs/chapter-sysadmin.html#system_software_updates
-
