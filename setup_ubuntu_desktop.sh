@@ -71,6 +71,9 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh
 #Password too long - only the first 8 characters will be used
 #sudo vncserver
 
+#-- screensavers ---
+sudo apt install -y xscreensaver
+
 # --- Themes and looks ---
 # https://www.howtogeek.com/358049/how-to-install-desktop-themes-on-ubuntu-18.04-lts/
 sudo apt install -y gnome-tweaks gnome-shell-extensions unity-tweak-tool
