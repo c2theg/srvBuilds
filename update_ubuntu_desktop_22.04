@@ -85,37 +85,6 @@ sudo ufw allow ssh
 sudo ufw enable && sudo ufw reload
 
 
-#--- VPN's ----
-#-- Wireguard --
-#sudo apt install -y wireguard
-#curl -L https://install.pivpn.io | bash
-#curl https://raw.githubusercontent.com/pivpn/pivpn/master/auto_install/install.sh | bash
-
-
-#-- Tailscale --
-#curl -fsSL https://tailscale.com/install.sh | sh
-#curl -o 'tailscale.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_tailscale.sh && chmod u+x tailscale.sh && ./tailscale.sh
-
-#--- Encryption ---
-sudo add-apt-repository -y ppa:unit193/encryption
-sudo apt update
-sudo apt install -y veracrypt
-
-#--- Coding ---
-
-#----- Windsurf ------
-wget -qO- "https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/windsurf.gpg" | gpg --dearmor > windsurf-stable.gpg
-sudo install -D -o root -g root -m 644 windsurf-stable.gpg /etc/apt/keyrings/windsurf-stable.gpg
-echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/windsurf-stable.gpg] https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/apt stable main" | sudo tee /etc/apt/sources.list.d/windsurf.list > /dev/null
-rm -f windsurf-stable.gpg
-sudo apt install windsurf
-
-#--- Sublime Text ---
-sudo wget -O- https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/sublimehq.gpg
-echo "deb [signed-by=/usr/share/keyrings/sublimehq.gpg] https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
-sudo apt update
-sudo apt install sublime-text
-
 
 
 
