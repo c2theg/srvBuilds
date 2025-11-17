@@ -19,8 +19,8 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.2                             \r\n
-Last Updated:  9/23/2022
+Version:  0.0.5                             \r\n
+Last Updated:  11/17/2025
 \r\n \r\n"
 
 wait
@@ -28,6 +28,7 @@ sudo apt autoremove -y
 
 #sudo add-apt-repository universe
 #sudo apt-get install -y linux-generic-hwe-22.04 linux-headers-generic-hwe-22.04 linux-image-generic-hwe-22.04
+#sudo apt-get install -y linux-generic-hwe-24.04 linux-headers-generic-hwe-24.04 linux-image-generic-hwe-24.04
 
 
 #-- Force IPv4 update servers --
@@ -68,11 +69,13 @@ sudo apt-get autoremove -y
 wait
 
 #------------
+sudo -E apt-get -y install unattended-upgrades
+
 sudo apt install -y software-properties-common apt-transport-https
 sudo apt-get update
 sudo apt-get upgrade -y
 
-sudo apt-get install -y gzip curl wget 
+sudo apt-get install -y gzip curl wget gpg
 
 #--- General ---
 
@@ -86,18 +89,32 @@ sudo ufw enable && sudo ufw reload
 #-- Wireguard --
 #sudo apt install -y wireguard
 #curl -L https://install.pivpn.io | bash
-curl https://raw.githubusercontent.com/pivpn/pivpn/master/auto_install/install.sh | bash
+#curl https://raw.githubusercontent.com/pivpn/pivpn/master/auto_install/install.sh | bash
 
 
 #-- Tailscale --
 #curl -fsSL https://tailscale.com/install.sh | sh
-curl -o 'tailscale.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_tailscale.sh && chmod u+x tailscale.sh && ./tailscale.sh
+#curl -o 'tailscale.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_tailscale.sh && chmod u+x tailscale.sh && ./tailscale.sh
 
 #--- Encryption ---
 sudo add-apt-repository -y ppa:unit193/encryption
 sudo apt update
 sudo apt install -y veracrypt
 
+#--- Coding ---
+
+#----- Windsurf ------
+wget -qO- "https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/windsurf.gpg" | gpg --dearmor > windsurf-stable.gpg
+sudo install -D -o root -g root -m 644 windsurf-stable.gpg /etc/apt/keyrings/windsurf-stable.gpg
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/windsurf-stable.gpg] https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/apt stable main" | sudo tee /etc/apt/sources.list.d/windsurf.list > /dev/null
+rm -f windsurf-stable.gpg
+sudo apt install windsurf
+
+#--- Sublime Text ---
+sudo wget -O- https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/sublimehq.gpg
+echo "deb [signed-by=/usr/share/keyrings/sublimehq.gpg] https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+sudo apt update
+sudo apt install sublime-text
 
 
 
