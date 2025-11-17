@@ -19,14 +19,14 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.20                             \r\n
+Version:  0.0.21                             \r\n
 Last Updated:  11/17/2025
 \r\n \r\n"
 
 wait
 sudo apt autoremove -y
 
-sudo add-apt-repository universe
+sudo add-apt-repository universe -y
 #sudo apt-get install -y linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04 linux-image-generic-hwe-20.04
 #sudo apt-get install -y linux-generic-hwe-22.04 linux-headers-generic-hwe-22.04 linux-image-generic-hwe-22.04
 #sudo apt-get install -y linux-generic-hwe-24.04 linux-headers-generic-hwe-24.04 linux-image-generic-hwe-24.04
@@ -95,30 +95,18 @@ gsettings set org.gnome.desktop.interface enable-hot-corners true
 
 #-- Utilities ----
 sudo apt-get install -y gnome-startup-applications
-gnome-session-properties
+# Show startup apps
+# gnome-session-properties
 
+#--- bittorrent ---
 #sudo add-apt-repository ppa:transmissionbt/ppa
-
 #--- Chrome ---
 echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
+
 #-- delete after installing ---
 rm google-chrome-stable_current_amd64.deb
-
-
-#--- Download VSCode ---
-#sudo snap install code --classic
-# wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
-# sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-# sudo apt upgrade
-# sudo apt install code
-
-
-# Run with:  code
-
-#--- Postman ---
-# sudo snap install -y postman
 
 #--- Wireshark ---
 # sudo apt-get install -y libcap2-bin wireshark mmdb-bin qt5-image-formats-plugins qtwayland5 snmp-mibs-downloader wireshark-doc
@@ -135,7 +123,6 @@ rm google-chrome-stable_current_amd64.deb
 #curl -L https://install.pivpn.io | bash
 #curl https://raw.githubusercontent.com/pivpn/pivpn/master/auto_install/install.sh | bash
 
-
 #-- Tailscale --
 #curl -fsSL https://tailscale.com/install.sh | sh
 #curl -o 'tailscale.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_tailscale.sh && chmod u+x tailscale.sh && ./tailscale.sh
@@ -147,11 +134,20 @@ sudo apt install -y veracrypt
 
 #--- Coding ---
 
+
+#--- Download VSCode ---
+#sudo snap install code --classic
+# wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+# sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+# sudo apt upgrade
+# sudo apt install code
+# Run with:  code
+
 #----- Windsurf ------
-wget -qO- "https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/windsurf.gpg" | gpg --dearmor > windsurf-stable.gpg
-sudo install -D -o root -g root -m 644 windsurf-stable.gpg /etc/apt/keyrings/windsurf-stable.gpg
-echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/windsurf-stable.gpg] https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/apt stable main" | sudo tee /etc/apt/sources.list.d/windsurf.list > /dev/null
-rm -f windsurf-stable.gpg
+# wget -qO- "https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/windsurf.gpg" | gpg --dearmor > windsurf-stable.gpg
+# sudo install -D -o root -g root -m 644 windsurf-stable.gpg /etc/apt/keyrings/windsurf-stable.gpg
+# echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/windsurf-stable.gpg] https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/apt stable main" | sudo tee /etc/apt/sources.list.d/windsurf.list > /dev/null
+# rm -f windsurf-stable.gpg
 sudo apt install -y windsurf
 
 #--- Sublime Text ---
@@ -159,6 +155,9 @@ sudo wget -O- https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor
 echo "deb [signed-by=/usr/share/keyrings/sublimehq.gpg] https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
 sudo apt update
 sudo apt install -y sublime-text
+
+#--- Postman ---
+# sudo snap install -y postman
 
 #--- Sublime Text ---
 # wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
@@ -175,7 +174,7 @@ sudo apt install -y sublime-text
 #sudo snap install -y vlc
 
 #--- widgets ----
-sudo add-apt-repository ppa:kasra-mp/ubuntu-indicator-weather
+sudo add-apt-repository -y ppa:kasra-mp/ubuntu-indicator-weather
 sudo apt update
 sudo apt install -y indicator-weather
 
