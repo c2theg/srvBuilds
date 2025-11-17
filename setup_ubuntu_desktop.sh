@@ -19,7 +19,7 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.15                             \r\n
+Version:  0.0.20                             \r\n
 Last Updated:  11/17/2025
 \r\n \r\n"
 
@@ -72,7 +72,8 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh
 #sudo vncserver
 
 #-- screensavers ---
-sudo apt install -y xscreensaver
+sudo apt install -y xscreensaver xscreensaver-gl-extra xscreensaver-data-extra
+
 
 # --- Themes and looks ---
 # https://www.howtogeek.com/358049/how-to-install-desktop-themes-on-ubuntu-18.04-lts/
