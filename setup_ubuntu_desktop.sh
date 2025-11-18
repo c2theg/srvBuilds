@@ -47,9 +47,24 @@ sudo apt install -y hardinfo
 
 # slurm -z -c -L -i ens16
 
+if [ -s "update_ubuntu_desktop_22.04.sh" ]; then
+    echo "Deleting old files \r\n"	
+		  rm update_ubuntu_desktop_22.04.sh
+fi
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ubuntu_desktop_22.04.sh && chmod u+x update_ubuntu_desktop_22.04.sh
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ubuntu_desktop_22.04 && chmod u+x update_ubuntu_desktop_22.04
+
+if [ -s "update_core.sh" ]; then
+    echo "Deleting old files \r\n"	
+		  rm update_core.sh
+fi
 wget wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh && ./update_core.sh
+
+
+if [ -s "install_docker.sh" ]; then
+    echo "Deleting old files \r\n"	
+		  rm install_docker.sh
+fi
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh && chmod u+x install_docker.sh
 
 
@@ -74,7 +89,12 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh
 #sudo vncserver
 
 #-- screensavers ---
-sudo apt install -y xscreensaver xscreensaver-gl-extra xscreensaver-data-extra
+#sudo apt-get update
+#apt-cache search xscreensaver*
+sudo apt install -y xscreensaver xscreensaver-gl-extra xscreensaver-data-extra rss-glx xscreensaver-screensaver-webcollage
+killall xscreensaver
+# /usr/bin/rss-glx_install
+# xscreensaver-demo
 
 
 # --- Themes and looks ---
@@ -185,19 +205,18 @@ sudo apt install -y conky
 #--- Temp Sensors ---
 sudo apt-get install -y lm-sensors hddtemp acpi xsensors
 sudo service kmod start
-sudo hddtemp /dev/sda  
+echo " use: sudo hddtemp /dev/sda  - to get harddrive temps \r\n \r\n "
 
 sudo add-apt-repository -y ppa:jfi/ppa
 sudo apt-get update
 sudo apt-get install -y psensor
-sudo sensors-detect
-sensors
+echo " \r\n \r\n  use 'sensors-detect' and 'sensors' to get all sensor data  \r\n \r\n"
 
 #--- gpu ----
 #-- Nvidia --
 sudo apt-get install -y nvidia-settings-updates
 sudo ubuntu-drivers autoinstall
-nvidia-smi
+echo " \r\n \r\n Use the command: 'nvidia-smi' to get all nvidia specific data \r\n \r\n"
 
 #-- Real-time Monitoring --
 # watch -n 1 nvidia-smi
