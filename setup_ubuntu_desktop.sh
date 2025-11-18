@@ -1,9 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
-#
 clear
 now=$(date)
 echo "Running setup_ubuntu_desktop.sh at $now 
@@ -19,9 +14,20 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.25                             \r\n
+Version:  0.0.26                             \r\n
 Last Updated:  11/18/2025
+
+Install:  wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/setup_ubuntu_desktop.sh && chmod u+x setup_ubuntu_desktop.sh && ./setup_ubuntu_desktop.sh
 \r\n \r\n"
+
+
+# Update itsself on the next run
+if [ -s "setup_ubuntu_desktop.sh" ]; then
+    echo "Deleting old files \r\n"	
+	rm setup_ubuntu_desktop.sh
+fi
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/setup_ubuntu_desktop.sh && chmod u+x setup_ubuntu_desktop.sh
+
 
 wait
 sudo apt autoremove -y
@@ -49,21 +55,21 @@ sudo apt install -y hardinfo
 
 if [ -s "update_ubuntu_desktop_22.04.sh" ]; then
     echo "Deleting old files \r\n"	
-		  rm update_ubuntu_desktop_22.04.sh
+	rm update_ubuntu_desktop_22.04.sh
 fi
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ubuntu_desktop_22.04.sh && chmod u+x update_ubuntu_desktop_22.04.sh
 
 
 if [ -s "update_core.sh" ]; then
     echo "Deleting old files \r\n"	
-		  rm update_core.sh
+	rm update_core.sh
 fi
-wget wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh && ./update_core.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh && ./update_core.sh
 
 
 if [ -s "install_docker.sh" ]; then
     echo "Deleting old files \r\n"	
-		  rm install_docker.sh
+	rm install_docker.sh
 fi
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh && chmod u+x install_docker.sh
 
@@ -84,7 +90,6 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh
 #echo "To KILL VNCServer use:  vncserver -kill :1  \r\n \r\n"
 #echo "set VNC Password: vncpasswd  \r\n \r\n"
 
-
 #Password too long - only the first 8 characters will be used
 #sudo vncserver
 
@@ -95,6 +100,8 @@ sudo apt install -y xscreensaver xscreensaver-gl-extra xscreensaver-data-extra r
 killall xscreensaver
 # /usr/bin/rss-glx_install
 # xscreensaver-demo
+#xscreensaver &
+#sudo apt-get remove gnome-screensaver
 
 
 # --- Themes and looks ---
@@ -104,16 +111,10 @@ sudo apt install -y adwaita-icon-theme-full
 sudo apt install -y numix-gtk-theme numix-icon-theme arc-theme
 
 # --- Hot corners --- https://ubuntuhandbook.org/index.php/2020/07/set-up-hot-corners-ubuntu-20-04/
-sudo apt install -y chrome-gnome-shell
-echo "Go To in Firefox or chome:  https://extensions.gnome.org/extension/1362/custom-hot-corners/ "
+#sudo apt install -y chrome-gnome-shell
+#echo "Go To in Firefox or chome:  https://extensions.gnome.org/extension/1362/custom-hot-corners/ "
 # https://luanlmd.medium.com/ubuntu-20-04-enable-hot-corners-82b15b542a8
-gsettings set org.gnome.desktop.interface enable-hot-corners true
-
-
-#-- Bonus Screensavers
-#sudo apt-get install -y xscreensaver xscreensaver-gl-extra xscreensaver-data-extra
-#xscreensaver &
-#sudo apt-get remove gnome-screensaver
+#gsettings set org.gnome.desktop.interface enable-hot-corners true
 
 #-- Utilities ----
 sudo apt-get install -y gnome-startup-applications
@@ -124,7 +125,6 @@ sudo apt-get install -y gnome-startup-applications
 sudo apt install -y vlc
 sudo apt install -y vlc-plugin-access-extra libbluray-bdj libdvd-pkg
 
-
 #--- bittorrent --- https://pimylifeup.com/ubuntu-transmission/
 #sudo add-apt-repository ppa:transmissionbt/ppa
 sudo apt install -y transmission
@@ -132,12 +132,16 @@ sudo apt install -y transmission
 
 
 #--- Chrome ---
-echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo dpkg -i google-chrome-stable_current_amd64.deb
-
-#-- delete after installing ---
-rm google-chrome-stable_current_amd64.deb
+if [ -s "/etc/apt/sources.list.d/google-chrome.list" ]; then
+    echo "Chrome installed, so skipping... \r\n "	
+	#rm update_ubuntu_desktop_22.04.sh
+else
+	echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+	sudo dpkg -i google-chrome-stable_current_amd64.deb
+	#-- delete after installing ---
+	rm google-chrome-stable_current_amd64.deb
+fi
 
 #--- Wireshark ---
 # sudo apt-get install -y libcap2-bin wireshark mmdb-bin qt5-image-formats-plugins qtwayland5 snmp-mibs-downloader wireshark-doc
