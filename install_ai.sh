@@ -210,9 +210,6 @@ pip3 install fastembed
 pip3 install sentence-transformers
 pip3 install elevenlabs
 
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-pip3 install tensorflow
-
 #--- Vector Databases ---
 # Milvus lite (10k - 100k vectors)
 pip3 install milvus
@@ -234,6 +231,7 @@ pip3 install plotly # https://plotly.com/python/getting-started/
 
 
 #------- Install Machine Learning libs -------
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 pip3 install tensorflow
 pip3 install scikit-learn
 pip3 install torch torchvision
