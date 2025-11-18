@@ -37,12 +37,12 @@ sudo -E apt-get -y install unattended-upgrades
 sudo apt install -y software-properties-common apt-transport-https
 sudo apt-get update
 sudo apt-get upgrade -y
-
 sudo apt-get install -y snapd
 
 #--- General ---
+sudo apt install -y build-essential automake autoconf cmake libtool pkg-config intltool libcurl4-openssl-dev libglib2.0-dev libevent-dev libminiupnpc-dev libgtk-3-dev libappindicator3-dev libssl-dev libsystemd-dev libgtkmm-3.0
 sudo apt install -y net-tools curl ssh
-sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump tcl8.6 ncat gimp wget
+sudo apt install -y iftop htop hping3 slurm bmon tcpdump tcl8.6 ncat gimp wget
 sudo apt install -y hardinfo
 
 # slurm -z -c -L -i ens16
@@ -120,8 +120,17 @@ sudo apt-get install -y gnome-startup-applications
 # Show startup apps
 # gnome-session-properties
 
-#--- bittorrent ---
+#-- VLC -- https://linuxconfig.org/ubuntu-22-04-vlc-installation
+sudo apt install -y vlc
+sudo apt install -y vlc-plugin-access-extra libbluray-bdj libdvd-pkg
+
+
+#--- bittorrent --- https://pimylifeup.com/ubuntu-transmission/
 #sudo add-apt-repository ppa:transmissionbt/ppa
+sudo apt install -y transmission
+# sudo apt install -y transmission-daemon
+
+
 #--- Chrome ---
 echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
