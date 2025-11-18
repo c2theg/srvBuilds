@@ -14,7 +14,7 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.27                             \r\n
+Version:  0.0.28                             \r\n
 Last Updated:  11/18/2025
 
 Install:  wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/setup_ubuntu_desktop.sh && chmod u+x setup_ubuntu_desktop.sh && ./setup_ubuntu_desktop.sh
@@ -218,7 +218,7 @@ fi
 # sudo apt install -y indicator-weather
 
 #-- https://itsfoss.com/conky-gui-ubuntu-1304/
-sudo add-apt-repository ppa:teejee2008/foss
+sudo add-apt-repository -y ppa:teejee2008/foss
 sudo apt update
 sudo apt install -y conky-manager2 conky-all
 
@@ -234,9 +234,21 @@ sudo apt install -y conky-manager2 conky-all
 
 #--- gpu ----
 #-- Nvidia --
-sudo apt-get install -y nvidia-settings-updates
+# if command -v nvidia-smi >/dev/null 2>&1; then
+#     echo "nvidia-smi exists!"
+# else
+#     sudo apt-get install -y nvidia-settings-updates
+# 	sudo ubuntu-drivers autoinstall
+# 	echo " \r\n \r\n Use the command: 'nvidia-smi' to get all nvidia specific data \r\n \r\n"
+# fi
+
+echo "\r\n \r\n If you have an nVidia GPU, use the following command to install it.. \r\n \r\n 
+sudo apt-get install -y nvidia-settings-updates  
 sudo ubuntu-drivers autoinstall
-echo " \r\n \r\n Use the command: 'nvidia-smi' to get all nvidia specific data \r\n \r\n"
+
+Use the command: 'nvidia-smi' to get all nvidia specific data \r\n \r\n"
+
+
 
 #-- Real-time Monitoring --
 # watch -n 1 nvidia-smi
