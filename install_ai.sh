@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.28
-Last Updated:  10/2/2025
+Version:  0.0.29
+Last Updated:  11/18/2025
 
 # https://ollama.com/search
 
@@ -194,14 +194,13 @@ echo "
 ollama list
 
 #--- Install Python Packages ---
+#--- virtualenv venv ---
+#apt install python3.12-venv
+apt install python3-venv
+python3 -m venv DevEnv1 && source DevEnv1/bin/activate
+wait
 
-#------ virtualenv venv ----------
-python3 -m venv DevEnv1
-wait
-source DevEnv1/bin/activate
-wait
 #--------------------------------
-
 pip3 install requests
 pip3 install ollama
 pip3 install pdfplumber
@@ -210,6 +209,9 @@ pip3 install unstructured unstructured[all-docs]
 pip3 install fastembed
 pip3 install sentence-transformers
 pip3 install elevenlabs
+
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip3 install tensorflow
 
 #--- Vector Databases ---
 # Milvus lite (10k - 100k vectors)
