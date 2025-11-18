@@ -97,7 +97,7 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh
 #sudo apt-get update
 #apt-cache search xscreensaver*
 sudo apt install -y xscreensaver xscreensaver-gl-extra xscreensaver-data-extra rss-glx xscreensaver-screensaver-webcollage
-killall xscreensaver
+# killall xscreensaver
 # /usr/bin/rss-glx_install
 # xscreensaver-demo
 #xscreensaver &
@@ -217,7 +217,10 @@ fi
 # sudo apt update
 # sudo apt install -y indicator-weather
 
-sudo apt install -y conky-all
+#-- https://itsfoss.com/conky-gui-ubuntu-1304/
+sudo add-apt-repository ppa:teejee2008/foss
+sudo apt update
+sudo apt install -y conky-manager2 conky-all
 
 #--- Temp Sensors ---
 # sudo apt-get install -y lm-sensors hddtemp acpi xsensors
