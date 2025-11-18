@@ -14,7 +14,7 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.26                             \r\n
+Version:  0.0.27                             \r\n
 Last Updated:  11/18/2025
 
 Install:  wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/setup_ubuntu_desktop.sh && chmod u+x setup_ubuntu_desktop.sh && ./setup_ubuntu_desktop.sh
@@ -186,11 +186,15 @@ sudo apt install -y veracrypt
 sudo apt install -y windsurf
 
 #--- Sublime Text ---
-sudo wget -O- https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/sublimehq.gpg
-echo "deb [signed-by=/usr/share/keyrings/sublimehq.gpg] https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
-sudo apt update
-sudo apt install -y sublime-text
-
+if [ -s "/usr/share/keyrings/sublimehq.gpg" ]; then
+    echo "Sublime installed, so skipping... \r\n "	
+	#rm update_ubuntu_desktop_22.04.sh
+else
+	sudo wget -O- https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/sublimehq.gpg
+	echo "deb [signed-by=/usr/share/keyrings/sublimehq.gpg] https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+	sudo apt update
+	sudo apt install -y sublime-text
+fi
 #--- Postman ---
 # sudo snap install -y postman
 
@@ -209,21 +213,21 @@ sudo apt install -y sublime-text
 #sudo snap install -y vlc
 
 #--- widgets ----
-sudo add-apt-repository -y ppa:kasra-mp/ubuntu-indicator-weather
-sudo apt update
-sudo apt install -y indicator-weather
+# sudo add-apt-repository -y ppa:kasra-mp/ubuntu-indicator-weather
+# sudo apt update
+# sudo apt install -y indicator-weather
 
-sudo apt install -y conky
+sudo apt install -y conky-all
 
 #--- Temp Sensors ---
-sudo apt-get install -y lm-sensors hddtemp acpi xsensors
-sudo service kmod start
-echo " use: sudo hddtemp /dev/sda  - to get harddrive temps \r\n \r\n "
+# sudo apt-get install -y lm-sensors hddtemp acpi xsensors
+# sudo service kmod start
+# echo " use: sudo hddtemp /dev/sda  - to get harddrive temps \r\n \r\n "
 
-sudo add-apt-repository -y ppa:jfi/ppa
-sudo apt-get update
-sudo apt-get install -y psensor
-echo " \r\n \r\n  use 'sensors-detect' and 'sensors' to get all sensor data  \r\n \r\n"
+# sudo add-apt-repository -y ppa:jfi/ppa
+# sudo apt-get update
+# sudo apt-get install -y psensor
+# echo " \r\n \r\n  use 'sensors-detect' and 'sensors' to get all sensor data  \r\n \r\n"
 
 #--- gpu ----
 #-- Nvidia --
