@@ -19,8 +19,8 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.21                             \r\n
-Last Updated:  11/17/2025
+Version:  0.0.25                             \r\n
+Last Updated:  11/18/2025
 \r\n \r\n"
 
 wait
@@ -43,6 +43,8 @@ sudo apt-get install -y snapd
 #--- General ---
 sudo apt install -y net-tools curl ssh
 sudo apt-get install -y iftop htop hping3 slurm bmon tcpdump tcl8.6 ncat gimp wget
+sudo apt install -y hardinfo
+
 # slurm -z -c -L -i ens16
 
 
@@ -192,6 +194,8 @@ sudo sensors-detect
 sensors
 
 #--- gpu ----
+#-- Nvidia --
+sudo apt-get install -y nvidia-settings-updates
 sudo ubuntu-drivers autoinstall
 nvidia-smi
 
