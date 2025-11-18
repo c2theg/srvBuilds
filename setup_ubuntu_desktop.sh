@@ -64,7 +64,7 @@ if [ -s "update_core.sh" ]; then
     echo "Deleting old files \r\n"	
 	rm update_core.sh
 fi
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh && ./update_core.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh
 
 
 if [ -s "install_docker.sh" ]; then
