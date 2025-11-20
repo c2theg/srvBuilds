@@ -1,16 +1,22 @@
 #!/bin/bash
 #  Copyright © 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.29
+# Version:  0.0.30
 # Last Updated:  11/19/2025
 #--------------------------------------
+# Setup fstabl to remove share
+#  mkdir /mnt/nfs_share
+#  nano /etc/fstab
+#  192.168.1.100:/data /mnt/nfs_share nfs defaults,_netdev 0 0
+#  mount -a
+#--------------------------------------
+
 TimeZone = "America/New_York"
 App_Data = "/mnt/zpool_0/App_Data"
 Media_TV = "/mnt/zpool_0/Media_TV"
 Media_Movies = "/mnt/zpool_0/Media_Movies"
 Media_Music = "/mnt/zpool_0/Media_Music"
 Media_Downloads = "/mnt/zpool_0/Media_Downloads"
-
 
 #------ Containers --------
 #--- Plex - https://hub.docker.com/r/linuxserver/plex
