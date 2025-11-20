@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.28
+# Version:  0.0.29
 # Last Updated:  11/19/2025
 #--------------------------------------
 TimeZone = "America/New_York"
@@ -60,6 +60,23 @@ docker run -d \
 
 
 # Access Sonrr - <your-ip>:8989
+
+#--- install Sabnzbd ---- https://hub.docker.com/r/linuxserver/sabnzbd
+docker run -d \
+  --name=sabnzbd \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=$TimeZone \
+  -p 8080:8080 \
+  -v $App_Data/sabnzbd/config:/config \
+  -v $Media_Downloads:/incomplete-downloads `#optional` \
+  -v $Media_Downloads:/downloads `#optional` \
+  --restart unless-stopped \
+  lscr.io/linuxserver/sabnzbd:latest
+
+
+# Access Sabnzbd - <your-ip>:8080
+
 
 #--- install Youtarr ---
 # https://github.com/DialmasterOrg/Youtarr
