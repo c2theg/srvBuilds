@@ -4,7 +4,7 @@
 # Version:  0.0.30
 # Last Updated:  11/19/2025
 #--------------------------------------
-# Setup fstabl to remove share
+# Setup fstab to remote share
 #  mkdir /mnt/nfs_share
 #  nano /etc/fstab
 #  192.168.1.100:/data /mnt/nfs_share nfs defaults,_netdev 0 0
