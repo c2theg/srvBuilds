@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.30
+# Version:  0.0.31
 # Last Updated:  11/19/2025
 #--------------------------------------
 # Setup fstab to remote share
@@ -11,12 +11,21 @@
 #  mount -a
 #--------------------------------------
 
+# Create required directories
+# cd /mnt/
+# mkdir -h zpool_0/App_Data
+# cd zpool_0/
+# mkdir media_tv media_movies media_music media_downloads temp_downloads
+
+#--------------------------------------
+
 TimeZone = "America/New_York"
-App_Data = "/mnt/zpool_0/App_Data"
-Media_TV = "/mnt/zpool_0/Media_TV"
-Media_Movies = "/mnt/zpool_0/Media_Movies"
-Media_Music = "/mnt/zpool_0/Media_Music"
-Media_Downloads = "/mnt/zpool_0/Media_Downloads"
+App_Data = "/mnt/zpool_0/app_data"
+Media_TV = "/mnt/zpool_0/media_tv"
+Media_Movies = "/mnt/zpool_0/media_movies"
+Media_Music = "/mnt/zpool_0/media_music"
+Media_Downloads = "/mnt/zpool_0/media_downloads"
+temp_downloads = "/mnt/zpool_0/temp_downloads"
 
 #------ Containers --------
 #--- Plex - https://hub.docker.com/r/linuxserver/plex
@@ -75,7 +84,7 @@ docker run -d \
   -e TZ=$TimeZone \
   -p 8080:8080 \
   -v $App_Data/sabnzbd/config:/config \
-  -v $Media_Downloads:/incomplete-downloads `#optional` \
+  -v $temp_downloads:/incomplete-downloads `#optional` \
   -v $Media_Downloads:/downloads `#optional` \
   --restart unless-stopped \
   lscr.io/linuxserver/sabnzbd:latest
