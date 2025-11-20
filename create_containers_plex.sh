@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.31
+# Version:  0.0.32
 # Last Updated:  11/19/2025
 #--------------------------------------
 # Setup fstab to remote share
@@ -13,14 +13,16 @@
 
 # Create required directories
 # cd /mnt/
-# mkdir -h zpool_0/App_Data
+# mkdir -h zpool_0/configs
 # cd zpool_0/
 # mkdir media_tv media_movies media_music media_downloads temp_downloads
+# cd configs/
+# mkdir plex radarr sonarr sabnzbd
 
 #--------------------------------------
 
 TimeZone = "America/New_York"
-App_Data = "/mnt/zpool_0/app_data"
+App_Data = "/mnt/zpool_0/configs"
 Media_TV = "/mnt/zpool_0/media_tv"
 Media_Movies = "/mnt/zpool_0/media_movies"
 Media_Music = "/mnt/zpool_0/media_music"
