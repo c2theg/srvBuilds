@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.29
-Last Updated:  11/18/2025
+Version:  0.0.31
+Last Updated:  11/21/2025
 
 # https://ollama.com/search
 
@@ -94,23 +94,6 @@ echo "
 
 "
 
-#-- good for Text
-# echo "
-
-# Downloading DeepSeek-R1-Distill-Llama-8B ...
-
-# "
-#ollama pull deepseek-r1:latest   # deepseek-r1:8b
-
-
-# echo "
-
-# Qwen-8B (Alibaba Cloud)
-
-# "
-#ollama pull qwen3:latest       # 8b  (from 0.5b - 110b) - Alibaba Cloud
-
-
 echo "
 
 Downloading llama3.2:latest ...
@@ -129,8 +112,7 @@ ollama pull llama3.2:latest        # 3b    - Meta
 #    7.5GB  32K
    
 # "
-# ollama pull gemma3n:latest
-
+# ollama pull gemma3:latest
 
 # echo "
 
@@ -146,7 +128,7 @@ echo "
 Downloading Mistral...
 
 "
-ollama pull mistral:7b
+# ollama pull mistral:7b
 
 #------------------------------------------------------------
 #ollama run tinyllama         # 1.1b
@@ -156,8 +138,25 @@ ollama pull mistral:7b
 #ollama run granite3-dense:8b # 8b - IBM RAG
 
 
-#-- good for Images
+#-- Image Generation ---
 #ollama pull llama3.2-vision:11b    # 11b
+
+
+#-- Vision processing ---
+# ollama pull qwen3-vl:latest
+
+#-- good for Text
+# echo "
+
+
+#-- Coding / Natural Language / Agentic tasks ---
+# ollama pull deepseek-r1:latest
+# ollama pull qwen3-coder:latest
+# ollama pull deepseek-coder:1.3b
+
+# Qwen-8B (Alibaba Cloud)
+# ollama pull qwen3:latest 
+
 
 # echo "
 
@@ -166,6 +165,12 @@ ollama pull mistral:7b
 # "
 #ollama pull llava:7b
 #ollama pull llava-llama3
+
+
+#--- OpenAI ---
+# ollama pull gpt-oss:latest
+# ollama pull gpt-oss:20b
+
 
 
 #--- EMBEDDINGS (RAG) -------
