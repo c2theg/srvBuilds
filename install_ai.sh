@@ -101,7 +101,8 @@ Downloading llama3.2:latest ...
 "
 ollama pull llama3.2:latest        # 3b    - Meta
 
-
+#-- BIG - 67Gb 
+# ollama pull llama4:scout
 
 # echo "
 
