@@ -235,24 +235,20 @@ pip3 install bokeh # https://bokeh.org/
 pip3 install seaborn # https://seaborn.pydata.org/installing.html
 pip3 install plotly # https://plotly.com/python/getting-started/
 
-
 # install NLP Libraries
-pip install numpy pandas matplotlib textblob nltk spacy seaborn wordcloud beautifulsoup4 pymongo imapclient imaplib
+pip3 install textblob nltk spacy wordcloud beautifulsoup4 pymongo
 
 # Machine Learning
-pip install scikit-learn joblib
+pip3 install scikit-learn joblib
 
 # Core email processing
-pip install pymongo beautifulsoup4 html2text requests urllib3
+pip install beautifulsoup4 html2text requests urllib3
 
 # For Transformer models (GPU recommended)
 pip install torch transformers datasets
 
 # Optional: For local Ollama inference
 # Install Ollama from https://ollama.ai
-
-
-echo "Installed Ollama models!"
 
 # Download NLTK data
 python -m nltk.downloader punkt stopwords wordnet averaged_perceptron_tagger
