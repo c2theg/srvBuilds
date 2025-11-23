@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.31
-Last Updated:  11/21/2025
+Version:  0.0.32
+Last Updated:  11/22/2025
 
 # https://ollama.com/search
 
@@ -172,7 +172,7 @@ Downloading Mistral...
 # ollama pull gpt-oss:latest
 # ollama pull gpt-oss:20b
 
-
+ollama pull phi3
 
 #--- EMBEDDINGS (RAG) -------
 echo "
@@ -234,6 +234,31 @@ python -m pip install "dask[complete]"
 pip3 install bokeh # https://bokeh.org/
 pip3 install seaborn # https://seaborn.pydata.org/installing.html
 pip3 install plotly # https://plotly.com/python/getting-started/
+
+
+# install NLP Libraries
+pip install numpy pandas matplotlib textblob nltk spacy seaborn wordcloud beautifulsoup4 pymongo imapclient imaplib
+
+# Machine Learning
+pip install scikit-learn joblib
+
+# Core email processing
+pip install pymongo beautifulsoup4 html2text requests urllib3
+
+# For Transformer models (GPU recommended)
+pip install torch transformers datasets
+
+# Optional: For local Ollama inference
+# Install Ollama from https://ollama.ai
+
+
+echo "Installed Ollama models!"
+
+# Download NLTK data
+python -m nltk.downloader punkt stopwords wordnet averaged_perceptron_tagger
+
+# Download spaCy model
+python -m spacy download en_core_web_sm
 
 
 #------- Install Machine Learning libs -------
