@@ -292,6 +292,10 @@ pip3 install opencv-python # https://docs.opencv.org/4.x/d6/d00/tutorial_py_root
 #-----------------------------
 ollama list
 ollama --version
+
+#-- update all models --
+ollama list | tail -n +2 | awk '{print $1}' | xargs -I {} ollama pull {}
+
 #service ollama status
 
 #---- LLAMA Web UI --- https://github.com/open-webui/open-webui#troubleshooting
