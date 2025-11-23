@@ -247,15 +247,11 @@ pip install beautifulsoup4 html2text requests urllib3
 # For Transformer models (GPU recommended)
 pip install torch transformers datasets
 
-# Optional: For local Ollama inference
-# Install Ollama from https://ollama.ai
-
 # Download NLTK data
 python -m nltk.downloader punkt stopwords wordnet averaged_perceptron_tagger
 
 # Download spaCy model
 python -m spacy download en_core_web_sm
-
 
 #------- Install Machine Learning libs -------
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
