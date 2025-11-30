@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.32
-Last Updated:  11/22/2025
+Version:  0.0.33
+Last Updated:  11/30/2025
 
 # https://ollama.com/search
 
@@ -302,8 +302,18 @@ ollama list | tail -n +2 | awk '{print $1}' | xargs -I {} ollama pull {}
 #pip3 install open-webui
 #open-webui serve
 # -- or docker version --
-# docker pull ghcr.io/open-webui/open-webui:main
-docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+#docker pull ghcr.io/open-webui/open-webui:main
+docker pull ghcr.io/open-webui/open-webui:ollama
+
+#-- not sure
+# docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+
+#-- CPU Only --
+# docker run -d -p 3000:8080 -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
+
+#-- GPU & CPU --
+# docker run -d -p 3000:8080 --gpus=all -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
+
 echo "
 
 Access it from the hostip:8080 
