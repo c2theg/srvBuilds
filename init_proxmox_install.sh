@@ -133,6 +133,21 @@ apt-get autoclean -y
 apt-get autoremove -y
 apt autoremove -y
 
+#---- Download popular / general debian packages ----
+apt install -y cmake
+apt install -y python3-pip
+apt install -y python3-venv
+
+#---- extensions -----
+pip3 install pymongo
+pip3 install validators
+
+mkdir -p /tmp/python3/venv/bin
+mkdir -p /tmp/ml_data/nltk_data
+
+#python3 -m venv /tmp/python3/venv && source /tmp/python3/venv/bin/activate            # NEW WAY - Globally shared python env - for general projects
+#pip3 install --upgrade pip
+#exit
 
 #--- Download LXC templates --- https://pve.proxmox.com/wiki/Linux_Container
 pveam update
