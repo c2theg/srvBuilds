@@ -139,6 +139,9 @@ apt install -y python3-pip
 apt install -y python3-venv
 
 #---- extensions -----
+apt install -y htop nload whois traceroute
+
+
 pip3 install pymongo
 pip3 install validators
 
