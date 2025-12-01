@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.33
+Version:  0.0.35
 Last Updated:  11/30/2025
 
 # https://ollama.com/search
@@ -314,20 +314,32 @@ docker pull ghcr.io/open-webui/open-webui:ollama
 #-- CPU Only --
 # docker run -d -p 3000:8080 -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
 
-#-- GPU & CPU --
-# docker run -d -p 3000:8080 --gpus=all --add-host=host.docker.internal:host-gateway -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
+#-- GPU (Nvidia) & CPU --
+# You need - nvidia-container-toolkit
+#  https://github.com/NVIDIA/nvidia-container-toolkit
+#  https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
 
+#--- Run Rem the following ---
+# sudo apt-get update && sudo apt-get install -y --no-install-recommends curl gnupg2
 
-#-- OpenUI - Models ---
-# https://ollama.com/library/gpt-oss
-# gpt-oss:20b
+# curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+#   && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+#     sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+#     sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
 
-# https://ollama.com/library/deepseek-r1
-# deepseek-r1:8b
+# sudo apt-get update
 
+# export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.18.0-1
+#   sudo apt-get install -y \
+#       nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+#       nvidia-container-toolkit-base=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+#       libnvidia-container-tools=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+#       libnvidia-container1=${NVIDIA_CONTAINER_TOOLKIT_VERSION}
 
+# sudo nvidia-ctk runtime configure --runtime=docker
+# sudo systemctl restart docker
 
-
+# docker run -d -p 3000:8080 --gpus=all -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
 
 echo "
 
