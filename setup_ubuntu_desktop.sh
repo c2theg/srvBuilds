@@ -14,8 +14,8 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.0.28                             \r\n
-Last Updated:  11/18/2025
+Version:  0.0.29                             \r\n
+Last Updated:  11/30/2025
 
 Install:  wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/setup_ubuntu_desktop.sh && chmod u+x setup_ubuntu_desktop.sh && ./setup_ubuntu_desktop.sh
 \r\n \r\n"
@@ -255,6 +255,16 @@ Use the command: 'nvidia-smi' to get all nvidia specific data \r\n \r\n"
 
 #-- Per-Process GPU Usage --
 # nvidia-smi pmon -c 1
+
+
+#-- if you get the error --
+#   Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section 
+# cd /etc/apt
+# sudo cp trusted.gpg trusted.gpg.d
+
+
+# --- another error --
+# sudo apt --fix-broken install
 
 
 
