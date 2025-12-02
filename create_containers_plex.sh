@@ -89,7 +89,11 @@ else
 fi
 
 
-chmod u+x /media/
+#--- change permissions ---
+cd /media/
+chmod u+x *
+chown -R ubuntu:ubuntu *
+
 #------ Containers --------
 #--- Plex - https://hub.docker.com/r/linuxserver/plex
 docker run -d \
