@@ -19,6 +19,8 @@ echo "
 Version:  1.5.17
 Last Updated:  12/2/2025
 
+
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
 "
 echo "Downloading required dependencies...
 
