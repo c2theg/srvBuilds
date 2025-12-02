@@ -230,7 +230,7 @@ echo "
     scp -r /path/to/local/directory/ username@remote_host:/path/to/remote/directory/
 
 # example:
-    scp -r /Users/Admin/Downloads/Movies/SomeAwesomeMovie.mp4 user@10.1.1.12:/media/media_movies/
+    scp -r /Users/Admin/Downloads/Movies/ user@10.1.1.12:/media/media_movies/
 
 
 "
