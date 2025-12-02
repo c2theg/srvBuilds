@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.32
+# Version:  0.0.33
 # Last Updated:  12/1/2025
 #--------------------------------------
 #
@@ -175,7 +175,29 @@ pveam download local ubuntu-22.04-standard_22.04-1_amd64.tar.zst
 
 pveam list local
 
+echo "
 #--- download OCI container images ----
+1) On left side, click the storage drive: 'local'
+2) Click 'CT Templates'
+3) Click 'Pull from OCI Registory'
+
+
+# Example Containers
+#-- servers --
+# portainer/portainer-ce:latest
+# nginx:latest
+# redis:latest
+# mongo:latest
+
+#-- media --
+# linuxserver/plex:latest
+
+
+"
+
+#--- automated downloads... tbd ---
+#cd /var/lib/vz/template/cache
+
 #pct pull <storage_id> <oci_image_url>
 
 # Plex - https://hub.docker.com/r/linuxserver/plex
@@ -249,5 +271,16 @@ echo "
 
 DONE!  Your main partition should be the full size of the disk 
 
+
+#----- Notifications -------
+If using Gmail, create a Gmail Specific password
+https://myaccount.google.com/apppasswords
+
+------
+The Test email will be from:  'Proxmox VE'
+
+
 "
+
+
 
