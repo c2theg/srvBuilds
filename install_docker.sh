@@ -19,10 +19,11 @@ echo "
 Version:  1.5.17
 Last Updated:  12/2/2025
 
-
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
-"
-echo "Downloading required dependencies...
+
+
+
+Downloading required dependencies...
 
 "
 #--------------------------------------------------------------------------------------------
@@ -34,7 +35,6 @@ sudo apt-get update
 sudo apt-get install -y apt-transport-https software-properties-common ca-certificates curl gnupg
 
 sudo install -m 0755 -d /etc/apt/keyrings
-
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
