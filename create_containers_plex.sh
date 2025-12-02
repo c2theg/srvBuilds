@@ -1,8 +1,11 @@
 #!/bin/bash
 #  Copyright © 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.32
-# Last Updated:  11/19/2025
+# Version:  0.0.33
+# Last Updated:  12/2/2025
+#
+# Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
+#
 #--------------------------------------
 # Setup fstab to remote share
 #  mkdir /mnt/nfs_share
@@ -18,16 +21,74 @@
 # mkdir media_tv media_movies media_music media_downloads temp_downloads
 # cd configs/
 # mkdir plex radarr sonarr sabnzbd
-
 #--------------------------------------
-
 TimeZone = "America/New_York"
-App_Data = "/mnt/zpool_0/configs"
-Media_TV = "/mnt/zpool_0/media_tv"
-Media_Movies = "/mnt/zpool_0/media_movies"
-Media_Music = "/mnt/zpool_0/media_music"
-Media_Downloads = "/mnt/zpool_0/media_downloads"
-temp_downloads = "/mnt/zpool_0/temp_downloads"
+
+#--- Change these directories ---
+App_Data = "/media/apps/configs"
+
+Media_Movies = "/media/media_movies"
+Media_TV = "/media/media_tv"
+Media_Music = "/media/media_music"
+
+Media_Downloads = "/media/media_downloads"
+temp_downloads = "/media/temp_downloads"
+
+#----- Check and create dir if doesnt exist --------------------
+if [ ! -d "$App_Data" ]; then
+  echo "Directory '$App_Data' does not exist. Creating it now..."
+  mkdir -p "$App_Data"
+  echo "Directory created ($App_Data)."
+else
+  echo "Directory '$App_Data' already exists."
+fi
+
+
+if [ ! -d "$Media_Movies" ]; then
+  echo "Directory '$Media_Movies' does not exist. Creating it now..."
+  mkdir -p "$Media_Movies"
+  echo "Directory created ($Media_Movies)."
+else
+  echo "Directory '$Media_Movies' already exists."
+fi
+
+
+if [ ! -d "$Media_TV" ]; then
+  echo "Directory '$Media_TV' does not exist. Creating it now..."
+  mkdir -p "$Media_TV"
+  echo "Directory created ($Media_TV)."
+else
+  echo "Directory '$Media_TV' already exists."
+fi
+
+
+if [ ! -d "$Media_Music" ]; then
+  echo "Directory '$Media_Music' does not exist. Creating it now..."
+  mkdir -p "$Media_Music"
+  echo "Directory created ($Media_Music)."
+else
+  echo "Directory '$Media_Music' already exists."
+fi
+
+
+if [ ! -d "$Media_Downloads" ]; then
+  echo "Directory '$Media_Downloads' does not exist. Creating it now..."
+  mkdir -p "$Media_Downloads"
+  echo "Directory created ($Media_Downloads)."
+else
+  echo "Directory '$Media_Downloads' already exists."
+fi
+
+
+if [ ! -d "$temp_downloads" ]; then
+  echo "Directory '$temp_downloads' does not exist. Creating it now..."
+  mkdir -p "$temp_downloads"
+  echo "Directory created ($temp_downloads)."
+else
+  echo "Directory '$temp_downloads' already exists."
+fi
+
+
 
 #------ Containers --------
 #--- Plex - https://hub.docker.com/r/linuxserver/plex
