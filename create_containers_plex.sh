@@ -212,3 +212,25 @@ Access Sabnzbd:  <Server-IP>:8080
 #--- Create Bittorrent Client ----
 # https://www.turnkeylinux.org/torrentserver
 # pveam download local debian-12-turnkey-torrentserver_18.0-1_amd64.tar.gz
+
+
+echo "
+
+
+#--- send files to server (Linux / OSX) ---
+
+    scp /path/to/local/file.txt username@remote_host:/path/to/remote/directory/
+
+# example:
+    scp /Users/Admin/Downloads/Movies/SomeAwesomeMovie.mp4 user@10.1.1.12:/media/media_movies/
+
+
+#--- Recursively ----
+
+    scp -r /path/to/local/directory/ username@remote_host:/path/to/remote/directory/
+
+# example:
+    scp -r /Users/Admin/Downloads/Movies/SomeAwesomeMovie.mp4 user@10.1.1.12:/media/media_movies/
+
+
+"
