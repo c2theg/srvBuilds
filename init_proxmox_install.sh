@@ -121,7 +121,7 @@ Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg" > /etc/apt/sources.l
 apt install -y netselect-apt
 netselect-apt sid -nc ID -o /etc/apt/sources.list
 
-
+# https://blog.valqk.com/archives/Proxmox-cheat-sheet-97.html
 #--- update system ---
 apt update
 apt-get install apt-transport-https
@@ -179,9 +179,11 @@ pveam list local
 #pct pull <storage_id> <oci_image_url>
 
 # Plex - https://hub.docker.com/r/linuxserver/plex
-pct pull local linuxserver/plex
+#pct pull local linuxserver/plex
+#pct pull local local:vztmpl/plex_latest.tar
+# lscr.io/linuxserver/plex:latest
 
-
+# pct create <vmid> local:vztmpl/<template_filename.tar.zst> --hostname plexserver --memory 2048 --cores 2 --net0 name=eth0,bridge=vmbr0,ip=dhcp --unprivileged 1 --password <your_password>
 
 
 #--- create LXC ---
