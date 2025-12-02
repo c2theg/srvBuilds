@@ -1,8 +1,8 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.27
-# Last Updated:  11/15/2025
+# Version:  0.0.30
+# Last Updated:  12/1/2025
 #--------------------------------------
 #
 #  Quick start script for initial setup of Proxmox VE 10+
@@ -195,3 +195,40 @@ echo "\r\n \r\n Done!, it is highly recommended to reboot the system.\r\n"
 
 # admin guide
 # https://pve.proxmox.com/pve-docs/chapter-sysadmin.html#system_software_updates
+
+echo "
+
+Fix partitions - Free up space
+https://youtu.be/_u8qTN3cCnQ?si=72xK2Vo3EiPyIVh8&t=885
+
+1) Login to Webui. ie:  192.168.1.1:8006
+
+2) Click 'Datacenter' 
+3) Click 'Storage'
+4) Click 'local-lvm'
+5) Click 'Remove' button above
+
+Once you delete this partition, press enter and this will resize the existing partition. 
+
+"
+
+# 6) Click the server (under 'Datacenter' on the left)
+# 7) Click 'Shell'
+# 8) Type the following: 
+#     a) lvremove /dev/pve/data
+#     b) lvresize -l +100%FREE /dev/pve/root
+#     c) resize2fs /dev/mapper/pve-root
+
+read -p "Press Enter to continue..."
+
+lvremove /dev/pve/data
+lvresize -l +100%FREE /dev/pve/root
+resize2fs /dev/mapper/pve-root
+
+
+echo " 
+
+DONE!  Your main partition should be the full size of the disk 
+
+"
+
