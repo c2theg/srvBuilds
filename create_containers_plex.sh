@@ -1,7 +1,7 @@
-#!/bin/bash
+ #!/bin/bash
 #  Copyright © 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.35
+# Version:  0.0.36
 # Last Updated:  12/2/2025
 #
 # Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
@@ -124,9 +124,13 @@ docker run -d \
   --restart unless-stopped \
   lscr.io/linuxserver/radarr:latest
 
+echo " 
 
-# Access Radarr:  http://your_server_ip:7878
 
+Access Radarr:  <Server-IP>:7878
+
+
+"
 #--- install Sonrr -- https://hub.docker.com/r/linuxserver/sonarr
 docker run -d \
   --name=sonarr \
@@ -141,7 +145,12 @@ docker run -d \
   lscr.io/linuxserver/sonarr:latest
 
 
-# Access Sonrr - <your-ip>:8989
+echo "
+
+
+Access Sonrr:  <Server-IP>:8989
+
+"
 
 #--- install Sabnzbd ---- https://hub.docker.com/r/linuxserver/sabnzbd
 docker run -d \
@@ -156,9 +165,12 @@ docker run -d \
   --restart unless-stopped \
   lscr.io/linuxserver/sabnzbd:latest
 
+echo "
 
-# Access Sabnzbd - <your-ip>:8080
 
+Access Sabnzbd:  <Server-IP>:8080
+
+"
 
 #--- install Youtarr ---
 # https://github.com/DialmasterOrg/Youtarr
