@@ -103,7 +103,7 @@ docker run -d \
   -e PGID=1000 \
   -e TZ=$TimeZone \
   -e VERSION=docker \
-  -e PLEX_CLAIM= '#optional' \
+  -e PLEX_CLAIM= `#optional` \
   -v $App_Data/plex/library:/config \
   -v $Media_TV:/tv \
   -v $Media_Movies:/movies \
