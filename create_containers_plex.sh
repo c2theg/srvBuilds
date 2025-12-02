@@ -114,6 +114,14 @@ cd /media/
 chmod u+x *
 chown -R ubuntu:ubuntu *
 
+
+#--- Backup Config ----
+# scp admin@10.1.1.13:/media/apps/configs/plex/library/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml  /Users/Admin/Downloads/Movies/
+
+#---- Download Configs -----
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/Preferences.xml
+cp Preferences.xml $App_Data/plex/library/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml
+
 #------ Containers --------
 #--- Plex - https://hub.docker.com/r/linuxserver/plex
 docker run -d \
