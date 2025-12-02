@@ -37,7 +37,7 @@ temp_downloads="/media/temp_downloads"
 #----- Check and create dir if doesnt exist --------------------
 if [ ! -d "$App_Data" ]; then
   echo "Directory '$App_Data' does not exist. Creating it now..."
-  mkdir -p "$App_Data"
+  mkdir -p $App_Data
   echo "Directory created ($App_Data)."
 else
   echo "Directory '$App_Data' already exists."
@@ -46,7 +46,7 @@ fi
 
 if [ ! -d "$Media_Movies" ]; then
   echo "Directory '$Media_Movies' does not exist. Creating it now..."
-  mkdir -p "$Media_Movies"
+  mkdir -p $Media_Movies
   echo "Directory created ($Media_Movies)."
 else
   echo "Directory '$Media_Movies' already exists."
@@ -55,7 +55,7 @@ fi
 
 if [ ! -d "$Media_TV" ]; then
   echo "Directory '$Media_TV' does not exist. Creating it now..."
-  mkdir -p "$Media_TV"
+  mkdir -p $Media_TV
   echo "Directory created ($Media_TV)."
 else
   echo "Directory '$Media_TV' already exists."
