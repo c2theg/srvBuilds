@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.34
+# Version:  0.0.35
 # Last Updated:  12/2/2025
 #
 # Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
@@ -35,12 +35,12 @@ Media_Downloads="/media/media_downloads"
 temp_downloads="/media/temp_downloads"
 
 #----- Check and create dir if doesnt exist --------------------
-if [ ! -d "$App_Data" ]; then
-  echo "Directory '$App_Data' does not exist. Creating it now..."
+if [ ! -d $App_Data ]; then
+  echo "Directory $App_Data does not exist. Creating it now..."
   mkdir -p $App_Data
   echo "Directory created ($App_Data)."
 else
-  echo "Directory '$App_Data' already exists."
+  echo "Directory $App_Data already exists."
 fi
 
 
