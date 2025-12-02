@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.31
+# Version:  0.0.32
 # Last Updated:  12/1/2025
 #--------------------------------------
 #
@@ -116,6 +116,12 @@ Components: no-subscription
 Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg" > /etc/apt/sources.list.d/ceph.sources
 
 
+#-- find the fastest debian repo to download from ---
+# https://medium.com/@sm4rthink/proxmox-cheatsheet-b3e92da768bc
+apt install -y netselect-apt
+netselect-apt sid -nc ID -o /etc/apt/sources.list
+
+
 #--- update system ---
 apt update
 apt-get install apt-transport-https
@@ -168,6 +174,15 @@ pveam download local ubuntu-22.04-standard_22.04-1_amd64.tar.zst
 #pveam download local rockylinux-10-default_20251001_amd64.tar.xz
 
 pveam list local
+
+#--- download OCI container images ----
+#pct pull <storage_id> <oci_image_url>
+
+# Plex - https://hub.docker.com/r/linuxserver/plex
+pct pull local linuxserver/plex
+
+
+
 
 #--- create LXC ---
 #pct create 999 local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst
