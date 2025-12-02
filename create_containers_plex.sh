@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.33
+# Version:  0.0.34
 # Last Updated:  12/2/2025
 #
 # Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
