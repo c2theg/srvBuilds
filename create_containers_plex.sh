@@ -233,4 +233,15 @@ echo "
     scp -r /Users/Admin/Downloads/Movies/ user@10.1.1.12:/media/media_movies/
 
 
+
+#--- VPN Connection ------
+# OpenVPN (PrivadoVPN),  Wireguard
+
 "
+sudo apt update
+sudo apt install -y openvpn
+sudo apt install -y wireguard wireguard-tools
+sudo wg --version
+
+
+
