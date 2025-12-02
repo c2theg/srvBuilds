@@ -22,17 +22,17 @@
 # cd configs/
 # mkdir plex radarr sonarr sabnzbd
 #--------------------------------------
-TimeZone = "America/New_York"
+TimeZone="America/New_York"
 
 #--- Change these directories ---
-App_Data = "/media/apps/configs"
+App_Data="/media/apps/configs"
 
-Media_Movies = "/media/media_movies"
-Media_TV = "/media/media_tv"
-Media_Music = "/media/media_music"
+Media_Movies="/media/media_movies"
+Media_TV="/media/media_tv"
+Media_Music="/media/media_music"
 
-Media_Downloads = "/media/media_downloads"
-temp_downloads = "/media/temp_downloads"
+Media_Downloads="/media/media_downloads"
+temp_downloads="/media/temp_downloads"
 
 #----- Check and create dir if doesnt exist --------------------
 if [ ! -d "$App_Data" ]; then
