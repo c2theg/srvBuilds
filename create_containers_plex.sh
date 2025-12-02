@@ -1,7 +1,7 @@
  #!/bin/bash
 #  Copyright © 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.36
+# Version:  0.0.40
 # Last Updated:  12/2/2025
 #
 # Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
@@ -30,6 +30,9 @@ App_Data="/media/apps/configs"
 Media_Movies="/media/media_movies"
 Media_TV="/media/media_tv"
 Media_Music="/media/media_music"
+
+Media_OtherVideos="/media/media_videos"
+Media_Photos="/media/media_photos"
 
 Media_Downloads="/media/media_downloads"
 temp_downloads="/media/temp_downloads"
@@ -89,6 +92,23 @@ else
 fi
 
 
+if [ ! -d "$Media_OtherVideos" ]; then
+  echo "Directory '$Media_OtherVideos' does not exist. Creating it now..."
+  mkdir -p "$Media_OtherVideos"
+  echo "Directory created ($Media_OtherVideos)."
+else
+  echo "Directory '$Media_OtherVideos' already exists."
+fi
+
+
+if [ ! -d "$Media_Photos" ]; then
+  echo "Directory '$Media_Photos' does not exist. Creating it now..."
+  mkdir -p "$Media_Photos"
+  echo "Directory created ($Media_Photos)."
+else
+  echo "Directory '$Media_Photos' already exists."
+fi
+
 #--- change permissions ---
 cd /media/
 chmod u+x *
@@ -99,16 +119,24 @@ chown -R ubuntu:ubuntu *
 docker run -d \
   --name=plex \
   --net=host \
+  -p 32400:32400 \
   -e PUID=1000 \
   -e PGID=1000 \
   -e TZ=$TimeZone \
   -e VERSION=docker \
-  -e PLEX_CLAIM= `#optional` \
   -v $App_Data/plex/library:/config \
   -v $Media_TV:/tv \
   -v $Media_Movies:/movies \
+  -v $Media_Music:/music \
+  -v $Media_OtherVideos:/videos \
+  -v $Media_Photos:/photos \
   --restart unless-stopped \
   lscr.io/linuxserver/plex:latest
+
+
+#   -e PLEX_CLAIM= `#optional` \
+#   -e PLEX_CLAIM="YOUR_CLAIM_TOKEN_HERE" \
+
 
 echo "
 
