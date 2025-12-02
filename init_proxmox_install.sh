@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.30
+# Version:  0.0.31
 # Last Updated:  12/1/2025
 #--------------------------------------
 #
@@ -161,7 +161,9 @@ pveam download local alpine-3.22-default_20250617_amd64.tar.xz
 #pveam download local debian-12-standard_12.12-1_amd64.tar.zst
 pveam download local debian-13-standard_13.1-2_amd64.tar.zst
 
+pveam download local ubuntu-22.04-standard_22.04-1_amd64.tar.zst
 #pveam download local ubuntu-24.04-standard_24.04-2_amd64.tar.zst
+
 #pveam download local rockylinux-9-default_20240912_amd64.tar.xz
 #pveam download local rockylinux-10-default_20251001_amd64.tar.xz
 
