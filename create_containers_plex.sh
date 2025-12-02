@@ -110,7 +110,13 @@ docker run -d \
   --restart unless-stopped \
   lscr.io/linuxserver/plex:latest
 
+echo "
 
+
+Access Plex:  <Server-IP>:32400/web
+
+
+"
 #--- install Radarr ---- https://hub.docker.com/r/linuxserver/radarr
 docker run -d \
   --name=radarr \
