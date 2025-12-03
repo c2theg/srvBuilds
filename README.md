@@ -79,3 +79,20 @@ curl https://raw.githubusercontent.com/pivpn/pivpn/master/auto_install/install.s
 
  Now run 'pivpn add' to create the client profiles. 
  Run 'pivpn help' to see what else you can do!
+
+
+
+<h3>Setting up a new Ubuntu Server with Plex, here is the recommended list of scripts to install</h3>
+
+```
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh
+
+chmod u+x *
+
+./update_time.sh
+./install_clamav.sh
+
+
+```
