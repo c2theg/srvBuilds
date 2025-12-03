@@ -118,9 +118,15 @@ chown -R ubuntu:ubuntu *
 #--- Backup Config ----
 # scp admin@10.1.1.13:/media/apps/configs/plex/library/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml  /Users/Admin/Downloads/Movies/
 
+echo "
+
 #---- Download Configs -----
+# https://support.plex.tv/articles/204281528-why-am-i-locked-out-of-server-settings-and-how-do-i-get-in/
+
+"
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/Preferences.xml
 cp Preferences.xml $App_Data/plex/library/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml
+
 
 #------ Containers --------
 #--- Plex - https://hub.docker.com/r/linuxserver/plex
