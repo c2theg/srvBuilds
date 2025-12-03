@@ -158,7 +158,7 @@ docker run -d \
   -v $App_Data/plex/library:/config \
   -v $Media_Movies:/movies \
   -v /mnt/remote_share_01:/remote_share_01 \
-  -v /mnt/remote_share_02:/remote_share_02 \ 
+  -v /mnt/remote_share_02:/remote_share_02 \
   -v $Media_TV:/tv \
   -v $Media_Music:/music \
   -v $Media_OtherVideos:/videos \
@@ -191,7 +191,7 @@ docker run -d \
   -v $Media_Movies:/movies `#optional` \
   -v $Media_Downloads:/downloads `#optional` \
   -v /mnt/remote_share_01:/remote_share_01 \
-  -v /mnt/remote_share_02:/remote_share_02 \ 
+  -v /mnt/remote_share_02:/remote_share_02 \
   --restart unless-stopped \
   lscr.io/linuxserver/radarr:latest
 
