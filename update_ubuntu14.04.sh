@@ -110,7 +110,16 @@ else
     pip3 install --upgrade pip
     wait
     #--------------------------------
-    #pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+    pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+
+    #--- install common pip packages ---
+    
+    pip3 install validators
+    pip3 install pymongo redis
+    pip3 install mysql-connector-python
+    pip3 install requests whois urllib3 certifi ordered-set
+    pip3 install pyOpenSSL idna requests urllib3 certifi ipaddress urlparse2 rich ping3 cryptography aiohttp psutil shutil-ext py-machineid distro netaddr python-crontab loguru scapy
+
 fi
 
 #apt install python3-requests -y
