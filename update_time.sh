@@ -1,11 +1,5 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
-#
 #clear
-echo "\r\n \r\n \r\n \r\n" 
 now=$(date)
 echo "Running update_time.sh at $now 
 
@@ -24,10 +18,14 @@ echo "Running update_time.sh at $now
 # https://www.tecmint.com/set-time-timezone-and-synchronize-time-using-timedatectl-command/
 # http://manpages.ubuntu.com/manpages/disco/en/man1/timedatectl.1.html
 
-\r\n \r\n
-Version:  0.0.11                             \r\n
-Last Updated:  6/28/2021
-\r\n \r\n"
+wget 
+
+
+Version:  0.0.12
+Last Updated:  12/3/2025
+
+
+"
 wait
 #--------------------------------------------------------------------------------------------
 sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/timesyncd.conf && chmod +u timesyncd.conf
@@ -36,7 +34,11 @@ wait
 sudo ntpdate -s time.google.com
 
 
-echo "Stopping NTP Services... \r\n"
+echo "
+
+Stopping NTP Services...
+
+"
 sudo service ntp stop
 sudo ntpd -gq
 sudo service ntp start
@@ -81,17 +83,31 @@ sudo systemctl reload ntp.service
 
 ntpq -p
 
-echo "Show status.. \r\n \r\n"
+echo "Show status.. 
+
+"
 sudo timedatectl status
 
-echo "\r\n \r\n Hardware Clock \r\n"
+echo "
+
+Hardware Clock
+
+"
 sudo hwclock --show
 
-echo "For more details enter: \r\n \r\n  sudo systemctl status systemd-timesyncd.service \r\n \r\n"
-echo "Show current time.. \r\n"
+echo "For more details enter: 
+   sudo systemctl status systemd-timesyncd.service
+
+   Show current time..
+
+   
+"
 date
 
-echo "\r\n \r\n \r\n"
-echo "To update timezone, use the following command then re-run this script: \r\n \r\n "
-echo "sudo timedatectl set-timezone UTC \r\n \r\n "
-echo "sudo timedatectl set-timezone America/New_York  \r\n \r\n "
+echo "
+
+To update timezone, use the following command then re-run this script: 
+     sudo timedatectl set-timezone UTC 
+     sudo timedatectl set-timezone America/New_York 
+
+"
