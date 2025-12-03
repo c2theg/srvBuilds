@@ -14,7 +14,7 @@ echo "
                             |_|                                             |___|
 
 
-https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_common.sh && chmod u+x install_common.sh
 
 This really is meant to be run under Ubuntu 16.04 - 24.04+ LTS
 
