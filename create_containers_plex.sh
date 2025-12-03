@@ -336,5 +336,15 @@ To setup SMB remote shares:
    3/6) sudo mount -a
    4/7) df -h /mnt/remote_share_01
 
-   
+
+------- DONE -----------
+To access your servers:
+
+ Access Plex:     <Server-IP>:32400/web
+ Access Radarr:   <Server-IP>:7878
+ Access Sonrr:    <Server-IP>:8989
+ Access Sabnzbd:  <Server-IP>:8080
+
+
+
 "
