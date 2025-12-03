@@ -1,7 +1,7 @@
  #!/bin/bash
 #  Copyright © 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.43
+# Version:  0.0.50
 # Last Updated:  12/2/2025
 #
 # Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
@@ -156,7 +156,8 @@ docker run -d \
   -e VERSION=docker \
   -v $App_Data/plex/library:/config \
   -v $Media_Movies:/movies \
-  -v $Media_Movies:/movies \  
+  -v /mnt/remote_share_01:/remote_share_01 \
+  -v /mnt/remote_share_02:/remote_share_02 \ 
   -v $Media_TV:/tv \
   -v $Media_Music:/music \
   -v $Media_OtherVideos:/videos \
@@ -177,6 +178,8 @@ Access Plex:  <Server-IP>:32400/web
 
 "
 #--- install Radarr ---- https://hub.docker.com/r/linuxserver/radarr
+# https://radarr.video/#downloads-docker
+
 docker run -d \
   --name=radarr \
   -e PUID=1000 \
@@ -186,6 +189,8 @@ docker run -d \
   -v $App_Data/radarr/data:/config \
   -v $Media_Movies:/movies `#optional` \
   -v $Media_Downloads:/downloads `#optional` \
+  -v /mnt/remote_share_01:/remote_share_01 \
+  -v /mnt/remote_share_02:/remote_share_02 \ 
   --restart unless-stopped \
   lscr.io/linuxserver/radarr:latest
 
@@ -206,6 +211,8 @@ docker run -d \
   -v $App_Data/sonarr/data:/config \
   -v $Media_TV:/tv `#optional` \
   -v $Media_Downloads:/downloads `#optional` \
+  -v /mnt/remote_share_01:/remote_share_01 \
+  -v /mnt/remote_share_02:/remote_share_02 \
   --restart unless-stopped \
   lscr.io/linuxserver/sonarr:latest
 
@@ -227,6 +234,8 @@ docker run -d \
   -v $App_Data/sabnzbd/config:/config \
   -v $temp_downloads:/incomplete-downloads `#optional` \
   -v $Media_Downloads:/downloads `#optional` \
+  -v /mnt/remote_share_01:/remote_share_01 \
+  -v /mnt/remote_share_02:/remote_share_02 \
   --restart unless-stopped \
   lscr.io/linuxserver/sabnzbd:latest
 
