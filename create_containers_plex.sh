@@ -45,7 +45,7 @@ sudo mkdir /mnt/remote_share_02
 sudo touch /root/.smbcredentials # Or a similar secure location 
 
 echo "username=your_smb_username
-    password=your_smb_password" > /root/.smbcredentials
+password=your_smb_password" > /root/.smbcredentials
 
 #   domain=your_smb_domain_or_workgroup # Optional
 sudo chmod 600 /root/.smbcredentials
