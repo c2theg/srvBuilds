@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.22
+Version:  1.7.25
 Last Updated:  12/2/2025
 
 
@@ -120,6 +120,8 @@ else
     pip3 install requests whois urllib3 certifi ordered-set
     pip3 install pyOpenSSL idna requests urllib3 certifi ipaddress urlparse2 rich ping3 cryptography aiohttp psutil shutil-ext py-machineid distro netaddr python-crontab loguru scapy
 
+    # Deactivate the virtual environment
+    deactivate
 fi
 
 #apt install python3-requests -y
