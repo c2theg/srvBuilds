@@ -18,7 +18,7 @@ echo "Running update_time.sh at $now
 
 
 
-Version:  0.0.1
+Version:  0.0.5
 Last Updated:  12/3/2025
 
 
@@ -39,18 +39,15 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/config
 
 
 systemctl restart chrony
+
+sudo systemctl start chronyd
+sudo systemctl enable chronyd
+
+
 echo "Show status..
 
 "
-chronyc sources
-
-echo "
-
-Hardware Clock
-
-"
-sudo hwclock --show
-
-
+# sudo systemctl status chrony
 
 chronyc sources
+
