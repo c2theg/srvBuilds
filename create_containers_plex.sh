@@ -49,7 +49,8 @@ echo "username=your_smb_username
 
 #   domain=your_smb_domain_or_workgroup # Optional
 sudo chmod 600 /root/.smbcredentials
-    
+#--- end smb ---
+
 
 if [ ! -d $App_Data ]; then
   echo "Directory $App_Data does not exist. Creating it now..."
