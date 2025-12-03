@@ -38,6 +38,19 @@ Media_Downloads="/media/media_downloads"
 temp_downloads="/media/temp_downloads"
 
 #----- Check and create dir if doesnt exist --------------------
+sudo mkdir /mnt/remote_share_01
+sudo mkdir /mnt/remote_share_02
+
+#-- smb ---
+sudo touch /root/.smbcredentials # Or a similar secure location 
+
+echo "username=your_smb_username
+    password=your_smb_password" > /root/.smbcredentials
+
+#   domain=your_smb_domain_or_workgroup # Optional
+sudo chmod 600 /root/.smbcredentials
+    
+
 if [ ! -d $App_Data ]; then
   echo "Directory $App_Data does not exist. Creating it now..."
   mkdir -p $App_Data
@@ -111,9 +124,6 @@ fi
 
 #--- change permissions ---
 cd /media/
-chmod u+x *
-chown -R ubuntu:ubuntu *
-
 
 #--- Backup Config ----
 # scp admin@10.1.1.13:/media/apps/configs/plex/library/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml  /Users/Admin/Downloads/Movies/
@@ -129,7 +139,11 @@ mkdir -p $App_Data/plex/library/Library/Application\ Support/Plex\ Media\ Server
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/Preferences.xml
 cp Preferences.xml $App_Data/plex/library/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml
+# cp Preferences.xml /media/apps/configs/plex/library/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml
 
+#---- Set Permissions ----
+chmod u+x *
+chown -R ubuntu:ubuntu *
 #------ Containers --------
 #--- Plex - https://hub.docker.com/r/linuxserver/plex
 docker run -d \
@@ -141,8 +155,9 @@ docker run -d \
   -e TZ=$TimeZone \
   -e VERSION=docker \
   -v $App_Data/plex/library:/config \
-  -v $Media_TV:/tv \
   -v $Media_Movies:/movies \
+  -v $Media_Movies:/movies \  
+  -v $Media_TV:/tv \
   -v $Media_Music:/music \
   -v $Media_OtherVideos:/videos \
   -v $Media_Photos:/photos \
@@ -256,13 +271,16 @@ echo "
 
 "
 sudo apt update
+sudo apt install -y cifs-utils
 sudo apt install -y openvpn
 sudo apt install -y wireguard wireguard-tools
 sudo wg --version
 
 echo "
+ 
 
-Done!   Here are you containers!
+Here are you containers!
+
 
 "
 
@@ -270,3 +288,43 @@ docker images
 
 docker ps -a
 
+echo "
+
+To setup NFS remote shares:
+
+    1) sudo nano /etc/fstab
+    
+    <NFS_Server_IP_or_Hostname>:<Exported_Directory> <Local_Mount_Point> nfs <options> 0 0
+
+    ie:
+       192.168.1.100:/data/shared /mnt/remote_share_01 nfs defaults,_netdev 0 0
+       192.168.1.101:/data/shared /mnt/remote_share_02 nfs defaults,_netdev 0 0
+
+
+    2) Save and close
+
+
+
+To setup SMB remote shares:
+
+    1) sudo nano /root/.smbcredentials # Or a similar secure location
+    2) Modify the credentials in this file.  
+    3) sudo chmod 600 /root/.smbcredentials
+    4) sudo nano /etc/fstab
+ 
+     //server_ip_or_hostname/share_name /mnt/smb_share cifs credentials=/root/.smbcredentials,uid=your_linux_user_id,gid=your_linux_group_id,vers=3.0,nofail 0 0
+
+     ie: 
+        //192.168.1.100/shared /mnt/remote_share_01 cifs credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
+        //192.168.1.101/shared /mnt/remote_share_02 cifs credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
+
+ 
+   5) Save and close
+
+--------------------------
+
+   3/6) sudo mount -a
+   4/7) df -h /mnt/remote_share_01
+
+   
+"
