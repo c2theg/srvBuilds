@@ -15,15 +15,18 @@ echo "Running update_time.sh at $now
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-# https://www.tecmint.com/set-time-timezone-and-synchronize-time-using-timedatectl-command/
-# http://manpages.ubuntu.com/manpages/disco/en/man1/timedatectl.1.html
 
-wget 
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_time.sh && chmod u+x update_time.sh
+
 
 
 Version:  0.0.12
 Last Updated:  12/3/2025
 
+
+Sources:
+# https://www.tecmint.com/set-time-timezone-and-synchronize-time-using-timedatectl-command/
+# http://manpages.ubuntu.com/manpages/disco/en/man1/timedatectl.1.html
 
 "
 wait
