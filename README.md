@@ -88,10 +88,12 @@ curl https://raw.githubusercontent.com/pivpn/pivpn/master/auto_install/install.s
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_time2.sh
+
 
 chmod u+x *
 
-./update_time.sh
+./update_time2.sh
 ./install_clamav.sh
 
 
