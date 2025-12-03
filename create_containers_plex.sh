@@ -150,10 +150,7 @@ docker run -d \
   --restart unless-stopped \
   lscr.io/linuxserver/plex:latest
 
-
-#   -e PLEX_CLAIM= `#optional` \
 #   -e PLEX_CLAIM="YOUR_CLAIM_TOKEN_HERE" \
-
 
 echo "
 
