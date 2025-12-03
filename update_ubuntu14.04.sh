@@ -103,28 +103,30 @@ else
     #source DevEnv1/bin/activate
     
     mkdir -p /tmp/python3/venv/bin
-    python3 -m venv /tmp/python3/venv && source /tmp/python3/venv/bin/activate
+    python3 -m venv /tmp/python3/venv
+    wait
+    source /tmp/python3/venv/bin/activate
     #pip3 install -U pip
     pip3 install --upgrade pip
     wait
     #--------------------------------
-    pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+    #pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
 
 #apt install python3-requests -y
 #apt install python3-setuptools -y
 #------------------------ Python PIP3 ---------------------------------
 
-if pip3 -V | grep -q ' not '; then
-    # True
-    echo "Skipping pip3 update.. "
-else
-    python3 -m pip install --upgrade pip
-    # False 
-    echo "Updating PIP3... "
-    pip3 install -U pip
-    pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
-fi
+# if pip3 -V | grep -q ' not '; then
+#     # True
+#     echo "Skipping pip3 update.. "
+# else
+#     #python3 -m pip install --upgrade pip
+#     # False 
+#     echo "Updating PIP3... "
+#     pip3 install -U pip
+#     pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+# fi
 
 #------------------------ Node JS ---------------------------------
 if nodejs --version | grep -q ' not '; then
