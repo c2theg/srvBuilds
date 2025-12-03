@@ -92,16 +92,14 @@ else
     apt install python3-pip -y
     
     python -m pip install --upgrade pip
+    #pip3 list --outdated
+    echo "
 
-    pip3 list --outdated
-    # False 
-    echo "\r\n \r\n ------------------------  \r\n \r\n Updating Python PIP packages... \r\n \r\n"
-
-    #------ virtualenv venv ----------
-    #python3 -m venv DevEnv1
-    #wait
-    #source DevEnv1/bin/activate
     
+    -------- Creating Global Python3 Environment ---------
+    
+    
+    "   
     mkdir -p /tmp/python3/venv/bin
     python3 -m venv /tmp/python3/venv
     wait
@@ -110,10 +108,8 @@ else
     pip3 install --upgrade pip
     wait
     #--------------------------------
-    pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
-
-    #--- install common pip packages ---
-    
+    #pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+    #--- install common pip packages in this global env ---
     pip3 install validators
     pip3 install pymongo redis
     pip3 install mysql-connector-python
