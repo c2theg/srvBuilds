@@ -138,7 +138,7 @@ echo "
 
 mkdir -p $App_Data/plex/library/Library/Application\ Support/Plex\ Media\ Server/
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/Preferences.xml
+wget -O Preferences.xml https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/Preferences.xml
 cp Preferences.xml $App_Data/plex/library/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml
 # cp Preferences.xml /media/apps/configs/plex/library/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml
 
