@@ -16,7 +16,12 @@ sudo -E apt-get update
 wait
 sudo -E apt-get upgrade -y
 wait
-echo "Downloading required dependencies...\r\n\r\n"
+echo "
+
+Downloading required dependencies...
+
+
+"
 #--------------------------------------------------------------------------------------------
 ### -- https://webmin.com/download/#install
 # curl -o webmin-setup-repo.sh https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
@@ -32,6 +37,13 @@ sudo dpkg --install webmin-current.deb
 
 /etc/webmin/restart-by-force-kill
 
-echo "Done! \r\n \r\n"
+echo "
 
+
+Done! 
+
+
+Access your server at:  <Server-IP>:10000
+
+"
 rm webmin-current.deb
