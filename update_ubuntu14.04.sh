@@ -88,6 +88,7 @@ if pip -V | grep -q ' not '; then
     # True
     echo "Skipping pip update.. "
 else
+    apt install -y python3-venv
     apt install python3-pip -y
     
     python -m pip install --upgrade pip
@@ -97,11 +98,10 @@ else
     echo "\r\n \r\n ------------------------  \r\n \r\n Updating Python PIP packages... \r\n \r\n"
 
     #------ virtualenv venv ----------
-    apt install -y python3-venv
-    
-    python3 -m venv DevEnv1
-    wait
+    #python3 -m venv DevEnv1
+    #wait
     #source DevEnv1/bin/activate
+    
     mkdir -p /tmp/python3/venv/bin
     python3 -m venv /tmp/python3/venv && source /tmp/python3/venv/bin/activate
     #pip3 install -U pip
