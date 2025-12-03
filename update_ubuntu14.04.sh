@@ -17,11 +17,11 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.21
-Last Updated:  10/1/2025
+Version:  1.7.22
+Last Updated:  12/2/2025
 
 
-for Debian 8 / Ubuntu versions 20.04 - 24.04 ( ignore the file name :/ )
+for Debian 8 / Ubuntu versions 20.04 - 24.04+ ( ignore the file name :/ )
 
 "
 # wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
@@ -97,13 +97,17 @@ else
     echo "\r\n \r\n ------------------------  \r\n \r\n Updating Python PIP packages... \r\n \r\n"
 
     #------ virtualenv venv ----------
+    apt install -y python3-venv
+    
     python3 -m venv DevEnv1
     wait
-    source DevEnv1/bin/activate
+    #source DevEnv1/bin/activate
+    mkdir -p /tmp/python3/venv/bin
+    python3 -m venv /tmp/python3/venv && source /tmp/python3/venv/bin/activate
+    #pip3 install -U pip
+    pip3 install --upgrade pip
     wait
     #--------------------------------
-    
-    pip install -U pip
     pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 fi
 
