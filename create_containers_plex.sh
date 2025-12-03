@@ -1,7 +1,7 @@
  #!/bin/bash
 #  Copyright © 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.42
+# Version:  0.0.43
 # Last Updated:  12/2/2025
 #
 # Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
@@ -124,9 +124,11 @@ echo "
 # https://support.plex.tv/articles/204281528-why-am-i-locked-out-of-server-settings-and-how-do-i-get-in/
 
 "
+
+mkdir -p $App_Data/plex/library/Application\ Support/Plex\ Media\ Server/
+
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/Preferences.xml
 cp Preferences.xml $App_Data/plex/library/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml
-
 
 #------ Containers --------
 #--- Plex - https://hub.docker.com/r/linuxserver/plex
@@ -248,8 +250,9 @@ echo "
 
 
 
-#--- VPN Connection ------
+#--- Installing VPN Applications ------
 # OpenVPN (PrivadoVPN),  Wireguard
+
 
 "
 sudo apt update
@@ -257,5 +260,13 @@ sudo apt install -y openvpn
 sudo apt install -y wireguard wireguard-tools
 sudo wg --version
 
+echo "
 
+Done!   Here are you containers!
+
+"
+
+docker images
+
+docker ps -a
 
