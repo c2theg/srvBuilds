@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.9.25                           \r\n
-Last Updated:  11/9/2025
+Version:  1.9.26                           \r\n
+Last Updated:  12/3/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
    
@@ -53,11 +53,8 @@ echo "
 
 "
 
-
-
 # Remove bad package
 #   rm /var/lib/dpkg/info/some-package*
-
 #---------------------------------
 sudo du -sh /var/cache/apt
 
@@ -358,13 +355,21 @@ snap list --all | awk '/disabled/{print $1, $3}' |
 
 echo "
 
-Delete any files larger then 1Gb
+
+Deleting all log files (in /var/log/) - which are larger then 1Gb
+
 
 "
 sudo find /var/log -type f -name "*.log" -size +1G -delete
 
+echo "
+
+Deleting CLI command history... 
+
+"
 
 history -c
+history -w
 
 echo " -------------- Done Cleaning system -------- "
 echo "\r\n \r\n"
