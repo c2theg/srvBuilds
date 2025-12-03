@@ -16,8 +16,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
-Version:  1.9.26                           \r\n
+
+Version:  1.9.27 
 Last Updated:  12/3/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
@@ -34,15 +34,10 @@ crontab -e
 (Save and close) - Ctrl + X,  then Save ( y ), then Enter key
 
 /etc/init.d/cron restart
---- DNS Error ---
-If you get the error:  (raw.githubusercontent.com)... failed: Temporary failure in name resolution.
 
-Do the following:
-    cd / 
+
 "
-echo "\r\n \r\n \r\n"
-
-echo "Find all files larger then 500mb... \r\n \r\n "
+echo "Finding all files larger then 500mb... \r\n \r\n "
 find / -type f -size +500M
 
 echo "\r\n \r\n \r\n"
@@ -332,6 +327,7 @@ fi
 
 #----- AI - Ollama ------
 if [ -d "/usr/share/ollama/.ollama/models/blobs/" ]; then
+    ollama list
     echo "Deleting old OLLAMA Models... "
     # ollama list | awk 'NR>2 {print $1}' | xargs -I {} ollama rm {}
 
@@ -362,16 +358,16 @@ Deleting all log files (in /var/log/) - which are larger then 1Gb
 "
 sudo find /var/log -type f -name "*.log" -size +1G -delete
 
-echo "
+# echo "
 
-Deleting CLI command history... 
+# Deleting CLI command history... 
 
-"
+# "
 
-history -c
-history -w
+# history -c
+# history -w
 
-echo " -------------- Done Cleaning system -------- "
+echo " --------- Done Cleaning system --------- "
 echo "\r\n \r\n"
 echo "But just incase you still dont have space... "
 echo "\r\n \r\n"
@@ -389,8 +385,6 @@ echo "\r\n \r\n \r\n \r\n"
 
 echo "Showing files still left open, as they could not be deleted until they are closed. \r\n \r\n"
 sudo lsof | grep deleted
-
-ollama list
 
 #echo "\r\n \r\n"
 #lsof +L1
