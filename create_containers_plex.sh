@@ -1,26 +1,11 @@
- #!/bin/bash
-#  Copyright © 2026 - Christopher Gray 
+#!/bin/bash
+#  Copyright © 2025 - 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.50
+# Version:  0.0.51
 # Last Updated:  12/2/2025
 #
 # Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
 #
-#--------------------------------------
-# Setup fstab to remote share
-#  mkdir /mnt/nfs_share
-#  nano /etc/fstab
-#  192.168.1.100:/data /mnt/nfs_share nfs defaults,_netdev 0 0
-#  mount -a
-#--------------------------------------
-
-# Create required directories
-# cd /mnt/
-# mkdir -h zpool_0/configs
-# cd zpool_0/
-# mkdir media_tv media_movies media_music media_downloads temp_downloads
-# cd configs/
-# mkdir plex radarr sonarr sabnzbd
 #--------------------------------------
 TimeZone="America/New_York"
 
@@ -37,11 +22,8 @@ Media_Photos="/media/media_photos"
 Media_Downloads="/media/media_downloads"
 temp_downloads="/media/temp_downloads"
 
-#----- Check and create dir if doesnt exist --------------------
-sudo mkdir /mnt/remote_share_01
-sudo mkdir /mnt/remote_share_02
 
-#-- smb ---
+#--- smb setup ---
 sudo touch /root/.smbcredentials # Or a similar secure location 
 
 echo "username=your_smb_username
@@ -51,6 +33,9 @@ password=your_smb_password" > /root/.smbcredentials
 sudo chmod 600 /root/.smbcredentials
 #--- end smb ---
 
+#----- Check and create dir if doesnt exist --------------------
+sudo mkdir /mnt/remote_share_01
+sudo mkdir /mnt/remote_share_02
 
 if [ ! -d $App_Data ]; then
   echo "Directory $App_Data does not exist. Creating it now..."
@@ -288,14 +273,22 @@ sudo wg --version
 echo "
  
 
-Here are you containers!
+Here are your containers!
+
+
+"
+docker ps -a
+
+echo "
+
+
+Using these images... 
 
 
 "
 
 docker images
 
-docker ps -a
 
 echo "
 
