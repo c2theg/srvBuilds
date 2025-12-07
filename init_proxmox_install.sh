@@ -1,8 +1,8 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.33
-# Last Updated:  12/1/2025
+# Version:  0.0.34
+# Last Updated:  12/7/2025
 #--------------------------------------
 #
 #  Quick start script for initial setup of Proxmox VE 10+
@@ -217,6 +217,7 @@ cd /var/lib/vz/template/iso
 #--- ubuntu ---  https://releases.ubuntu.com/
 #wget https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso
 wget https://releases.ubuntu.com/24.04/ubuntu-24.04.3-live-server-amd64.iso
+# wget https://download.sys.truenas.net/TrueNAS-SCALE-Goldeye/25.10.0.1/TrueNAS-SCALE-25.10.0.1.iso
 
 #-- arch linux -- https://archlinux.org/releng/releases/
 # Downloads - https://archlinux.org/download/
