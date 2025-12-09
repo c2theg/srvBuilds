@@ -5,7 +5,7 @@ echo "
 Version:  0.0.5
 Last Updated:  12/8/2025
 
-
+https://py-kms.readthedocs.io/en/latest/Documentation.html
 https://py-kms.readthedocs.io/en/latest/Keys.html
 
 
@@ -20,7 +20,6 @@ Enter commands:
 	slmgr /ato
 ------------------------------------------------------------
 
-
 Windows Server 2022 Evaluation (Eval) to Full Version
 Download Windows Server 2022 Evaluation English from Microsoft
 https://software-static.download.prss.microsoft.com/sg/download/888969d5-f34g-4e03-ac9d-1f9786c66749/SERVER_EVAL_x64FRE_en-us.iso
@@ -28,8 +27,6 @@ Upgrade (Eval) to Full version
 Open cmd (run as administrator), then use
 Upgrade to STANDARD
 dism /online /set-edition:serverstandard /productkey:<PRODUCT KEY> /accepteula
-
-
 
 "
 
