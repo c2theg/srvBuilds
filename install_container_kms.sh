@@ -2,7 +2,7 @@
 clear
 echo "
 
-Version:  0.0.2
+Version:  0.0.5
 Last Updated:  12/8/2025
 
 
