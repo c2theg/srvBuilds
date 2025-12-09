@@ -8,6 +8,10 @@ Last Updated:  12/8/2025
 https://py-kms.readthedocs.io/en/latest/Documentation.html
 https://py-kms.readthedocs.io/en/latest/Keys.html
 
+Windows XP - https://archive.org/details/WinXPProSP3x86  
+ - serial: MRX3F-47B9T-2487J-KWKMF-RPWBY
+ -         FCKGW-RHQQ2-YXRKT-8TG6W-2B7Q8
+ 
 
 Login to windows
 Run command prompt as administrator
