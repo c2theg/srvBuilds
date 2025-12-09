@@ -14,7 +14,7 @@ Run command prompt as administrator
 Enter commands:
 
 	slmgr /upk
-	slmgr /ipk W269N-WFGWX-YVC9B-4J6C9-T83GX  (windows key)
+	slmgr /ipk <PRODUCT KEY>  (windows key)
 	slmgr /skms 10.1.10.180 (IP of KMS Server)
 	slmgr /at0
 	slmgr /ato
