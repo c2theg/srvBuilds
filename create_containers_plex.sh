@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2025 - 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.52
+# Version:  0.0.53
 # Last Updated:  12/10/2025
 #
 # Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
@@ -322,16 +322,22 @@ To setup SMB remote shares:
 
 
      ie: 
-        //192.168.1.100:/shared /mnt/remote_share_01 cifs credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=2.0,nofail 0 0
-        //192.168.1.101:/shared /mnt/remote_share_02 cifs credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
+        //192.168.1.100/shared /mnt/remote_share_01 cifs credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
+        //192.168.1.101/shared /mnt/remote_share_02 cifs credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
 
         or Temp Test:
         
-        sudo mount -t cifs //192.168.1.100:/shared /mnt/remote_share_01 -o credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=2.0,nofail 0 0
+        sudo mount -t cifs //192.168.1.100:/shared /mnt/remote_share_01 -o credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
         sudo mount -t cifs //192.168.1.101:/shared /mnt/remote_share_02 -o credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
 
  
    5) Save and close
+
+    FYI: When changing the fstab file, you need to reload the daemon with: 
+      systemctl daemon-reload
+
+    then:
+      mount -a
 
 --------------------------
 
