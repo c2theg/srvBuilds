@@ -134,6 +134,7 @@ cp Preferences.xml $App_Data/plex/library/Library/Application\ Support/Plex\ Med
 # cp Preferences.xml /media/apps/configs/plex/library/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml
 
 #---- Set Permissions ----
+cd /media/
 chmod u+x *
 chown -R ubuntu:ubuntu *
 #------ Containers --------
@@ -268,7 +269,6 @@ echo "
 
 "
 sudo apt update
-sudo apt install -y cifs-utils
 sudo apt install -y openvpn
 sudo apt install -y wireguard wireguard-tools
 sudo wg --version
@@ -346,7 +346,6 @@ To access your servers:
  Access Radarr:   <Server-IP>:7878
  Access Sonrr:    <Server-IP>:8989
  Access Sabnzbd:  <Server-IP>:8080
-
 
 
 "
