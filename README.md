@@ -89,10 +89,15 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/instal
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_time2.sh
-
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_webmin.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_clamav.sh
 
 chmod u+x *
 
+./update_core.sh
+./install_webmin.sh
+./install_docker.sh
+./create_containers_plex.sh
 ./update_time2.sh
 ./install_clamav.sh
 
