@@ -42,11 +42,11 @@ sudo apt install -y nfs-common nfs-kernel-server
 # sudo systemctl restart docker
 # nvidia-smi
 
-# Test GPU integration
+##-- Test GPU integration
 # docker run --gpus all nvidia/cuda:11.5.2-base-ubuntu20.04 nvidia-smi
 
 
-# Then Edit the plex container config, to add the following:
+##-- Then Edit the plex container config, to add the following:
 #   --gpus all \
 #   --runtime=nvidia \
 
