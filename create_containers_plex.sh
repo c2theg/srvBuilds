@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2025 - 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.54
+# Version:  0.0.55
 # Last Updated:  12/10/2025
 #
 # Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
@@ -153,6 +153,7 @@ docker run -d \
   --net=host \
   -e PUID=1000 \
   -e PGID=1000 \
+  --device=/dev/dri:/dev/dri \
   -e TZ=$TimeZone \
   -e VERSION=docker \
   -v $App_Data/plex/library:/config \
