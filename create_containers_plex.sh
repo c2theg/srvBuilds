@@ -14,11 +14,43 @@ sudo apt install -y nfs-common nfs-kernel-server
 
 #-- GPU Drivers---
 # --- Intel Nuc ---
-# sudo apt install intel-media-va-driver-non-free
-# sudo apt install libva-drm2 libva-x11-2
-# sudo apt install intel-opencl-icd
+# sudo apt install -y intel-media-va-driver-non-free
+# sudo apt install -y libva-drm2 libva-x11-2
+# sudo apt install -y intel-opencl-icd
 
-# --- Nvidia ---
+#--- Troubleshooting ---
+# on Intel Nuc 6 with Ubuntu 24.04 - if with no display, the devices turns off:
+# sudo nano /etc/default/grub
+# GRUB_CMDLINE_LINUX_DEFAULT="video=HDMI-A-1:e"
+
+#-- save and close then reboot --
+# sudo update-grub
+# sudo reboot
+
+# --- Nvidia --- https://tizutech.com/plex-transcoding-with-docker-nvidia-gpu/ 
+# sudo apt search nvidia-driver
+# sudo apt install -y nvidia-headless-550-server libnvidia-encode-550 nvidia-utils-550-server libnvidia-encode-550-server
+# reboot
+# curl -fsSL nvidia.github.io | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+# sudo curl -sL nvidia.github.io | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+# sudo apt update
+# sudo apt install -y nvidia-container-toolkit
+
+# sudo nvidia-ctk runtime configure --runtime=docker
+
+# sudo nvidia-container-toolkit --setup-hook
+# sudo systemctl restart docker
+# nvidia-smi
+
+# Test GPU integration
+# docker run --gpus all nvidia/cuda:11.5.2-base-ubuntu20.04 nvidia-smi
+
+
+# Then Edit the plex container config, to add the following:
+#   --gpus all \
+#   --runtime=nvidia \
+
+
 
 
 #--------------------------------------
