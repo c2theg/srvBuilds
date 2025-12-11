@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2025 - 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.55
+# Version:  0.0.57
 # Last Updated:  12/10/2025
 #
 # Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
@@ -45,17 +45,12 @@ sudo apt install -y nfs-common nfs-kernel-server
 ##-- Test GPU integration
 # docker run --gpus all nvidia/cuda:11.5.2-base-ubuntu20.04 nvidia-smi
 
-
 ##-- Then Edit the plex container config, to add the following:
 #   --gpus all \
 #   --runtime=nvidia \
 
-
-
-
 #--------------------------------------
 TimeZone="America/New_York"
-
 #--- Change these directories ---
 App_Data="/media/apps/configs"
 
@@ -68,7 +63,6 @@ Media_Photos="/media/media_photos"
 
 Media_Downloads="/media/media_downloads"
 temp_downloads="/media/temp_downloads"
-
 
 #--- smb setup ---
 sudo touch /root/.smbcredentials # Or a similar secure location 
@@ -362,15 +356,14 @@ To setup SMB remote shares:
      //server_ip_or_hostname/share_name /mnt/smb_share cifs credentials=/root/.smbcredentials,uid=your_linux_user_id,gid=your_linux_group_id,vers=3.0,nofail 0 0
 
 
-
      ie: 
         //192.168.1.100/shared /mnt/remote_share_01 cifs credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
         //192.168.1.101/shared /mnt/remote_share_02 cifs credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
 
-        or Temp Test:
+        Or Temp Test:
         
-        sudo mount -t cifs //192.168.1.100:/shared /mnt/remote_share_01 -o credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
-        sudo mount -t cifs //192.168.1.101:/shared /mnt/remote_share_02 -o credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
+        sudo mount -t cifs //192.168.1.100/shared /mnt/remote_share_01 -o credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
+        sudo mount -t cifs //192.168.1.101/shared /mnt/remote_share_02 -o credentials=/root/.smbcredentials,uid=ubuntu,gid=ubuntu,vers=3.0,nofail 0 0
 
  
    5) Save and close
