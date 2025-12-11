@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2025 - 2026 - Christopher Gray 
 #--------------------------------------
-# Version:  0.0.53
+# Version:  0.0.54
 # Last Updated:  12/10/2025
 #
 # Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/create_containers_plex.sh && chmod u+x create_containers_plex.sh
@@ -11,6 +11,15 @@
 sudo apt update
 sudo apt install -y cifs-utils samba smbclient
 sudo apt install -y nfs-common nfs-kernel-server
+
+#-- GPU Drivers---
+# --- Intel Nuc ---
+# sudo apt install intel-media-va-driver-non-free
+# sudo apt install libva-drm2 libva-x11-2
+# sudo apt install intel-opencl-icd
+
+# --- Nvidia ---
+
 
 #--------------------------------------
 TimeZone="America/New_York"
