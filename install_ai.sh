@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.35
-Last Updated:  11/30/2025
+Version:  0.0.36
+Last Updated:  12/15/2025
 
 # https://ollama.com/search
 
@@ -31,6 +31,8 @@ Recommended (after):
     rm update_ai_models.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
 
 "
+
+# linux-modules-nvidia-580-open-generic-hwe-24.04
 
 #-- update yourself! --
 rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
