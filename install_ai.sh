@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.36
+Version:  0.0.37
 Last Updated:  12/15/2025
 
 # https://ollama.com/search
@@ -303,6 +303,27 @@ ollama list | tail -n +2 | awk '{print $1}' | xargs -I {} ollama pull {}
 
 #service ollama status
 
+echo "
+
+
+------------------------------
+Hello World - Ollama! 
+------------------------------
+
+
+"
+
+curl http://localhost:11434/api/generate -d '{
+  "model": "llama3.2",
+  "prompt": "Why is the sky blue?",
+  "stream": false
+}'
+
+echo "
+
+
+
+"
 #---- LLAMA Web UI --- https://github.com/open-webui/open-webui#troubleshooting
 #pip3 install open-webui
 #open-webui serve
@@ -311,7 +332,8 @@ ollama list | tail -n +2 | awk '{print $1}' | xargs -I {} ollama pull {}
 docker pull ghcr.io/open-webui/open-webui:ollama
 
 #-- not sure
-# docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+
 
 #-- CPU Only --
 # docker run -d -p 3000:8080 -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
