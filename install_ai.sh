@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.37
+Version:  0.0.38
 Last Updated:  12/15/2025
 
 # https://ollama.com/search
@@ -302,6 +302,18 @@ ollama --version
 ollama list | tail -n +2 | awk '{print $1}' | xargs -I {} ollama pull {}
 
 #service ollama status
+
+echo "
+
+
+---- List all Models ----
+
+
+"
+curl http://localhost:11434/api/tags | jq .
+
+
+
 
 echo "
 
