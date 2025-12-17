@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.39
+Version:  0.0.40
 Last Updated:  12/17/2025
 
 # https://ollama.com/search
@@ -36,6 +36,12 @@ Recommended (after):
 
 #-- update yourself! --
 rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
+
+
+if [ ! -f "install_docker.sh" ]; then
+     echo " You need docker first before running this. This will download a docker installer and run it for you. "
+     wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
+fi;
 
 #--------------------------------------------------------------------------------------------
 # Docker - Ollama
