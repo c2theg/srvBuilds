@@ -17,8 +17,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.25
-Last Updated:  12/2/2025
+Version:  1.7.26
+Last Updated:  12/16/2025
 
 
 for Debian 8 / Ubuntu versions 20.04 - 24.04+ ( ignore the file name :/ )
@@ -91,7 +91,7 @@ else
     apt install -y python3-venv
     apt install python3-pip -y
     
-    python -m pip install --upgrade pip
+    #python3 -m pip install --upgrade pip
     #pip3 list --outdated
     echo "
 
