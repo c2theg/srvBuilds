@@ -53,6 +53,8 @@ if [ ! -f "install.sh" ]; then
     wget https://ollama.com/install.sh && chmod u+x install.sh && ./install.sh
 fi
 
+ollama --version
+
 
 echo "
 
@@ -111,6 +113,8 @@ Verify correct function with:  rocminfo
 # sudo tar -C /usr -xzf ollama-linux-arm64.tgz
 
 
+
+
 #---- AI MODELS ----
 # https://ollama.com/search
 
@@ -154,13 +158,15 @@ echo "
 Downloading Mistral...
 
 "
-# ollama pull mistral:7b
+#ollama pull mistral:7b
+ollama pull ministral-3:latest
 
 #------------------------------------------------------------
 #ollama run tinyllama         # 1.1b
 #ollama run nemotron-mini     # 4b - Nvidia
 #ollama run mistral-nemo      # 12b - Mistral - Nvidia
 ollama pull ministral-3:8b-cloud # text only
+ollama pull nemotron-3-nano:30b-cloud
 
 #ollama run llama3-chatqa     # 8b - Nvidia - ChatQA
 #ollama run granite3-dense:8b # 8b - IBM RAG
