@@ -23,9 +23,10 @@ Last Updated:  12/16/2025
 
 for Debian 8 / Ubuntu versions 20.04 - 24.04+ ( ignore the file name :/ )
 
-"
-# wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
 
+"
+#-- update yourself! --
+rm update_ubuntu14.04.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
 
 wait
 # https://askubuntu.com/questions/759524/problem-with-ipv6-sudo-apt-get-update-upgrade
