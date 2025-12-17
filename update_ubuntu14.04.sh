@@ -139,7 +139,7 @@ else
     pip3 install requests whois urllib3 certifi ordered-set
     pip3 install pyOpenSSL idna requests urllib3 certifi ipaddress urlparse2 rich ping3 cryptography aiohttp psutil shutil-ext py-machineid distro netaddr python-crontab loguru scapy
 
-    # Deactivate the virtual environment
+    echo "Deactivate the virtual environment... "
     deactivate
 fi
 
@@ -159,6 +159,7 @@ fi
 # fi
 
 #------------------------ Node JS ---------------------------------
+echo "Checking Node.JS  "
 if nodejs --version | grep -q ' not '; then
     # True
     echo "skipping NodeJS Update.. "
