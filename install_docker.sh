@@ -16,8 +16,8 @@ echo "
 
 
 
-Version:  1.5.17
-Last Updated:  12/2/2025
+Version:  1.5.18
+Last Updated:  12/17/2025
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
 
@@ -55,8 +55,7 @@ sudo -E apt-get update
 #sudo -E apt-get install -y docker-ce
 #sudo -E apt install -y docker-compose
 
-sudo -E apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    
+sudo -E apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-model-plugin
 sudo -E apt install -y docker-compose
 #-------------------------------------
 sudo systemctl start docker
@@ -64,11 +63,22 @@ sudo systemctl start docker
 sudo systemctl enable docker
 #wait
 #sudo systemctl status docker
+echo "
 
+Done - Showing Versions
+
+"
 docker --version
 docker-compose -v
 
 #-------------------------------------
+echo "
+
+
+Setting up container: Portainer
+
+
+"
 docker pull portainer/portainer-ce:latest
 
 docker volume create portainer_data
