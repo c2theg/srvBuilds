@@ -18,8 +18,8 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/instal
 
 This really is meant to be run under Ubuntu 16.04 - 24.04+ LTS
 
-Version:  1.7.26
-Last Updated:  12/2/2025
+Version:  1.7.27
+Last Updated:  12/17/2025
 
 Checking Internet status... 
 
@@ -46,7 +46,7 @@ if nc -zw1 google.com 443; then
 	#sudo -E apt-get install -y ifenslave # LACP - https://www.snel.com/support/how-to-set-up-lacp-bonding-on-ubuntu-18-04-with-netplan/
 
 	#--- Everything else ---
-	sudo -E apt-get install -y sysstat dos2unix cmake
+	sudo -E apt-get install -y sysstat dos2unix cmake apt-transport-https
 	sudo -E apt-get install -y ssh openssh-server openssl libssl-dev whois traceroute htop sshguard build-essential libffi-dev nfs-common nfs-kernel-server speedometer watchdog zip unzip
 	wait
 	sudo -E apt-get install -y ntp ntpdate linuxptp libicu-dev screen sysstat iptraf iperf3 iftop slurm tcptrack bmon nethogs nload parallel gnupg openssl libcurl4 curl net-tools
