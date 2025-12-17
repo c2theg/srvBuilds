@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.38
-Last Updated:  12/15/2025
+Version:  0.0.39
+Last Updated:  12/17/2025
 
 # https://ollama.com/search
 
@@ -45,8 +45,8 @@ rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs
 curl -fsSL https://ollama.com/install.sh | sh
 
 echo "
-grep MemTotal /proc/meminfo
 
+grep MemTotal /proc/meminfo
 
 Downloading and Installing AMD GPU Drivers...
 
@@ -58,6 +58,8 @@ lspci | grep VGA
 curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
 sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
 
+sudo apt install -y libdrm-amdgpu1 libhsa-runtime64-1 libhsakmt1 rocminfo
+
 echo "
 
 
@@ -66,6 +68,13 @@ Deleting Temp download...
 
 "
 rm ollama-linux-amd64-rocm.tgz
+
+echo " 
+
+Verify correct function with:  rocminfo
+
+
+"
 
 
 # echo "
