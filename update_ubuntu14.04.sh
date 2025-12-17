@@ -105,8 +105,10 @@ else
     
     mkdir -p $VENV_DIR
     python3 -m venv $VENV_DIR
+    python3 -m venv '/tmp/python3/venv'
+    
     wait
-    #source /tmp/python3/venv/bin/activate
+    source /tmp/python3/venv/bin/activate
     
     # Define the virtual environment directory name (default to 'venv')
     #VENV_DIR=${VENV_DIR:-"venv"}
