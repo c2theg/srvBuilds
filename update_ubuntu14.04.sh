@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.27
+Version:  1.7.28
 Last Updated:  12/16/2025
 
 
@@ -66,6 +66,16 @@ wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 sudo -E apt-get -y install unattended-upgrades
+sudo -E apt install -y ca-certificates
+sudo update-ca-certificates
+# sudo dpkg-reconfigure ca-certificates
+
+
+#This package installs common CA (Certificate Authority) certificates in /usr/share/ca-certificates.                                                                                                                                      │ 
+#  │ Please select the certificate authorities you trust so that their certificates are installed into /etc/ssl/certs. They will be compiled   │ 
+#  │ into a single /etc/ssl/certs/ca-certificates.crt file. 
+
+
 wait
 #apt-get dist-upgrade -y
 wait
