@@ -104,7 +104,29 @@ else
     mkdir -p /tmp/python3/venv/bin
     python3 -m venv /tmp/python3/venv
     wait
-    source /tmp/python3/venv/bin/activate
+    #source /tmp/python3/venv/bin/activate
+    
+    
+    # Usage: source setup_venv.sh
+    
+    # Define the virtual environment directory name (default to 'venv')
+    #VENV_DIR=${VENV_DIR:-"venv"}
+    VENV_DIR=/tmp/python3/venv
+    
+    # Check if the activate script exists for Linux/macOS
+    if [ -f "./$VENV_DIR/bin/activate" ]; then
+        echo "Activating virtual environment: $VENV_DIR"
+        # Source the activate script in the current shell
+        source "./$VENV_DIR/bin/activate"
+    elif [ -f "./$VENV_DIR/Scripts/activate" ]; then
+        # Check for Windows (Command Prompt/Git Bash compatibility)
+        echo "Activating virtual environment: $VENV_DIR (Windows likely)"
+        source "./$VENV_DIR/Scripts/activate"
+    else
+        echo "Virtual environment directory '$VENV_DIR' not found."
+        echo "Please create it using 'python3 -m venv $VENV_DIR' first."
+    fi
+
     #pip3 install -U pip
     pip3 install --upgrade pip
     wait
