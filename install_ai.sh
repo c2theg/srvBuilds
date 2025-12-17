@@ -160,6 +160,8 @@ Downloading Mistral...
 #ollama run tinyllama         # 1.1b
 #ollama run nemotron-mini     # 4b - Nvidia
 #ollama run mistral-nemo      # 12b - Mistral - Nvidia
+ollama pull ministral-3:8b-cloud # text only
+
 #ollama run llama3-chatqa     # 8b - Nvidia - ChatQA
 #ollama run granite3-dense:8b # 8b - IBM RAG
 
@@ -197,7 +199,7 @@ Downloading Mistral...
 # ollama pull gpt-oss:latest
 # ollama pull gpt-oss:20b
 
-ollama pull phi3
+#ollama pull phi3
 
 #--- EMBEDDINGS (RAG) -------
 echo "
@@ -211,12 +213,12 @@ ollama pull nomic-embed-text
 
 
 #--- Security (Prompt) ----
-echo "
+# echo "
 
-Downloading llama-guard3t...
+# Downloading llama-guard3t...
 
-"
-ollama pull llama-guard3:latest  # 8b - Meta
+# "
+#ollama pull llama-guard3:latest  # 8b - Meta
 #ollama run shieldgemma:latest   # 9b - Google
 
 echo "
@@ -420,3 +422,22 @@ Access it from the hostip:8080
 # upgrade Milvus
 # bash standalone_embed.sh upgrade
 # pip3 install -U pymilvus
+
+
+echo "
+
+==============================
+        Ollama Cloud
+
+   https://ollama.com/cloud
+==============================
+
+If you want to run models in ollama cloud you must setup an account and sign in. Use the following command to generate an API token with ollama.com and a account
+
+Command: 
+    ollama signin
+
+
+
+"
+
