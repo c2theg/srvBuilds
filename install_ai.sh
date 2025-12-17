@@ -160,17 +160,16 @@ Downloading Mistral...
 "
 #ollama pull mistral:7b
 ollama pull ministral-3:latest
+#ollama pull ministral-3:8b-cloud # text only
+#ollama run mistral-nemo      # 12b - Mistral - Nvidia
 
 #------------------------------------------------------------
 #ollama run tinyllama         # 1.1b
 #ollama run nemotron-mini     # 4b - Nvidia
-#ollama run mistral-nemo      # 12b - Mistral - Nvidia
-ollama pull ministral-3:8b-cloud # text only
 ollama pull nemotron-3-nano:30b-cloud
 
 #ollama run llama3-chatqa     # 8b - Nvidia - ChatQA
 #ollama run granite3-dense:8b # 8b - IBM RAG
-
 
 #-- Image Generation ---
 #ollama pull llama3.2-vision:11b    # 11b
