@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.26
+Version:  1.7.27
 Last Updated:  12/16/2025
 
 
@@ -100,19 +100,17 @@ else
     -------- Creating Global Python3 Environment ---------
     
     
-    "   
-    mkdir -p /tmp/python3/venv/bin
-    python3 -m venv /tmp/python3/venv
+    "
+    VENV_DIR=/tmp/python3/venv
+    
+    mkdir -p $VENV_DIR
+    python3 -m venv $VENV_DIR
     wait
     #source /tmp/python3/venv/bin/activate
     
-    
-    # Usage: source setup_venv.sh
-    
     # Define the virtual environment directory name (default to 'venv')
     #VENV_DIR=${VENV_DIR:-"venv"}
-    VENV_DIR=/tmp/python3/venv
-    
+   
     # Check if the activate script exists for Linux/macOS
     if [ -f "./$VENV_DIR/bin/activate" ]; then
         echo "Activating virtual environment: $VENV_DIR"
@@ -207,13 +205,9 @@ fi
 echo "Done "
 echo "\r\n \r\n "
 
-echo " 
+# echo " 
 
-IF you receive the error message: 'The following packages have been kept back', then use the following command.  \r\n 
-for i in $(apt list --upgradable | cut -d '/' -f 1,1); do sudo apt-get install $i -y ; done    \r\n   \r\n 
+# IF you receive the error message: 'The following packages have been kept back', then use the following command.  \r\n 
+# for i in $(apt list --upgradable | cut -d '/' -f 1,1); do sudo apt-get install $i -y ; done    \r\n   \r\n 
 
-";
-
-
-
-
+# ";
