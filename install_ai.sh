@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.40
+Version:  0.0.41
 Last Updated:  12/17/2025
 
 # https://ollama.com/search
@@ -41,14 +41,17 @@ rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs
 if [ ! -f "install_docker.sh" ]; then
      echo " You need docker first before running this. This will download a docker installer and run it for you. "
      wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
-fi;
+fi
 
 #--------------------------------------------------------------------------------------------
 # Docker - Ollama
 # docker pull ollama/ollama
 
 # Install & Update Ollama to latest version using:
+#if [ ! -f "install.sh" ]; then
 curl -fsSL https://ollama.com/install.sh | sh
+#fi
+
 
 echo "
 
@@ -76,6 +79,7 @@ Deleting Temp download...
 rm ollama-linux-amd64-rocm.tgz
 
 echo " 
+
 
 Verify correct function with:  rocminfo
 
