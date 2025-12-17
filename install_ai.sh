@@ -48,9 +48,10 @@ fi
 # docker pull ollama/ollama
 
 # Install & Update Ollama to latest version using:
-#if [ ! -f "install.sh" ]; then
-curl -fsSL https://ollama.com/install.sh | sh
-#fi
+if [ ! -f "install.sh" ]; then
+    #curl -fsSL https://ollama.com/install.sh | sh
+    wget https://ollama.com/install.sh && chmod u+x install.sh && ./install.sh
+fi
 
 
 echo "
