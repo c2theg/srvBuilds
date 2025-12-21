@@ -60,9 +60,14 @@ echo "
 
 grep MemTotal /proc/meminfo
 
-Downloading and Installing AMD GPU Drivers...
+Downloading and Installing AMD GPU / AMD Ryzen AI 9 HX PRO 370 - Drivers...
+
+dmesg | grep -e IOMMU -e AMD-Vi
+
 
 "
+sudo apt install -y linux-oem-24.04b
+# sudo apt install -y fdutils linux-oem-6.14-tools
 
 lspci -k | grep -EA3 'VGA|3D|Display'
 lspci | grep VGA
@@ -73,6 +78,22 @@ sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
 sudo apt install -y libdrm-amdgpu1 libhsa-runtime64-1 libhsakmt1 rocminfo
 
 echo "
+
+Add to grup:
+  nano /etc/default/grub  (remove back slashes)
+      GRUB_CMDLINE_LINUX_DEFAULT=\"amd_iommu=on iommu=pt\"
+
+  save and close
+  update-grub
+
+
+On HOST (Proxmox) 
+issue:
+    lspci -nn | grep -i amd
+look for:
+   00:00.2 IOMMU [0806]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo IOMMU [1022:1508]
+   
+
 
 
 Deleting Temp download...
@@ -90,11 +111,17 @@ Verify correct function with:  rocminfo
 "
 
 
-# echo "
+echo "
 
-# Installing Nvidia CUDA Drivers...
+ ---- Installing Nvidia CUDA Drivers ----
 
-# lspci | grep -i nvidia
+find nvidia devices:
+
+    lspci | grep -i nvidia
+    lspci -nn | grep -i nvidia
+
+
+"
 
 # "
 # Nvidia CUDA - https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local
@@ -128,7 +155,16 @@ echo "
 Downloading llama3.2:latest ...
 
 "
+ollama pull gemma3:4b
 ollama pull llama3.2:latest        # 3b    - Meta
+ollama pull llama3.2-vision
+
+#ollama pull codegemma:7b
+
+#--- RAG Models ---
+# ollama pull command-r:35b
+# ollama pull command-r7b
+
 
 #-- BIG - 67Gb 
 # ollama pull llama4:scout
