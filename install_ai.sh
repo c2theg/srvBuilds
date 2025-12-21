@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.41
-Last Updated:  12/17/2025
+Version:  0.0.43
+Last Updated:  12/20/2025
 
 # https://ollama.com/search
 
@@ -441,6 +441,17 @@ If you want to run models in ollama cloud you must setup an account and sign in.
 
 Command: 
     ollama signin
+
+
+ --- Windows - WSL---
+1) Add Firewall rules to Windows Defender Firewall:
+    8080, 11434
+
+2) Port forward from windows to linux (wsl) container. Run Powershell as admin and enter the following:
+    a) Get IP Address inside Linux container via:  ip a
+    b) Update the following, with both ports, with the correct ip address:
+        netsh interface portproxy add v4tov4 listenport=8080  listenaddress=0.0.0.0 connectport=8080  connectaddress=<WSL_IP>
+        netsh interface portproxy add v4tov4 listenport=11434 listenaddress=0.0.0.0 connectport=11434 connectaddress=<WSL_IP>
 
 
 
