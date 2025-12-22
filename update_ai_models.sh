@@ -18,8 +18,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.19
-Last Updated:  1/10/2025
+Version:  0.0.21
+Last Updated:  12/21/2025
 
 
 Install:
@@ -50,7 +50,10 @@ Updating Ollama or re-installing it...
 
 
 "
-curl -fsSL https://ollama.com/install.sh | sh
+#curl -fsSL https://ollama.com/install.sh | sh
+
+
+
 ollama -v
 
 
@@ -72,9 +75,10 @@ Updating all AI Models...
 
 
 "
-ollama list | tail -n +2 | awk '{print $1}' | while read -r model; do
-  ollama pull $model
-done
+# ollama list | tail -n +2 | awk '{print $1}' | while read -r model; do
+#   ollama pull $model
+# done
+ollama list | tail -n +2 | awk '{print $1}' | xargs -I {} ollama pull {}
 
 
 echo "
