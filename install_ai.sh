@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.44
-Last Updated:  12/20/2025
+Version:  0.0.45
+Last Updated:  12/22/2025
 
 # https://ollama.com/search
 
@@ -66,6 +66,8 @@ dmesg | grep -e IOMMU -e AMD-Vi
 
 
 "
+
+sudo apt install -y jq
 sudo apt install -y linux-oem-24.04b
 # sudo apt install -y fdutils linux-oem-6.14-tools
 
@@ -246,6 +248,34 @@ ollama pull ministral-3:latest
 # "
 #ollama pull llama-guard3:latest  # 8b - Meta
 #ollama run shieldgemma:latest   # 9b - Google
+
+
+#---- Stable Difusion ----
+# https://github.com/AUTOMATIC1111/stable-diffusion-webui
+
+# Debian-based:
+sudo apt install -y wget git python3 python3-venv libgl1 libglib2.0-0
+
+# Ubuntu 24.04
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt install python3.11
+
+# Manjaro/Arch
+sudo pacman -S yay
+yay -S python311 # do not confuse with python3.11 package
+
+# Only for 3.11
+# Then set up env variable in launch script
+export python_cmd="python3.11"
+# or in webui-user.sh
+python_cmd="python3.11"
+
+#-- install 
+wget -q https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui/master/webui.sh && chmod u+x webui.sh && ./webui.sh
+
+#-------------------
+
 
 echo "
 
