@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.43
+Version:  0.0.44
 Last Updated:  12/20/2025
 
 # https://ollama.com/search
@@ -156,7 +156,9 @@ Downloading llama3.2:latest ...
 
 "
 ollama pull gemma3:4b
-ollama pull llama3.2:latest        # 3b    - Meta
+#ollama pull llama3.2:latest        # 3b    - Meta
+
+#-- Image Generation ---
 ollama pull llama3.2-vision
 
 #ollama pull codegemma:7b
@@ -178,17 +180,6 @@ ollama pull llama3.2-vision
 #    7.5GB  32K
    
 # "
-# ollama pull gemma3:latest
-
-# echo "
-
-# Downloading Phi...
-
-# "
-# #ollama pull phi4           # 14b   - Microsoft
-# # ollama pull phi4-mini-reasoning  # 3.8b - Microsoft
-
-
 echo "
 
 Downloading Mistral...
@@ -202,21 +193,16 @@ ollama pull ministral-3:latest
 #------------------------------------------------------------
 #ollama run tinyllama         # 1.1b
 #ollama run nemotron-mini     # 4b - Nvidia
-ollama pull nemotron-3-nano:30b-cloud
+#ollama pull nemotron-3-nano:30b-cloud
 
 #ollama run llama3-chatqa     # 8b - Nvidia - ChatQA
 #ollama run granite3-dense:8b # 8b - IBM RAG
-
-#-- Image Generation ---
-#ollama pull llama3.2-vision:11b    # 11b
-
 
 #-- Vision processing ---
 # ollama pull qwen3-vl:latest
 
 #-- good for Text
 # echo "
-
 
 #-- Coding / Natural Language / Agentic tasks ---
 # ollama pull deepseek-r1:latest
@@ -225,7 +211,6 @@ ollama pull nemotron-3-nano:30b-cloud
 
 # Qwen-8B (Alibaba Cloud)
 # ollama pull qwen3:latest 
-
 
 # echo "
 
@@ -243,12 +228,12 @@ ollama pull nemotron-3-nano:30b-cloud
 #ollama pull phi3
 
 #--- EMBEDDINGS (RAG) -------
-echo "
+# echo "
 
-Downloading nomic-embed-text...
+# Downloading nomic-embed-text...
 
-"
-ollama pull nomic-embed-text
+# "
+#ollama pull nomic-embed-text
 #ollama pull mxbai-embed-large
 #ollama pull snowflake-arctic-embed
 
@@ -271,7 +256,10 @@ ollama list
 #--- virtualenv venv ---
 #apt install python3.12-venv
 apt install python3-venv
-python3 -m venv DevEnv1 && source DevEnv1/bin/activate
+#python3 -m venv DevEnv1 && source DevEnv1/bin/activate
+python3 -m venv DevEnv1 && source ~/bin/activate
+
+
 wait
 
 #--------------------------------
