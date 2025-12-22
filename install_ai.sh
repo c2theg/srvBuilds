@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.45
+Version:  0.0.46
 Last Updated:  12/22/2025
 
 # https://ollama.com/search
@@ -37,6 +37,8 @@ Recommended (after):
 #-- update yourself! --
 rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
 
+
+sudo apt install -y wget curl git python3 python3-venv libgl1 libglib2.0-0
 
 if [ ! -f "install_docker.sh" ]; then
      echo " You need docker first before running this. This will download a docker installer and run it for you. "
@@ -254,7 +256,7 @@ ollama pull ministral-3:latest
 # https://github.com/AUTOMATIC1111/stable-diffusion-webui
 
 # Debian-based:
-sudo apt install -y wget git python3 python3-venv libgl1 libglib2.0-0
+#sudo apt install -y wget git python3 python3-venv libgl1 libglib2.0-0
 
 # Ubuntu 24.04
 sudo add-apt-repository ppa:deadsnakes/ppa
