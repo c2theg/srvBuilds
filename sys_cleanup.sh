@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  1.9.27 
-Last Updated:  12/3/2025
+Version:  1.10.1
+Last Updated:  12/23/2025
 --- Github: 
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
    
@@ -62,7 +62,6 @@ sudo rm /var/lib/dpkg/lock
 echo " --- Running System cleanup...  
 
 "
-sudo pip cache purge
 
 sudo df -h
 #sudo apt-get remove --purge $(dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d')
@@ -336,6 +335,10 @@ if [ -d "/usr/share/ollama/.ollama/models/blobs/" ]; then
     find "$TARGET_DIR" -type f -mtime +90 -exec rm -f {} \;
 fi
 
+#--- Python ----
+sudo pip cache purge
+rm -rf ~/.cache/pip
+sudo rm -rf /root/.cache/pip
 
 #--- SNAP -----
 # Remove old revisions of snaps
