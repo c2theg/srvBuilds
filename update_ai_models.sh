@@ -18,8 +18,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.21
-Last Updated:  12/21/2025
+Version:  0.0.22
+Last Updated:  12/22/2025
 
 
 Install:
@@ -94,4 +94,29 @@ echo "
 DONE!
 
 
+Update OpenWebUI
+
+docker pull ghcr.io/open-webui/open-webui:main
+docker rm -f open-webui
+docker run -d -p 3000:8080 -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main
+
+
+
+
 "
+
+docker stop open-webui
+docker rm -f open-webui
+docker system prune --all --volumes
+
+
+#-- General Version - CPU --
+#docker pull ghcr.io/open-webui/open-webui:main
+#docker run -d -p 3000:8080 -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main
+
+#-- Nvidia Version --
+docker run -d -p 3000:8080 --gpus all --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:cuda
+
+
+
+
