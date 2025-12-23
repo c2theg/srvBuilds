@@ -117,6 +117,14 @@ rm /var/log/vmware-vmsvc.*
 rm /var/log/apt/term.log.*
 rm /var/log/apt/history.log.*
 
+#--- tmp dir ---
+rm -rf /tmp/pip-*
+#rm -rf /tmp/pip-metadata-*
+#rm -rf /tmp/pip-unpack-*
+rm -rf /tmp/systemd-private-*
+rm -rf /tmp/resilio_dumps/
+#--------------
+
 if [ -d "/var/log/unattended-upgrades/" ]; then
     rm -rf /var/log/unattended-upgrades/*
     #rm -rf /var/log/unattended-upgrades/unattended-upgrades-dpkg_*
