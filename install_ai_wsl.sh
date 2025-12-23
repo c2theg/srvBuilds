@@ -1,3 +1,8 @@
+#!/bin/bash
+#  Version 0.0.10
+#  Updated: 12/22/2025
+#
+#----------------------------------------------
 sudo apt install nvidia-driver-580 -y
 
 #------------------
@@ -34,6 +39,9 @@ sudo systemctl restart docker
 #docker run -d -p 3000:8080 -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main
 
 #-- Nvidia Version --
-docker run -d -p 3000:8080 --gpus all --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:cuda
+#docker run -d -p 3000:8080 --gpus all --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:cuda
+docker run -d --network=host --gpus all --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --restart always ghcr.io/open-webui/open-webui:cuda
 
+#-- General Version - CPU --
+docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
 
