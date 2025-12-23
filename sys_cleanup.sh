@@ -37,6 +37,8 @@ crontab -e
 
 
 "
+START_FREE_SPACE=$(df -Ph / | awk 'NR==2 {print $4}')
+
 echo "Finding all files larger then 500mb... \r\n \r\n "
 find / -type f -size +500M
 
@@ -484,6 +486,22 @@ cd /etc/apt
 sudo cp trusted.gpg trusted.gpg.d
 
 
+
+
+"
+df -h
+
+echo "
+
+
+"
+# 3. Get new free space in bytes
+END_FREE_SPACE=$(df -P -B1 / | awk 'NR==2 {print $4}')
+# 4. Calculate difference and print in Human Readable format
+DIFF=$((END_FREE_SPACE - START_FREE_SPACE))
+echo "Space Reclaimed: $(numfmt --to=iec-i --suffix=B $DIFF)"
+
+echo "
 
 
 "
