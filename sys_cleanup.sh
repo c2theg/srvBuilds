@@ -339,6 +339,9 @@ fi
 sudo pip cache purge
 rm -rf ~/.cache/pip
 sudo rm -rf /root/.cache/pip
+sudo rm -rf /root/.local/lib/
+
+
 
 #--- SNAP -----
 # Remove old revisions of snaps
