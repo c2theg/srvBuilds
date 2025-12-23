@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.46
+Version:  0.0.47
 Last Updated:  12/22/2025
 
 # https://ollama.com/search
@@ -234,9 +234,13 @@ ollama pull ministral-3:latest
 #--- EMBEDDINGS (RAG) -------
 # echo "
 
-# Downloading nomic-embed-text...
+# Downloading Embeddings...
 
 # "
+
+# https://ollama.com/library/qwen3-embedding
+ollama pull qwen3-embedding:0.6b
+#ollama pull qwen3-embedding:4b
 #ollama pull nomic-embed-text
 #ollama pull mxbai-embed-large
 #ollama pull snowflake-arctic-embed
