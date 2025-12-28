@@ -23,3 +23,21 @@ sudo update-initramfs -u
 # Reboot to apply changes
 #sudo reboot
 echo "You need to reboot to apply changes... "
+
+echo "
+
+To confirm: 
+
+lspci -nnk | grep -A 3 8126
+
+
+or install Linux HWE
+
+sudo apt install --install-recommends linux-generic-hwe-24.04
+
+
+"
+
+# sudo apt install --install-recommends linux-generic-hwe-24.04
+# sudo reboot
+
