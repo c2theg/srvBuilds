@@ -18,7 +18,7 @@ echo "
 
 
 Version:  0.0.47
-Last Updated:  12/22/2025
+Last Updated:  12/28/2025
 
 # https://ollama.com/search
 
@@ -37,6 +37,8 @@ Recommended (after):
 #-- update yourself! --
 rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
 
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh
+
 
 sudo apt install -y wget curl git python3 python3-venv libgl1 libglib2.0-0
 
@@ -52,7 +54,7 @@ fi
 # Install & Update Ollama to latest version using:
 if [ ! -f "install.sh" ]; then
     #curl -fsSL https://ollama.com/install.sh | sh
-    wget https://ollama.com/install.sh && chmod u+x install.sh && ./install.sh
+    wget -O ollama_install.sh  https://ollama.com/install.sh && chmod u+x ollama_install.sh && ./ollama_install.sh
 fi
 
 ollama --version
@@ -75,6 +77,7 @@ sudo apt install -y linux-oem-24.04b
 
 lspci -k | grep -EA3 'VGA|3D|Display'
 lspci | grep VGA
+
 
 curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
 sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
@@ -159,7 +162,8 @@ echo "
 Downloading llama3.2:latest ...
 
 "
-ollama pull gemma3:4b
+
+#ollama pull gemma3:4b
 #ollama pull llama3.2:latest        # 3b    - Meta
 
 #-- Image Generation ---
@@ -291,12 +295,14 @@ ollama list
 #--- Install Python Packages ---
 #--- virtualenv venv ---
 #apt install python3.12-venv
-apt install python3-venv
+#apt install python3-venv
 #python3 -m venv DevEnv1 && source DevEnv1/bin/activate
-python3 -m venv DevEnv1 && source ~/bin/activate
+#python3 -m venv DevEnv1 && source ~/bin/activate
+#wait
 
+rm install_python3.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh && ./install_python3.sh
 
-wait
 
 #--------------------------------
 pip3 install requests
