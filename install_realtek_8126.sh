@@ -1,4 +1,10 @@
 #!/bin/sh
+#-------------------------
+#  Version 0.0.8
+#  Updated: 12/28/2025
+#-------------------------
+
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/50-staticip.yaml
 
 # Update your lists first
 sudo apt update
@@ -34,6 +40,18 @@ lspci -nnk | grep -A 3 8126
 or install Linux HWE
 
 sudo apt install --install-recommends linux-generic-hwe-24.04
+
+---------------
+To configure ip:
+
+ip a
+ie: enp129s0
+
+move 50-staticip.yaml with:
+
+mv 50-staticip.yaml  /etc/network/
+
+then update the file to include the correct network interface. (ie: enp129s0)
 
 
 "
