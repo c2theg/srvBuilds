@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.4.23
-Last Updated:  9/24/2025
+Version:  1.5.0
+Last Updated:  12/27/2025
 \r\n \r\n"
 #sudo -E apt-get update
 #wait
@@ -54,11 +54,44 @@ sudo -E apt-get install -y python3-virtualenv
 
 wait
 
+cd /opt/
 #virtualenv venv
-python3 -m venv DevEnv1
-wait
-source DevEnv1/bin/activate
-wait
+# python3 -m venv DevEnv1
+# wait
+# source DevEnv1/bin/activate
+# wait
+#-----------------------------------------------------------------------------
+# Configuration
+VENV_DIR="/opt/python_shared"
+TARGET_USER="ubuntu"
+
+#echo "--- 1. Installing Prerequisites ---"
+#sudo apt update && sudo apt install -y python3-venv python3-pip
+
+echo "--- 2. Creating Virtual Environment at $VENV_DIR ---"
+# Create the directory first and set ownership
+sudo mkdir -p $VENV_DIR
+sudo chown $TARGET_USER:$TARGET_USER $VENV_DIR
+
+# Create the venv as the ubuntu user
+python3 -m venv $VENV_DIR
+
+echo "--- 3. Updating Core Components ---"
+# Use the absolute path to the venv's pip
+$VENV_DIR/bin/pip install --upgrade pip setuptools wheel
+
+echo "--- 4. Creating 'activate' Alias ---"
+# This adds an alias to your .bashrc so you don't have to type the full path
+if ! grep -q "alias activate-shared=" ~/.bashrc; then
+    echo "alias activate-shared='source $VENV_DIR/bin/activate'" >> ~/.bashrc
+    echo "Alias 'activate-shared' added to .bashrc"
+fi
+
+echo "--- SUCCESS ---"
+echo "Run 'source ~/.bashrc' or restart your terminal."
+echo "Then, simply type: activate-shared"
+
+#-----------------------------------------------------------------------------
 
 #sudo -E pip3 install virtualenv
 
@@ -78,7 +111,6 @@ pip3 install python-dotenv
 echo "Installing other PIP modules... https://hugovk.github.io/top-pypi-packages/ \r\n "
 
 pip3 install redis pymongo PyYAML psutil tldextract python-whois validators ping3 netaddr maxminddb certifi requests psutil
-
 
 pip3 install setuptools
 pip3 install requests
@@ -142,7 +174,7 @@ pip3 install rsa
 
 pip3 install numpy
 
-
+#deactivate
 #-----------------------
 #echo "Installing pexpect... \r\n "
 #pip3 install pexpect
@@ -162,3 +194,10 @@ pip3 --version
 virtualenv --version
 python3 -m pip --version
 echo "\r\n \r\n"
+
+
+echo "--- SUCCESS ---"
+echo "Run 'source ~/.bashrc' or restart your terminal."
+echo "Then, simply type: activate-shared"
+
+#deactivate
