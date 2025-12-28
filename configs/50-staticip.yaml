@@ -1,6 +1,6 @@
 #---------------------------
 #  Updated: 12/27/2025
-#   Version 0.0.10
+#   Version 0.0.15
 #
 #  Make sure to change line: 12 (ens18) 
 #  *** This MOST-LIKELY WONT WORK FOR YOU! ***
@@ -10,17 +10,19 @@ network:
   renderer: networkd
   ethernets:
     ens18:
+      dhcp4: false         # Disable IPv4 DHCP
+      dhcp6: false         # Optional: Disable IPv6 DHCP
       addresses:
         - 10.1.1.50/24
+      routes:
+        - to: default
+          via: 10.1.1.1
       nameservers:
         addresses:
           - 10.1.1.1
           - 1.1.1.3
           - 208.67.222.222
-      routes:
-        - to: default
-          via: 10.1.1.1
-      ntp:
-        servers:
-          - 10.1.1.1
-          - time.cloudflare.com
+      # ntp:
+      #   servers:
+      #     - 10.1.1.1
+      #     - time.cloudflare.com
