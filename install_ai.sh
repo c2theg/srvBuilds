@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.47
+Version:  0.0.50
 Last Updated:  12/28/2025
 
 # https://ollama.com/search
@@ -82,76 +82,88 @@ sudo apt install -y linux-oem-24.04b
 lspci -k | grep -EA3 'VGA|3D|Display'
 lspci | grep VGA
 
+GPU_INFO=$(lspci -k | grep -EA3 'VGA|3D|Display')
 
-curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
-sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
+if echo "$GPU_INFO" | grep -qi "nvidia"; then
+    echo "NVIDIA GPU detected."    
+    echo "
+ 
+     ---- Installing Nvidia CUDA Drivers ----
+    
+    find nvidia devices:
+    
+        lspci | grep -i nvidia
+        lspci -nn | grep -i nvidia
 
-sudo apt install -y libdrm-amdgpu1 libhsa-runtime64-1 libhsakmt1 rocminfo
-
-echo "
-
-Add to grup:
-  nano /etc/default/grub  (remove back slashes)
-      GRUB_CMDLINE_LINUX_DEFAULT=\"amd_iommu=on iommu=pt\"
-
-  save and close
-  update-grub
+        
+    https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=24.04&target_type=deb_local
 
 
-On HOST (Proxmox) 
-issue:
-    lspci -nn | grep -i amd
-look for:
-   00:00.2 IOMMU [0806]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo IOMMU [1022:1508]
+    "
+
+    #--- Ubuntu 22.04 ---
+    #Nvidia CUDA - https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local
+    #wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+    #sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+    #wget https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/cuda-repo-ubuntu2204-12-6-local_12.6.3-560.35.05-1_amd64.deb
+    #sudo dpkg -i cuda-repo-ubuntu2204-12-6-local_12.6.3-560.35.05-1_amd64.deb
+    #sudo cp /var/cuda-repo-ubuntu2204-12-6-local/cuda-*-keyring.gpg /usr/share/keyrings/
+    
+    #--- Ubuntu 24.04 ---
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
+    sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
+    wget https://developer.download.nvidia.com/compute/cuda/13.1.0/local_installers/cuda-repo-ubuntu2404-13-1-local_13.1.0-590.44.01-1_amd64.deb
+    sudo dpkg -i cuda-repo-ubuntu2404-13-1-local_13.1.0-590.44.01-1_amd64.deb
+    sudo cp /var/cuda-repo-ubuntu2404-13-1-local/cuda-*-keyring.gpg /usr/share/keyrings/
+    sudo apt-get update
+    sudo apt-get -y install cuda-toolkit-13-1
+
+    #------------------------------
+    sudo apt-get update
+    sudo apt-get -y install cuda-toolkit-12-6
+    sudo apt-get install -y nvidia-open
+
    
+elif echo "$GPU_INFO" | grep -qi "amd"; then
+    echo "AMD GPU detected."
+    
+    
+    curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
+    sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
+    
+    sudo apt install -y libdrm-amdgpu1 libhsa-runtime64-1 libhsakmt1 rocminfo
+    
+    rm ollama-linux-amd64-rocm.tgz
 
 
-
-Deleting Temp download...
-
-
-"
-rm ollama-linux-amd64-rocm.tgz
-
-echo " 
-
-
-Verify correct function with:  rocminfo
-
-
-"
-
-
-echo "
-
- ---- Installing Nvidia CUDA Drivers ----
-
-find nvidia devices:
-
-    lspci | grep -i nvidia
-    lspci -nn | grep -i nvidia
+    echo "
+    
+    Add to grup:
+      nano /etc/default/grub  (remove back slashes)
+          GRUB_CMDLINE_LINUX_DEFAULT=\"amd_iommu=on iommu=pt\"
+    
+      save and close
+      update-grub
+    
+    
+    On HOST (Proxmox) 
+    issue:
+        lspci -nn | grep -i amd
+    look for:
+       00:00.2 IOMMU [0806]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo IOMMU [1022:1508]
+       
+    Verify correct function with:  rocminfo
+    
+    "
 
 
-"
+else
+    echo "No NVIDIA or AMD GPU found in relevant PCI slots."
+    # echo "Installing ARM64 (Apple Mac, Pi, etc.)... \r\n "
+    # curl -L https://ollama.com/download/ollama-linux-arm64.tgz -o ollama-linux-arm64.tgz
+    # sudo tar -C /usr -xzf ollama-linux-arm64.tgz
 
-# "
-# Nvidia CUDA - https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local
-# wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
-# sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
-# wget https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/cuda-repo-ubuntu2204-12-6-local_12.6.3-560.35.05-1_amd64.deb
-# sudo dpkg -i cuda-repo-ubuntu2204-12-6-local_12.6.3-560.35.05-1_amd64.deb
-# sudo cp /var/cuda-repo-ubuntu2204-12-6-local/cuda-*-keyring.gpg /usr/share/keyrings/
-# sudo apt-get update
-# sudo apt-get -y install cuda-toolkit-12-6
-# sudo apt-get install -y nvidia-open
-
-
-# echo "Installing ARM64 (Apple Mac, Pi, etc.)... \r\n "
-# curl -L https://ollama.com/download/ollama-linux-arm64.tgz -o ollama-linux-arm64.tgz
-# sudo tar -C /usr -xzf ollama-linux-arm64.tgz
-
-
-
+fi
 
 #---- AI MODELS ----
 # https://ollama.com/search
@@ -270,6 +282,8 @@ ollama pull qwen3-embedding:0.6b
 # Debian-based:
 #sudo apt install -y wget git python3 python3-venv libgl1 libglib2.0-0
 
+
+
 # Ubuntu 24.04
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt update
@@ -306,6 +320,14 @@ ollama list
 
 
 #--------------------------------
+source /opt/python_shared/bin/activate
+source ~/.bashrc
+activate-shared
+
+
+wait
+wait
+
 pip3 install requests
 pip3 install ollama
 pip3 install pdfplumber
