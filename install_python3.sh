@@ -91,11 +91,10 @@ echo "--- SUCCESS ---"
 echo "Run 'source ~/.bashrc' or restart your terminal."
 echo "Then, simply type: activate-shared"
 
+#--- activiate ---
+source $VENV_DIR/bin/activate
 wait
 wait
-source ~/.bashrc
-wait
-activate-shared
 wait
 #-----------------------------------------------------------------------------
 
@@ -157,7 +156,7 @@ pip3 install rsa
 #pip3 install protobuf
 #pip3 install websockets
 
-#pip3 install redis
+pip3 install redis
 #pip3 install redis-trib
 
 #pip3 install python-memcached
@@ -206,11 +205,11 @@ echo "--- SUCCESS ---"
 echo "Run 'source ~/.bashrc' or restart your terminal."
 echo "Then, simply type: activate-shared"
 
-#deactivate
+deactivate
 
 #--------------------------------------------------------------------------------------------------
 # Configuration
-DATA_DIR="/opt/ml_shared"
+DATA_DIR="/usr/local/share/ml_shared" #"/opt/ml_shared"
 
 echo "--- 1. Creating Shared ML Data Directory ---"
 sudo mkdir -p $DATA_DIR
@@ -224,14 +223,27 @@ mkdir -p $DATA_DIR/torch
 
 echo "--- 3. Exporting Environment Variables to .bashrc ---"
 # This tells the libraries where to look
-cat << EOF >> ~/.bashrc
+# cat << EOF >> ~/.bashrc
 
-# Shared ML Data Paths
-export HF_HOME="$DATA_DIR/huggingface"
-export NLTK_DATA="$DATA_DIR/nltk"
-export SPACY_DATA="$DATA_DIR/spacy"
-export TORCH_HOME="$DATA_DIR/torch"
-EOF
+# # Shared ML Data Paths
+# export HF_HOME="$DATA_DIR/huggingface"
+# export NLTK_DATA="$DATA_DIR/nltk"
+# export SPACY_DATA="$DATA_DIR/spacy"
+# export TORCH_HOME="$DATA_DIR/torch"
+# EOF
+
+echo "export HF_HOME='$DATA_DIR/huggingface'" >> ~/.bashrc
+echo "export HF_HOME='$DATA_DIR/nltk'" >> ~/.bashrc
+echo "export HF_HOME='$DATA_DIR/spacy'" >> ~/.bashrc
+echo "export HF_HOME='$DATA_DIR/torch'" >> ~/.bashrc
 
 echo "--- SUCCESS ---"
 echo "Please run: source ~/.bashrc"
+
+
+
+echo "-- Preload ML Data... ---"
+# https://www.nltk.org/data.html
+#python3 -m nltk.downloader popular
+
+
