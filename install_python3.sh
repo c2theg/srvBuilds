@@ -15,7 +15,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.0
+Version:  1.5.1
 Last Updated:  12/27/2025
 \r\n \r\n"
 #sudo -E apt-get update
@@ -207,3 +207,31 @@ echo "Run 'source ~/.bashrc' or restart your terminal."
 echo "Then, simply type: activate-shared"
 
 #deactivate
+
+#--------------------------------------------------------------------------------------------------
+# Configuration
+DATA_DIR="/opt/ml_shared"
+
+echo "--- 1. Creating Shared ML Data Directory ---"
+sudo mkdir -p $DATA_DIR
+sudo chown -R $USER_NAME:$USER_NAME $DATA_DIR
+
+echo "--- 2. Setting up Library Sub-folders ---"
+mkdir -p $DATA_DIR/huggingface
+mkdir -p $DATA_DIR/nltk
+mkdir -p $DATA_DIR/spacy
+mkdir -p $DATA_DIR/torch
+
+echo "--- 3. Exporting Environment Variables to .bashrc ---"
+# This tells the libraries where to look
+cat << EOF >> ~/.bashrc
+
+# Shared ML Data Paths
+export HF_HOME="$DATA_DIR/huggingface"
+export NLTK_DATA="$DATA_DIR/nltk"
+export SPACY_DATA="$DATA_DIR/spacy"
+export TORCH_HOME="$DATA_DIR/torch"
+EOF
+
+echo "--- SUCCESS ---"
+echo "Please run: source ~/.bashrc"
