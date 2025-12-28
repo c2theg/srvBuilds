@@ -15,8 +15,8 @@ echo "Running setup_bbr.sh
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.3                            
-Last Updated:  11/24/2022
+Version:  0.0.5                         
+Last Updated:  12/28/2025
 \r\n \r\n"
 # https://wiki.crowncloud.net/?How_to_enable_BBR_on_Ubuntu_22_04
 #--------------------------------------------------------------------------------------------
@@ -32,3 +32,14 @@ echo "Check if its working... "
 sysctl net.ipv4.tcp_available_congestion_control
 sysctl net.ipv4.tcp_congestion_control
 lsmod | grep bbr
+
+
+#--- BBRv2 - https://github.com/jinwyp/one_click_script
+
+echo "
+
+If you want BBRv2 run the following script: 
+curl -O https://raw.githubusercontent.com/jinwyp/one_click_script/master/install_kernel.sh && chmod +x ./install_kernel.sh && ./install_kernel.sh
+
+
+"
