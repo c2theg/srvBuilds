@@ -91,6 +91,12 @@ echo "--- SUCCESS ---"
 echo "Run 'source ~/.bashrc' or restart your terminal."
 echo "Then, simply type: activate-shared"
 
+wait
+wait
+source ~/.bashrc
+wait
+activate-shared
+wait
 #-----------------------------------------------------------------------------
 
 #sudo -E pip3 install virtualenv
