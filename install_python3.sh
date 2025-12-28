@@ -15,7 +15,7 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.3
+Version:  1.5.4
 Last Updated:  12/27/2025
 
 update yourself:
