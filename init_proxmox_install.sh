@@ -291,6 +291,16 @@ The Test email will be from:  'Proxmox VE'
 
 "
 
-apt-get update
+
+apt-get update && apt-get dist-upgrade -y && apt-get autoremove && apt-get autoclean
 apt-get upgrade -y
 
+#----
+
+echo " If you have networking issues with Chrony.... "
+echo " remark out: 'set -e' in the file: /etc/network/if-up.d/chrony.  That will fix it"
+
+echo "
+
+
+"
