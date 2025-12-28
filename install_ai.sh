@@ -46,6 +46,11 @@ if [ ! -f "install_docker.sh" ]; then
      ./install_docker.sh
 fi
 
+
+#rm install_python3.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh
+#./install_python3.sh
+
 #--------------------------------------------------------------------------------------------
 # Docker - Ollama
 # docker pull ollama/ollama
@@ -298,9 +303,6 @@ ollama list
 #python3 -m venv DevEnv1 && source DevEnv1/bin/activate
 #python3 -m venv DevEnv1 && source ~/bin/activate
 #wait
-
-rm install_python3.sh
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh && ./install_python3.sh
 
 
 #--------------------------------
