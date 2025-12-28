@@ -15,9 +15,16 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.1
+Version:  1.5.3
 Last Updated:  12/27/2025
-\r\n \r\n"
+
+update yourself:
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh && ./install_python3.sh
+
+"
+
+rm install_python3.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh && ./install_python3.sh
+
 #sudo -E apt-get update
 #wait
 #sudo -E apt-get upgrade -y
