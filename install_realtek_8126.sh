@@ -6,12 +6,18 @@
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/50-staticip.yaml
 
+#--- backup netplan ---
+sudo mkdir /etc/netplan/backup
+sudo cp /etc/netplan/*.yaml /etc/netplan/backup/
+#--- end backup of netplan ---
+
 # Update your lists first
 sudo apt update
 
 # Add the specific 24.04 compatible driver PPA
 sudo add-apt-repository ppa:awesometic/ppa
 sudo apt update
+sudo apt upgrade -y
 
 # Install the driver package
 sudo apt install realtek-r8126-dkms
