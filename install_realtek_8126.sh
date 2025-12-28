@@ -1,8 +1,9 @@
 #!/bin/sh
 #-------------------------
-#  Version 0.0.8
+#  Version 0.0.20
 #  Updated: 12/28/2025
 #-------------------------
+ip link show
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/50-staticip.yaml
 
