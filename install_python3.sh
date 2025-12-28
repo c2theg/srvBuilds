@@ -213,8 +213,13 @@ echo "--- SUCCESS ---"
 echo "Run 'source ~/.bashrc' or restart your terminal."
 echo "Then, simply type: activate-shared"
 
-deactivate
+#deactivate
 
+echo " 
+
+You can 'deactivate' the venv now!
+
+"
 #--------------------------------------------------------------------------------------------------
 # Configuration
 DATA_DIR="/usr/local/share/ml_shared" #"/opt/ml_shared"
