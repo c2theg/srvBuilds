@@ -37,14 +37,13 @@ Recommended (after):
 #-- update yourself! --
 rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh
-
-
 sudo apt install -y wget curl git python3 python3-venv libgl1 libglib2.0-0
 
 if [ ! -f "install_docker.sh" ]; then
      echo " You need docker first before running this. This will download a docker installer and run it for you. "
-     wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
+     wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh
+     chmod u+x install_docker.sh
+     ./install_docker.sh
 fi
 
 #--------------------------------------------------------------------------------------------
@@ -52,7 +51,7 @@ fi
 # docker pull ollama/ollama
 
 # Install & Update Ollama to latest version using:
-if [ ! -f "install.sh" ]; then
+if [ ! -f "ollama_install.sh" ]; then
     #curl -fsSL https://ollama.com/install.sh | sh
     wget -O ollama_install.sh  https://ollama.com/install.sh && chmod u+x ollama_install.sh && ./ollama_install.sh
 fi
