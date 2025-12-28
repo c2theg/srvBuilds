@@ -1,8 +1,8 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray 
 #--------------------------------------
-# Version:  0.0.34
-# Last Updated:  12/7/2025
+# Version:  0.0.35
+# Last Updated:  12/27/2025
 #--------------------------------------
 #
 #  Quick start script for initial setup of Proxmox VE 10+
@@ -123,8 +123,13 @@ netselect-apt sid -nc ID -o /etc/apt/sources.list
 
 # https://blog.valqk.com/archives/Proxmox-cheat-sheet-97.html
 #--- update system ---
+
+#-- if you cant update b/c you have invalid certs
+#sudo apt -o "Acquire::https::Verify-Peer=false" update
+#sudo apt -o "Acquire::https::Verify-Peer=false" install ca-certificates
+
 apt update
-apt-get install apt-transport-https
+apt-get install -y apt-transport-https ca-certificates 
 apt-get upgrade -y
 
 #https://github.com/CarmineCodes/Proxmox-No-Subscription-No-Problem
@@ -145,14 +150,17 @@ apt install -y python3-pip
 apt install -y python3-venv
 
 #---- extensions -----
-apt install -y htop nload whois traceroute
+apt install -y htop nload whois traceroute iotop iftop curl wget tmux unzip 
 
+#--- security ---
+apt install -y fail2ban
 
+#--- python ---
 pip3 install pymongo
 pip3 install validators
 
-mkdir -p /tmp/python3/venv/bin
-mkdir -p /tmp/ml_data/nltk_data
+mkdir -p /opt/python3/venv/bin
+mkdir -p /opt/ml_data/nltk_data
 
 #python3 -m venv /tmp/python3/venv && source /tmp/python3/venv/bin/activate            # NEW WAY - Globally shared python env - for general projects
 #pip3 install --upgrade pip
@@ -283,5 +291,6 @@ The Test email will be from:  'Proxmox VE'
 
 "
 
-
+apt-get update
+apt-get upgrade -y
 
