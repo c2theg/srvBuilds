@@ -18,8 +18,8 @@ wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/instal
 
 This really is meant to be run under Ubuntu 16.04 - 24.04+ LTS
 
-Version:  1.7.27
-Last Updated:  12/17/2025
+Version:  1.8.0
+Last Updated:  12/27/2025
 
 Checking Internet status... 
 
@@ -99,6 +99,7 @@ if nc -zw1 google.com 443; then
 	echo "\r\n \r\n ---------------------------------------------- \r\n \r\n"
 	#wget -O - -q -t 1 --timeout=1 https://magnetoai.com/api/updater/check.php?f=install_common > /dev/null
 	echo "Downloading latest versions... \r\n\r\n"	
+	wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/50-staticip.yaml
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_snmp.sh && chmod u+x install_snmp.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod +u update_time.sh
 	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
