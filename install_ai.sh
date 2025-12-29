@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.50
+Version:  0.0.55
 Last Updated:  12/28/2025
 
 # https://ollama.com/search
@@ -36,8 +36,9 @@ Recommended (after):
 
 #-- update yourself! --
 rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
+sudo apt update
+sudo apt install -y --no-install-recommends wget curl gnupg2 git python3 python3-venv libgl1 libglib2.0-0
 
-sudo apt install -y wget curl git python3 python3-venv libgl1 libglib2.0-0
 
 if [ ! -f "install_docker.sh" ]; then
      echo " You need docker first before running this. This will download a docker installer and run it for you. "
@@ -155,14 +156,11 @@ elif echo "$GPU_INFO" | grep -qi "amd"; then
     Verify correct function with:  rocminfo
     
     "
-
-
 else
     echo "No NVIDIA or AMD GPU found in relevant PCI slots."
     # echo "Installing ARM64 (Apple Mac, Pi, etc.)... \r\n "
     # curl -L https://ollama.com/download/ollama-linux-arm64.tgz -o ollama-linux-arm64.tgz
     # sudo tar -C /usr -xzf ollama-linux-arm64.tgz
-
 fi
 
 #---- AI MODELS ----
@@ -275,6 +273,8 @@ ollama pull qwen3-embedding:0.6b
 #ollama pull llama-guard3:latest  # 8b - Meta
 #ollama run shieldgemma:latest   # 9b - Google
 
+ollama list
+
 
 #---- Stable Difusion ----
 # https://github.com/AUTOMATIC1111/stable-diffusion-webui
@@ -282,16 +282,14 @@ ollama pull qwen3-embedding:0.6b
 # Debian-based:
 #sudo apt install -y wget git python3 python3-venv libgl1 libglib2.0-0
 
-
-
 # Ubuntu 24.04
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt update
 sudo apt install python3.11
 
 # Manjaro/Arch
-sudo pacman -S yay
-yay -S python311 # do not confuse with python3.11 package
+#sudo pacman -S yay
+#yay -S python311 # do not confuse with python3.11 package
 
 # Only for 3.11
 # Then set up env variable in launch script
@@ -303,32 +301,30 @@ python_cmd="python3.11"
 wget -q https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui/master/webui.sh && chmod u+x webui.sh && ./webui.sh
 
 #-------------------
-
-
 echo "
 
-"
-ollama list
 
-#--- Install Python Packages ---
-#--- virtualenv venv ---
+"
 #apt install python3.12-venv
 #apt install python3-venv
 #python3 -m venv DevEnv1 && source DevEnv1/bin/activate
 #python3 -m venv DevEnv1 && source ~/bin/activate
-#wait
-
-
 #--------------------------------
+wait
 source /opt/python_shared/bin/activate
-source ~/.bashrc
-activate-shared
-
-
+#source ~/.bashrc
+#activate-shared
 wait
-wait
+echo "
 
-pip3 install requests
+
+--- Installing Python Pip3 ---
+   Python global venv:   /opt/python_shared/bin/activate
+
+
+"
+pip3 install requests urllib3 beautifulsoup4 pymongo
+
 pip3 install ollama
 pip3 install pdfplumber
 pip3 install langchain langchain-core langchain-ollama langchain-community langchain_text_splitters
@@ -336,10 +332,9 @@ pip3 install unstructured unstructured[all-docs]
 pip3 install fastembed
 pip3 install sentence-transformers
 pip3 install elevenlabs
-
 #--- Vector Databases ---
 # Milvus lite (10k - 100k vectors)
-pip3 install milvus
+#pip3 install milvus
 # Milvus Standalone (single machine (1M - 10M Vectors) / Milvus-cluster (10B vectors)
 pip3 install -U pymilvus
 #in memory vector database, single node
@@ -357,13 +352,13 @@ pip3 install seaborn # https://seaborn.pydata.org/installing.html
 pip3 install plotly # https://plotly.com/python/getting-started/
 
 # install NLP Libraries
-pip3 install textblob nltk spacy wordcloud beautifulsoup4 pymongo
+pip3 install textblob nltk spacy wordcloud
 
 # Machine Learning
 pip3 install scikit-learn joblib
 
 # Core email processing
-pip install beautifulsoup4 html2text requests urllib3
+pip install html2text 
 
 # For Transformer models (GPU recommended)
 pip install torch transformers datasets
@@ -375,10 +370,10 @@ python -m nltk.downloader punkt stopwords wordnet averaged_perceptron_tagger
 python -m spacy download en_core_web_sm
 
 #------- Install Machine Learning libs -------
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip3 install torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 pip3 install tensorflow
 pip3 install scikit-learn
-pip3 install torch torchvision
+pip3 install torchvision
 
 #pip3 install catboost
 # LightGBM -> https://lightgbm.readthedocs.io/en/stable/Installation-Guide.html
@@ -397,18 +392,14 @@ pip3 install pyro-ppl # -> https://pyro.ai/examples/intro_long.html
 #pip3 install -U jax # -> Many Install options depending on hardware -> https://github.com/jax-ml/jax
 # NeRF -> https://github.com/bmild/nerf
 
-
-
 #------- Computer Vision / Real-Time Object Detection -------
 pip3 install opencv-python # https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
 # Darknet # https://github.com/mdv3101/darknet-yolov3 |  https://pjreddie.com/darknet/
 # pip3 install YOLOv3 # -> https://pjreddie.com/darknet/yolo/ | https://viso.ai/deep-learning/yolov3-overview/
 # pip3 install yolo-v4 #-> https://github.com/philipperemy/python-darknet-yolo-v4
 
-
 #- https://huggingface.co/datasets?task_categories=task_categories%3Aimage-to-text
 # google/imageinwords  # https://huggingface.co/datasets/google/imageinwords
-
 
 #-----------------------------
 ollama list
@@ -416,9 +407,6 @@ ollama --version
 
 #-- update all models --
 ollama list | tail -n +2 | awk '{print $1}' | xargs -I {} ollama pull {}
-
-#service ollama status
-
 echo "
 
 
@@ -426,79 +414,92 @@ echo "
 
 
 "
+
 curl http://localhost:11434/api/tags | jq .
 
-
-
-
 echo "
-
 
 ------------------------------
 Hello World - Ollama! 
 ------------------------------
 
-
 "
 
+# llama3.2
+# llama3.2-vision
 curl http://localhost:11434/api/generate -d '{
-  "model": "llama3.2",
+  "model": "llama3.2-vision",
   "prompt": "Why is the sky blue?",
   "stream": false
 }'
 
-echo "
+# curl http://localhost:11434/api/generate -d '{
+#   "model": "llama3.2-vision",
+#   "prompt": "Generate me a picture of a beautifly sunset and save the picture locally",
+#   "stream": false
+# }'
 
+echo "
 
 
 "
 #---- LLAMA Web UI --- https://github.com/open-webui/open-webui#troubleshooting
-#pip3 install open-webui
-#open-webui serve
-# -- or docker version --
-#docker pull ghcr.io/open-webui/open-webui:main
-docker pull ghcr.io/open-webui/open-webui:ollama
 
-#-- not sure
-docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+if echo "$GPU_INFO" | grep -qi "nvidia"; then
+    echo "NVIDIA GPU detected."
+    
+    #-- GPU (Nvidia) & CPU --
+    # You need - nvidia-container-toolkit
+    #  https://github.com/NVIDIA/nvidia-container-toolkit
+    #  https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+
+    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+      && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+        sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+        sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
 
 
-#-- CPU Only --
-# docker run -d -p 3000:8080 -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
+    export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.18.0-1
+      sudo apt-get install -y \
+          nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+          nvidia-container-toolkit-base=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+          libnvidia-container-tools=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+          libnvidia-container1=${NVIDIA_CONTAINER_TOOLKIT_VERSION}
 
-#-- GPU (Nvidia) & CPU --
-# You need - nvidia-container-toolkit
-#  https://github.com/NVIDIA/nvidia-container-toolkit
-#  https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+    sudo nvidia-ctk runtime configure --runtime=docker
+    sudo systemctl restart docker
+    #docker run -d -p 3000:8080 --gpus=all -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
 
-#--- Run Rem the following ---
-# sudo apt-get update && sudo apt-get install -y --no-install-recommends curl gnupg2
+    #-- Nvidia Version --
+    #docker run -d -p 3000:8080 --gpus all --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:cuda
+    docker run -d --network=host --gpus all --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --restart always ghcr.io/open-webui/open-webui:cuda
+    
+    #-- General Version - CPU --
+    #docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+    
+elif echo "$GPU_INFO" | grep -qi "amd"; then
+    echo "AMD GPU detected."
 
-# curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
-#   && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
-#     sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
-#     sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
-
-# sudo apt-get update
-
-# export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.18.0-1
-#   sudo apt-get install -y \
-#       nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
-#       nvidia-container-toolkit-base=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
-#       libnvidia-container-tools=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
-#       libnvidia-container1=${NVIDIA_CONTAINER_TOOLKIT_VERSION}
-
-# sudo nvidia-ctk runtime configure --runtime=docker
-# sudo systemctl restart docker
-
-# docker run -d -p 3000:8080 --gpus=all -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
+    # -- or docker version --
+    #docker pull ghcr.io/open-webui/open-webui:main
+    #docker pull ghcr.io/open-webui/open-webui:ollama
+    
+    #-- not sure
+    #docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+    
+    
+else
+    echo "No NVIDIA or AMD GPU found in relevant PCI slots."
+    #-- CPU Only --
+    docker run -d -p 3000:8080 -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
+fi
 
 echo "
 
 Access it from the hostip:8080 
 
-"
 
+"
 
 #------ RAG ------------
 #--- Malvius ----
@@ -531,18 +532,4 @@ If you want to run models in ollama cloud you must setup an account and sign in.
 Command: 
     ollama signin
 
-
- --- Windows - WSL---
-1) Add Firewall rules to Windows Defender Firewall:
-    8080, 11434
-
-2) Port forward from windows to linux (wsl) container. Run Powershell as admin and enter the following:
-    a) Get IP Address inside Linux container via:  ip a
-    b) Update the following, with both ports, with the correct ip address:
-        netsh interface portproxy add v4tov4 listenport=8080  listenaddress=0.0.0.0 connectport=8080  connectaddress=<WSL_IP>
-        netsh interface portproxy add v4tov4 listenport=11434 listenaddress=0.0.0.0 connectport=11434 connectaddress=<WSL_IP>
-
-
-
 "
-
