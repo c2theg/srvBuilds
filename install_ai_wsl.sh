@@ -45,3 +45,17 @@ docker run -d --network=host --gpus all --add-host=host.docker.internal:host-gat
 #-- General Version - CPU --
 #docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
 
+
+echo "
+
+ --- Windows - WSL---
+1) Add Firewall rules to Windows Defender Firewall:
+    8080, 11434
+
+2) Port forward from windows to linux (wsl) container. Run Powershell as admin and enter the following:
+    a) Get IP Address inside Linux container via:  ip a
+    b) Update the following, with both ports, with the correct ip address:
+        netsh interface portproxy add v4tov4 listenport=8080  listenaddress=0.0.0.0 connectport=8080  connectaddress=<WSL_IP>
+        netsh interface portproxy add v4tov4 listenport=11434 listenaddress=0.0.0.0 connectport=11434 connectaddress=<WSL_IP>
+
+"
