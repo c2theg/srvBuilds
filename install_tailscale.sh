@@ -18,7 +18,7 @@ echo "
 Version:  0.0.21
 Last Updated:  12/18/2024
 
-wget 
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_tailscale.sh && chmod u+x install_tailscale.sh
 "
 echo "Downloading required dependencies...
 
