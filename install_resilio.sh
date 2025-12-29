@@ -20,7 +20,7 @@ Version:  0.6.11
 Last Updated:  12/28/2025
 This is really meant for 18.04+ - 24.04+)
 
-wget 
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_resilio.sh && chmod u+x install_resilio.sh
 
 
 Updating system first..."
