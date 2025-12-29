@@ -14,12 +14,15 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
-Version:  0.0.20                            \r\n
+
+Version:  0.0.21
 Last Updated:  12/18/2024
 
+wget 
 "
-echo "Downloading required dependencies...\r\n\r\n"
+echo "Downloading required dependencies...
+
+"
 #--------------------------------------------------------------------------------------------
 curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
 curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
@@ -43,7 +46,12 @@ sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-no
 #sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=10.1.1.0/24 --ssh --accept-risk=lose-ssh
 tailscale set --auto-update
 
-echo "\r\n \r\n Your TailScale IP is:  \r\n"
+echo "
+
+Your TailScale IP is: 
+
+
+"
 tailscale ip -4
 tailscale ip -6
 tailscale netcheck
