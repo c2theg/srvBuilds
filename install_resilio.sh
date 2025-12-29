@@ -43,19 +43,19 @@ wait
 #-- for Ubuntu 22.04 --
 wget -qO - https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add -
 
-
-
 wait
 sudo apt update
 wait
+#cd /etc/apt
+# sudo cp trusted.gpg trusted.gpg.d
+
+
 #sudo apt install -y resilio-sync --allow-unauthenticated
 #wait
 #wget https://download-cdn.resilio.com/2.7.2.1375/Debian/resilio-sync_2.7.2.1375-1_amd64.deb
 wait
 #sudo dpkg -i resilio-sync_2.7.2.1375-1_amd64.deb
-
 sudo apt-get install -y resilio-sync
-
 #---------------------------------------------------------------------------------------------------------
 #if [ -s "/etc/resilio-sync/config.json" ]
 #then
@@ -106,3 +106,9 @@ echo "DONE. Now visit the server in your webbrowser at https://<SERVERIP>:8888"
 echo "\r\n \r\n"
 echo "To fix permissions use: sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/  \r\n \r\n"
 echo "Edit the config with: nano /etc/resilio-sync/config.json  - and change listen to: 0.0.0.0:8888   \r\n \r\n"
+
+#--- fix repo error --
+cd /etc/apt
+sudo cp trusted.gpg trusted.gpg.d
+# move back to home
+cd ~
