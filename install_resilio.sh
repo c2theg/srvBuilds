@@ -14,11 +14,14 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
-Version:  0.6.10
-Last Updated:  11/29/2022
-\r\n \r\n
-This is really meant for 18.04+ - 22.04+) \r\n \r\n
+
+
+Version:  0.6.11
+Last Updated:  12/28/2025
+This is really meant for 18.04+ - 24.04+)
+
+wget 
+
 
 Updating system first..."
 sudo -E apt-get update
