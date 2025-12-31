@@ -90,7 +90,7 @@ if command -v rustup >/dev/null 2>&1; then
     rustup check
     rustup update
 else
-    echo "❌ Node.js is not installed. Skipping..."
+    echo "❌ RUST is not installed. Skipping..."
     NODE_INSTALLED=false
 fi
 
