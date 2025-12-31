@@ -16,7 +16,7 @@ echo "
 
 
 
-Version:  0.0.1
+Version:  0.0.2
 Last Updated:  12/31/2025
 
 update yourself:
@@ -27,7 +27,8 @@ This downloads and installs a series of scripts that will setup everything neede
 
 "
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh && ./update_core.sh && ./install_common.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh && ./update_core.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_common.sh && chmod u+x ./install_common.sh && ./install_common.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh && ./install_python3.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_resilio.sh && chmod u+x install_resilio.sh && ./install_resilio.sh
