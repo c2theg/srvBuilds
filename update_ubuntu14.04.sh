@@ -16,7 +16,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.30
+Version:  1.7.31
 Last Updated:  12/31/2025
 
 for Debian 8 / Ubuntu versions 20.04 - 24.04+ ( ignore the file name :/ )
@@ -93,16 +93,26 @@ else
 fi
 
 #------------------------ Node JS ---------------------------------
-echo "Checking Node.JS  "
-if nodejs --version | grep -q ' not '; then
-    # True
-    echo "skipping NodeJS Update.. "
+if command -v node >/dev/null 2>&1; then
+    echo "✅ Node.js detected: $(node -v)"
+    #NODE_INSTALLED=true
+    sudo apt install --only-upgrade -y nodejs
 else
-    echo "Updating NPM.. "
+    echo "❌ Node.js is not installed. Skipping..."
+    NODE_INSTALLED=false
+fi
+
+if command -v npm >/dev/null 2>&1; then
+    echo "✅ npm detected: $(npm -v)"
+    #NPM_INSTALLED=true
+    sudo apt install --only-upgrade -y npm
     sudo npm update npm -g
     sudo npm install -g npm
     sudo npm audit
-    npm audit fix
+    npm audit fix    
+else
+    echo "❌ npm is not installed. Skipping..."
+    NPM_INSTALLED=false
 fi
 
 #------------------------ Crontab ---------------------------------
