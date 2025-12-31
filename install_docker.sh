@@ -1,5 +1,4 @@
 #!/bin/sh
-#
 clear
 echo "
  _____             _         _    _          _                                   
@@ -15,22 +14,15 @@ echo "
                             |_|                                             |___|
 
 
-
-Version:  1.5.20
+Version:  1.6.0
 Last Updated:  12/31/2025
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
-
-
 
 Downloading required dependencies...
 
 "
 #--------------------------------------------------------------------------------------------
-# Source: 
-#   https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04
-#   https://docs.docker.com/engine/install/ubuntu/
-
 sudo apt-get update
 sudo apt-get install -y apt-transport-https software-properties-common ca-certificates curl gnupg
 
@@ -43,26 +35,13 @@ echo \
   \"$(. /etc/os-release && echo "$VERSION_CODENAME")\" stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-
-#-- old way --
-#curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-#sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-
-
 # curl -fsSL https://get.docker.com/ | sh
 sudo -E apt-get update
-#apt-cache policy docker-ce
-#sudo -E apt-get install -y docker-ce
-#sudo -E apt install -y docker-compose
-
 sudo -E apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-model-plugin
 sudo -E apt install -y docker-compose
 #-------------------------------------
 sudo systemctl start docker
-#sudo systemctl status docker
 sudo systemctl enable docker
-#wait
-#sudo systemctl status docker
 echo "
 
 Done - Showing Versions
@@ -74,7 +53,6 @@ docker-compose -v
 #-- add premissions to current user to access: docker.sock --
 sudo usermod -aG docker $USER
 #------------------------------------------------------------
-
 echo "
 
 
@@ -83,9 +61,7 @@ Setting up container: Portainer
 
 "
 docker pull portainer/portainer-ce:latest
-
 docker volume create portainer_data
-
 docker run \
     --name "Portainer1" \
     -p 8000:8000 \
@@ -98,13 +74,9 @@ docker run \
 docker ps
  
 echo "Visit: https://<server ip>:9443/ to access Portainer"
-
 # Reset Portainer Username: https://omar2cloud.github.io/rasp/psswd/
-
 #---- Other good tools ----
 # docker stats
-
 #-- https://hub.docker.com/r/nicolargo/glances
 # docker pull nicolargo/glances
-
 #-- 
