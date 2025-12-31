@@ -23,13 +23,24 @@ Last Updated:  12/30/2025
 DONT USE THIS ANYMORE! 
 
 A better way to do it is via a container!
+ie:
 
+docker run \
+    -d -p 46379:6379 \
+    --restart=always \
+    --name 'Cache0' \
+    -m 1g --memory-reservation=512m \
+    -v 'redis.conf':/redis-conf \
+    -v '/var/log/redis':'/var/log/redis' \
+    -d redis:latest redis-server /redis-conf
+
+
+Downloading required dependencies...
+
+This installs redis-server to your server
 
 "
-wait
-echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
-echo "This installs redis-server to your box... \r\n"
 sudo add-apt-repository -y ppa:redislabs/redis
 wait
 sudo -E apt-get update
@@ -40,7 +51,7 @@ sudo -E apt-get install -y redis-server ruby-redis redis-tools
 clear
 echo "
 
-Fixing the: WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. \r\n
+Fixing the: WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. 
 
 ";
 sudo echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf
@@ -58,18 +69,23 @@ if test -f /sys/kernel/mm/transparent_hugepage/defrag; then
     sudo echo never > /sys/kernel/mm/transparent_hugepage/defrag
 fi
 wait
-echo "\r\n Running benchmark before custom config gets downloaded... If this fails, please edit the command and add password. https://redis.io/topics/benchmarks \r\n"
+echo "
+
+Running benchmark before custom config gets downloaded... If this fails, please edit the command and add password. https://redis.io/topics/benchmarks
+
+"
 redis-benchmark -q -n 1000 -c 10 -P 5
 wait
-echo "\r\n \r\n Creating Autostart script... \r\n"
+echo "Creating Autostart script... "
 touch /etc/init/redis-server.conf
 sudo echo 'description "redis server"' > /etc/init/redis-server.conf
 sudo echo 'start on runlevel [23]' >> /etc/init/redis-server.conf
 sudo echo 'stop on shutdown' >> /etc/init/redis-server.conf
 sudo echo 'exec sudo -u redis /usr/bin/redis-server /etc/redis/redis.conf' >> /etc/init/redis-server.conf
 sudo echo 'respawn' >> /etc/init/redis-server.conf
-echo "----------------------------------------------------------------------- \r\n"
-echo "Downloading latest custom config... 
+echo "----------------------------------------------------------------------- 
+
+Downloading latest custom config... 
 
 "
 wait
@@ -115,28 +131,26 @@ mkdir -p /var/log/redis/
 touch /var/log/redis/redis.log
 sudo chown redis /var/log/redis/redis.log && sudo chmod u+x /var/log/redis/redis.log
 
-echo "--------------------------------------------------------------------"
-echo "\r\n Starting.... \r\n \r\n "
-echo "  sudo /usr/bin/redis-server /etc/redis/redis.conf "
-echo "\r\n \r\n"
+echo "--------------------------------------------------------------------
 
+Starting.... 
+
+sudo /usr/bin/redis-server /etc/redis/redis.conf 
+
+"
 sudo /usr/bin/redis-server /etc/redis/redis.conf
 
-echo "To test, issue the following commands: "
-echo " redis-benchmark -q -n 1000 -c 10 -P 5 -p 46379 \r\n"
-echo " redis-cli -p 46379  \r\n"
-echo " Or auth with: \r\n "
-echo " redis-cli -p 46379 -a <password>
+echo "To test, issue the following commands: 
 
-"
+redis-benchmark -q -n 1000 -c 10 -P 5 -p 46379
+redis-cli -p 46379
+Or auth with:
+redis-cli -p 46379 -a <password>
 
-echo " /etc/init.d/redis-server stop  
+/etc/init.d/redis-server stop  
 
-"
-echo " /etc/init.d/redis-server start  
+/etc/init.d/redis-server start  
 
-"
-echo "
 redis-cli info
 redis-cli info stats
 redis-cli info server
@@ -148,15 +162,18 @@ sudo systemctl enable redis-server.service
 #wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_ruby.sh && chmod u+x install_ruby.sh && ./install_ruby.sh
 #gem install redis
 #wget http://download.redis.io/redis-stable/src/redis-trib.rb && chmod u+x redis-trib.rb && ./redis-trib.rb
-echo "Done!"
+echo "
+
+Done!
+
+"
 
 if [ -d "/etc/php" ]
 then
     echo "Installing PHP module...
     
     "
-    # sudo apt-get install -y php-redis
-    sudo apt-get install -y php7.4-redis
+    sudo apt-get install -y php-redis php7.4-redis
     sudo bash -c "echo extension=redis.so > /etc/php/7.4/mods-available/redis.ini"
     echo "Modify /etc/php/7.4/fpm/php.ini to configure redis servers...
     
