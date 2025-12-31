@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.55
-Last Updated:  12/28/2025
+Version:  0.0.60
+Last Updated:  12/31/2025
 
 # https://ollama.com/search
 
@@ -176,42 +176,26 @@ echo "
 Downloading llama3.2:latest ...
 
 "
-
-#ollama pull gemma3:4b
-#ollama pull llama3.2:latest        # 3b    - Meta
-
 #-- Image Generation ---
-ollama pull llama3.2-vision
+ollama pull llama3.2:latest     # 3b    - Meta
+#ollama pull llama3.2-vision
 
-#ollama pull codegemma:7b
-
-#--- RAG Models ---
-# ollama pull command-r:35b
-# ollama pull command-r7b
-
-
-#-- BIG - 67Gb 
-# ollama pull llama4:scout
-
-# echo "
-
-
-# Downloading Gemma...
-#    - https://ollama.com/library/gemma3
-
-#    7.5GB  32K
-   
-# "
 echo "
 
-Downloading Mistral...
+Downloading Gemma...  https://ollama.com/library/gemma3
 
 "
-#ollama pull mistral:7b
-ollama pull ministral-3:latest
-#ollama pull ministral-3:8b-cloud # text only
-#ollama run mistral-nemo      # 12b - Mistral - Nvidia
+ollama pull gemma3:4b
+#ollama pull codegemma:7b
 
+
+echo "
+
+Downloading Mistral-3... (https://ollama.com/library/ministral-3) 
+
+"
+ollama pull ministral-3:latest
+#ollama pull mistral:7b
 #------------------------------------------------------------
 #ollama run tinyllama         # 1.1b
 #ollama run nemotron-mini     # 4b - Nvidia
@@ -220,19 +204,8 @@ ollama pull ministral-3:latest
 #ollama run llama3-chatqa     # 8b - Nvidia - ChatQA
 #ollama run granite3-dense:8b # 8b - IBM RAG
 
-#-- Vision processing ---
+#----------------- Vision Processing -----------------
 # ollama pull qwen3-vl:latest
-
-#-- good for Text
-# echo "
-
-#-- Coding / Natural Language / Agentic tasks ---
-# ollama pull deepseek-r1:latest
-# ollama pull qwen3-coder:latest
-# ollama pull deepseek-coder:1.3b
-
-# Qwen-8B (Alibaba Cloud)
-# ollama pull qwen3:latest 
 
 # echo "
 
@@ -243,13 +216,13 @@ ollama pull ministral-3:latest
 #ollama pull llava-llama3
 
 
-#--- OpenAI ---
-# ollama pull gpt-oss:latest
-# ollama pull gpt-oss:20b
+#----------------- Text Processing -----------------
 
-#ollama pull phi3
+#--- RAG Models ---
+# ollama pull command-r:35b
+# ollama pull command-r7b
 
-#--- EMBEDDINGS (RAG) -------
+ #- EMBEDDINGS (RAG) -
 # echo "
 
 # Downloading Embeddings...
@@ -264,6 +237,19 @@ ollama pull qwen3-embedding:0.6b
 #ollama pull snowflake-arctic-embed
 
 
+#-- Coding / Natural Language / Agentic tasks ---
+# ollama pull deepseek-r1:latest
+# ollama pull qwen3-coder:latest
+# ollama pull deepseek-coder:1.3b
+
+# Qwen-8B (Alibaba Cloud)
+# ollama pull qwen3:latest 
+
+#--- OpenAI ---
+# ollama pull gpt-oss:latest
+# ollama pull gpt-oss:20b
+
+
 #--- Security (Prompt) ----
 # echo "
 
@@ -273,14 +259,12 @@ ollama pull qwen3-embedding:0.6b
 #ollama pull llama-guard3:latest  # 8b - Meta
 #ollama run shieldgemma:latest   # 9b - Google
 
-ollama list
-
-
 #---- Stable Difusion ----
 # https://github.com/AUTOMATIC1111/stable-diffusion-webui
-
 # Debian-based:
 #sudo apt install -y wget git python3 python3-venv libgl1 libglib2.0-0
+
+ollama list
 
 # Ubuntu 24.04
 sudo add-apt-repository ppa:deadsnakes/ppa
@@ -428,7 +412,7 @@ Hello World - Ollama!
 # llama3.2
 # llama3.2-vision
 curl http://localhost:11434/api/generate -d '{
-  "model": "llama3.2-vision",
+  "model": "llama3.2",
   "prompt": "Why is the sky blue?",
   "stream": false
 }'
