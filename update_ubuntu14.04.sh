@@ -17,8 +17,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.28
-Last Updated:  12/16/2025
+Version:  1.7.29
+Last Updated:  12/30/2025
 
 
 for Debian 8 / Ubuntu versions 20.04 - 24.04+ ( ignore the file name :/ )
@@ -69,13 +69,6 @@ sudo -E apt-get -y install unattended-upgrades
 sudo -E apt install -y ca-certificates
 sudo update-ca-certificates
 # sudo dpkg-reconfigure ca-certificates
-
-
-#This package installs common CA (Certificate Authority) certificates in /usr/share/ca-certificates.                                                                                                                                      │ 
-#  │ Please select the certificate authorities you trust so that their certificates are installed into /etc/ssl/certs. They will be compiled   │ 
-#  │ into a single /etc/ssl/certs/ca-certificates.crt file. 
-
-
 wait
 #apt-get dist-upgrade -y
 wait
@@ -111,14 +104,15 @@ else
     
     
     "
-    VENV_DIR=/tmp/python3/venv
+    VENV_DIR=/opt/python_shared
     
     mkdir -p $VENV_DIR
     python3 -m venv $VENV_DIR
-    python3 -m venv '/tmp/python3/venv'
-    
+    python3 -m venv '/opt/python_shared'
+    # /tmp/python3/venv
     wait
-    source /tmp/python3/venv/bin/activate
+    #source /tmp/python3/venv/bin/activate
+    source /opt/python_shared/bin/activate
     
     # Define the virtual environment directory name (default to 'venv')
     #VENV_DIR=${VENV_DIR:-"venv"}
