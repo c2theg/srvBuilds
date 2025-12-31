@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.5
+Version:  0.0.7
 Last Updated:  12/31/2025
 
 What this does:
@@ -32,9 +32,13 @@ Global Path:  $VENV_BASE/venv
 
 
 Install:
-    rm install_common_python3_venv.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_common_python3_venv.sh && chmod u+x install_common_python3_venv.sh
+    wget -O 'install_common_python3_venv.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_common_python3_venv.sh && chmod u+x install_common_python3_venv.sh
 
+-------- Creating Global Python3 Environment ---------
+    
 "
+apt install -y python3-venv
+apt install python3-pip -y
 
 VENV_DIR="$VENV_BASE/venv"
 
@@ -57,9 +61,10 @@ fi
 # Activate venv (bash built-in)
 source "$VENV_DIR/bin/activate"
 
+pip3 install --upgrade pip
+
 # Upgrade core tooling
 pip install --upgrade pip setuptools wheel
-
 
 #--------------- Install shared packages ---------------
 pip install \
@@ -67,10 +72,15 @@ pip install \
     flask \
     redis
 
-
+#pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+#--- install common pip packages in this global env ---
+pip3 install validators
+pip3 install pymongo redis
+pip3 install mysql-connector-python
+pip3 install requests whois urllib3 certifi ordered-set
+pip3 install pyOpenSSL idna requests urllib3 certifi ipaddress urlparse2 rich ping3 cryptography aiohttp psutil shutil-ext py-machineid distro netaddr python-crontab loguru scapy
 
 
 #------------------- End of Shared ---------------------
-
 # Deactivate cleanly
 deactivate
