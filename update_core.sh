@@ -1,13 +1,12 @@
 #!/bin/sh
-#clear
-# Absolute path to this script, e.g. /home/user/bin/foo.sh
+clear
 SCRIPT=$(readlink -f "$0")
 # Absolute path this script is in, thus /home/user/bin
 SCRIPTPATH=$(dirname "$SCRIPT")
 
 now=$(date)
-echo "Running update_core.sh at $now \r\n
-Current working dir: $SCRIPTPATH \r\n \r\n
+echo "Running update_core.sh at $now 
+Current working dir: $SCRIPTPATH 
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
 |   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
@@ -21,9 +20,11 @@ Current working dir: $SCRIPTPATH \r\n \r\n
                             |_|                                             |___|
 
 
-Version:  1.6.7                             \r\n
-Last Updated:  12/22/2022
-\r\n \r\n"
+Version:  1.6.8
+Last Updated:  12/30/2025
+
+
+"
 wait
 #--------------------------------------------------------------------------------------------
 echo "Checking Internet status...\r\n\r\n"
@@ -131,4 +132,6 @@ if [ -z "$Cron_output" ]; then
     (crontab -u root -l; echo "$line" ) | crontab -u root -
 fi
 
-echo "Done! \r\n \r\n"
+echo "Done!
+
+"
