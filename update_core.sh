@@ -3,7 +3,6 @@ clear
 SCRIPT=$(readlink -f "$0")
 # Absolute path this script is in, thus /home/user/bin
 SCRIPTPATH=$(dirname "$SCRIPT")
-
 now=$(date)
 echo "Running update_core.sh at $now 
 Current working dir: $SCRIPTPATH 
@@ -20,14 +19,16 @@ Current working dir: $SCRIPTPATH
                             |_|                                             |___|
 
 
-Version:  1.6.8
-Last Updated:  12/30/2025
+Version:  1.6.9
+Last Updated:  12/31/2025
 
 
 "
 wait
 #--------------------------------------------------------------------------------------------
-echo "Checking Internet status...\r\n\r\n"
+echo "Checking Internet status...
+
+"
 #ping -q -c3 github.com > /dev/null
 #if [ $? -eq 0 ]
 if nc -zw1 google.com 443; then
@@ -58,12 +59,14 @@ if nc -zw1 google.com 443; then
 		#rm /root/update_time.sh
 	fi
 	rm *.sh.1
-	echo "Downloading latest versions... \r\n\r\n"
+	echo "Downloading latest versions... 
+	
+	"
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
 	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_restart.sh && chmod u+x sys_restart.sh
-	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && chmod u+x install_common.sh
+	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && chmod u+x install_common.sh
 	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh && chmod u+x install_monitoring.sh
 	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
 	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod u+x update_time.sh
@@ -99,7 +102,7 @@ if nc -zw1 google.com 443; then
 
 	sh /root/update_ubuntu14.04.sh
 else
-	echo "Not connected to the Internet. Fix that first and try again \r\n \r\n"
+	echo "Not connected to the Internet. Fix that first and try again "
 fi
 
 Cron_output=$(crontab -l | grep "update_core.sh")
