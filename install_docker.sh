@@ -16,8 +16,8 @@ echo "
 
 
 
-Version:  1.5.18
-Last Updated:  12/17/2025
+Version:  1.5.20
+Last Updated:  12/31/2025
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
 
@@ -71,7 +71,10 @@ Done - Showing Versions
 docker --version
 docker-compose -v
 
-#-------------------------------------
+#-- add premissions to current user to access: docker.sock --
+sudo usermod -aG docker $USER
+#------------------------------------------------------------
+
 echo "
 
 
