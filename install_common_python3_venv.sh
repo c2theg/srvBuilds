@@ -32,7 +32,7 @@ Global Path:  $VENV_BASE/venv
 
 
 Install:
-    rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
+    rm install_common_python3_venv.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_common_python3_venv.sh && chmod u+x install_common_python3_venv.sh
 
 "
 
