@@ -79,10 +79,20 @@ wait
 sudo apt autoremove -y
 
 #--- RUST ---
-echo "Updating Rust... \r\n \r\n"
-# curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-rustup check
-rustup update
+if command -v rustup >/dev/null 2>&1; then
+    echo "✅ RUST detected: rustup -v"
+
+    echo "Updating Rust... \r\n \r\n"
+    # curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+    
+    sudo apt install --only-upgrade -y rust
+    rustup check
+    rustup update
+else
+    echo "❌ Node.js is not installed. Skipping..."
+    NODE_INSTALLED=false
+fi
 
 #------------------------ Python PIP ---------------------------------
 if pip -V | grep -q ' not '; then
