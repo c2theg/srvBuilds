@@ -16,7 +16,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.31
+Version:  1.7.32
 Last Updated:  12/31/2025
 
 for Debian 8 / Ubuntu versions 20.04 - 24.04+ ( ignore the file name :/ )
@@ -77,23 +77,6 @@ wait
 #sudo apt-get autoremove -y
 wait
 sudo apt autoremove -y
-
-#--- RUST ---
-if command -v rustup >/dev/null 2>&1; then
-    echo "✅ RUST detected: rustup -v"
-
-    echo "Updating Rust... \r\n \r\n"
-    # curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-    
-    sudo apt install --only-upgrade -y rust
-    rustup check
-    rustup update
-else
-    echo "❌ RUST is not installed. Skipping..."
-    NODE_INSTALLED=false
-fi
-
 #------------------------ Python PIP ---------------------------------
 if pip -V | grep -q ' not '; then
     # True
@@ -124,7 +107,16 @@ else
     echo "❌ npm is not installed. Skipping..."
     NPM_INSTALLED=false
 fi
-
+# --- 2. RUST DETECTION ---
+if command -v rustup >/dev/null 2>&1; then
+    echo "✅ Rust (rustup) detected: $(rustc --version)"
+    rustup check
+    echo "🚀 Running rustup update..."
+    rustup update
+    echo "✨ Rust toolchain is now up to date."
+else
+    echo "❌ Rust (rustup) not found. Skipping..."
+fi
 #------------------------ Crontab ---------------------------------
 Cron_output=$(crontab -l | grep "update_core.sh")
 #echo "The output is: [ $Cron_output ]"
