@@ -1,5 +1,4 @@
 #!/bin/sh
-#
 clear
 now=$(date)
 echo "Running update_ubuntu14.04.sh at $now 
@@ -17,12 +16,10 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.29
-Last Updated:  12/30/2025
-
+Version:  1.7.30
+Last Updated:  12/31/2025
 
 for Debian 8 / Ubuntu versions 20.04 - 24.04+ ( ignore the file name :/ )
-
 
 "
 #-- update yourself! --
@@ -92,75 +89,8 @@ if pip -V | grep -q ' not '; then
     # True
     echo "Skipping pip update.. "
 else
-    apt install -y python3-venv
-    apt install python3-pip -y
-    
-    #python3 -m pip install --upgrade pip
-    #pip3 list --outdated
-    echo "
-
-    
-    -------- Creating Global Python3 Environment ---------
-    
-    
-    "
-    VENV_DIR=/opt/python_shared
-    
-    mkdir -p $VENV_DIR
-    python3 -m venv $VENV_DIR
-    python3 -m venv '/opt/python_shared'
-    # /tmp/python3/venv
-    wait
-    #source /tmp/python3/venv/bin/activate
-    source /opt/python_shared/bin/activate
-    
-    # Define the virtual environment directory name (default to 'venv')
-    #VENV_DIR=${VENV_DIR:-"venv"}
-   
-    # Check if the activate script exists for Linux/macOS
-    if [ -f "./$VENV_DIR/bin/activate" ]; then
-        echo "Activating virtual environment: $VENV_DIR"
-        # Source the activate script in the current shell
-        source "./$VENV_DIR/bin/activate"
-    elif [ -f "./$VENV_DIR/Scripts/activate" ]; then
-        # Check for Windows (Command Prompt/Git Bash compatibility)
-        echo "Activating virtual environment: $VENV_DIR (Windows likely)"
-        source "./$VENV_DIR/Scripts/activate"
-    else
-        echo "Virtual environment directory '$VENV_DIR' not found."
-        echo "Please create it using 'python3 -m venv $VENV_DIR' first."
-    fi
-
-    #pip3 install -U pip
-    pip3 install --upgrade pip
-    wait
-    #--------------------------------
-    #pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
-    #--- install common pip packages in this global env ---
-    pip3 install validators
-    pip3 install pymongo redis
-    pip3 install mysql-connector-python
-    pip3 install requests whois urllib3 certifi ordered-set
-    pip3 install pyOpenSSL idna requests urllib3 certifi ipaddress urlparse2 rich ping3 cryptography aiohttp psutil shutil-ext py-machineid distro netaddr python-crontab loguru scapy
-
-    echo "Deactivate the virtual environment... "
-    deactivate
+    wget -O 'install_common_python3_venv.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_common_python3_venv.sh && chmod u+x install_common_python3_venv.sh
 fi
-
-#apt install python3-requests -y
-#apt install python3-setuptools -y
-#------------------------ Python PIP3 ---------------------------------
-
-# if pip3 -V | grep -q ' not '; then
-#     # True
-#     echo "Skipping pip3 update.. "
-# else
-#     #python3 -m pip install --upgrade pip
-#     # False 
-#     echo "Updating PIP3... "
-#     pip3 install -U pip
-#     pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
-# fi
 
 #------------------------ Node JS ---------------------------------
 echo "Checking Node.JS  "
