@@ -141,8 +141,11 @@ pip3 install spacy
 
 #--- Custom Path ---
 # https://github.com/explosion/spacy-models/releases/tag/en_core_web_md-3.8.0
-wget -O "en_core_web_md.tar.gz" https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0.tar.gz
-unzip en_core_web_md.tar.gz -d $VENV_BASE/spacy/
+
+#if [[ ! -d "$VENV_DIR" ]]; then
+    wget -O "en_core_web_md.tar.gz" https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0.tar.gz
+    unzip en_core_web_md.tar.gz -d $VENV_BASE/spacy/
+#fi
 
 echo "
 To include Spacy into your python:
