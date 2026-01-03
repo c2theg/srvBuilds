@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.21-1
+Version:  0.0.22
 Last Updated:  1/3/2026
 
 What this does:
@@ -164,8 +164,106 @@ doc = nlp('This is a sentence.')
 pip3 install stopwordsiso stop-words
 
 #------- Install Machine Learning libs -------
-pip3 install torch torchvision
-pip3 install torchaudio --index-url https://download.pytorch.org/whl/cu118
+# - PyTorch - Customize the download - https://pytorch.org/get-started/locally/
+
+# POSIX sh GPU detection for macOS + Linux (Ubuntu/Rocky), with CUDA/ROCm version hints.
+# Outputs: GPU_TYPE (nvidia|amd|mac|cpu), and optionally CUDA_VERSION / ROCM_VERSION.
+
+GPU_TYPE="cpu"
+CUDA_VERSION=""
+ROCM_VERSION=""
+
+uname_s=$(uname 2>/dev/null || echo "")
+
+if [ "$uname_s" = "Darwin" ]; then
+  # macOS: treat Apple GPU as "mac". (NVIDIA is effectively obsolete on modern macOS.)
+  if system_profiler SPDisplaysDataType 2>/dev/null | grep -qi "Apple"; then
+    GPU_TYPE="mac"
+  elif system_profiler SPDisplaysDataType 2>/dev/null | grep -qi "AMD"; then
+    GPU_TYPE="amd"
+  else
+    GPU_TYPE="cpu"
+  fi
+else
+  # Linux: prefer NVIDIA if present.
+  if command -v nvidia-smi >/dev/null 2>&1; then
+    GPU_TYPE="nvidia"
+
+    # CUDA version checks (best-effort)
+    # 1) Prefer NVCC if installed
+    if command -v nvcc >/dev/null 2>&1; then
+      # Example: "Cuda compilation tools, release 12.3, V12.3.107"
+      CUDA_VERSION=$(nvcc --version 2>/dev/null | awk '/release/ {for (i=1;i<=NF;i++) if ($i=="release") {gsub(/,/, "", $(i+1)); print $(i+1); exit}}')
+    fi
+    # 2) Fallback to nvidia-smi reported CUDA
+    if [ -z "$CUDA_VERSION" ]; then
+      # Example: "... CUDA Version: 12.2"
+      CUDA_VERSION=$(nvidia-smi 2>/dev/null | awk -F'CUDA Version: ' 'NF>1 {split($2,a," "); print a[1]; exit}')
+    fi
+    # 3) Fallback to version.txt if present
+    if [ -z "$CUDA_VERSION" ] && [ -r /usr/local/cuda/version.txt ]; then
+      # Example: "CUDA Version 12.2.0"
+      CUDA_VERSION=$(awk '{for (i=1;i<=NF;i++) if ($i=="Version") {print $(i+1); exit}}' /usr/local/cuda/version.txt 2>/dev/null)
+    fi
+
+    # for Nvidia CUDA - (Note: Replace cu126 with the specific CUDA version, such as cu128, if you are targeting a newer toolkit)
+    pip3 install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu130 # Nvidia - CUDA - Latest 1/3/2026
+
+
+  else
+    # AMD detection (ROCm-aware, plus generic PCI vendor check if available)
+    AMD_FOUND=""
+
+    # ROCm toolchain present?
+    if command -v rocminfo >/dev/null 2>&1 || command -v rocm-smi >/dev/null 2>&1; then
+      AMD_FOUND="yes"
+    fi
+
+    # Generic AMD/ATI via PCI (common on Ubuntu/Rocky; may be missing in minimal installs)
+    if [ -z "$AMD_FOUND" ] && command -v lspci >/dev/null 2>&1; then
+      if lspci 2>/dev/null | grep -Ei "VGA|3D|Display" | grep -Ei "AMD|ATI" >/dev/null 2>&1; then
+        AMD_FOUND="yes"
+      fi
+    fi
+
+    if [ -n "$AMD_FOUND" ]; then
+      GPU_TYPE="amd"
+
+      # ROCm version checks (best-effort)
+      # 1) /opt/rocm/.info/version is common on ROCm installs
+      if [ -r /opt/rocm/.info/version ]; then
+        ROCM_VERSION=$(head -n 1 /opt/rocm/.info/version 2>/dev/null | tr -d ' \t\r\n')
+      fi
+      # 2) rocm-smi sometimes prints a version string (varies by version/distribution)
+      if [ -z "$ROCM_VERSION" ] && command -v rocm-smi >/dev/null 2>&1; then
+        ROCM_VERSION=$(rocm-smi --version 2>/dev/null | awk 'NR==1{print $NF; exit}')
+      fi
+      # 3) rocminfo may include "ROCm" lines (format varies)
+      if [ -z "$ROCM_VERSION" ] && command -v rocminfo >/dev/null 2>&1; then
+        ROCM_VERSION=$(rocminfo 2>/dev/null | awk '/ROCm/ {print $NF; exit}')
+      fi
+
+      # AMD GPU
+      pip3 install torch torchvision --index-url https://download.pytorch.org/whl/rocm6.4
+      
+    fi
+  fi
+fi
+
+# Example: export or just print
+echo "GPU_TYPE=$GPU_TYPE"
+[ -n "$CUDA_VERSION" ] && echo "CUDA_VERSION=$CUDA_VERSION"
+[ -n "$ROCM_VERSION" ] && echo "ROCM_VERSION=$ROCM_VERSION"
+
+if $GPU_TYPE == 'cpu'; then
+    # CPU Only!
+    pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+fi
+
+# Verify the install is good!
+python3 -c "import torch; print(f'PyTorch version: {torch.__version__}'); print(f'MPS available: {torch.backends.mps.is_available()}')"
+
+#----------------------------------------------
 pip3 install tensorflow
 pip3 install scikit-learn
 
