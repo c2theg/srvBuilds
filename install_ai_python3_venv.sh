@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.21
+Version:  0.0.23
 Last Updated:  1/3/2026
 
 What this does:
@@ -128,13 +128,10 @@ nltk.data.path.append('$VENV_BASE/nltk_data')
 # Download to a specific folder
 nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 
-
 "
 
 pip3 install stopwordsiso stop-words
 python3 -m wn download oewn:2024
-
-
 
 # Download spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
 pip3 install spacy
