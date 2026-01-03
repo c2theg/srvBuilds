@@ -39,14 +39,13 @@ Install:
 sudo apt-get update
 # python3.10-venv
 sudo apt-get install -y python3-dev build-essential
-python -m pip install -U pip setuptools wheel packaging
+#python3 -m pip install -U pip setuptools wheel packaging
 
 #python -m pip install --upgrade pip --trusted-host pypi.org --trusted-host files.pythonhosted.org
-python -m pip install -U truststore pip-system-certs
+python3 -m pip install -U truststore pip-system-certs
 
 pip install --upgrade pip setuptools wheel
-python -m pip install unstructured
-
+python3 -m pip install unstructured
 
 
 #------- core ------------------------
