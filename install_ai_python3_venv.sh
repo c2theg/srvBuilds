@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.22
+Version:  0.0.22-2
 Last Updated:  1/3/2026
 
 What this does:
@@ -255,13 +255,16 @@ echo "GPU_TYPE=$GPU_TYPE"
 [ -n "$CUDA_VERSION" ] && echo "CUDA_VERSION=$CUDA_VERSION"
 [ -n "$ROCM_VERSION" ] && echo "ROCM_VERSION=$ROCM_VERSION"
 
+
+
 if [ $GPU_TYPE = "cpu" ]; then
+    echo "No GPU detected. falling back to CPU only! "
     # CPU Only!
     pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 fi
 
 # Verify the install is good!
-python3 -c "import torch; print(f'PyTorch version: {torch.__version__}'); print(f'MPS available: {torch.backends.mps.is_available()}')"
+#python3 -c "import torch; print(f'PyTorch version: {torch.__version__}'); print(f'MPS available: {torch.backends.mps.is_available()}')"
 
 #----------------------------------------------
 pip3 install tensorflow
