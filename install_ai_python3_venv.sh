@@ -112,9 +112,10 @@ export NLTK_DATA="$VENV_BASE/nltk_data"
 #pip3 install nltk
 python3 -m pip install nltk
 python3 -m nltk.downloader -d $VENV_BASE/nltk_data all
-python3 -m nltk.downloader punkt
-python3 -m nltk.downloader popular
-python3 -m nltk.downloader stopwords
+#python3 -m nltk.downloader -d $VENV_BASE/nltk_data punkt
+#python3 -m nltk.downloader -d $VENV_BASE/nltk_data popular
+#python3 -m nltk.downloader -d $VENV_BASE/nltk_data stopwords
+#python3 -m nltk.downloader -d $VENV_BASE/nltk_data averaged_perceptron_tagger
 
 
 echo "
@@ -130,8 +131,9 @@ nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 
 "
 
-python3 -m wordnet averaged_perceptron_tagger
 pip3 install stopwordsiso stop-words
+python3 -m wn download oewn:2024
+
 
 
 # Download spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
