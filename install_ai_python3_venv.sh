@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.28
+Version:  0.0.28-1
 Last Updated:  1/3/2026
 
 What this does:
