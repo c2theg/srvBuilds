@@ -69,8 +69,6 @@ pip3 install requests flask
 pip3 install requests urllib3 beautifulsoup4 pymongo
 pip3 install html2text 
 
-
-
 #------- AI ----------------
 pip3 install ollama
 pip3 install pdfplumber
@@ -79,6 +77,7 @@ pip3 install unstructured unstructured[all-docs]
 pip3 install fastembed
 pip3 install sentence-transformers
 pip3 install elevenlabs
+
 #--- Vector Databases ---
 # Milvus lite (10k - 100k vectors)
 #pip3 install milvus
@@ -128,10 +127,30 @@ nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 
 python3 -m punkt stopwords wordnet averaged_perceptron_tagger
 
-# Download spaCy model
-pip3 install spacy
-python -m spacy download en_core_web_sm
 
+# Download spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
+pip3 install spacy
+#python -m spacy download en_core_web_sm # 0 keys, 0 unique vectors (0 dimensions) - 12 MB
+#python -m spacy download en_core_web_md # 685k keys, 20k unique vectors (300 dimensions) -  31 MB
+#python -m spacy download en_core_web_lg # 685k keys, 343k unique vectors (300 dimensions) - 382 MB
+#python -m spacy download en_core_web_trf # 0 keys, 0 unique vectors (0 dimensions) - 436 MB
+
+#--- Custom Path ---
+# https://github.com/explosion/spacy-models/releases/tag/en_core_web_md-3.8.0
+wget -O "en_core_web_md.tar.gz" https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0.tar.gz
+unzip en_core_web_md.tar.gz -d $VENV_BASE/spacy/
+
+echo '
+To include Spacy into your python:
+
+
+import spacy
+nlp = spacy.load("'$VENV_BASE'/spacy/en_core_web_md") # load package from a directory
+
+doc = nlp("This is a sentence.")
+
+
+'
 #------- Install Machine Learning libs -------
 pip3 install torch torchvision
 pip3 install torchaudio --index-url https://download.pytorch.org/whl/cu118
