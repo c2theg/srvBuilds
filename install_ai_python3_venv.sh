@@ -140,17 +140,17 @@ pip3 install spacy
 wget -O "en_core_web_md.tar.gz" https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0.tar.gz
 unzip en_core_web_md.tar.gz -d $VENV_BASE/spacy/
 
-echo '
+echo "
 To include Spacy into your python:
 
 
 import spacy
-nlp = spacy.load("'$VENV_BASE'/spacy/en_core_web_md") # load package from a directory
+nlp = spacy.load('$VENV_BASE/spacy/en_core_web_md') # load package from a directory
 
-doc = nlp("This is a sentence.")
+doc = nlp('This is a sentence.')
 
 
-'
+"
 #------- Install Machine Learning libs -------
 pip3 install torch torchvision
 pip3 install torchaudio --index-url https://download.pytorch.org/whl/cu118
