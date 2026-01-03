@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.24
+Version:  0.0.25
 Last Updated:  1/3/2026
 
 What this does:
@@ -142,10 +142,10 @@ pip3 install spacy
 #--- Custom Path ---
 # https://github.com/explosion/spacy-models/releases/tag/en_core_web_md-3.8.0
 
-#if [[ ! -d "$VENV_DIR" ]]; then
+if [[ ! -d "$VENV_DIR/spacy/" ]]; then
     wget -O "en_core_web_md.tar.gz" https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0.tar.gz
     unzip en_core_web_md.tar.gz -d $VENV_BASE/spacy/
-#fi
+fi
 
 echo "
 To include Spacy into your python:
