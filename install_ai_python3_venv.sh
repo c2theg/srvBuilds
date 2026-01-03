@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.25
+Version:  0.0.26
 Last Updated:  1/3/2026
 
 What this does:
@@ -193,7 +193,7 @@ pip3 install datasets # https://pypi.org/project/datasets/
 export NLTK_DATA="$VENV_BASE/nltk_data"
 #python3 -m pip install nltk
 pip3 install nltk
-if [[ ! -d "$VENV_DIR/nltk_data/" ]]; then
+if [ ! -d "$VENV_DIR/nltk_data" ]; then
     echo "
     
     NLTK Data not found, so downloading... ( $VENV_DIR/nltk_data/ )
@@ -226,7 +226,7 @@ nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 
 # Download spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
 pip3 install spacy
-if [[ ! -d "$VENV_DIR/spacy/" ]]; then
+if [ ! -d "$VENV_DIR/spacy" ]; then
     echo "
     
     Spacy Data not found, so downloading... ( $VENV_DIR/spacy/ ) 
