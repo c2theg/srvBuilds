@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.27
+Version:  0.0.28
 Last Updated:  1/3/2026
 
 What this does:
@@ -36,9 +36,23 @@ Install:
 
 "
 #---- OS Level -----
+sudo apt-get update
+# python3.10-venv
+sudo apt-get install -y python3-dev build-essential
+python -m pip install -U pip setuptools wheel packaging
+
+#python -m pip install --upgrade pip --trusted-host pypi.org --trusted-host files.pythonhosted.org
+python -m pip install -U truststore pip-system-certs
+
+pip install --upgrade pip setuptools wheel
+python -m pip install unstructured
+
+
+
+#------- core ------------------------
+echo $SETUPTOOLS_USE_DISTUTILS
+
 sudo apt install -y tesseract-ocr
-
-
 #-------- Python3 - PIP -----------------
 VENV_DIR="$VENV_BASE/venv"
 
@@ -142,11 +156,7 @@ Detected GPU_TYPE = $GPU_TYPE
 
 "
 #---- end cpu gpu detection -----
-# Upgrade core tooling
-python -m pip install --upgrade pip --trusted-host pypi.org --trusted-host files.pythonhosted.org
-pip install pip-system-certs
 
-pip install --upgrade pip setuptools wheel
 #--------------- Install shared packages ---------------
 pip3 install requests urllib3 beautifulsoup4
 pip3 install html2text
