@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.28-1
+Version:  0.0.28-2
 Last Updated:  1/3/2026
 
 What this does:
@@ -47,9 +47,8 @@ python3 -m pip install -U truststore pip-system-certs
 pip install --upgrade pip setuptools wheel
 python3 -m pip install unstructured
 
-
 #------- core ------------------------
-echo $SETUPTOOLS_USE_DISTUTILS
+#echo $SETUPTOOLS_USE_DISTUTILS
 
 sudo apt install -y tesseract-ocr
 #-------- Python3 - PIP -----------------
