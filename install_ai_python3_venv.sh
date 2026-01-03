@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.28-6
+Version:  0.0.28-7
 Last Updated:  1/3/2026
 
 What this does:
@@ -32,7 +32,7 @@ Global Path:  $VENV_BASE/venv/bin/activate
 
 
 Install:
-     wget -O 'install_ai_python3_venv.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
+     wget --no-cache -O 'install_ai_python3_venv.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
 
 "
 #---- OS Level -----
