@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.28-5
+Version:  0.0.28-6
 Last Updated:  1/3/2026
 
 What this does:
@@ -147,11 +147,7 @@ Detected GPU_TYPE = $GPU_TYPE
 
 "
 #---- end cpu gpu detection -----
-
-
-#python3 -m pip install -U pip setuptools wheel packaging
-
-echo "SETUPTOOLS_USE_DISTUTILS=$SETUPTOOLS_USE_DISTUTILS"
+#echo "SETUPTOOLS_USE_DISTUTILS=$SETUPTOOLS_USE_DISTUTILS"
 
 # 1) remove the pip startup hook (this is the part breaking the build subprocess)
 python3 -m pip uninstall -y pip-system-certs pip_system_certs truststore
