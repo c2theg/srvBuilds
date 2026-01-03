@@ -106,14 +106,14 @@ pip3 install scikit-learn joblib
 pip3 install transformers # https://pypi.org/project/transformers/
 pip3 install datasets # https://pypi.org/project/datasets/
 
-#--- NLTK ---
+#--- NLTK --- https://www.nltk.org/data.html
 export NLTK_DATA="$VENV_BASE/nltk_data"
 
-pip3 install nltk
-#python3 -m nltk.downloader
+#pip3 install nltk
+python3 -m pip install nltk
 python3 -m nltk.downloader -d $VENV_BASE/nltk_data all
-python3 -m nltk.downloader -d $VENV_BASE/nltk_data punkt
-
+python3 -m nltk.downloader punkt
+python3 -m nltk.downloader popular
 
 echo "
 To include nltk in your python code:
