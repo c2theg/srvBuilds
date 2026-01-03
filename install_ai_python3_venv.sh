@@ -126,6 +126,10 @@ pip3 install keras # Yolo3 requirement
 #pip3 install gym  # -> https://github.com/openai/gym
 #pip3 install xgboost # -> https://xgboost.readthedocs.io/en/stable/install.html
 
+#--- Deep Learning ---
+pip3 install tf-keras
+
+
 #------- Generative AI -------
 pip3 install dalle2-pytorch # -> https://github.com/lucidrains/DALLE2-pytorch
 pip3 install pyro-ppl # -> https://pyro.ai/examples/intro_long.html
@@ -144,6 +148,7 @@ pip3 install opencv-python # https://docs.opencv.org/4.x/d6/d00/tutorial_py_root
 
 #- https://huggingface.co/datasets?task_categories=task_categories%3Aimage-to-text
 # google/imageinwords  # https://huggingface.co/datasets/google/imageinwords
+
 
 #--- OCR ---
 # Install EasyOCR
@@ -179,3 +184,16 @@ pip3 install reductoai
 #------------------- End of Shared ---------------------
 # Deactivate cleanly
 deactivate
+
+
+# source /opt/python3_shared/venv/bin/activate
+echo " 
+Done installing/Updating!
+
+To Activate the Python VEnv, issue the following:
+
+
+source $VENV_BASE/venv
+
+
+"
