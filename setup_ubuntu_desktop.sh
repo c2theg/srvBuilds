@@ -13,32 +13,30 @@ echo "Running setup_ubuntu_desktop.sh at $now
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-\r\n \r\n
-Version:  0.0.29                             \r\n
-Last Updated:  11/30/2025
+
+Version:  0.0.30                             \r\n
+Last Updated:  1/2/2025
 
 Install:  wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/setup_ubuntu_desktop.sh && chmod u+x setup_ubuntu_desktop.sh && ./setup_ubuntu_desktop.sh
-\r\n \r\n"
 
+
+"
 
 # Update itsself on the next run
 if [ -s "setup_ubuntu_desktop.sh" ]; then
     echo "Deleting old files \r\n"	
 	rm setup_ubuntu_desktop.sh
 fi
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/setup_ubuntu_desktop.sh && chmod u+x setup_ubuntu_desktop.sh
 
-
+wget -O "setup_ubuntu_desktop.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/setup_ubuntu_desktop.sh && chmod u+x setup_ubuntu_desktop.sh
 wait
 sudo apt autoremove -y
 
 sudo add-apt-repository universe -y
-#sudo apt-get install -y linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04 linux-image-generic-hwe-20.04
 #sudo apt-get install -y linux-generic-hwe-22.04 linux-headers-generic-hwe-22.04 linux-image-generic-hwe-22.04
 #sudo apt-get install -y linux-generic-hwe-24.04 linux-headers-generic-hwe-24.04 linux-image-generic-hwe-24.04
 
-
-#------------
+#----------------------------------------------------------------------
 sudo -E apt-get -y install unattended-upgrades
 sudo apt install -y software-properties-common apt-transport-https
 sudo apt-get update
@@ -49,29 +47,29 @@ sudo apt-get install -y snapd
 sudo apt install -y build-essential automake autoconf cmake libtool pkg-config intltool libcurl4-openssl-dev libglib2.0-dev libevent-dev libminiupnpc-dev libgtk-3-dev libappindicator3-dev libssl-dev libsystemd-dev libgtkmm-3.0
 sudo apt install -y net-tools curl ssh
 sudo apt install -y iftop htop hping3 slurm bmon tcpdump tcl8.6 ncat gimp wget
-sudo apt install -y hardinfo
+sudo apt install -y hardinfo baobab
 
 # slurm -z -c -L -i ens16
 
-if [ -s "update_ubuntu_desktop_22.04.sh" ]; then
-    echo "Deleting old files \r\n"	
-	rm update_ubuntu_desktop_22.04.sh
-fi
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ubuntu_desktop_22.04.sh && chmod u+x update_ubuntu_desktop_22.04.sh
+# if [ -s "update_ubuntu_desktop_22.04.sh" ]; then
+#     echo "Deleting old files \r\n"	
+# 	rm update_ubuntu_desktop_22.04.sh
+# fi
+wget -O "update_ubuntu_desktop_22.04.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ubuntu_desktop_22.04.sh && chmod u+x update_ubuntu_desktop_22.04.sh
 
 
-if [ -s "update_core.sh" ]; then
-    echo "Deleting old files \r\n"	
-	rm update_core.sh
-fi
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh
+# if [ -s "update_core.sh" ]; then
+#     echo "Deleting old files \r\n"	
+# 	rm update_core.sh
+# fi
+wget -O "update_core.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh
 
 
 if [ -s "install_docker.sh" ]; then
     echo "Deleting old files \r\n"	
 	rm install_docker.sh
 fi
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh && chmod u+x install_docker.sh
+wget -O "install_docker.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_docker.sh && chmod u+x install_docker.sh
 
 
 #-- VNC Server
@@ -168,8 +166,6 @@ sudo apt update
 sudo apt install -y veracrypt
 
 #--- Coding ---
-
-
 #--- Download VSCode ---
 #sudo snap install code --classic
 # wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
@@ -185,6 +181,7 @@ sudo apt install -y veracrypt
 # rm -f windsurf-stable.gpg
 sudo apt install -y windsurf
 
+
 #--- Sublime Text ---
 if [ -s "/usr/share/keyrings/sublimehq.gpg" ]; then
     echo "Sublime installed, so skipping... \r\n "	
@@ -198,19 +195,13 @@ fi
 #--- Postman ---
 # sudo snap install -y postman
 
-#--- Sublime Text ---
-# wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
-# echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
-# sudo apt-get update
-# sudo apt-get install -y sublime-text
-
 #--- Termius ---
 #wget https://www.termius.com/download/linux/Termius.deb
 #chmod u+x Termius.deb 
 #sudo apt install -y ./Termius.deb
 
 #---- Others ----
-#sudo snap install -y vlc
+sudo snap install -y vlc
 
 #--- widgets ----
 # sudo add-apt-repository -y ppa:kasra-mp/ubuntu-indicator-weather
@@ -242,13 +233,16 @@ sudo apt install -y conky-manager2 conky-all
 # 	echo " \r\n \r\n Use the command: 'nvidia-smi' to get all nvidia specific data \r\n \r\n"
 # fi
 
-echo "\r\n \r\n If you have an nVidia GPU, use the following command to install it.. \r\n \r\n 
+echo "
+
+If you have an nVidia GPU, use the following command to install it.. 
+
 sudo apt-get install -y nvidia-settings-updates  
 sudo ubuntu-drivers autoinstall
 
-Use the command: 'nvidia-smi' to get all nvidia specific data \r\n \r\n"
+Use the command: 'nvidia-smi' to get all nvidia specific data
 
-
+"
 
 #-- Real-time Monitoring --
 # watch -n 1 nvidia-smi
@@ -256,15 +250,10 @@ Use the command: 'nvidia-smi' to get all nvidia specific data \r\n \r\n"
 #-- Per-Process GPU Usage --
 # nvidia-smi pmon -c 1
 
-
 #-- if you get the error --
 #   Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section 
 # cd /etc/apt
 # sudo cp trusted.gpg trusted.gpg.d
 
-
 # --- another error --
-# sudo apt --fix-broken install
-
-
-
+sudo apt --fix-broken install
