@@ -28,7 +28,7 @@ What this does:
     can access the shared resources!
 
 
-Global Path:  $VENV_BASE/venv
+Global Path:  $VENV_BASE/venv/bin/activate
 
 
 Install:
@@ -228,7 +228,7 @@ Done installing/Updating!
 To Activate the Python VEnv, issue the following:
 
 
-source $VENV_BASE/venv
+source $VENV_BASE/venv/bin/activate
 
 
 "
