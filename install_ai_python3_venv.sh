@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.15
+Version:  0.0.17
 Last Updated:  1/3/2026
 
 What this does:
@@ -65,9 +65,13 @@ source "$VENV_DIR/bin/activate"
 pip install --upgrade pip setuptools wheel
 
 #--------------- Install shared packages ---------------
-pip install requests flask redis
+pip3 install requests flask
 pip3 install requests urllib3 beautifulsoup4 pymongo
+pip3 install html2text 
 
+
+
+#------- AI ----------------
 pip3 install ollama
 pip3 install pdfplumber
 pip3 install langchain langchain-core langchain-ollama langchain-community langchain_text_splitters
@@ -100,15 +104,29 @@ pip3 install textblob wordcloud
 # Machine Learning
 pip3 install scikit-learn joblib
 
-# Core email processing
-pip3 install html2text 
+pip3 install transformers # https://pypi.org/project/transformers/
+pip3 install datasets # https://pypi.org/project/datasets/
 
-# For Transformer models (GPU recommended)
-pip3 install transformers datasets
+# Download NLTK
+export NLTK_DATA="$VENV_BASE/nltk_data"
 
-# Download NLTK data
 pip3 install nltk
-python -m nltk.downloader punkt stopwords wordnet averaged_perceptron_tagger
+python3 -m nltk.downloader 
+
+echo "
+To include nltk in your python code:
+
+import nltk
+# Append a new search path
+nltk.data.path.append('$VENV_BASE/nltk_data')
+
+# Download to a specific folder
+nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
+
+
+"
+
+python3 -m punkt stopwords wordnet averaged_perceptron_tagger
 
 # Download spaCy model
 pip3 install spacy
@@ -129,7 +147,6 @@ pip3 install keras # Yolo3 requirement
 #--- Deep Learning ---
 pip3 install tf-keras
 
-
 #------- Generative AI -------
 pip3 install dalle2-pytorch # -> https://github.com/lucidrains/DALLE2-pytorch
 pip3 install pyro-ppl # -> https://pyro.ai/examples/intro_long.html
@@ -148,7 +165,6 @@ pip3 install opencv-python # https://docs.opencv.org/4.x/d6/d00/tutorial_py_root
 
 #- https://huggingface.co/datasets?task_categories=task_categories%3Aimage-to-text
 # google/imageinwords  # https://huggingface.co/datasets/google/imageinwords
-
 
 #--- OCR ---
 # Install EasyOCR
