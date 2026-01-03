@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.24
+Version:  0.0.25
 Last Updated:  1/3/2026
 
 What this does:
@@ -194,7 +194,12 @@ export NLTK_DATA="$VENV_BASE/nltk_data"
 #python3 -m pip install nltk
 pip3 install nltk
 if [[ ! -d "$VENV_DIR/nltk_data/" ]]; then
-    echo "NLTK Data not found, so downloading... "
+    echo "
+    
+    NLTK Data not found, so downloading... ( $VENV_DIR/nltk_data/ )
+    
+    "
+    
     mkdir -p $VENV_BASE/nltk_data/
     python3 -m nltk.downloader -d $VENV_BASE/nltk_data all
     #python3 -m nltk.downloader -d $VENV_BASE/nltk_data punkt
@@ -207,6 +212,7 @@ fi
 
 
 echo "
+
 To include nltk in your python code:
 
 import nltk
@@ -221,7 +227,11 @@ nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 # Download spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
 pip3 install spacy
 if [[ ! -d "$VENV_DIR/spacy/" ]]; then
-    echo "spacy Data not found, so downloading... "
+    echo "
+    
+    Spacy Data not found, so downloading... ( $VENV_DIR/spacy/ ) 
+    
+    "
     mkdir -p $VENV_BASE/spacy/
     #python -m spacy download en_core_web_sm # 0 keys, 0 unique vectors (0 dimensions) - 12 MB
     #python -m spacy download en_core_web_md # 685k keys, 20k unique vectors (300 dimensions) -  31 MB
