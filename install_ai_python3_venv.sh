@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.28-3
+Version:  0.0.28-4
 Last Updated:  1/3/2026
 
 What this does:
@@ -39,13 +39,6 @@ Install:
 sudo apt-get update
 # python3.10-venv
 sudo apt-get install -y python3-dev build-essential
-#python3 -m pip install -U pip setuptools wheel packaging
-
-#python -m pip install --upgrade pip --trusted-host pypi.org --trusted-host files.pythonhosted.org
-#python3 -m pip install -U truststore pip-system-certs
-
-#pip install --upgrade pip setuptools wheel
-#python3 -m pip install unstructured
 
 #------- core ------------------------
 #echo $SETUPTOOLS_USE_DISTUTILS
@@ -154,6 +147,16 @@ Detected GPU_TYPE = $GPU_TYPE
 
 "
 #---- end cpu gpu detection -----
+
+
+#python3 -m pip install -U pip setuptools wheel packaging
+
+
+# make sure truststore is installed in the venv
+python3 -m pip install -U truststore pip-system-certs
+
+# avoid build isolation for the install (so it doesn't spawn a subprocess env that triggers the problem)
+python3 -m pip install --no-build-isolation unstructured
 
 #--------------- Install shared packages ---------------
 pip3 install requests urllib3 beautifulsoup4
