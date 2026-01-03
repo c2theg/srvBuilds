@@ -141,16 +141,15 @@ Detected GPU_TYPE = $GPU_TYPE
 
 
 "
-
 #---- end cpu gpu detection -----
-
 # Upgrade core tooling
-pip install --upgrade pip setuptools wheel
+python -m pip install --upgrade pip --trusted-host pypi.org --trusted-host files.pythonhosted.org
+pip install pip-system-certs
 
+pip install --upgrade pip setuptools wheel
 #--------------- Install shared packages ---------------
-pip3 install requests flask
-pip3 install requests urllib3 beautifulsoup4 pymongo
-pip3 install html2text 
+pip3 install requests urllib3 beautifulsoup4
+pip3 install html2text
 
 #------- AI ----------------
 pip3 install ollama
