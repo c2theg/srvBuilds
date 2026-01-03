@@ -69,41 +69,41 @@ pip install --upgrade pip setuptools wheel
 #--------------- Install shared packages ---------------
 # pip3 install -U -r requirements.txt
 
-pip3 install flask fastapi
-
 #pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 #--- install common pip packages in this global env ---
 pip3 install validators
-pip3 install whois certifi ordered-set
-pip3 install pyOpenSSL idna requests urllib3 ipaddress urlparse2 rich ping3 cryptography aiohttp psutil shutil-ext py-machineid distro netaddr loguru
-
-#--- Databases ----
-pip3 install pymongo redis
-#pip3 install mysql-connector-python
-
-#----- Install Flask ------------
-#echo "Installing Flask... \r\n "
-#pip3 install Flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
-#--- Web API stuff ----
-echo "Installing other PIP modules... https://hugovk.github.io/top-pypi-packages/ \r\n "
-
-pip3 install ansible
-pip3 install PyYAML tldextract python-whois validators netaddr  certifi
-
+pip3 install certifi pyOpenSSL
+pip3 install requests urllib3 ipaddress urlparse2 rich ping3 
+pip3 install psutil shutil-ext py-machineid distro netaddr loguru
 pip3 install wheel
 pip3 install setuptools
-
-pip3 install jsonify
 pip3 install asyncio
 pip3 install aiohttp
 
+#--- Databases ----
+pip3 install redis
+pip3 install pymongo
+#pip3 install mysql-connector-python
+
+#----- Install Flask ------------
+echo "Installing Flask... \r\n "
+pip3 install flask flask_restful flask_apscheduler flask_marshmallow flask_migrate flask_socketio
+
+#--- Web API stuff ----
+echo "Installing other PIP modules... https://hugovk.github.io/top-pypi-packages/ \r\n "
+
+pip3 install fastapi
+pip3 install ansible
+pip3 install PyYAML 
+
+pip3 install jsonify
 pip3 install python-dateutil
 
 pip3 install colorama
 pip3 install Jinja2
-pip3 install validators
 
 pip3 install numpy
+pip3 install ordered-set
 
 #--- crypto ---
 pip3 install pynacl
@@ -129,6 +129,9 @@ pip3 install quantcrypt
 #pip3 install websockets
 
 #-- Networking --
+pip3 install idna
+pip3 install tldextract
+pip3 install python-whois whois
 pip3 install scapy
 #pip3 install Twisted
 #pip3 install cbor2
@@ -140,7 +143,7 @@ pip3 install scapy
 #pip3 install pyang
 #pip3 install netconf
 #pip3 install pexpect
-pip3 install dnslookup-cli
+#pip3 install dnslookup-cli
 
 #--- GeoIP ---
 pip3 install maxminddb
