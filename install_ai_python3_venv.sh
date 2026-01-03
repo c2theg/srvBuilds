@@ -19,8 +19,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.5
-Last Updated:  12/31/2025
+Version:  0.0.10
+Last Updated:  1/3/2026
 
 What this does:
     Creates a GLOBAL Python3 Virtual Environment (I know you think that defeats the entire reason for an venv... it does not. 
@@ -35,7 +35,11 @@ Install:
     rm install_ai_python3_venv.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
 
 "
+#---- OS Level -----
+sudo apt install -y tesseract-ocr
 
+
+#-------- Python3 - PIP -----------------
 VENV_DIR="$VENV_BASE/venv"
 
 # Create venv if it doesn't exist
@@ -91,35 +95,36 @@ pip3 install seaborn # https://seaborn.pydata.org/installing.html
 pip3 install plotly # https://plotly.com/python/getting-started/
 
 # install NLP Libraries
-pip3 install textblob nltk spacy wordcloud
+pip3 install textblob wordcloud
 
 # Machine Learning
 pip3 install scikit-learn joblib
 
 # Core email processing
-pip install html2text 
+pip3 install html2text 
 
 # For Transformer models (GPU recommended)
-pip install torch transformers datasets
+pip3 install transformers datasets
 
 # Download NLTK data
+pip3 install nltk
 python -m nltk.downloader punkt stopwords wordnet averaged_perceptron_tagger
 
 # Download spaCy model
+pip3 install spacy
 python -m spacy download en_core_web_sm
 
 #------- Install Machine Learning libs -------
-pip3 install torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip3 install torch torchvision
+pip3 install torchaudio --index-url https://download.pytorch.org/whl/cu118
 pip3 install tensorflow
 pip3 install scikit-learn
-pip3 install torchvision
 
 #pip3 install catboost
 # LightGBM -> https://lightgbm.readthedocs.io/en/stable/Installation-Guide.html
 pip3 install keras # Yolo3 requirement
 #pip3 install gym  # -> https://github.com/openai/gym
 #pip3 install xgboost # -> https://xgboost.readthedocs.io/en/stable/install.html
-
 
 #------- Generative AI -------
 pip3 install dalle2-pytorch # -> https://github.com/lucidrains/DALLE2-pytorch
@@ -140,7 +145,37 @@ pip3 install opencv-python # https://docs.opencv.org/4.x/d6/d00/tutorial_py_root
 #- https://huggingface.co/datasets?task_categories=task_categories%3Aimage-to-text
 # google/imageinwords  # https://huggingface.co/datasets/google/imageinwords
 
-#------------------- End of Shared ---------------------
+#--- OCR ---
+# Install EasyOCR
+pip3 install easyocr
+pip3 install pytesseract pillow
 
+#---- PaddleOCR -----
+#--- CPU ---
+python -m pip install paddlepaddle
+#python -m pip install paddleocr
+python -m pip install "paddleocr[all]"
+
+#--- GPU - Nvidia ---
+# Example for CUDA 12.6 (2026 stable)
+#python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
+
+#- DocTR (Document Text Recognition) is a high-performance Python OCR library --
+pip3 install "python-doctr[viz,html,contrib]"
+pip3 install "python-doctr[torch]"
+pip3 install "python-doctr[tf]"
+
+#--- Keras ---
+pip3 install keras-ocr
+
+#----- LLM -----------------
+# https://ollama.com/library/qwen3-vl
+# ollama run qwen3-vl
+# qwen3-vl:8b
+
+#--- https://reducto.ai/blog/introducing-rolmocr-open-source-ocr-model --
+pip3 install reductoai
+
+#------------------- End of Shared ---------------------
 # Deactivate cleanly
 deactivate
