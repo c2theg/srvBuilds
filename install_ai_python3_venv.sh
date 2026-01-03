@@ -134,6 +134,14 @@ else
     fi
   fi
 fi
+echo "
+
+
+Detected GPU_TYPE = $GPU_TYPE
+
+
+"
+
 #---- end cpu gpu detection -----
 
 # Upgrade core tooling
@@ -186,13 +194,17 @@ export NLTK_DATA="$VENV_BASE/nltk_data"
 #python3 -m pip install nltk
 pip3 install nltk
 if [[ ! -d "$VENV_DIR/nltk_data/" ]]; then
+    echo "NLTK Data not found, so downloading... "
     mkdir -p $VENV_BASE/nltk_data/
     python3 -m nltk.downloader -d $VENV_BASE/nltk_data all
     #python3 -m nltk.downloader -d $VENV_BASE/nltk_data punkt
     #python3 -m nltk.downloader -d $VENV_BASE/nltk_data popular
     #python3 -m nltk.downloader -d $VENV_BASE/nltk_data stopwords
     #python3 -m nltk.downloader -d $VENV_BASE/nltk_data averaged_perceptron_tagger
+else
+   echo "NLTK Data found, so not updating! "
 fi
+
 
 echo "
 To include nltk in your python code:
@@ -209,8 +221,8 @@ nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 # Download spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
 pip3 install spacy
 if [[ ! -d "$VENV_DIR/spacy/" ]]; then
+    echo "spacy Data not found, so downloading... "
     mkdir -p $VENV_BASE/spacy/
-    
     #python -m spacy download en_core_web_sm # 0 keys, 0 unique vectors (0 dimensions) - 12 MB
     #python -m spacy download en_core_web_md # 685k keys, 20k unique vectors (300 dimensions) -  31 MB
     #python -m spacy download en_core_web_lg # 685k keys, 343k unique vectors (300 dimensions) - 382 MB
@@ -221,6 +233,8 @@ if [[ ! -d "$VENV_DIR/spacy/" ]]; then
     wget -O "en_core_web_md.tar.gz" https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0.tar.gz
     tar -xvzf en_core_web_md.tar.gz -C $VENV_BASE/spacy/
     #tar -xvzf en_core_web_md.tar.gz -C /opt/python3_shared/spacy/
+else
+    echo "Spacy Data found so not updating!"
 fi
 
 
@@ -244,12 +258,11 @@ pip3 install stopwordsiso stop-words
 # POSIX sh GPU detection for macOS + Linux (Ubuntu/Rocky), with CUDA/ROCm version hints.
 # Outputs: GPU_TYPE (nvidia|amd|mac|cpu), and optionally CUDA_VERSION / ROCM_VERSION.
 
-
 echo "
 
 
 "
-echo "GPU_TYPE=$GPU_TYPE"
+
 if [ $GPU_TYPE = "nvidia"  ]; then
     echo "Nvidia GPU - Detected! "
     [ -n "$CUDA_VERSION" ] && echo "CUDA_VERSION=$CUDA_VERSION"
@@ -268,13 +281,6 @@ else
     # CPU Only!
     pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 fi
-
-echo "
-
-Verify PyTorch install is good 
-
-"
-python3 -c "import torch; print(f'PyTorch version: {torch.__version__}'); print(f'MPS available: {torch.backends.mps.is_available()}')"
 
 #----------------------------------------------
 pip3 install tensorflow
