@@ -130,7 +130,8 @@ nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 
 "
 
-python3 -m stop-words wordnet averaged_perceptron_tagger
+python3 -m wordnet averaged_perceptron_tagger
+pip3 install stopwordsiso stop-words
 
 
 # Download spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
