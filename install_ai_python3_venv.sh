@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.25
+Version:  0.0.21-1
 Last Updated:  1/3/2026
 
 What this does:
@@ -108,15 +108,16 @@ pip3 install datasets # https://pypi.org/project/datasets/
 
 #--- NLTK --- https://www.nltk.org/data.html
 export NLTK_DATA="$VENV_BASE/nltk_data"
-
-#pip3 install nltk
-python3 -m pip install nltk
-python3 -m nltk.downloader -d $VENV_BASE/nltk_data all
-#python3 -m nltk.downloader -d $VENV_BASE/nltk_data punkt
-#python3 -m nltk.downloader -d $VENV_BASE/nltk_data popular
-#python3 -m nltk.downloader -d $VENV_BASE/nltk_data stopwords
-#python3 -m nltk.downloader -d $VENV_BASE/nltk_data averaged_perceptron_tagger
-
+#python3 -m pip install nltk
+pip3 install nltk
+if [[ ! -d "$VENV_DIR/nltk_data/" ]]; then
+    mkdir -p $VENV_BASE/nltk_data/
+    python3 -m nltk.downloader -d $VENV_BASE/nltk_data all
+    #python3 -m nltk.downloader -d $VENV_BASE/nltk_data punkt
+    #python3 -m nltk.downloader -d $VENV_BASE/nltk_data popular
+    #python3 -m nltk.downloader -d $VENV_BASE/nltk_data stopwords
+    #python3 -m nltk.downloader -d $VENV_BASE/nltk_data averaged_perceptron_tagger
+fi
 
 echo "
 To include nltk in your python code:
@@ -130,21 +131,21 @@ nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 
 "
 
-pip3 install stopwordsiso stop-words
-
 # Download spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
 pip3 install spacy
-#python -m spacy download en_core_web_sm # 0 keys, 0 unique vectors (0 dimensions) - 12 MB
-#python -m spacy download en_core_web_md # 685k keys, 20k unique vectors (300 dimensions) -  31 MB
-#python -m spacy download en_core_web_lg # 685k keys, 343k unique vectors (300 dimensions) - 382 MB
-#python -m spacy download en_core_web_trf # 0 keys, 0 unique vectors (0 dimensions) - 436 MB
-
-#--- Custom Path ---
-# https://github.com/explosion/spacy-models/releases/tag/en_core_web_md-3.8.0
-
 if [[ ! -d "$VENV_DIR/spacy/" ]]; then
+    mkdir -p $VENV_BASE/spacy/
+    
+    #python -m spacy download en_core_web_sm # 0 keys, 0 unique vectors (0 dimensions) - 12 MB
+    #python -m spacy download en_core_web_md # 685k keys, 20k unique vectors (300 dimensions) -  31 MB
+    #python -m spacy download en_core_web_lg # 685k keys, 343k unique vectors (300 dimensions) - 382 MB
+    #python -m spacy download en_core_web_trf # 0 keys, 0 unique vectors (0 dimensions) - 436 MB
+    
+    #--- Custom Path ---
+    # https://github.com/explosion/spacy-models/releases/tag/en_core_web_md-3.8.0
     wget -O "en_core_web_md.tar.gz" https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0.tar.gz
     tar -xvzf en_core_web_md.tar.gz -C $VENV_BASE/spacy/
+    #tar -xvzf en_core_web_md.tar.gz -C /opt/python3_shared/spacy/
 fi
 
 
@@ -159,6 +160,9 @@ doc = nlp('This is a sentence.')
 
 
 "
+
+pip3 install stopwordsiso stop-words
+
 #------- Install Machine Learning libs -------
 pip3 install torch torchvision
 pip3 install torchaudio --index-url https://download.pytorch.org/whl/cu118
