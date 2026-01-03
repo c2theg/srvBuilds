@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.28-2
+Version:  0.0.28-3
 Last Updated:  1/3/2026
 
 What this does:
@@ -42,10 +42,10 @@ sudo apt-get install -y python3-dev build-essential
 #python3 -m pip install -U pip setuptools wheel packaging
 
 #python -m pip install --upgrade pip --trusted-host pypi.org --trusted-host files.pythonhosted.org
-python3 -m pip install -U truststore pip-system-certs
+#python3 -m pip install -U truststore pip-system-certs
 
-pip install --upgrade pip setuptools wheel
-python3 -m pip install unstructured
+#pip install --upgrade pip setuptools wheel
+#python3 -m pip install unstructured
 
 #------- core ------------------------
 #echo $SETUPTOOLS_USE_DISTUTILS
