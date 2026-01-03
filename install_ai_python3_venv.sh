@@ -255,7 +255,7 @@ echo "GPU_TYPE=$GPU_TYPE"
 [ -n "$CUDA_VERSION" ] && echo "CUDA_VERSION=$CUDA_VERSION"
 [ -n "$ROCM_VERSION" ] && echo "ROCM_VERSION=$ROCM_VERSION"
 
-if $GPU_TYPE == 'cpu'; then
+if [ $GPU_TYPE = "cpu" ]; then
     # CPU Only!
     pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 fi
