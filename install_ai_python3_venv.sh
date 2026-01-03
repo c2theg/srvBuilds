@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.28-7
+Version:  0.0.28-8
 Last Updated:  1/3/2026
 
 What this does:
@@ -156,7 +156,7 @@ python3 -m pip uninstall -y pip-system-certs pip_system_certs truststore
 python3 -m pip install -U pip setuptools wheel packaging
 
 # 3) install langdetect without PEP517/build isolation
-python3 -m pip install --no-use-pep517 langdetect
+#python3 -m pip install --no-use-pep517 langdetect
 
 # 4) install unstructured
 python3 -m pip install unstructured
