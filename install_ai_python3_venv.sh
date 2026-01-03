@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.20
+Version:  0.0.21
 Last Updated:  1/3/2026
 
 What this does:
@@ -112,8 +112,8 @@ export NLTK_DATA="$VENV_BASE/nltk_data"
 #pip3 install nltk
 python3 -m pip install nltk
 python3 -m nltk.downloader -d $VENV_BASE/nltk_data all
-python3 -m nltk.downloader punkt
-python3 -m nltk.downloader popular
+#python3 -m nltk.downloader punkt
+#python3 -m nltk.downloader popular
 
 echo "
 To include nltk in your python code:
