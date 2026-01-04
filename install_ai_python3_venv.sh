@@ -22,7 +22,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.31
+Version:  0.2.32
 Last Updated:  1/4/2026
 
 What this does:
@@ -540,3 +540,12 @@ Persistent DB paths (exported by this script):
 
 
 "
+
+#alias myproject="source $VENV_BASE/venv/bin/activate"
+echo "alias activate_env=\"source $VENV_BASE/venv/bin/activate\"" >> ~/.bashrc
+#echo "alias activate_env=\"source /opt/python3_shared/venv/bin/activate\"" >> ~/.bashrc
+
+echo "Added alias: activate_env -> source $VENV_BASE/venv/bin/activate"
+echo "Run 'activate_env' to activate the virtual environment"
+echo "You can also use: source $VENV_BASE/venv/bin/activate"
+echo "You must restart your shell or run 'source ~/.bashrc' to use the new alias"
