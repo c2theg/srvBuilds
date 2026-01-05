@@ -22,8 +22,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.32
-Last Updated:  1/4/2026
+Version:  0.2.33
+Last Updated:  1/5/2026
 
 What this does:
     Creates a GLOBAL Python3 Virtual Environment (I know you think that defeats the entire reason for an venv... it does not. 
@@ -400,7 +400,7 @@ nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 
 "
 
-# Download spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
+#--- spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
 pip_install spacy
 if [[ -z "${SKIP_SPACY_MODEL:-}" ]]; then
   # Prefer wheel install (no custom extract paths).
@@ -422,6 +422,13 @@ doc = nlp('This is a sentence.')
 
 pip_install stopwordsiso stop-words
 
+
+#--- huggingface models ---
+if [[ -z "${SKIP_NLTK_DATA:-}" && ! -d "$VENV_BASE/huggingface" ]]; then
+    mkdir -p $VENV_BASE/huggingface
+  
+fi
+
 #------- Install Machine Learning libs -------
 # - PyTorch - Customize the download - https://pytorch.org/get-started/locally/
 
@@ -430,8 +437,14 @@ pip_install stopwordsiso stop-words
 
 echo "
 
+   --- PyTorch ---
+
 
 "
+if [! -d "$VENV_BASE/torch" ]; then
+    mkdir -p $DATA_DIR/torch
+fi
+
 
 if [ $GPU_TYPE = "nvidia"  ]; then
     echo "Nvidia GPU - Detected! "
@@ -451,6 +464,7 @@ else
     # CPU Only!
     pip_install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 fi
+
 
 #----------------------------------------------
 pip_install tensorflow
