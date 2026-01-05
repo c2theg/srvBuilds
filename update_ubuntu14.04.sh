@@ -16,49 +16,27 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.7.32
-Last Updated:  12/31/2025
+Version:  1.7.33
+Last Updated:  1/5/2025
 
 for Debian 8 / Ubuntu versions 20.04 - 24.04+ ( ignore the file name :/ )
 
 "
 #-- update yourself! --
-rm update_ubuntu14.04.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
-
+wget -O 'update_ubuntu14.04.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
 wait
-# https://askubuntu.com/questions/759524/problem-with-ipv6-sudo-apt-get-update-upgrade
-# echo 'Acquire::ForceIPv4 "true";' | sudo tee /etc/apt/apt.conf.d/99force-ipv4
-#
-#sudo -E apt-get update
-#sudo -E apt-get upgrade -y --force-yes
-
-#--- Broken Python3.10 packages, require forced remove for now - 5/19/2022 - Will remove in a week
-#sudo apt --fix-missing purge $(dpkg -l | grep 'python3\.1[01]' | awk '{print $2}')
-#sudo apt --fix-broken install
-#sudo apt upgrade
-
 #-- Force IPv4 update servers --
 sudo -E apt-get -o Acquire::ForceIPv4=true update
-#sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y
 sudo -E apt-get -o Acquire::ForceIPv4=true upgrade -y
-
 #-- Force IPv6 update servers --
 #sudo -E apt-get -o Acquire::ForceIPv6=true update
 #sudo -E apt-get -o Acquire::ForceIPv6=true upgrade -y
-#sudo -E apt-get -o Acquire::ForceIPv6=true upgrade -y
-
 #sudo -E apt-get dist-upgrade -y
-
 #-------------------------------------------------------
 wait
 sudo -E apt-get install -f -y
 wait
-#sudo apt update
-wait
 sudo apt upgrade -y --allow-downgrades
-wait
-#echo "Freeing up space"
-#sudo apt-get autoremove -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
@@ -83,8 +61,8 @@ if pip -V | grep -q ' not '; then
     echo "Skipping pip update.. "
 else
     wget -O 'install_common_python3_venv.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_common_python3_venv.sh && chmod u+x install_common_python3_venv.sh
+    wget -O 'install_ai_python3_venv.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh   
 fi
-
 #------------------------ Node JS ---------------------------------
 if command -v node >/dev/null 2>&1; then
     echo "✅ Node.js detected: $(node -v)"
