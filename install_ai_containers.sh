@@ -1,14 +1,15 @@
-
-
-docker run -it --rm -p 8888:8888 jupyter/datascience-notebook:latest
-
-docker run -it --rm -p 5678:5678 n8nio/n8n:latest
+#!/bin/sh
+#-------------------------------------------------------------
+#  
+#  Updated: 1/6/2026
+#  Version: 0.0.6
+#-------------------------------------------------------------
 
 docker run -it --rm ollama/ollama:latest
 
+
 #--- vector databases ----
 #docker run -it --rm -p 6333:6333 qdrant/qdrant
-
 
 # https://milvus.io/docs/install_standalone-docker.md
 # https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh
@@ -43,3 +44,10 @@ docker run \
     --volume=$HOME/neo4j/data:/data \
     --env NEO4J_AUTH=neo4j/your_password \
     neo4j:latest
+
+
+
+#---- APPLICATIONS ---------
+# docker run -it --rm -p 8888:8888 jupyter/datascience-notebook:latest
+# docker run -it --rm -p 5678:5678 n8nio/n8n:latest
+
