@@ -16,8 +16,8 @@ echo "
 
 
 
-Version:  1.6.0
-Last Updated:  12/31/2025
+Version:  1.6.2
+Last Updated:  1/5/2026
 
 update yourself:
 wget -O 'install_python3.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh && ./install_python3.sh
@@ -56,6 +56,7 @@ pip3 install --upgrade pip
 python3 -m pip install --upgrade pip
 #--------------------------------------------------------------------------------------------
 wget -O 'install_common_python3_venv.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_common_python3_venv.sh && chmod u+x install_common_python3_venv.sh
+wget -O 'install_ai_python3_venv.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh   
 
 echo "
 
@@ -71,38 +72,7 @@ virtualenv --version
 python3 -m pip --version
 echo "--- SUCCESS ---"
 #--------------------------------------------------------------------------------------------------
-# Configuration
-DATA_DIR="/usr/local/share/ml_shared" #"/opt/ml_shared"
 
-echo "--- 1. Creating Shared ML Data Directory ---"
-sudo mkdir -p $DATA_DIR
-sudo chown -R $USER_NAME:$USER_NAME $DATA_DIR
+./install_common_python3_venv.sh
 
-echo "--- 2. Setting up Library Sub-folders ---"
-mkdir -p $DATA_DIR/huggingface
-mkdir -p $DATA_DIR/nltk
-mkdir -p $DATA_DIR/spacy
-mkdir -p $DATA_DIR/torch
 
-echo "--- 3. Exporting Environment Variables to .bashrc ---"
-# This tells the libraries where to look
-# cat << EOF >> ~/.bashrc
-
-# # Shared ML Data Paths
-# export HF_HOME="$DATA_DIR/huggingface"
-# export NLTK_DATA="$DATA_DIR/nltk"
-# export SPACY_DATA="$DATA_DIR/spacy"
-# export TORCH_HOME="$DATA_DIR/torch"
-# EOF
-
-echo "export HF_HOME='$DATA_DIR/huggingface'" >> ~/.bashrc
-echo "export HF_HOME='$DATA_DIR/nltk'" >> ~/.bashrc
-echo "export HF_HOME='$DATA_DIR/spacy'" >> ~/.bashrc
-echo "export HF_HOME='$DATA_DIR/torch'" >> ~/.bashrc
-
-echo "--- SUCCESS ---"
-echo "Please run: source ~/.bashrc"
-
-echo "-- Preload ML Data... ---"
-# https://www.nltk.org/data.html
-#python3 -m nltk.downloader popular
