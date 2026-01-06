@@ -17,51 +17,41 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.61
-Last Updated:  12/31/2025
+Version:  0.0.62
+Last Updated:  1/6/2025
 
 # https://ollama.com/search
 
-
-Install:
-    rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
-
-
-Recommended (after):
-    rm update_ai_models.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
-
 "
-
 # linux-modules-nvidia-580-open-generic-hwe-24.04
 
 #-- update yourself! --
-rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
+wget -O "install_ai.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
+wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
+
+
 sudo apt update
 sudo apt install -y --no-install-recommends wget curl gnupg2 git python3 python3-venv libgl1 libglib2.0-0
 
 
 if [ ! -f "install_docker.sh" ]; then
      echo " You need docker first before running this. This will download a docker installer and run it for you. "
-     wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh
+     wget -O "install_docker.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh
      chmod u+x install_docker.sh
      ./install_docker.sh
 fi
 
-
 #rm install_python3.sh
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh
-#./install_python3.sh
-
-#--------------------------------------------------------------------------------------------
+wget -O "install_python3.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh
+#----------------------------------------------------------------------------------------------------------------------------------
 # Docker - Ollama
 # docker pull ollama/ollama
 
 # Install & Update Ollama to latest version using:
 if [ ! -f "ollama_install.sh" ]; then
     #curl -fsSL https://ollama.com/install.sh | sh
-    wget -O ollama_install.sh  https://ollama.com/install.sh && chmod u+x ollama_install.sh && ./ollama_install.sh
+    wget -O "ollama_install.sh" https://ollama.com/install.sh && chmod u+x ollama_install.sh && ./ollama_install.sh
 fi
-
 ollama --version
 
 
@@ -289,7 +279,7 @@ echo "
 
 "
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
+wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
 ./install_ai_python3_venv.sh
 
 #-----------------------------
