@@ -16,15 +16,17 @@ echo "
 
 
 
-Version:  1.6.2
+Version:  1.6.3
 Last Updated:  1/5/2026
 
-update yourself:
-wget -O 'install_python3.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh && ./install_python3.sh
 
 "
 #--------------------------------------------------------------------------------------------
-echo "Installing Python 3.x... -> latest for your platform
+wget -O 'install_python3.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh
+
+echo "
+
+Installing Python 3.x... -> latest for your platform
 
 "
 #sudo -E add-apt-repository -y ppa:deadsnakes/ppa
