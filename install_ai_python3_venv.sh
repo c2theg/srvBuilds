@@ -25,7 +25,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.36
+Version:  0.2.36-1
 Last Updated:  1/5/2026
 
 What this does:
