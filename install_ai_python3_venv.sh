@@ -6,6 +6,9 @@ AI_DBS_BASE="${AI_DBS_BASE:-/opt/ai_dbs}"
 VENV_RECREATE=0
 PYTHON_VERSION_MM=""
 
+sudo chown -R $USER_NAME:$USER_NAME $VENV_BASE
+sudo chown -R $USER_NAME:$USER_NAME $AI_DBS_BASE
+
 echo "
 
 
@@ -22,7 +25,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.33
+Version:  0.2.35
 Last Updated:  1/5/2026
 
 What this does:
@@ -330,7 +333,7 @@ pip_install html2text
 
 #------- AI ----------------
 pip_install ollama
-pip_install pdfplumber
+
 pip_install langchain langchain-core langchain-ollama langchain-community langchain_text_splitters
 pip_install "unstructured[all-docs]"
 pip_install fastembed
@@ -356,14 +359,27 @@ pip_install bokeh # https://bokeh.org/
 pip_install seaborn # https://seaborn.pydata.org/installing.html
 pip_install plotly # https://plotly.com/python/getting-started/
 
-# install NLP Libraries
 pip_install textblob wordcloud
-
-# Machine Learning
 pip_install scikit-learn joblib
 
-pip_install transformers # https://pypi.org/project/transformers/
-pip_install datasets # https://pypi.org/project/datasets/
+# https://pypi.org/project/transformers/
+pip_install transformers
+
+# https://pypi.org/project/datasets/
+pip_install datasets
+
+#--- PDF Processing ----
+pip_install pdfplumber
+
+# https://github.com/pymupdf/PyMuPDF
+pip_install PyMuPDF
+pip_install pymupdf-fonts
+pip_install fonttools
+
+# https://github.com/ocrmypdf/OCRmyPDF
+pip_install ocrmypdf
+
+
 
 #--- NLTK --- https://www.nltk.org/data.html
 export NLTK_DATA="$VENV_BASE/nltk_data"
@@ -402,9 +418,10 @@ nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 
 #--- spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
 pip_install spacy
-if [[ -z "${SKIP_SPACY_MODEL:-}" ]]; then
-  # Prefer wheel install (no custom extract paths).
-  pip_install "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl"
+if [! -d "$VENV_BASE/spacy"]; then
+    mkdir -p $VENV_BASE/spacy
+    # Prefer wheel install (no custom extract paths).
+    pip_install "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl"
 fi
 
 
@@ -424,9 +441,8 @@ pip_install stopwordsiso stop-words
 
 
 #--- huggingface models ---
-if [[ -z "${SKIP_NLTK_DATA:-}" && ! -d "$VENV_BASE/huggingface" ]]; then
+if [! -d "$VENV_BASE/huggingface"]; then
     mkdir -p $VENV_BASE/huggingface
-  
 fi
 
 #------- Install Machine Learning libs -------
@@ -464,6 +480,13 @@ else
     # CPU Only!
     pip_install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 fi
+
+
+echo "---  Exporting Environment Variables to .bashrc ---"
+echo "export HF_HOME='$VENV_BASE/huggingface'" >> ~/.bashrc
+echo "export NLTK_HOME='$VENV_BASE/nltk_data'" >> ~/.bashrc
+echo "export SPACY_HOME='$VENV_BASE/spacy'" >> ~/.bashrc
+echo "export TORCH_HOME='$VENV_BASE/torch'" >> ~/.bashrc
 
 
 #----------------------------------------------
