@@ -6,8 +6,8 @@ AI_DBS_BASE="${AI_DBS_BASE:-/opt/ai_dbs}"
 VENV_RECREATE=0
 PYTHON_VERSION_MM=""
 
-sudo chown -R $USER_NAME:$USER_NAME $VENV_BASE
-sudo chown -R $USER_NAME:$USER_NAME $AI_DBS_BASE
+sudo chown -R $USER:$USER $VENV_BASE
+sudo chown -R $USER:$USER $AI_DBS_BASE
 
 echo "
 
@@ -25,7 +25,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.35
+Version:  0.2.36
 Last Updated:  1/5/2026
 
 What this does:
