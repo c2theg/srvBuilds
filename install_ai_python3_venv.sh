@@ -6,8 +6,8 @@ AI_DBS_BASE="${AI_DBS_BASE:-/opt/ai_dbs}"
 VENV_RECREATE=0
 PYTHON_VERSION_MM=""
 
-sudo chown -R $USER:$USER $VENV_BASE
-sudo chown -R $USER:$USER $AI_DBS_BASE
+#mkdir -p $VENV_BASE
+mkdir -p $AI_DBS_BASE
 
 echo "
 
@@ -47,7 +47,6 @@ echo "System Python: $(python3 --version 2>/dev/null || echo "Not found")"
 echo "System Pip: $(pip3 --version 2>/dev/null || echo "Not found")"
 echo "VENV_BASE: $VENV_BASE"
 echo "AI_DBS_BASE: $AI_DBS_BASE"
-
 
 
 usage() {
@@ -562,6 +561,10 @@ fi
 
 
 # source /opt/python3_shared/venv/bin/activate
+
+sudo chown -R $USER:$USER $VENV_BASE
+sudo chown -R $USER:$USER $AI_DBS_BASE
+
 echo " 
 Done installing/Updating!
 
