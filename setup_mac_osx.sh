@@ -15,8 +15,8 @@ echo "Running setup_mac_osx.sh
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.2                            
-Last Updated:  12/16/2023
+Version:  0.0.10                           
+Last Updated:  1/6/2026
 
 https://formulae.brew.sh/cask/
 
@@ -36,8 +36,6 @@ rustc --version
 brew cask install docker
 brew install --cask docker-toolbox
 
-brew install qt5
-pip3 install pyqt5
 
 #--- CLI apps ---
 brew install gping
@@ -45,36 +43,46 @@ brew install nload
 
 #--- GUI Apps ---
 
-#-- General --
-brew install python3
-# https://www.python.org/ftp/python/3.12.0/python-3.12.0-macos11.pkg
-
+#-- browsers --
 brew install --cask google-chrome
-brew install --cask veracrypt
-brew install wireguard-go
-brew install --cask vlc
-brew install --cask macfuse
+brew install --cask brave-browser
 
+
+#-- General --
+brew install --cask macfuse
+brew install --cask --no-quarantine wine-stable
+
+#-- video ---
+brew install --cask vlc
+#brew install --cask hdhomerun
 
 #-- remove viewers --
-brew install --cask vnc-viewer
-brew install --cask microsoft-remote-desktop
-
+#brew install --cask microsoft-remote-desktop
+#brew install --cask vnc-viewer
 
 #--- Dev Apps ---
-brew install --cask postman
-brew install --cask sublime-text
+brew install --cask windsurf
 brew install --cask visual-studio-code
-brew install --cask cyberduck
+brew install --cask sublime-text
+brew install --cask postman
+
+#brew install python3
+brew install python@3.14
+#brew install qt5
+#pip3 install pyqt5
+
+#brew install --cask cyberduck
 brew install tailscale
+
+#-- Downloading --
 brew install --cask transmission
+
+#--- Security ---
 brew install nmap
+brew install --cask veracrypt
+brew install wireguard-go
 
 #-- databases --
-brew install --cask dbeaver-community
-brew install --cask sqlpro-for-sqlite
-brew install --cask mongodb-compass
-
-
-
-
+#brew install --cask dbeaver-community
+#brew install --cask sqlpro-for-sqlite
+#brew install --cask mongodb-compass
