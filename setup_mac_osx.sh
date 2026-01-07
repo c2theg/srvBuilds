@@ -107,3 +107,7 @@ brew install --cask ollama-app
 #brew install --cask sqlpro-for-sqlite
 #brew install --cask mongodb-compass
 brew install sqlite
+
+#-- Other --
+brew install net-snmp
+
