@@ -28,7 +28,7 @@ curl -o setup_mac_osx.sh https://raw.githubusercontent.com/c2theg/srvBuilds/refs
 brew update --auto-update
 
 
-#-----------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------
 #--- Security ---
 brew install ca-certificates
 brew install openssl@3
