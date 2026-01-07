@@ -14,15 +14,16 @@ echo "Running setup_mac_osx.sh
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
-Version:  0.0.11                         
+Version:  0.0.12
 Last Updated:  1/6/2026
 
 https://formulae.brew.sh/cask/
-
+https://formulae.brew.sh/analytics/cask-install/90d/
 
 "
-#--------------------------------------------------------------------------------------------
+
+curl -o setup_mac_osx.sh https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/setup_mac_osx.sh
+#------------------------------------------------------------------------------------------------------------------
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 brew update --auto-update
 
@@ -40,19 +41,15 @@ brew install gnupg
 brew install --cask veracrypt
 brew install wireguard-go
 brew install --cask signal
-#brew install --cask metasploit
 
 #--- install apps ---
 brew cask install docker
 brew install --cask docker-desktop
 brew install --cask docker-toolbox
 
-
 #--- CLI apps ---
 brew install gping
 brew install nload
-
-#--- GUI Apps ---
 
 #-- browsers --
 brew install --cask google-chrome
@@ -102,6 +99,7 @@ brew install --cask transmission
 # brew install --cask libreoffice
 
 #-- AI --
+brew install --cask ollama-app
 # brew install ollama
 
 #-- databases --
