@@ -65,6 +65,8 @@ brew install --cask --no-quarantine wine-stable
 brew install --cask vlc
 #brew install --cask hdhomerun
 
+brew install ffmpeg
+
 #-- remove viewers --
 #brew install --cask microsoft-remote-desktop
 #brew install --cask vnc-viewer
@@ -80,6 +82,8 @@ brew install --cask postman
 brew install python@3.14
 #brew install qt5
 #pip3 install pyqt5
+
+#brew install go
 
 #brew install --cask cyberduck
 brew install tailscale
