@@ -82,6 +82,7 @@ brew install --cask postman
 brew install python@3.14
 #brew install qt5
 #pip3 install pyqt5
+brew install certifi
 
 #brew install go
 
@@ -91,6 +92,9 @@ brew install tailscale
 #-- Downloading --
 brew install --cask transmission
 
+
+#-- AI --
+# brew install ollama
 
 
 #-- databases --
