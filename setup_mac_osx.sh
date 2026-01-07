@@ -15,7 +15,7 @@ echo "Running setup_mac_osx.sh
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  0.0.10                           
+Version:  0.0.11                         
 Last Updated:  1/6/2026
 
 https://formulae.brew.sh/cask/
@@ -30,7 +30,16 @@ brew update --auto-update
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source "$HOME/.cargo/env"
 
-rustc --version
+
+#--- Security ---
+brew install ca-certificates
+brew install openssl@3
+
+
+#brew install nmap
+brew install --cask veracrypt
+brew install wireguard-go
+
 
 #--- install apps ---
 brew cask install docker
@@ -61,6 +70,7 @@ brew install --cask vlc
 #brew install --cask vnc-viewer
 
 #--- Dev Apps ---
+rustc --version
 brew install --cask windsurf
 brew install --cask visual-studio-code
 brew install --cask sublime-text
@@ -77,10 +87,7 @@ brew install tailscale
 #-- Downloading --
 brew install --cask transmission
 
-#--- Security ---
-brew install nmap
-brew install --cask veracrypt
-brew install wireguard-go
+
 
 #-- databases --
 #brew install --cask dbeaver-community
