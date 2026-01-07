@@ -27,12 +27,8 @@ curl -o setup_mac_osx.sh https://raw.githubusercontent.com/c2theg/srvBuilds/refs
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 brew update --auto-update
 
-# Install RUST
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source "$HOME/.cargo/env"
-rustc --version
 
-
+#-----------------------------------------------------------------------------------------------------
 #--- Security ---
 brew install ca-certificates
 brew install openssl@3
@@ -86,15 +82,23 @@ brew install --cask windsurf
 brew install --cask visual-studio-code
 brew install --cask sublime-text
 brew install --cask postman
+#brew install --cask cyberduck
+brew install --cask tailscale-app
 
+#- Python
 brew install python@3.14
 #brew install qt5
 #pip3 install pyqt5
 brew install certifi
 
+#- GoLang
 #brew install go
-#brew install --cask cyberduck
-brew install --cask tailscale-app
+
+#- RUST
+# Install RUST
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source "$HOME/.cargo/env"
+rustc --version
 
 
 #-- Downloading --
