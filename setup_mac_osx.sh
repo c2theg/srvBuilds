@@ -22,7 +22,7 @@ https://formulae.brew.sh/analytics/cask-install/90d/
 
 "
 
-curl -o setup_mac_osx.sh https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/setup_mac_osx.sh
+curl -o setup_mac_osx.sh https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/setup_mac_osx.sh && chmod u+x setup_mac_osx.sh
 #------------------------------------------------------------------------------------------------------------------
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 brew update --auto-update
