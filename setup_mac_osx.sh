@@ -93,3 +93,4 @@ brew install --cask transmission
 #brew install --cask dbeaver-community
 #brew install --cask sqlpro-for-sqlite
 #brew install --cask mongodb-compass
+brew install sqlite
