@@ -29,20 +29,22 @@ brew update --auto-update
 # Install RUST 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source "$HOME/.cargo/env"
-
+rustc --version
 
 #--- Security ---
 brew install ca-certificates
 brew install openssl@3
-
+brew install gnupg
 
 #brew install nmap
 brew install --cask veracrypt
 brew install wireguard-go
-
+brew install --cask signal
+#brew install --cask metasploit
 
 #--- install apps ---
 brew cask install docker
+brew install --cask docker-desktop
 brew install --cask docker-toolbox
 
 
@@ -56,23 +58,23 @@ brew install nload
 brew install --cask google-chrome
 brew install --cask brave-browser
 
-
 #-- General --
 brew install --cask macfuse
 brew install --cask --no-quarantine wine-stable
 
 #-- video ---
+brew install ffmpeg
 brew install --cask vlc
 #brew install --cask hdhomerun
-
-brew install ffmpeg
+brew install --cask plex
 
 #-- remove viewers --
 #brew install --cask microsoft-remote-desktop
 #brew install --cask vnc-viewer
+#brew install --cask teamviewer
 
 #--- Dev Apps ---
-rustc --version
+
 brew install --cask windsurf
 brew install --cask visual-studio-code
 brew install --cask sublime-text
@@ -87,15 +89,20 @@ brew install certifi
 #brew install go
 
 #brew install --cask cyberduck
-brew install tailscale
+brew install --cask tailscale-app
+#brew install tailscale
+
+brew install tor
+brew install --cask tor-browser
 
 #-- Downloading --
 brew install --cask transmission
 
+#-- office ---
+# brew install --cask libreoffice
 
 #-- AI --
 # brew install ollama
-
 
 #-- databases --
 #brew install --cask dbeaver-community
