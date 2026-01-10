@@ -42,12 +42,25 @@ sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
 printf '#!/bin/sh\n\nethtool -K %s rx-udp-gro-forwarding on rx-gro-list off \n' "$(ip -o route get 8.8.8.8 | cut -f 5 -d " ")" | sudo tee /etc/networkd-dispatcher/routable.d/50-tailscale
 sudo chmod 755 /etc/networkd-dispatcher/routable.d/50-tailscale
 
+echo "
+
+Version $(tailscale version)
+
+"
 #-------------------------------------
+tailscale set --auto-update
+
+tailscale up --reset
+
 #sudo tailscale up --ssh
-sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --ssh --accept-risk=lose-ssh
 #sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=192.168.1.0/24 --ssh --accept-risk=lose-ssh
 #sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=10.1.1.0/24 --ssh --accept-risk=lose-ssh
-tailscale set --auto-update
+#sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --ssh --accept-risk=lose-ssh
+
+tailscale up --netfilter-mode=off --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=10.13.1.0/24 --ssh --accept-risk=lose-ssh --exit-node-allow-lan-access
+
+tailscale status
+
 
 echo "
 
