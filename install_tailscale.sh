@@ -15,14 +15,17 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.21
-Last Updated:  12/18/2024
+Version:  0.0.22
+Last Updated:  1/10/2026
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_tailscale.sh && chmod u+x install_tailscale.sh
+
 "
 echo "Downloading required dependencies...
 
 "
+wget -O "install_tailscale.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_tailscale.sh && chmod u+x install_tailscale.sh
+
+
 #--------------------------------------------------------------------------------------------
 curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
 curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
