@@ -1,6 +1,6 @@
 #!/bin/bash
 #  Updated: 1/31/2026
-#  Version: 0.0.2
+#  Version: 0.0.5
 #  Purpose:  Downloads a list of LLM Models into Ollama hosted locally in a docker container
 #---------------------------------------------
 # Create the directory (Just incase its not present)
@@ -18,11 +18,16 @@ done
 echo -e "\nOllama is up! Pulling models..."
 
 # List the models you want to install here
-MODELS=("llama3.2:latest,minimax-m2.1:cloud,qwen3-embedding:0.6b,ministral-3:8b,qwen3-vl:8b")
+MODELS=("llama3.2:latest" "minimax-m2.1:cloud" "qwen3-embedding:0.6b" "ministral-3:8b" "qwen3-vl:8b")
 
 for MODEL in "${MODELS[@]}"; do
+    echo "\r\n \r\n"
+    echo "------------------------------------------"
     echo "Downloading $MODEL..."
     docker exec -it ollama ollama pull $MODEL
 done
 
+echo "------------------------------------------"
 echo "Setup complete! Models are stored in /usr/share/ollama/models"
+echo "All models installed successfully!"
+echo "You can now select them in Open WebUI at http://localhost:3000"
