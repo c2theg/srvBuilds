@@ -25,27 +25,6 @@ services:
 
 
 
-
-  # This helper container pulls the model once, then exits
-  ollama-pull-model:
-    container_name: "ollama_model_downloader"
-    image: ollama/ollama:latest
-    volumes:
-      - /usr/share/ollama/models:/root/.ollama/models
-    entrypoint: /bin/sh
-    command: >
-      -c "sleep 5; ollama pull minimax-m2.1:cloud"
-      -c "sleep 5; ollama pull ministral-3:8b"
-      -c "sleep 5; ollama pull llama3.2:3b"
-      -c "sleep 5; ollama pull qwen3-vl:8b"
-      -c "sleep 5; ollama pull qwen3-embedding:0.6b"
-    depends_on:
-      ollama:
-        condition: service_healthy # Waits for the healthcheck above to pass
-
-
-
-
   open-webui:
     container_name: "ollama_openwebui"
     image: ghcr.io/open-webui/open-webui:main
