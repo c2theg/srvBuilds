@@ -2,6 +2,8 @@
 #  Updated: 1/31/2026
 #  Version: 0.0.5
 #  Purpose:  Downloads a list of LLM Models into Ollama hosted locally in a docker container
+#  Install:  wget -O "install_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_models.sh && chmod +x install_ai_models.sh && ./install_ai_models.sh
+#
 #---------------------------------------------
 # Create the directory (Just incase its not present)
 sudo mkdir -p /usr/share/ollama/models
