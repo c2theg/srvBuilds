@@ -30,7 +30,7 @@ wget -O "install_ai.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/
 wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
 
 sudo apt update
-sudo apt install -y --no-install-recommends wget curl gnupg2 git python3 python3-venv libgl1 libglib2.0-0
+sudo apt install -y --no-install-recommends wget curl gnupg2 git libgl1 libglib2.0-0
 
 # Check if docker is in the system's PATH
 if command -v docker >/dev/null 2>&1; then
@@ -45,6 +45,7 @@ fi
 
 #rm install_python3.sh
 wget -O "install_python3.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh
+# python3 python3-venv
 #----------------------------------------------------------------------------------------------------------------------------------
 # Docker - Ollama
 # docker pull ollama/ollama
