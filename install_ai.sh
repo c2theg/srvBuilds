@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.1.4
+Version:  0.1.5
 Last Updated:  1/31/2026
 
 # https://ollama.com/search
@@ -45,9 +45,6 @@ else
      chmod u+x install_docker.sh
      ./install_docker.sh
 fi
-
-#rm install_python3.sh
-wget -O "install_python3.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh
 #----------------------------------------------------------------------------------------------------------------------------------
 
 # Create the directory
@@ -169,32 +166,19 @@ fi
 
 
 
+# if echo "$GPU_INFO" | grep -qi "nvidia"; then
+#     echo "NVIDIA GPU detected."
 
-if [ ! -f "install_ai_python3_venv.sh" ]; then
-    wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
-    ./install_ai_python3_venv.sh
-fi
+# elif echo "$GPU_INFO" | grep -qi "amd"; then
+#     echo "AMD GPU detected."
+#     #docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
 
+# else
+#     echo "No NVIDIA or AMD GPU found in relevant PCI slots."
+#     #-- CPU Only --
+#     #docker run -d -p 3000:8080 -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
 
-
-
-#---- LLAMA Web UI --- https://github.com/open-webui/open-webui#troubleshooting
-if echo "$GPU_INFO" | grep -qi "nvidia"; then
-    echo "NVIDIA GPU detected."
-
-
-elif echo "$GPU_INFO" | grep -qi "amd"; then
-    echo "AMD GPU detected."
-    #docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
-
-
-else
-    echo "No NVIDIA or AMD GPU found in relevant PCI slots."
-    #-- CPU Only --
-    #docker run -d -p 3000:8080 -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
-
-
-fi
+# fi
 
 
 echo "
@@ -253,6 +237,24 @@ curl http://localhost:11434/api/generate -d '{
 #   "stream": false
 # }'
 
+
+#---- Python 3 ----
+echo "
+
+Installing Python 3 for AI Developmemt...
+
+
+"
+if [ ! -f "install_python3.sh" ]; then
+    wget -O "install_python3.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh
+fi
+
+if [ ! -f "install_ai_python3_venv.sh" ]; then
+    wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
+    ./install_ai_python3_venv.sh
+fi
+
+#--- end Python 3 ----
 
 echo "
 
