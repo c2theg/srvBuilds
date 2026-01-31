@@ -1,5 +1,5 @@
 #----------------------------------------------------
-# Version 0.0.14
+# Version 0.0.16
 # Updated: 1/31/2026
 #
 # To Stop and remove all:
@@ -16,6 +16,15 @@ services:
       - /usr/share/ollama/models:/root/.ollama/models
     environment:
       - OLLAMA_HOST=0.0.0.0 # Allows external API access
+    # ADD THIS: Tells Docker how to know Ollama is "Ready"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+
 
   # This helper container pulls the model once, then exits
   ollama-pull-model:
@@ -31,7 +40,11 @@ services:
       -c "sleep 5; ollama pull qwen3-vl:8b"
       -c "sleep 5; ollama pull qwen3-embedding:0.6b"
     depends_on:
-      - ollama
+      ollama:
+        condition: service_healthy # Waits for the healthcheck above to pass
+
+
+
 
   open-webui:
     container_name: "ollama_openwebui"
