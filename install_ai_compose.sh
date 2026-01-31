@@ -26,6 +26,7 @@ services:
       -c "sleep 5; ollama pull ministral-3:8b"
       -c "sleep 5; ollama pull llama3.2:3b"
       -c "sleep 5; ollama pull qwen3-vl:8b"
+      -c "sleep 5; ollama pull qwen3-embedding:0.6b"
     depends_on:
       - ollama
 
