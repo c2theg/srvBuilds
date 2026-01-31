@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.62
-Last Updated:  1/6/2025
+Version:  0.0.68
+Last Updated:  1/31/2025
 
 # https://ollama.com/search
 
@@ -29,12 +29,14 @@ Last Updated:  1/6/2025
 wget -O "install_ai.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
 wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
 
-
 sudo apt update
 sudo apt install -y --no-install-recommends wget curl gnupg2 git python3 python3-venv libgl1 libglib2.0-0
 
-
-if [ ! -f "install_docker.sh" ]; then
+# Check if docker is in the system's PATH
+if command -v docker >/dev/null 2>&1; then
+    echo "✅ Docker is installed. Version: $(docker --version)"
+else
+    echo "❌ Docker is not installed."
      echo " You need docker first before running this. This will download a docker installer and run it for you. "
      wget -O "install_docker.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh
      chmod u+x install_docker.sh
