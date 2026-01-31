@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.1.5
+Version:  0.1.6
 Last Updated:  1/31/2026
 
 # https://ollama.com/search
@@ -26,7 +26,7 @@ Last Updated:  1/31/2026
 
 #-- Update yourself! --
 wget -O "install_ai.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
-wget -O "docker-compose.yml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_compose.txt && docker compose up -d
+wget -O "docker-compose.yml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_compose.txt
 #wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
 
 #--------------------------
@@ -187,7 +187,7 @@ Download & Install Containers (Ollama, Open-WebUI, etc.)
 
 "
 docker compose up -d
-sleep 20
+sleep 10
 
 
 #---- AI MODELS ----
@@ -206,7 +206,7 @@ Download & Install AI Models
 
 "
 wget -O "install_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_models.sh && chmod +x install_ai_models.sh && ./install_ai_models.sh
-sleep 20
+sleep 10
 
 
 echo "
