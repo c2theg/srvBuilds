@@ -1,7 +1,13 @@
 #!/bin/bash
 #  Updated: 1/31/2026
 #  Version: 0.0.2
-#-------------------------
+#  Purpose:  Downloads a list of LLM Models into Ollama hosted locally in a docker container
+#---------------------------------------------
+# Create the directory (Just incase its not present)
+sudo mkdir -p /usr/share/ollama/models
+# Give the directory appropriate permissions for the Docker container
+sudo chmod -R 777 /usr/share/ollama/models
+
 
 echo "Checking if Ollama is ready..."
 until $(curl --output /dev/null --silent --head --fail http://localhost:11434); do
