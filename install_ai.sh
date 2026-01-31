@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.68
+Version:  0.0.69
 Last Updated:  1/31/2025
 
 # https://ollama.com/search
@@ -51,11 +51,25 @@ wget -O "install_python3.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/
 # docker pull ollama/ollama
 
 # Install & Update Ollama to latest version using:
-if [ ! -f "ollama_install.sh" ]; then
+# Check if the ollama binary is in the PATH
+if command -v ollama >/dev/null 2>&1; then
+    echo "✅ Ollama is installed. Version: $(ollama --version)"
+    
+    # Check if the systemd service is actually running
+    if systemctl is-active --quiet ollama; then
+        echo "🟢 Service status: Running"
+    else
+        echo "⚠️  Service status: Not running (Run 'sudo systemctl start ollama' to start it)"
+    fi
+else
+    echo "❌ Ollama is not installed."
     #curl -fsSL https://ollama.com/install.sh | sh
     wget -O "ollama_install.sh" https://ollama.com/install.sh && chmod u+x ollama_install.sh && ./ollama_install.sh
 fi
+
+
 ollama --version
+
 
 
 echo "
@@ -170,15 +184,15 @@ Downloading llama3.2:latest ...
 
 "
 #-- Image Generation ---
-ollama pull llama3.2:latest     # 3b    - Meta
+ollama pull llama3.2:latest     # 3b    - Meta llama3.2:3b
 #ollama pull llama3.2-vision
 
-echo "
+# echo "
 
-Downloading Gemma...  https://ollama.com/library/gemma3
+# Downloading Gemma...  https://ollama.com/library/gemma3
 
-"
-ollama pull gemma3:4b
+# "
+# ollama pull gemma3:4b
 #ollama pull codegemma:7b
 
 
@@ -189,6 +203,8 @@ Downloading Mistral-3... (https://ollama.com/library/ministral-3)
 "
 ollama pull ministral-3:latest
 #ollama pull mistral:7b
+#ollama pull qwen3:4b
+
 #------------------------------------------------------------
 #ollama run tinyllama         # 1.1b
 #ollama run nemotron-mini     # 4b - Nvidia
