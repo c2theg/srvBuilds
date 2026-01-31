@@ -1,12 +1,14 @@
 #----------------------------------------------------
-# Version 0.0.13
+# Version 0.0.14
 # Updated: 1/31/2026
+#
+# To Stop and remove all:
+#  docker compose down
 #----------------------------------------------------
 services:
   ollama:
     container_name: "ollama"
     image: ollama/ollama:latest
-    container_name: ollama
     restart: always
     ports:
       - "11434:11434"  # Exposes API for automation tasks
@@ -19,7 +21,6 @@ services:
   ollama-pull-model:
     container_name: "ollama_model_downloader"
     image: ollama/ollama:latest
-    container_name: ollama-pull-model
     volumes:
       - /usr/share/ollama/models:/root/.ollama/models
     entrypoint: /bin/sh
@@ -35,7 +36,6 @@ services:
   open-webui:
     container_name: "ollama_openwebui"
     image: ghcr.io/open-webui/open-webui:main
-    container_name: open-webui
     restart: always
     ports:
       - "3000:8080"
