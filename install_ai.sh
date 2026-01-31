@@ -17,20 +17,23 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.69
-Last Updated:  1/31/2025
+Version:  0.1.4
+Last Updated:  1/31/2026
 
 # https://ollama.com/search
 
 "
-# linux-modules-nvidia-580-open-generic-hwe-24.04
 
-#-- update yourself! --
+#-- Update yourself! --
 wget -O "install_ai.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
-wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
+wget -O "docker-compose.yml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_compose.txt && docker compose up -d
+#wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
 
+#--------------------------
 sudo apt update
 sudo apt install -y --no-install-recommends wget curl gnupg2 git libgl1 libglib2.0-0
+sudo apt install -y jq
+sudo apt install -y linux-oem-24.04b
 
 # Check if docker is in the system's PATH
 if command -v docker >/dev/null 2>&1; then
@@ -45,31 +48,13 @@ fi
 
 #rm install_python3.sh
 wget -O "install_python3.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh
-# python3 python3-venv
 #----------------------------------------------------------------------------------------------------------------------------------
-# Docker - Ollama
-# docker pull ollama/ollama
 
-# Install & Update Ollama to latest version using:
-# Check if the ollama binary is in the PATH
-if command -v ollama >/dev/null 2>&1; then
-    echo "✅ Ollama is installed. Version: $(ollama --version)"
-    
-    # Check if the systemd service is actually running
-    if systemctl is-active --quiet ollama; then
-        echo "🟢 Service status: Running"
-    else
-        echo "⚠️  Service status: Not running (Run 'sudo systemctl start ollama' to start it)"
-    fi
-else
-    echo "❌ Ollama is not installed."
-    #curl -fsSL https://ollama.com/install.sh | sh
-    wget -O "ollama_install.sh" https://ollama.com/install.sh && chmod u+x ollama_install.sh && ./ollama_install.sh
-fi
+# Create the directory
+sudo mkdir -p /usr/share/ollama/models
 
-
-ollama --version
-
+# Give the directory appropriate permissions for the Docker container
+sudo chmod -R 777 /usr/share/ollama/models
 
 
 echo "
@@ -82,11 +67,6 @@ dmesg | grep -e IOMMU -e AMD-Vi
 
 
 "
-
-sudo apt install -y jq
-sudo apt install -y linux-oem-24.04b
-# sudo apt install -y fdutils linux-oem-6.14-tools
-
 lspci -k | grep -EA3 'VGA|3D|Display'
 lspci | grep VGA
 
@@ -124,25 +104,40 @@ if echo "$GPU_INFO" | grep -qi "nvidia"; then
     sudo dpkg -i cuda-repo-ubuntu2404-13-1-local_13.1.0-590.44.01-1_amd64.deb
     sudo cp /var/cuda-repo-ubuntu2404-13-1-local/cuda-*-keyring.gpg /usr/share/keyrings/
     sudo apt-get update
+    #----- You need - nvidia-container-toolkit -------------------------
     sudo apt-get -y install cuda-toolkit-13-1
-
-    #------------------------------
-    sudo apt-get update
-    sudo apt-get -y install cuda-toolkit-12-6
+    #sudo apt-get -y install cuda-toolkit-12-6
     sudo apt-get install -y nvidia-open
+    sudo apt-get install -y linux-modules-nvidia-580-open-generic-hwe-24.04
+
+    #  https://github.com/NVIDIA/nvidia-container-toolkit
+    #  https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+
+    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+      && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+        sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+        sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+
+    export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.18.0-1
+      sudo apt-get install -y \
+          nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+          nvidia-container-toolkit-base=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+          libnvidia-container-tools=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+          libnvidia-container1=${NVIDIA_CONTAINER_TOOLKIT_VERSION}
+
+    sudo nvidia-ctk runtime configure --runtime=docker
+    sudo systemctl restart docker
+
 
    
 elif echo "$GPU_INFO" | grep -qi "amd"; then
     echo "AMD GPU detected."
-    
-    
+
     curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
     sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
-    
     sudo apt install -y libdrm-amdgpu1 libhsa-runtime64-1 libhsakmt1 rocminfo
-    
     rm ollama-linux-amd64-rocm.tgz
-
 
     echo "
     
@@ -163,155 +158,76 @@ elif echo "$GPU_INFO" | grep -qi "amd"; then
     Verify correct function with:  rocminfo
     
     "
+
+
 else
-    echo "No NVIDIA or AMD GPU found in relevant PCI slots."
+    echo "No NVIDIA or AMD GPU found in relevant PCI-X slots."
     # echo "Installing ARM64 (Apple Mac, Pi, etc.)... \r\n "
     # curl -L https://ollama.com/download/ollama-linux-arm64.tgz -o ollama-linux-arm64.tgz
     # sudo tar -C /usr -xzf ollama-linux-arm64.tgz
 fi
 
+
+
+
+if [ ! -f "install_ai_python3_venv.sh" ]; then
+    wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
+    ./install_ai_python3_venv.sh
+fi
+
+
+
+
+#---- LLAMA Web UI --- https://github.com/open-webui/open-webui#troubleshooting
+if echo "$GPU_INFO" | grep -qi "nvidia"; then
+    echo "NVIDIA GPU detected."
+
+
+elif echo "$GPU_INFO" | grep -qi "amd"; then
+    echo "AMD GPU detected."
+    #docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+
+
+else
+    echo "No NVIDIA or AMD GPU found in relevant PCI slots."
+    #-- CPU Only --
+    #docker run -d -p 3000:8080 -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
+
+
+fi
+
+
+echo "
+
+Download & Install Containers (Ollama, Open-WebUI, etc.)
+
+"
+docker compose up -d
+sleep 20
+
+
 #---- AI MODELS ----
 # https://ollama.com/search
 
-ollama list
+#--- force pull models ---
+# docker exec -it ollama ollama pull minimax-m2.1:cloud
+# docker exec -it ollama ollama pull ministral-3:8b
+# docker exec -it ollama ollama pull llama3.2:3b
+# docker exec -it ollama ollama pull qwen3-vl:8b
+# docker exec -it ollama ollama pull qwen3-embedding:0.6b
+
 echo "
+
+Download & Install AI Models
 
 "
-
-echo "
-
-Downloading llama3.2:latest ...
-
-"
-#-- Image Generation ---
-ollama pull llama3.2:latest     # 3b    - Meta llama3.2:3b
-#ollama pull llama3.2-vision
-
-# echo "
-
-# Downloading Gemma...  https://ollama.com/library/gemma3
-
-# "
-# ollama pull gemma3:4b
-#ollama pull codegemma:7b
+wget -O "install_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_models.sh && chmod +x install_ai_models.sh && ./install_ai_models.sh
+sleep 20
 
 
 echo "
-
-Downloading Mistral-3... (https://ollama.com/library/ministral-3) 
-
-"
-ollama pull ministral-3:latest
-#ollama pull mistral:7b
-#ollama pull qwen3:4b
-
-#------------------------------------------------------------
-#ollama run tinyllama         # 1.1b
-#ollama run nemotron-mini     # 4b - Nvidia
-#ollama pull nemotron-3-nano:30b-cloud
-
-#ollama run llama3-chatqa     # 8b - Nvidia - ChatQA
-#ollama run granite3-dense:8b # 8b - IBM RAG
-
-#----------------- Vision Processing -----------------
-# ollama pull qwen3-vl:latest
-
-# echo "
-
-# Downloading llava:7b...
-
-# "
-#ollama pull llava:7b
-#ollama pull llava-llama3
-
-
-#----------------- Text Processing -----------------
-
-#--- RAG Models ---
-# ollama pull command-r:35b
-# ollama pull command-r7b
-
- #- EMBEDDINGS (RAG) -
-# echo "
-
-# Downloading Embeddings...
-
-# "
-
-# https://ollama.com/library/qwen3-embedding
-ollama pull qwen3-embedding:0.6b
-#ollama pull qwen3-embedding:4b
-#ollama pull nomic-embed-text
-#ollama pull mxbai-embed-large
-#ollama pull snowflake-arctic-embed
-
-
-#-- Coding / Natural Language / Agentic tasks ---
-# ollama pull deepseek-r1:latest
-# ollama pull qwen3-coder:latest
-# ollama pull deepseek-coder:1.3b
-
-# Qwen-8B (Alibaba Cloud)
-# ollama pull qwen3:latest 
-
-#--- OpenAI ---
-# ollama pull gpt-oss:latest
-# ollama pull gpt-oss:20b
-
-
-#--- Security (Prompt) ----
-# echo "
-
-# Downloading llama-guard3t...
-
-# "
-#ollama pull llama-guard3:latest  # 8b - Meta
-#ollama run shieldgemma:latest   # 9b - Google
-
-#---- Stable Difusion ----
-# https://github.com/AUTOMATIC1111/stable-diffusion-webui
-# Debian-based:
-#sudo apt install -y wget git python3 python3-venv libgl1 libglib2.0-0
-
-ollama list
-
-# Ubuntu 24.04
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
-sudo apt install python3.11
-
-# Manjaro/Arch
-#sudo pacman -S yay
-#yay -S python311 # do not confuse with python3.11 package
-
-# Only for 3.11
-# Then set up env variable in launch script
-export python_cmd="python3.11"
-# or in webui-user.sh
-python_cmd="python3.11"
-
-#-- install 
-wget -q https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui/master/webui.sh && chmod u+x webui.sh && ./webui.sh
-#--------------------------------------------------
-echo "
-
-
-"
-
-wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
-./install_ai_python3_venv.sh
-
-#-----------------------------
-ollama list
-ollama --version
-
-#-- update all models --
-ollama list | tail -n +2 | awk '{print $1}' | xargs -I {} ollama pull {}
-echo "
-
 
 ---- List all Models ----
-
 
 "
 
@@ -325,8 +241,6 @@ Hello World - Ollama!
 
 "
 
-# llama3.2
-# llama3.2-vision
 curl http://localhost:11434/api/generate -d '{
   "model": "llama3.2",
   "prompt": "Why is the sky blue?",
@@ -338,85 +252,6 @@ curl http://localhost:11434/api/generate -d '{
 #   "prompt": "Generate me a picture of a beautifly sunset and save the picture locally",
 #   "stream": false
 # }'
-
-echo "
-
-
-"
-#---- LLAMA Web UI --- https://github.com/open-webui/open-webui#troubleshooting
-
-if echo "$GPU_INFO" | grep -qi "nvidia"; then
-    echo "NVIDIA GPU detected."
-    
-    #-- GPU (Nvidia) & CPU --
-    # You need - nvidia-container-toolkit
-    #  https://github.com/NVIDIA/nvidia-container-toolkit
-    #  https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
-
-    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
-      && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
-        sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
-        sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
-
-
-    export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.18.0-1
-      sudo apt-get install -y \
-          nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
-          nvidia-container-toolkit-base=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
-          libnvidia-container-tools=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
-          libnvidia-container1=${NVIDIA_CONTAINER_TOOLKIT_VERSION}
-
-    sudo nvidia-ctk runtime configure --runtime=docker
-    sudo systemctl restart docker
-    #docker run -d -p 3000:8080 --gpus=all -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
-
-    #-- Nvidia Version --
-    #docker run -d -p 3000:8080 --gpus all --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:cuda
-    docker run -d --network=host --gpus all --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --restart always ghcr.io/open-webui/open-webui:cuda
-    
-    #-- General Version - CPU --
-    #docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
-    
-elif echo "$GPU_INFO" | grep -qi "amd"; then
-    echo "AMD GPU detected."
-
-    # -- or docker version --
-    #docker pull ghcr.io/open-webui/open-webui:main
-    #docker pull ghcr.io/open-webui/open-webui:ollama
-    
-    #-- not sure
-    #docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
-    
-    
-else
-    echo "No NVIDIA or AMD GPU found in relevant PCI slots."
-    #-- CPU Only --
-    docker run -d -p 3000:8080 -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
-fi
-
-echo "
-
-Access it from the hostip:8080 
-
-
-"
-
-#------ RAG ------------
-#--- Malvius ----
-# https://milvus.io/docs/install_standalone-docker.md
-
-# apt-get install fio -y
-# mkdir test-data fio --rw=write --ioengine=sync --fdatasync=1 --directory=test-data --size=2200m --bs=2300 --name=mytest
-# curl -sfL https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh -o standalone_embed.sh
-# bash standalone_embed.sh start
-# Stop Milvus
-# bash standalone_embed.sh stop
-# Delete Milvus data
-# bash standalone_embed.sh delete
-
-# upgrade Milvus
-# bash standalone_embed.sh upgrade
-# pip3 install -U pymilvus
 
 
 echo "
@@ -431,5 +266,14 @@ If you want to run models in ollama cloud you must setup an account and sign in.
 
 Command: 
     ollama signin
+
+
+
+ALL DONE!
+
+
+Access the webui at http://localhost:3000
+Ollama API at: http://localhost:11434
+
 
 "
