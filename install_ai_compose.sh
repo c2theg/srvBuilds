@@ -1,10 +1,10 @@
 #----------------------------------------------------
-# Version 0.0.12
+# Version 0.0.13
 # Updated: 1/31/2026
 #----------------------------------------------------
 services:
   ollama:
-    name: "ollama"
+    container_name: "ollama"
     image: ollama/ollama:latest
     container_name: ollama
     restart: always
@@ -17,7 +17,7 @@ services:
 
   # This helper container pulls the model once, then exits
   ollama-pull-model:
-    name: "ollama_model_downloader"
+    container_name: "ollama_model_downloader"
     image: ollama/ollama:latest
     container_name: ollama-pull-model
     volumes:
@@ -33,7 +33,7 @@ services:
       - ollama
 
   open-webui:
-    name: "ollama_openwebui"
+    container_name: "ollama_openwebui"
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
     restart: always
