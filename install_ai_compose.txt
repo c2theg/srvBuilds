@@ -1,8 +1,12 @@
 #----------------------------------------------------
-# Version 0.0.16
+# Version 0.0.17
 # Updated: 1/31/2026
 #
-# To Stop and remove all:
+#
+# To Install:
+#    wget -O "docker-compose.yml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_compose.txt && docker compose up -d
+#
+# To ttop and remove all:
 #  docker compose down
 #----------------------------------------------------
 services:
