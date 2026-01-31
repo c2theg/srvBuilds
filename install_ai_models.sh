@@ -23,13 +23,20 @@ echo -e "\nOllama is up! Pulling models..."
 MODELS=("llama3.2:latest" "minimax-m2.1:cloud" "qwen3-embedding:0.6b" "ministral-3:8b" "qwen3-vl:8b")
 
 for MODEL in "${MODELS[@]}"; do
-    echo "\r\n \r\n"
-    echo "------------------------------------------"
+    echo "
+    ------------------------------------------
+    "
     echo "Downloading $MODEL..."
     docker exec -it ollama ollama pull $MODEL
 done
 
-echo "------------------------------------------"
-echo "Setup complete! Models are stored in /usr/share/ollama/models"
-echo "All models installed successfully!"
-echo "You can now select them in Open WebUI at http://localhost:3000"
+echo "
+
+------------------------------------------
+
+Setup complete! Models are stored in /usr/share/ollama/models
+
+All models installed successfully!
+
+You can now select them in Open WebUI at http://localhost:3000
+"
