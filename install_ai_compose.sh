@@ -1,5 +1,5 @@
 #----------------------------------------------------
-# Version 0.0.3
+# Version 0.0.12
 # Updated: 1/31/2026
 #----------------------------------------------------
 services:
@@ -22,7 +22,10 @@ services:
       - /usr/share/ollama/models:/root/.ollama/models
     entrypoint: /bin/sh
     command: >
-      -c "sleep 5; ollama pull llama3.2"
+      -c "sleep 5; ollama pull minimax-m2.1:cloud"
+      -c "sleep 5; ollama pull ministral-3:8b"
+      -c "sleep 5; ollama pull llama3.2:3b"
+      -c "sleep 5; ollama pull qwen3-vl:8b"
     depends_on:
       - ollama
 
