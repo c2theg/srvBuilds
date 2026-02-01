@@ -104,9 +104,9 @@ if echo "$GPU_INFO" | grep -qi "nvidia"; then
     #----- You need - nvidia-container-toolkit -------------------------
     sudo apt-get -y install cuda-toolkit-13-1
     #sudo apt-get -y install cuda-toolkit-12-6
-    sudo apt-get install -y nvidia-open
-    sudo apt-get install -y linux-modules-nvidia-580-open-generic-hwe-24.04
-
+    sudo apt-get install -y nvidia-open nvidia-driver-pinning-590
+    
+    #sudo apt-get install -y linux-modules-nvidia-580-open-generic-hwe-24.04
     #  https://github.com/NVIDIA/nvidia-container-toolkit
     #  https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
 
