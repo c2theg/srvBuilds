@@ -1,6 +1,6 @@
 #----------------------------------------------------
-# Version 0.0.17
-# Updated: 1/31/2026
+# Version 0.0.18
+# Updated: 2/1/2026
 #
 #
 # To Install:
@@ -13,13 +13,15 @@ services:
   ollama:
     container_name: "ollama"
     image: ollama/ollama:latest
-    restart: always
+    restart: unless-stopped
     ports:
       - "11434:11434"  # Exposes API for automation tasks
     volumes:
       - /usr/share/ollama/models:/root/.ollama/models
     environment:
       - OLLAMA_HOST=0.0.0.0 # Allows external API access
+      - NVIDIA_VISIBLE_DEVICES=all # Makes all GPUs visible to the container
+
     # ADD THIS: Tells Docker how to know Ollama is "Ready"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
@@ -32,7 +34,7 @@ services:
   open-webui:
     container_name: "ollama_openwebui"
     image: ghcr.io/open-webui/open-webui:main
-    restart: always
+    restart: unless-stopped
     ports:
       - "3000:8080"
     environment:
