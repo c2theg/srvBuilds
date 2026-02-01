@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.1.6
-Last Updated:  1/31/2026
+Version:  0.1.7
+Last Updated:  2/1/2026
 
 # https://ollama.com/search
 
