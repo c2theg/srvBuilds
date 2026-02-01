@@ -1,5 +1,5 @@
 #----------------------------------------------------
-# Version 0.0.19
+# Version 0.0.20
 # Updated: 2/1/2026
 #
 #
@@ -22,13 +22,18 @@ services:
       - OLLAMA_HOST=0.0.0.0 # Allows external API access
       - NVIDIA_VISIBLE_DEVICES=all # Makes all GPUs visible to the container
 
-    # ADD THIS: Tells Docker how to know Ollama is "Ready"
-    healthcheck:
+    healthcheck:     # ADD THIS: Tells Docker how to know Ollama is "Ready"
       test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
       interval: 5s
       timeout: 5s
       retries: 5
-
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            capabilities: ["gpu"]
+            count: all  # Adjust count for the number of GPUs you want to use
 
 
   open-webui:
