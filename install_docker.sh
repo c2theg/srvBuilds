@@ -14,8 +14,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  1.6.0
-Last Updated:  12/31/2025
+Version:  1.6.1
+Last Updated:  2/9/2026
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
 
@@ -53,17 +53,35 @@ docker-compose -v
 #-- add premissions to current user to access: docker.sock --
 sudo usermod -aG docker $USER
 #------------------------------------------------------------
-echo "
 
+#----- Arcane ----------------
+echo " 
 
-Setting up container: Portainer
+Installing Arcane   
+
+ - GitHub -https://github.com/getarcaneapp/arcane?tab=readme-ov-file
+ - Docker Hub - https://hub.docker.com/r/getarcaneapp/arcane
+ - https://getarcane.app/docs/setup/installation
+ - Docs: https://github.com/getarcaneapp/arcane
+
+  Access Arcane: http://<Server IP>:3552
 
 
 "
+# Install:  
+curl -fsSL https://getarcane.app/install.sh | bash
+
+#------------------------------------------------------------------------------------
+echo "
+
+
+To install container: Portainer (arcane is better).. leaving this just incase
+
+
 docker pull portainer/portainer-ce:latest
 docker volume create portainer_data
 docker run \
-    --name "Portainer1" \
+    --name 'Portainer1' \
     -p 8000:8000 \
     -p 9443:9443 \
     -v /var/run/docker.sock:/var/run/docker.sock \
@@ -71,9 +89,13 @@ docker run \
     --restart=always \
     -d portainer/portainer-ce:latest
 
+
+Visit: https://<server ip>:9443/ to access Portainer
+
+"
+
 docker ps
  
-echo "Visit: https://<server ip>:9443/ to access Portainer"
 
 echo "
 
