@@ -14,7 +14,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  1.6.1
+Version:  1.6.2
 Last Updated:  2/9/2026
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
@@ -65,6 +65,8 @@ Installing Arcane
  - Docs: https://github.com/getarcaneapp/arcane
 
   Access Arcane: http://<Server IP>:3552
+     Default Username: arcane
+             Password: arcane-admin
 
 
 "
