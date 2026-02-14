@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.1.7
-Last Updated:  2/1/2026
+Version:  0.1.8
+Last Updated:  2/14/2026
 
 # https://ollama.com/search
 
@@ -135,6 +135,17 @@ elif echo "$GPU_INFO" | grep -qi "amd"; then
     sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
     sudo apt install -y libdrm-amdgpu1 libhsa-runtime64-1 libhsakmt1 rocminfo
     rm ollama-linux-amd64-rocm.tgz
+
+
+    sudo apt update
+    # Install AMD GPU drivers with ROCm support
+    # Example using version 6.4.1 (check amdgpu-install for latest)
+    wget https://repo.radeon.com/amdgpu-install/6.4.1/ubuntu/noble/amdgpu-install_6.4.60401-1_all.deb
+    sudo apt install ./amdgpu-install_6.4.60401-1_all.deb
+    sudo amdgpu-install -y --usecase=workstation,rocm
+    
+
+
 
     echo "
     
