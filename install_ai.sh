@@ -126,11 +126,13 @@ if echo "$GPU_INFO" | grep -qi "nvidia"; then
     sudo nvidia-ctk runtime configure --runtime=docker
     sudo systemctl restart docker
 
-
-   
 elif echo "$GPU_INFO" | grep -qi "amd"; then
-    echo "AMD GPU detected."
+    echo "AMD GPU detected.
+        
+    Downloading ROCm drivers...
 
+    "
+ 
     curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
     sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
     sudo apt install -y libdrm-amdgpu1 libhsa-runtime64-1 libhsakmt1 rocminfo
@@ -138,15 +140,19 @@ elif echo "$GPU_INFO" | grep -qi "amd"; then
 
 
     sudo apt update
-    # Install AMD GPU drivers with ROCm support
-    # Example using version 6.4.1 (check amdgpu-install for latest)
+
+    echo "
+    
+    Install AMD GPU drivers with ROCm support
+    Example using version 6.4.1 (check amdgpu-install for latest)
+    
+    "
+    
     wget https://repo.radeon.com/amdgpu-install/6.4.1/ubuntu/noble/amdgpu-install_6.4.60401-1_all.deb
     sudo apt install ./amdgpu-install_6.4.60401-1_all.deb
     sudo amdgpu-install -y --usecase=workstation,rocm
+
     
-
-
-
     echo "
     
     Add to grup:
