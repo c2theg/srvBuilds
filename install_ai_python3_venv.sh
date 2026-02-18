@@ -25,7 +25,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.40
+Version:  0.2.41
 Last Updated:  2/18/2026
 
 What this does:
@@ -417,7 +417,7 @@ Installing NLTK...
 export NLTK_DATA="$VENV_BASE/nltk_data"
 #python3 -m pip install nltk
 pip_install nltk
-if [ [ -z "${SKIP_NLTK_DATA:-}" ] && [ ! -d "$VENV_BASE/nltk_data" ] ]; then
+if [ -z "${SKIP_NLTK_DATA:-}" ] && [ ! -d "$VENV_BASE/nltk_data" ]; then
     echo "
 
     NLTK Data not found, so downloading... ( $VENV_DIR/nltk_data/ )
@@ -457,7 +457,7 @@ nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 
 #--- spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
 pip_install spacy
-if [ ! -d "$VENV_BASE/spacy"]; then
+if [ ! -d "$VENV_BASE/spacy" ]; then
     mkdir -p $VENV_BASE/spacy
     # Prefer wheel install (no custom extract paths).
     pip_install "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
@@ -487,7 +487,7 @@ pip_install stopwordsiso stop-words
 
 
 #--- huggingface models ---
-if [ ! -d "$VENV_BASE/huggingface"]; then
+if [ ! -d "$VENV_BASE/huggingface" ]; then
     mkdir -p $VENV_BASE/huggingface
 fi
 
@@ -504,7 +504,7 @@ echo "
 
 "
 if [ ! -d "$VENV_BASE/torch" ]; then
-    mkdir -p $DATA_DIR/torch
+    mkdir -p $VENV_BASE/torch
 fi
 
 
@@ -637,5 +637,9 @@ echo "Run 'activate_env' to activate the virtual environment"
 echo "You can also use: source $VENV_BASE/venv/bin/activate"
 echo "You must restart your shell or run 'source ~/.bashrc' to use the new alias
 
+"
 
+echo "Add the following to the top of your python scripts, to activate the venv:"
+echo "
+  #!/opt/activate_env/bin/python3
 "
