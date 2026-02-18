@@ -25,7 +25,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.37
+Version:  0.2.38
 Last Updated:  2/18/2026
 
 What this does:
@@ -35,6 +35,14 @@ What this does:
 
 
 Global Path:  $VENV_BASE/venv/bin/activate
+
+Errors:
+
+
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+ocrmypdf 17.2.0 requires pypdfium2>=5.0.0, but you have pypdfium2 4.30.0 which is incompatible.
+langchain-classic 1.0.1 requires langchain-core<2.0.0,>=1.2.5, but you have langchain-core 0.3.81 which is incompatible.
+langchain-classic 1.0.1 requires langchain-text-splitters<2.0.0,>=1.1.0, but you have langchain-text-splitters 0.3.11 which is incompatible.
 
 "
 
@@ -333,11 +341,27 @@ pip_install html2text
 #------- AI ----------------
 pip_install ollama
 
-pip_install langchain langchain-core langchain-ollama langchain-community langchain_text_splitters
+
+#--- Langchain ---
+pip_install "langchain-core>=1.2.5,<2.0.0" langchain-classic==1.0.1
+pip_install -U langchain langchain-core langchain-ollama langchain-community langchain-text-splitters
+
+pip list | grep langchain
+#--- Unstructured ---
 pip_install "unstructured[all-docs]"
+
+
+#--- FastEmbed ---
 pip_install fastembed
+
+
+#--- Sentence Transformers ---
 pip_install sentence-transformers
+
+
+#--- ElevenLabs ---
 pip_install elevenlabs
+
 
 #--- Vector Databases ---
 # Milvus lite (10k - 100k vectors)
@@ -391,7 +415,7 @@ Installing NLTK...
 export NLTK_DATA="$VENV_BASE/nltk_data"
 #python3 -m pip install nltk
 pip_install nltk
-if [[ -z "${SKIP_NLTK_DATA:-}" && ! -d "$VENV_BASE/nltk_data" ]]; then
+if [ [ -z "${SKIP_NLTK_DATA:-}" ] && [ ! -d "$VENV_BASE/nltk_data" ] ]; then
     echo "
 
     NLTK Data not found, so downloading... ( $VENV_DIR/nltk_data/ )
@@ -431,7 +455,7 @@ nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
 
 #--- spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
 pip_install spacy
-if [! -d "$VENV_BASE/spacy"]; then
+if [ ! -d "$VENV_BASE/spacy"]; then
     mkdir -p $VENV_BASE/spacy
     # Prefer wheel install (no custom extract paths).
     pip_install "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
@@ -439,6 +463,9 @@ if [! -d "$VENV_BASE/spacy"]; then
 
     #"$VENV_PY" -m spacy download en_core_web_sm
     #"$VENV_PY" -m spacy download en_core_web_md
+
+else
+    echo "Spacy found, so not updating! "
 fi
 
 
@@ -458,7 +485,7 @@ pip_install stopwordsiso stop-words
 
 
 #--- huggingface models ---
-if [! -d "$VENV_BASE/huggingface"]; then
+if [ ! -d "$VENV_BASE/huggingface"]; then
     mkdir -p $VENV_BASE/huggingface
 fi
 
@@ -474,7 +501,7 @@ echo "
 
 
 "
-if [! -d "$VENV_BASE/torch" ]; then
+if [ ! -d "$VENV_BASE/torch" ]; then
     mkdir -p $DATA_DIR/torch
 fi
 
@@ -556,7 +583,7 @@ pip_install "paddleocr[all]"
 #- DocTR (Document Text Recognition) is a high-performance Python OCR library --
 pip_install "python-doctr[viz,html,contrib]"
 pip_install "python-doctr[torch]"
-pip_install "python-doctr[tf]"
+#pip_install "python-doctr[tf]"
 
 #--- Keras ---
 pip_install keras-ocr
@@ -606,4 +633,7 @@ echo "alias activate_env=\"source $VENV_BASE/venv/bin/activate\"" >> ~/.bashrc
 echo "Added alias: activate_env -> source $VENV_BASE/venv/bin/activate"
 echo "Run 'activate_env' to activate the virtual environment"
 echo "You can also use: source $VENV_BASE/venv/bin/activate"
-echo "You must restart your shell or run 'source ~/.bashrc' to use the new alias"
+echo "You must restart your shell or run 'source ~/.bashrc' to use the new alias
+
+
+"
