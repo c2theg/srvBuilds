@@ -25,22 +25,22 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.36-1
-Last Updated:  1/5/2026
+Version:  0.2.37
+Last Updated:  2/18/2026
 
 What this does:
-    Creates a GLOBAL Python3 Virtual Environment (I know you think that defeats the entire reason for an venv... it does not. 
-    You need a global venv so that you dont have duplicate versions of everything installed. Its global so many python scripts 
+    Creates a GLOBAL Python3 Virtual Environment (I know you think that defeats the entire reason for an venv... it does not.
+    You need a global venv so that you dont have duplicate versions of everything installed. Its global so many python scripts
     can access the shared resources!
 
 
 Global Path:  $VENV_BASE/venv/bin/activate
 
-
-Install:
-     wget --no-cache -O 'install_ai_python3_venv.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
-
 "
+
+#-- Install / Update yourself! --
+wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
+#----------------------
 
 # Print out current python3 and pip version
 echo "System Python: $(python3 --version 2>/dev/null || echo "Not found")"
@@ -274,7 +274,7 @@ else
       # Example: "CUDA Version 12.2.0"
       CUDA_VERSION=$(awk '{for (i=1;i<=NF;i++) if ($i=="Version") {print $(i+1); exit}}' /usr/local/cuda/version.txt 2>/dev/null)
     fi
- 
+
   else
     # AMD detection (ROCm-aware, plus generic PCI vendor check if available)
     AMD_FOUND=""
@@ -381,18 +381,32 @@ pip_install ocrmypdf
 
 
 #--- NLTK --- https://www.nltk.org/data.html
+echo "
+
+Installing NLTK...
+
+
+"
+
 export NLTK_DATA="$VENV_BASE/nltk_data"
 #python3 -m pip install nltk
 pip_install nltk
 if [[ -z "${SKIP_NLTK_DATA:-}" && ! -d "$VENV_BASE/nltk_data" ]]; then
     echo "
-    
+
     NLTK Data not found, so downloading... ( $VENV_DIR/nltk_data/ )
-    
+
     "
-    
+
     mkdir -p "$VENV_BASE/nltk_data/"
     "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" all || true
+
+    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" averaged_perceptron_tagger_eng || true
+    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" punkt_eng || true
+    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" popular_eng || true
+    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" stopwords_eng || true
+    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" averaged_perceptron_tagger || true
+
     #python3 -m nltk.downloader -d $VENV_BASE/nltk_data punkt
     #python3 -m nltk.downloader -d $VENV_BASE/nltk_data popular
     #python3 -m nltk.downloader -d $VENV_BASE/nltk_data stopwords
@@ -420,7 +434,11 @@ pip_install spacy
 if [! -d "$VENV_BASE/spacy"]; then
     mkdir -p $VENV_BASE/spacy
     # Prefer wheel install (no custom extract paths).
+    pip_install "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
     pip_install "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl"
+
+    #"$VENV_PY" -m spacy download en_core_web_sm
+    #"$VENV_PY" -m spacy download en_core_web_md
 fi
 
 
@@ -565,7 +583,7 @@ fi
 sudo chown -R $USER:$USER $VENV_BASE
 sudo chown -R $USER:$USER $AI_DBS_BASE
 
-echo " 
+echo "
 Done installing/Updating!
 
 To Activate the Python VEnv, issue the following:
