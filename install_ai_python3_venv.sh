@@ -25,7 +25,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.38
+Version:  0.2.40
 Last Updated:  2/18/2026
 
 What this does:
@@ -36,16 +36,8 @@ What this does:
 
 Global Path:  $VENV_BASE/venv/bin/activate
 
-Errors:
-
-
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-ocrmypdf 17.2.0 requires pypdfium2>=5.0.0, but you have pypdfium2 4.30.0 which is incompatible.
-langchain-classic 1.0.1 requires langchain-core<2.0.0,>=1.2.5, but you have langchain-core 0.3.81 which is incompatible.
-langchain-classic 1.0.1 requires langchain-text-splitters<2.0.0,>=1.1.0, but you have langchain-text-splitters 0.3.11 which is incompatible.
 
 "
-
 #-- Install / Update yourself! --
 wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
 #----------------------
@@ -346,7 +338,15 @@ pip_install ollama
 pip_install "langchain-core>=1.2.5,<2.0.0" langchain-classic==1.0.1
 pip_install -U langchain langchain-core langchain-ollama langchain-community langchain-text-splitters
 
-pip list | grep langchain
+echo "
+
+To verify langchain install:
+    activate the venv and run:
+        source $VENV_DIR/bin/activate
+        pip list | grep langchain
+
+
+"
 #--- Unstructured ---
 pip_install "unstructured[all-docs]"
 
@@ -400,8 +400,10 @@ pip_install pymupdf-fonts
 pip_install fonttools
 
 # https://github.com/ocrmypdf/OCRmyPDF
-pip_install ocrmypdf
+#pip_install ocrmypdf
 
+pip_install -U pypdfium2
+pip_install -U ocrmypdf
 
 
 #--- NLTK --- https://www.nltk.org/data.html
