@@ -5,7 +5,7 @@
 # Updated: 2/21/2026
 #---------------------------------------------------------------------------------------------------------
 # Install / Update here:
-#       wget -O "download_container_helpers.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/docker/download_container_helpers.sh && chmod +x download_container_helpers.sh && ./download_container_helpers.sh
+wget -O "download_container_helpers.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/docker/download_container_helpers.sh && chmod +x download_container_helpers.sh && ./download_container_helpers.sh
 
 
 wget -O "start.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/docker/start.sh && chmod +x start.sh
