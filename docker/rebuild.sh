@@ -1,25 +1,24 @@
 #!/bin/bash
 #---------------------------------------------------------------------------------------------------------
 # Copyright © 2012-2026 Christopher Gray.  All Rights Reserved.  Proprietary and Confidential.  -  The reproduction, adaptation, distribution, display, or transmission of the content is strictly prohibited, unless authorized by Christopher Gray. All other company & product names may be trademarks of the respective companies with which they are associated.
-# Version: 0.1.25
+# Version: 0.1.26
 # Updated: 2/21/2026
 #---------------------------------------------------------------------------------------------------------
 
 # How to use:
+#   ./rebuild.sh
+#   ./rebuild.sh -d
+#   ./rebuild.sh --daemon
+#   ./rebuild.sh daemon
+#   ./rebuild.sh --no-cache
+#   ./rebuild.sh --cache
 
-# ./rebuild.sh
-# ./rebuild.sh -d
-# ./rebuild.sh --daemon
-# ./rebuild.sh daemon
-# ./rebuild.sh --no-cache
-# ./rebuild.sh --cache
-
-# ./rebuild.sh -d --no-cache
+#   ./rebuild.sh -d --no-cache
 
 
 
 # Install / Update here:
-# wget -O "rebuild.sh" && 
+#     wget -O "rebuild.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/docker/rebuild.sh && chmod +x rebuild.sh
 
 echo "
 
