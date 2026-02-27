@@ -37,6 +37,7 @@ Save:
 
 "
 
+cd /root/
 #-- Update yourself! --
 wget -O "shutdown.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/shutdown.sh && chmod +x shutdown.sh
 
