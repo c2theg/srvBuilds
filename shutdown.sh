@@ -38,7 +38,7 @@ Save:
 "
 
 #-- Update yourself! --
-wget -O "shutdown.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/shutdown.sh && chmod +x shutdown.sh
+wget -O "shutdown.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/shutdown.sh && chmod +x shutdown.sh
 
 
 # This script assumes it is started at 03:00:00 by cron.
