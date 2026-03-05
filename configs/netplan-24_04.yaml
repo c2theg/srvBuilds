@@ -50,6 +50,10 @@
 #  if you get error: ' Permissions for /etc/netplan/01-network-manager-all.yaml are too open. Netplan configuration should NOT be accessible by others.' 
 #	sudo chmod 600 /etc/netplan/01-network-manager-all.yaml
 #
+#	If you get the error "inconsistant indendation"
+#		sed 's/ /./g' 50-cloud-init.yaml
+#
+#
 # -------------------------------------------------------
 network:
   version: 2
