@@ -1,7 +1,9 @@
 #   Christopher Gray - 3/4/2026
 #	Version 0.0.15
 #	For: Ubuntu 24.04 Server (LTS)+
-#	-----------------------------------------------------
+#	Quick Download: 
+#		wget -O "netplan-24_04.yaml" https://bit.ly/4bnv0oy
+#	---------------------------------------------------------------------
 #	1) First identify the interface name (like ens33, eth0, enp0s3, etc.).
 #		ip a
 #	2) ls /etc/netplan/
