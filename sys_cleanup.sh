@@ -18,6 +18,9 @@ echo "
 
 
 Version:  2.0.1
+
+Optimized with AI (Claude Sonnet 4.5)
+
 Last Updated:  03/16/2026
 --- Github:
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
