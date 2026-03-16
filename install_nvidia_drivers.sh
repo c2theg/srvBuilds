@@ -92,15 +92,23 @@ if [[ "$DRIVER_VERSION" -lt "$MIN_VERSION" ]]; then
 fi
 
 # ── Step 5: Install driver + open kernel modules (recommended for Blackwell) ──
-echo "[5/7] Installing $LATEST_DRIVER and open kernel modules..."
+echo "[5/7] Installing $LATEST_DRIVER..."
 
-# nvidia-open uses NVIDIA's open-source kernel module, which NVIDIA recommends
-# for Turing+ GPUs and requires for Blackwell (RTX 50-series).
-apt-get install -y \
-  "$LATEST_DRIVER" \
-  "nvidia-kernel-open-${DRIVER_VERSION}" \
-  nvidia-settings \
-  nvidia-prime
+# For RTX 50-series (Blackwell), NVIDIA recommends the open kernel module variant.
+# Package naming: nvidia-driver-NNN-open (preferred) or nvidia-driver-NNN (bundled open).
+# Try the -open variant first; fall back to base package if not available.
+OPEN_PKG="nvidia-driver-${DRIVER_VERSION}-open"
+BASE_PKG="nvidia-driver-${DRIVER_VERSION}"
+
+if apt-cache show "$OPEN_PKG" &>/dev/null; then
+  echo "      Using open kernel module variant: $OPEN_PKG"
+  INSTALL_PKG="$OPEN_PKG"
+else
+  echo "      Open variant not found, using: $BASE_PKG"
+  INSTALL_PKG="$BASE_PKG"
+fi
+
+apt-get install -y "$INSTALL_PKG" nvidia-settings nvidia-prime
 
 echo "      Installation complete"
 
