@@ -1,5 +1,4 @@
-#!/bin/sh
-#
+#!/usr/bin/env bash
 clear
 echo "
  _____             _         _    _          _                                   
@@ -15,8 +14,8 @@ echo "
                             |_|                                             |___|
 
 \r\n \r\n
-Version:  1.5.14                            \r\n
-Last Updated:  11/13/2021
+Version:  1.6.0                            \r\n
+Last Updated:  3/16/2026
 \r\n \r\n
 Updating system first..."
 sudo -E apt-get update
@@ -24,43 +23,61 @@ wait
 sudo -E apt-get upgrade -y
 wait
 echo "Downloading required dependencies...\r\n\r\n"
-
 #--------------------------------------------------------------------------------------------
-sudo -E apt-get install -y build-essential libssl-dev
+# Installs Node.js 24 (LTS) and the latest npm on Ubuntu 24.04.
+# Uses the official NodeSource repository.
+#
+# Usage:
+#   sudo bash install_nodejs24.sh
+# ══════════════════════════════════════════════════════════════════════════════
+set -euo pipefail
 
-cd ~
+if [[ $EUID -ne 0 ]]; then
+  echo "[error] This script must be run as root: sudo bash $0"
+  exit 1
+fi
 
-# https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
-# https://github.com/nodesource/distributions
+echo "══════════════════════════════════════════════════"
+echo "  Node.js 24 Installer — Ubuntu 24.04"
+echo "══════════════════════════════════════════════════"
+echo ""
 
-# LTS
-curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-# Latest
-#curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -
+# ── Step 1: Remove any existing Node.js installation ─────────────────────────
+echo "[1/4] Removing existing Node.js / npm packages..."
+apt-get remove --purge -y nodejs npm 2>/dev/null || true
+apt-get autoremove -y
+rm -f /etc/apt/sources.list.d/nodesource.list
+rm -f /usr/share/keyrings/nodesource.gpg
+echo "      Done"
 
-#--- NVM ---  https://github.com/nvm-sh/nvm
-#curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-#nvm use 14
+# ── Step 2: Add NodeSource repository for Node.js 24 ─────────────────────────
+echo "[2/4] Adding NodeSource repository (Node.js 24)..."
+apt-get update -y
+apt-get install -y curl ca-certificates
+
+curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
+echo "      Repository added"
+
+# ── Step 3: Install Node.js 24 ───────────────────────────────────────────────
+echo "[3/4] Installing Node.js 24..."
+apt-get install -y nodejs
+echo "      Done"
+
+# ── Step 4: Upgrade npm to the latest version ────────────────────────────────
+echo "[4/4] Upgrading npm to latest..."
+npm install -g npm@latest
+echo "      Done"
+
+# ── Summary ───────────────────────────────────────────────────────────────────
+echo ""
+echo "══════════════════════════════════════════════════"
+echo "  Installation complete!"
+echo ""
+echo "  $(node  --version | xargs echo "Node.js :")"
+echo "  $(npm   --version | xargs echo "npm     :")"
+echo "══════════════════════════════════════════════════"
 #--------------------------------------------------------------------------------------------
-wait
-sudo apt-get install -y nodejs
 
-echo "\r\n \r\n Installing NPM \r\n "
-sudo apt install -y npm
-
-sudo npm update npm -g
-#----------------- YARN -----------------------------------
-## To install the Yarn package manager, run:
-curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
-echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-sudo apt-get update
-sudo apt-get install -y yarn
-#--------------------------------------------------------------------------------------------     
-#---- https://www.npmjs.com/ ----
-
-#touch /root/package.json
-#chmod u+x /root/package.json
-npm init
 
 echo "Install popular NPM modules... \r\n "
 sudo npm install ws --ws:native
@@ -126,9 +143,9 @@ sudo npm i redis
 #--------------
 wait
 
-sudo npm audit
-sudo npm audit fix
-sudo npm install npm@latest -g
+#sudo npm audit
+#sudo npm audit fix
+#sudo npm install npm@latest -g
 
 node -v
 npm -v
