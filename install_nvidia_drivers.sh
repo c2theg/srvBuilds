@@ -129,6 +129,12 @@ if command -v update-grub &>/dev/null; then
   update-grub 2>/dev/null || true
 fi
 
+
+sudo apt-get install -y nvidia-container-toolkit
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker
+
+
 echo ""
 echo "══════════════════════════════════════════════════"
 echo "  Installation complete!"
