@@ -1,21 +1,43 @@
 #!/bin/sh
 #-------------------------------------------------------------
-#  
-#  Updated: 3/17/2026
-#  Version: 0.0.6
+echo "
+
+
+ _____             _         _    _          _
+|     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|
+|   --|  _| -_| .'|  _| -_| . |  | . | | |   _
+|_____|_| |___|__,|_| |___|___|  |___|_  |  |_|
+                                     |___|
+
+ _____ _       _     _           _              _____    __    _____
+|     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _
+|   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
+|_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
+                            |_|                                             |___|
+
+
+Version:  0.0.10
+Last Updated:  3/18/2026
+
+"
 
 wget -O "install_ai_containers.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_containers.sh && chmod u+x install_ai_containers.sh
 #-------------------------------------------------------------
+if [ ! -d "/usr/share/ollama" ]; then
+    echo "Directory /usr/share/ollama does not exist. Creating it..."
+    mkdir -p /usr/share/ollama
+fi
+
+#--- stop and remove any existing ollama containers and images ----
 docker stop ollama && docker rm ollama
 docker rmi ollama/ollama:latest
+#-------------------------------------------------------------------
 
-#--- download and install the latest version ---
-docker run -it --rm ollama/ollama:latest
-
+cd /usr/share/ollama
+wget -O "docker-compose.yml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_compose.txt
+docker compose up -d
 
 #--- vector databases ----
-#docker run -it --rm -p 6333:6333 qdrant/qdrant
-
 # https://milvus.io/docs/install_standalone-docker.md
 # https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh
 sudo docker run -d \
@@ -40,7 +62,10 @@ sudo docker run -d \
     milvusdb/milvus:v2.6.8 \
     milvus run standalone  1> /dev/null
 
-    
+
+#--- Time Series Database -----
+# docker run -d --name influxdb -p 8086:8086 influxdb:latest
+
 
 #--- graph database(s) -----
 # docker run \
@@ -51,8 +76,6 @@ sudo docker run -d \
 #     neo4j:latest
 
 
-
 #---- APPLICATIONS ---------
 # docker run -it --rm -p 8888:8888 jupyter/datascience-notebook:latest
 # docker run -it --rm -p 5678:5678 n8nio/n8n:latest
-
