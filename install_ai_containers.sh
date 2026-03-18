@@ -3,6 +3,8 @@
 #  
 #  Updated: 3/17/2026
 #  Version: 0.0.6
+
+wget -O "install_ai_containers.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_containers.sh && chmod u+x install_ai_containers.sh
 #-------------------------------------------------------------
 docker stop ollama && docker rm ollama
 docker rmi ollama/ollama:latest
