@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.10
+Version:  0.0.15
 Last Updated:  3/18/2026
 
 "
@@ -31,6 +31,11 @@ fi
 #--- stop and remove any existing ollama containers and images ----
 docker stop ollama && docker rm ollama
 docker rmi ollama/ollama:latest
+
+#- stop / remove openwebui-
+docker stop ollama_openwebui && docker rm ollama_openwebui
+docker rmi ghcr.io/open-webui/open-webui:main
+
 #-------------------------------------------------------------------
 
 cd /usr/share/ollama
