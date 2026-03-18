@@ -43,6 +43,11 @@ wget -O "docker-compose.yml" https://raw.githubusercontent.com/c2theg/srvBuilds/
 docker compose up -d
 
 #--- vector databases ----
+
+#-- remove before upgrading --
+#docker stop milvus-standalone && docker rm milvus-standalone
+#docker rmi milvusdb/milvus:v2.6.8
+
 # https://milvus.io/docs/install_standalone-docker.md
 # https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh
 sudo docker run -d \
