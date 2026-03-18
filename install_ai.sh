@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.1.8
-Last Updated:  2/14/2026
+Version:  0.1.9
+Last Updated:  3/18/2026
 
 # https://ollama.com/search
 
@@ -28,6 +28,7 @@ Last Updated:  2/14/2026
 wget -O "install_ai.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
 wget -O "docker-compose.yml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_compose.txt
 #wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
+wget -O "install_ai_containers.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_containers.sh && chmod u+x install_ai_containers.sh
 
 #--------------------------
 sudo apt update
