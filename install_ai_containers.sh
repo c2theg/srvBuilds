@@ -1,10 +1,13 @@
 #!/bin/sh
 #-------------------------------------------------------------
 #  
-#  Updated: 1/6/2026
+#  Updated: 3/17/2026
 #  Version: 0.0.6
 #-------------------------------------------------------------
+docker stop ollama && docker rm ollama
+docker rmi ollama/ollama:latest
 
+#--- download and install the latest version ---
 docker run -it --rm ollama/ollama:latest
 
 
@@ -38,12 +41,12 @@ sudo docker run -d \
     
 
 #--- graph database(s) -----
-docker run \
-    --name neo4j-server \
-    --publish=7474:7474 --publish=7687:7687 \
-    --volume=$HOME/neo4j/data:/data \
-    --env NEO4J_AUTH=neo4j/your_password \
-    neo4j:latest
+# docker run \
+#     --name neo4j-server \
+#     --publish=7474:7474 --publish=7687:7687 \
+#     --volume=$HOME/neo4j/data:/data \
+#     --env NEO4J_AUTH=neo4j/your_password \
+#     neo4j:latest
 
 
 
