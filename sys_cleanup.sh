@@ -1,6 +1,8 @@
-#!/bin/bash
-#
-clear
+#!/usr/bin/env bash
+set -euo pipefail
+
+
+#clear
 now=$(date)
 echo "Running sys_cleanup.sh at $now"
 echo "
@@ -17,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  2.0.2
+Version:  2.0.3
 
 Optimized with AI (Claude Sonnet 4.5)
 
@@ -352,7 +354,6 @@ report_freed "APT autoremove/upgrade" "$_B" "$_A"
 
 echo "--- Removing all but the last kernel --- "
 
-current="$(uname -r)"
 dpkg -l 'linux-image-[0-9]*-generic' \
 | awk '/^ii/ {print $2}' \
 | grep -v -- "$current" \
