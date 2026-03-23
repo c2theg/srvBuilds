@@ -17,11 +17,11 @@ echo "
                             |_|                                             |___|
 
 
-Version:  2.0.1
+Version:  2.0.2
 
 Optimized with AI (Claude Sonnet 4.5)
 
-Last Updated:  03/16/2026
+Last Updated:  03/22/2026
 --- Github:
    wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
 
@@ -348,6 +348,18 @@ sudo dpkg --configure -a       2>/dev/null
 sudo apt-get install -y -q ncdu traceroute 2>/dev/null
 _A=$(free_space)
 report_freed "APT autoremove/upgrade" "$_B" "$_A"
+
+sudo apt autoremove --purge
+
+
+echo "--- Removing all but the last kernel --- "
+dpkg -l 'linux-image-*' \
+| awk '/^ii{print $2}' \
+| grep -E 'linux-image-[0-9]' \
+| sort -V \
+| head -n -2 \
+| xargs -r sudo apt -y purge
+
 
 # ---------------------------------------------------------------------------
 # SUMMARY REPORT
