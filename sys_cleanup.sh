@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-
 #clear
 now=$(date)
 echo "Running sys_cleanup.sh at $now"
@@ -37,13 +36,11 @@ crontab -e
 
 sudo systemctl restart cron
 
-
 "
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-
 # Returns current free bytes on /
 free_space() { df -P -B1 / | awk 'NR==2 {print $4}'; }
 
