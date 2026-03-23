@@ -349,17 +349,16 @@ sudo apt-get install -y -q ncdu traceroute 2>/dev/null
 _A=$(free_space)
 report_freed "APT autoremove/upgrade" "$_B" "$_A"
 
-sudo apt autoremove --purge
-
 
 echo "--- Removing all but the last kernel --- "
-dpkg -l 'linux-image-*' \
-| awk '/^ii{print $2}' \
-| grep -E 'linux-image-[0-9]' \
-| sort -V \
-| head -n -2 \
-| xargs -r sudo apt -y purge
 
+current="$(uname -r)"
+dpkg -l 'linux-image-[0-9]*-generic' \
+| awk '/^ii/ {print $2}' \
+| grep -v -- "$current" \
+| xargs -r sudo apt-get -y purge
+
+sudo apt-get -y autoremove --purge
 
 # ---------------------------------------------------------------------------
 # SUMMARY REPORT
