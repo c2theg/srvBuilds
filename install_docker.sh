@@ -41,7 +41,7 @@ sudo -E apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-p
 sudo -E apt install -y docker-compose
 
 #-- download logging config --
-wget -P /etc/docker/ -O "daemon.json" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/docker/daemon.json
+wget -P /etc/docker/ https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/docker/daemon.json
 
 #-------------------------------------
 sudo systemctl start docker
