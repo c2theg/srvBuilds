@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  2.0.6
+Version:  2.0.7
 
 Optimized with AI (Claude Sonnet 4.5)
 
@@ -75,10 +75,8 @@ echo "RAM used  at start : $(free -h | awk '/Mem/ {print $3}')"
 echo ""
 
 echo "Files larger than 500MB:"
-sudo find / -type f -size +500M 2>/dev/null
+sudo find / -type f -size +500M 2>/dev/null || true
 echo ""
-
-
 
 # ---------------------------------------------------------------------------
 echo " APT cache "
@@ -442,7 +440,7 @@ sudo du -ah / 2>/dev/null | sort -nr | head -n 10
 
 echo ""
 echo "Files still larger than 500MB:"
-sudo find / -type f -size +500M 2>/dev/null
+sudo find / -type f -size +500M 2>/dev/null || true
 
 echo ""
 echo "Installed kernel images (running: $(uname -r)):"
