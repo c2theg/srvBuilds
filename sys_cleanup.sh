@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+
 #clear
 now=$(date)
 echo "Running sys_cleanup.sh at $now"
@@ -18,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  2.0.7
+Version:  2.0.8
 
 Optimized with AI (Claude Sonnet 4.5)
 
@@ -36,11 +37,13 @@ crontab -e
 
 sudo systemctl restart cron
 
+
 "
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 # Returns current free bytes on /
 free_space() { df -P -B1 / | awk 'NR==2 {print $4}'; }
 
@@ -85,7 +88,7 @@ _A=$(free_space)
 report_freed "APT cache" "$_B" "$_A"
 
 # ---------------------------------------------------------------------------
-# Old kernels (keep running kernel)
+echo " Old kernels (keep running kernel) "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
 dpkg --list | grep linux-image | awk '{ print $2 }' | sort -V \
@@ -97,11 +100,12 @@ _A=$(free_space)
 report_freed "Old kernels" "$_B" "$_A"
 
 # ---------------------------------------------------------------------------
-# /var/log — all service log sections in one measurement
+echo " /var/log — all service log sections in one measurement "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
 
-#-- Core
+
+echo " -- Core "
 sudo rm -f /var/log/error /var/log/error.*
 sudo rm -f /var/log/network.log /var/log/pm-powersave.log*
 sudo rm -rf /var/log/cups/*
@@ -123,7 +127,7 @@ sudo rm -f /var/log/dmesg.* /var/log/netserver.debug_* /var/log/crypto.txt
 [ -d "/var/log/samba/" ] && sudo rm -f /var/log/samba/log.nmbd.* /var/log/samba/log.smbd.* /var/log/samba/log.*
 sudo rm -f /var/log/apcupsd.events
 
-#-- Security
+echo " -- Security "
 sudo rm -f /var/log/user.log.* /var/log/auth.log /var/log/auth.log.*
 sudo rm -f /var/log/fail2ban.log.*
 if [ -d "/var/log/clamav/" ]; then
@@ -131,7 +135,7 @@ if [ -d "/var/log/clamav/" ]; then
     sudo rm -f /var/log/install_clamav.log
 fi
 
-#-- Databases
+echo " -- Databases "
 if [ -d "/var/log/mysql/" ]; then
     sudo rm -rf /var/log/mysql/*
     sudo rm -f /var/log/mysql.log.* /var/log/mysql/mysql_error.log /var/log/mysql/error.log
@@ -141,7 +145,7 @@ fi
 [ -d "/var/log/mongdb/" ]  && sudo rm -f /var/log/mongdb/*
 [ -d "/var/log/redis/" ]   && sudo rm -f /var/log/redis/*
 
-#-- ELK
+echo " -- ELK "
 if [ -d "/var/log/kibana/" ]; then
     sudo rm -f /var/log/kibana/*
     sudo systemctl restart kibana 2>/dev/null
@@ -158,14 +162,14 @@ if [ -d "/var/log/elasticsearch/" ]; then
     sudo systemctl restart elasticsearch 2>/dev/null
 fi
 
-#-- Mail
+echo " -- Mail "
 if [ -d "/var/log/mail/" ]; then
     sudo rm -f /var/log/mail.log /var/log/mail.log.* /var/log/mail.err.*
     sudo postsuper -d ALL 2>/dev/null
     sudo systemctl restart postfix 2>/dev/null
 fi
 
-#-- Web / HTTP
+echo " -- Web / HTTP "
 [ -d "/var/log/letsencrypt/" ] && sudo rm -f /var/log/letsencrypt/letsencrypt.log.*
 [ -d "/var/log/apache2/" ]    && sudo rm -f /var/log/apache2/*
 [ -d "/var/log/lighttpd/" ]   && sudo rm -f /var/log/lighttpd/*
@@ -179,7 +183,7 @@ if [ -d "/var/log/nginx/" ]; then
     sudo systemctl restart nginx 2>/dev/null
 fi
 
-#-- Pi-Hole
+echo " -- Pi-Hole "
 if [ -d "/var/log/pihole/" ]; then
     sudo pihole -f 2>/dev/null
     sudo systemctl stop pihole-FTL dnsmasq 2>/dev/null
@@ -190,18 +194,19 @@ if [ -d "/var/log/pihole/" ]; then
     sudo systemctl restart pihole-FTL 2>/dev/null
 fi
 
-#-- Misc
+echo " -- Misc "
 sudo rm -f /var/log/update_core.log /var/log/update_ubuntu.log
 sudo rm -f /var/log/sys_cleanup.log* /var/log/vmware-network.* /var/log/cloud-init.log
 
-#-- Large log files (>1GB)
+echo " -- Large log files (>1GB) "
 sudo find /var/log -type f -name "*.log" -size +1G -delete 2>/dev/null
 
 _A=$(free_space)
 report_freed "/var/log cleanup" "$_B" "$_A"
 
+
 # ---------------------------------------------------------------------------
-# /tmp
+echo " -- /tmp "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
 rm -rf /tmp/pip-* /tmp/systemd-private-*
@@ -210,7 +215,7 @@ _A=$(free_space)
 report_freed "/tmp cleanup" "$_B" "$_A"
 
 # ---------------------------------------------------------------------------
-# Resilio Sync — logs, metadata, and .sync/Archive folders
+echo " -- Resilio Sync — logs, metadata, and .sync/Archive folders     "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
 if [ -d "/var/lib/resilio-sync/" ]; then
@@ -227,7 +232,7 @@ _A=$(free_space)
 report_freed "Resilio Sync archives" "$_B" "$_A"
 
 # ---------------------------------------------------------------------------
-# Systemd journal vacuum
+echo " -- Systemd journal vacuum "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
 sudo journalctl --vacuum-time=7d  2>/dev/null
@@ -236,7 +241,7 @@ _A=$(free_space)
 report_freed "systemd journal" "$_B" "$_A"
 
 # ---------------------------------------------------------------------------
-# Compressed / numerically-rotated old logs
+echo " -- Compressed / numerically-rotated old logs "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
 sudo find /var/log -type f \( -name "*.gz" -o -name "*.1" -o -name "*.2" \
@@ -245,7 +250,7 @@ _A=$(free_space)
 report_freed "Rotated/compressed logs" "$_B" "$_A"
 
 # ---------------------------------------------------------------------------
-# Docker
+echo " -- Docker "
 # ---------------------------------------------------------------------------
 if [ -d "/var/lib/docker/" ]; then
     _B=$(free_space)
@@ -259,7 +264,7 @@ if [ -d "/var/lib/docker/" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# Ollama — model blobs older than 90 days
+echo " -- Ollama — model blobs older than 90 days "
 # ---------------------------------------------------------------------------
 if [ -d "/usr/share/ollama/.ollama/models/blobs/" ]; then
     _B=$(free_space)
@@ -270,7 +275,7 @@ if [ -d "/usr/share/ollama/.ollama/models/blobs/" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# Python cache
+echo " -- Python cache "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
 rm -rf ~/.cache/pip
@@ -279,7 +284,7 @@ _A=$(free_space)
 report_freed "Python pip cache" "$_B" "$_A"
 
 # ---------------------------------------------------------------------------
-# Snap — remove old disabled revisions
+echo " -- Snap — remove old disabled revisions "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
 snap list --all | awk '/disabled/{print $1, $3}' | \
@@ -291,7 +296,7 @@ _A=$(free_space)
 report_freed "Snap old revisions" "$_B" "$_A"
 
 # ---------------------------------------------------------------------------
-# Deleted-but-held-open files: truncate via /proc/<pid>/fd
+echo " -- Deleted-but-held-open files: truncate via /proc/<pid>/fd "
 # Frees disk space immediately without killing any process or rebooting.
 # ---------------------------------------------------------------------------
 _B=$(free_space)
@@ -309,7 +314,7 @@ report_freed "Held-open deleted files" "$_B" "$_A"
 [ "${_held:-0}" -gt 0 ] && echo "  (${_held} held-open deleted file descriptors truncated)"
 
 # ---------------------------------------------------------------------------
-# RAM / Page cache
+echo " -- RAM / Page cache "
 # ---------------------------------------------------------------------------
 _RAM_B=$(ram_used)
 sync
@@ -334,7 +339,7 @@ fi
 $_swap_cleared && echo "  [+] Swap cleared" && SUMMARY+=("Swap|cleared")
 
 # ---------------------------------------------------------------------------
-# APT housekeeping (after cleanup so indexes are fresh)
+echo " -- APT housekeeping (after cleanup so indexes are fresh) "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
 sudo apt-get autoremove -y -q  2>/dev/null
@@ -381,7 +386,7 @@ dpkg -l \
 sudo apt-get -y autoremove --purge
 
 # ---------------------------------------------------------------------------
-# SUMMARY REPORT
+echo " -- SUMMARY REPORT "
 # ---------------------------------------------------------------------------
 END_FREE_SPACE=$(free_space)
 END_RAM_USED=$(ram_used)
@@ -426,7 +431,7 @@ echo "============================================================"
 echo ""
 
 # ---------------------------------------------------------------------------
-# Diagnostics
+echo " -- Diagnostics "
 # ---------------------------------------------------------------------------
 echo "Top 10 largest items in /var/log:"
 sudo du -ah /var/log 2>/dev/null | sort -nr | head -n 10
@@ -449,7 +454,7 @@ echo "To run an interactive filesize viewer:  ncdu /"
 echo ""
 
 # ---------------------------------------------------------------------------
-# Self-update
+echo " -- Self-update "
 # ---------------------------------------------------------------------------
 SCRIPT_PATH="$(realpath "$0")"
 wget -q https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh \
