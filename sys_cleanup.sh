@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  2.0.4
+Version:  2.0.5
 
 Optimized with AI (Claude Sonnet 4.5)
 
@@ -78,8 +78,10 @@ echo "Files larger than 500MB:"
 sudo find / -type f -size +500M 2>/dev/null
 echo ""
 
+
+
 # ---------------------------------------------------------------------------
-# APT cache
+echo " APT cache "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
 sudo apt-get clean -q
