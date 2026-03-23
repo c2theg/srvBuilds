@@ -14,8 +14,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  1.6.2
-Last Updated:  2/9/2026
+Version:  1.6.3
+Last Updated:  3/23/2026
 
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh && chmod u+x install_docker.sh && ./install_docker.sh
 
@@ -39,6 +39,10 @@ echo \
 sudo -E apt-get update
 sudo -E apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-model-plugin
 sudo -E apt install -y docker-compose
+
+#-- download logging config --
+wget -P /etc/docker/ -O "daemon.json" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/docker/daemon.json
+
 #-------------------------------------
 sudo systemctl start docker
 sudo systemctl enable docker
