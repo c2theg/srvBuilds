@@ -19,13 +19,13 @@ echo "
                             |_|                                             |___|
 
 
-Version:  2.0.3
+Version:  2.0.4
 
 Optimized with AI (Claude Sonnet 4.5)
 
 Last Updated:  03/22/2026
 --- Github:
-   wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
+   wget -O 'sys_cleanup.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
 
 Add to Crontab: (Every Sunday at 2:10 AM)
 
@@ -358,6 +358,13 @@ dpkg -l 'linux-image-[0-9]*-generic' \
 | awk '/^ii/ {print $2}' \
 | grep -v -- "$current" \
 | xargs -r sudo apt-get -y purge
+
+
+dpkg -l \
+| awk '/^(ii|rc)/ && $2 ~ /^linux-(image|modules|headers)-[0-9]/ { print $2 }' \
+| grep -vF -- "$current" \
+| xargs -r sudo dpkg --purge
+
 
 sudo apt-get -y autoremove --purge
 
