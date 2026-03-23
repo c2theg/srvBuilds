@@ -19,7 +19,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  2.0.5
+Version:  2.0.6
 
 Optimized with AI (Claude Sonnet 4.5)
 
@@ -354,17 +354,32 @@ _A=$(free_space)
 report_freed "APT autoremove/upgrade" "$_B" "$_A"
 
 
-echo "--- Removing all but the last kernel --- "
+echo "--- Removing all but the current and latest kernel --- "
 
+current=$(uname -r)
+
+# Find the newest installed generic kernel version
+latest=$(dpkg -l 'linux-image-[0-9]*-generic' \
+    | awk '/^ii/ {print $2}' \
+    | sort -V \
+    | tail -1 \
+    | sed 's/linux-image-//')
+
+echo "  Keeping: $current (running)"
+[ "$latest" != "$current" ] && echo "  Keeping: $latest (latest)"
+
+# Purge generic kernel images (keep current + latest)
 dpkg -l 'linux-image-[0-9]*-generic' \
 | awk '/^ii/ {print $2}' \
-| grep -v -- "$current" \
+| grep -vF -- "$current" \
+| grep -vF -- "$latest" \
 | xargs -r sudo apt-get -y purge
 
-
+# Purge all related packages (modules, headers) for removed kernels
 dpkg -l \
 | awk '/^(ii|rc)/ && $2 ~ /^linux-(image|modules|headers)-[0-9]/ { print $2 }' \
 | grep -vF -- "$current" \
+| grep -vF -- "$latest" \
 | xargs -r sudo dpkg --purge
 
 
