@@ -8,7 +8,7 @@ set -euo pipefail
 #   SYNC_PORT=55555 FIREWALL_ZONE=public bash install_resilio_sync_rocky97.sh
 
 SYNC_PORT="${SYNC_PORT:-55555}"
-OPEN_WEBUI="${OPEN_WEBUI:-false}"        # true | false
+OPEN_WEBUI="${OPEN_WEBUI:-true}"         # true | false
 WEBUI_PORT="${WEBUI_PORT:-8888}"
 OPEN_LAN_DISCOVERY="${OPEN_LAN_DISCOVERY:-true}"  # true | false
 FIREWALL_ZONE="${FIREWALL_ZONE:-}"       # if empty, default firewalld zone is used
