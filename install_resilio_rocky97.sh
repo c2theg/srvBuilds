@@ -4,11 +4,10 @@ set -euo pipefail
 # Rocky Linux 9.7 Resilio Sync installer
 # Usage examples:
 #   bash install_resilio_sync_rocky97.sh
-#   OPEN_WEBUI=true WEBUI_PORT=8888 bash install_resilio_sync_rocky97.sh
-#   SYNC_PORT=55555 FIREWALL_ZONE=public bash install_resilio_sync_rocky97.sh
+#   WEBUI_PORT=8888 bash install_resilio_sync_rocky97.sh
+#   SYNC_PORT=55555 FIREWALL_ZONE=public WEBUI_PORT=8888 bash install_resilio_sync_rocky97.sh
 
 SYNC_PORT="${SYNC_PORT:-55555}"
-OPEN_WEBUI="${OPEN_WEBUI:-true}"         # true | false
 WEBUI_PORT="${WEBUI_PORT:-8888}"
 OPEN_LAN_DISCOVERY="${OPEN_LAN_DISCOVERY:-true}"  # true | false
 FIREWALL_ZONE="${FIREWALL_ZONE:-}"       # if empty, default firewalld zone is used
@@ -102,10 +101,8 @@ if [[ "${OPEN_LAN_DISCOVERY}" == "true" ]]; then
   add_port_if_missing "3838/udp"
 fi
 
-# Optional: only needed if WebUI should be reachable from the network.
-if [[ "${OPEN_WEBUI}" == "true" ]]; then
-  add_port_if_missing "${WEBUI_PORT}/tcp"
-fi
+# Open WebUI port for remote access.
+add_port_if_missing "${WEBUI_PORT}/tcp"
 
 log "Reloading firewall..."
 $SUDO firewall-cmd --reload >/dev/null
@@ -120,4 +117,4 @@ $SUDO firewall-cmd --zone="${FIREWALL_ZONE}" --list-ports
 echo
 echo "Install complete."
 echo "Resilio Sync is installed and running."
-echo "WebUI note: OPEN_WEBUI=${OPEN_WEBUI} (set OPEN_WEBUI=true to open ${WEBUI_PORT}/tcp)."
+echo "WebUI firewall is enabled on ${WEBUI_PORT}/tcp."
