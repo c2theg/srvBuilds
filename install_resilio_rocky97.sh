@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Version: 0.0.10
+# Updated: 3/31/2026
+#
 # Rocky Linux 9.7 Resilio Sync installer
 # Usage examples:
 #   bash install_resilio_sync_rocky97.sh
@@ -80,9 +83,25 @@ EOF
 log "Installing packages (resilio-sync + firewalld)..."
 $SUDO dnf install -y resilio-sync firewalld
 
+SERVICE_USER="$($SUDO systemctl show -p User --value resilio-sync 2>/dev/null || true)"
+SERVICE_GROUP="$($SUDO systemctl show -p Group --value resilio-sync 2>/dev/null || true)"
+SERVICE_USER="${SERVICE_USER:-rslsync}"
+SERVICE_GROUP="${SERVICE_GROUP:-$SERVICE_USER}"
+
+if ! $SUDO id "${SERVICE_USER}" >/dev/null 2>&1; then
+  die "Resilio service user '${SERVICE_USER}' not found."
+fi
+
+log "Resilio service account: ${SERVICE_USER}:${SERVICE_GROUP}"
+
 if [[ ! -f "${RESILIO_CONFIG}" ]]; then
   die "Resilio config not found at ${RESILIO_CONFIG}"
 fi
+
+log "Ensuring service account can update config during first-run WebUI setup..."
+$SUDO install -d -m 750 -o root -g "${SERVICE_GROUP}" "$(dirname "${RESILIO_CONFIG}")"
+$SUDO chown root:"${SERVICE_GROUP}" "${RESILIO_CONFIG}"
+$SUDO chmod 660 "${RESILIO_CONFIG}"
 
 log "Configuring Resilio WebUI listener to 0.0.0.0:${WEBUI_PORT}..."
 $SUDO cp -a "${RESILIO_CONFIG}" "${RESILIO_CONFIG}.bak.$(date +%Y%m%d%H%M%S)"
@@ -111,10 +130,31 @@ with open(cfg_path, "w", encoding="utf-8") as f:
     f.write("\n")
 PY
 
+STORAGE_PATH="$($SUDO python3 - "${RESILIO_CONFIG}" <<'PY'
+import json
+import sys
+
+cfg_path = sys.argv[1]
+with open(cfg_path, "r", encoding="utf-8") as f:
+    data = json.load(f)
+print(data.get("storage_path", "").strip())
+PY
+)"
+
+if [[ -n "${STORAGE_PATH}" ]]; then
+  log "Ensuring storage path is writable: ${STORAGE_PATH}"
+  $SUDO install -d -m 750 -o "${SERVICE_USER}" -g "${SERVICE_GROUP}" "${STORAGE_PATH}"
+fi
+
 log "Enabling and starting services..."
 $SUDO systemctl enable --now firewalld
 $SUDO systemctl enable --now resilio-sync
-$SUDO systemctl restart resilio-sync
+if ! $SUDO systemctl restart resilio-sync; then
+  warn "resilio-sync failed to restart; collecting service logs"
+  $SUDO systemctl status --no-pager --full resilio-sync || true
+  $SUDO journalctl -u resilio-sync -n 80 --no-pager || true
+  die "Failed to restart resilio-sync."
+fi
 
 if [[ -z "${FIREWALL_ZONE}" ]]; then
   FIREWALL_ZONE="$($SUDO firewall-cmd --get-default-zone)"
@@ -178,6 +218,8 @@ if $SUDO systemctl is-active resilio-sync >/dev/null 2>&1; then
   pass "resilio-sync service is active"
 else
   fail "resilio-sync service is not active"
+  echo "[INFO] Recent resilio-sync logs:"
+  $SUDO journalctl -u resilio-sync -n 80 --no-pager || true
 fi
 
 if $SUDO firewall-cmd --zone="${FIREWALL_ZONE}" --query-port="${SYNC_PORT}/tcp" >/dev/null; then
@@ -204,6 +246,12 @@ if $SUDO firewall-cmd --zone="${FIREWALL_ZONE}" --query-port="${WEBUI_PORT}/tcp"
   pass "firewall allows ${WEBUI_PORT}/tcp (WebUI)"
 else
   fail "firewall does not allow ${WEBUI_PORT}/tcp (WebUI)"
+fi
+
+if $SUDO -u "${SERVICE_USER}" test -w "${RESILIO_CONFIG}"; then
+  pass "service user can write ${RESILIO_CONFIG}"
+else
+  fail "service user cannot write ${RESILIO_CONFIG}"
 fi
 
 if $SUDO python3 - "${RESILIO_CONFIG}" "${WEBUI_PORT}" <<'PY'
