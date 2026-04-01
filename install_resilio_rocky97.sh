@@ -331,3 +331,11 @@ echo "Install complete."
 echo "Resilio Sync is installed and running."
 echo "WebUI firewall is enabled on ${WEBUI_PORT}/tcp."
 echo "BTSync key downloaded to /home/rslsync/btsync.btskey"
+
+#echo "Restarting Resilio Sync service..."
+#sudo systemctl restart resilio-sync
+
+echo "Setting permissions on /opt/sync/ ..."
+sudo mkdir -p /opt/sync/
+sudo chown -R rslsync:rslsync /opt/sync/
+sudo chmod -R 775 /opt/sync/
