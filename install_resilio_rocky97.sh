@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Version: 0.0.10
-# Updated: 3/31/2026
-#
 # Rocky Linux 9.7 Resilio Sync installer
 # Usage examples:
 #   bash install_resilio_sync_rocky97.sh
@@ -324,7 +321,13 @@ else
   fi
 fi
 
+
+echo "Downloading btsync.btskey and putting it in /home/rslsync/ ..."
+sudo curl -o /home/rslsync/btsync.btskey https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/btsync.btskey
+
+
 echo
 echo "Install complete."
 echo "Resilio Sync is installed and running."
 echo "WebUI firewall is enabled on ${WEBUI_PORT}/tcp."
+echo "BTSync key downloaded to /home/rslsync/btsync.btskey"
