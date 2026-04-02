@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+require_root() {
+    if [ "${EUID:-$(id -u)}" -ne 0 ]; then
+        echo "sys_cleanup.sh must be run as root." >&2
+        echo "Manual run: sudo bash $0" >&2
+        echo "Cron: install it in root's crontab with: sudo crontab -e" >&2
+        exit 1
+    fi
+}
+
+require_root
+
+# The script historically prefixes most privileged commands with `sudo`.
+# When already running as root, keep those call sites working without invoking sudo again.
+sudo() { "$@"; }
+
 
 #clear
 now=$(date)
@@ -19,19 +34,19 @@ echo "
                             |_|                                             |___|
 
 
-Version:  2.0.8
+Version:  2.0.12
 
-Optimized with AI (Claude Sonnet 4.5)
+Optimized with AI (Claude Sonnet 4.5, ChatGPT 5.4)
 
-Last Updated:  03/22/2026
+Last Updated:  4/2/2026
 --- Github:
    wget -O 'sys_cleanup.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
 
-Add to Crontab: (Every Sunday at 2:10 AM)
+Add to root Crontab: (Every Sunday at 2:10 AM)
 
-crontab -e
+sudo crontab -e
 
-10 2 * * 7 /home/ubuntu/sys_cleanup.sh
+10 2 * * 7 /bin/bash /absolute/path/to/sys_cleanup.sh
 
 (Save and close) - Ctrl + X, then Save ( y ), then Enter key
 
@@ -49,6 +64,52 @@ free_space() { df -P -B1 / | awk 'NR==2 {print $4}'; }
 
 # Returns current used RAM in bytes
 ram_used() { free -b | awk '/Mem/ {print $3}'; }
+
+# Returns success when a command exists in PATH
+have_cmd() { command -v "$1" >/dev/null 2>&1; }
+
+# Remove a live log only when it has grown past the configured threshold.
+LIVE_LOG_DELETE_BYTES=$((10 * 1024 * 1024))
+LIVE_LOG_REMOVED_LAST=0
+delete_live_logs_over_limit() {
+    LIVE_LOG_REMOVED_LAST=0
+    local log_path size_bytes
+    for log_path in "$@"; do
+        [ -f "$log_path" ] || continue
+        size_bytes=$(sudo stat -c '%s' "$log_path" 2>/dev/null || echo 0)
+        if [ "${size_bytes:-0}" -gt "$LIVE_LOG_DELETE_BYTES" ]; then
+            sudo rm -f -- "$log_path" 2>/dev/null || true
+            if [ ! -e "$log_path" ]; then
+                LIVE_LOG_REMOVED_LAST=$(( LIVE_LOG_REMOVED_LAST + 1 ))
+                echo "    [>] removed live log >10MiB: $log_path"
+            fi
+        fi
+    done
+}
+
+delete_rotated_logs_in_dir() {
+    local dir="$1"
+    [ -d "$dir" ] || return 0
+    sudo find "$dir" -maxdepth 1 -type f \
+        \( -name "*.log.*" -o -name "*.gz" -o -name "*.old" \) \
+        -delete 2>/dev/null || true
+}
+
+delete_live_logs_in_dir_over_limit() {
+    LIVE_LOG_REMOVED_LAST=0
+    local dir="$1" log_path size_bytes
+    [ -d "$dir" ] || return 0
+    while IFS= read -r -d '' log_path; do
+        size_bytes=$(sudo stat -c '%s' "$log_path" 2>/dev/null || echo 0)
+        if [ "${size_bytes:-0}" -gt "$LIVE_LOG_DELETE_BYTES" ]; then
+            sudo rm -f -- "$log_path" 2>/dev/null || true
+            if [ ! -e "$log_path" ]; then
+                LIVE_LOG_REMOVED_LAST=$(( LIVE_LOG_REMOVED_LAST + 1 ))
+                echo "    [>] removed live log >10MiB: $log_path"
+            fi
+        fi
+    done < <(sudo find "$dir" -maxdepth 1 -type f -print0 2>/dev/null)
+}
 
 # report_freed LABEL BEFORE_FREE_BYTES AFTER_FREE_BYTES
 # Appends to SUMMARY[] and prints a line only when > 1 MB was freed.
@@ -92,10 +153,10 @@ echo " Old kernels (keep running kernel) "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
 dpkg --list | grep linux-image | awk '{ print $2 }' | sort -V \
-    | sed -n '/'$(uname -r)'/q;p' | xargs sudo apt-get -y purge -q 2>/dev/null
+    | sed -n '/'$(uname -r)'/q;p' | xargs -r sudo apt-get -y purge -q 2>/dev/null || true
 dpkg --list | grep linux-image-extra | awk '{ print $2 }' | sort -V \
-    | sed -n '/'$(uname -r)'/q;p' | xargs sudo apt-get -y purge -q 2>/dev/null
-sudo update-grub2 -q 2>/dev/null
+    | sed -n '/'$(uname -r)'/q;p' | xargs -r sudo apt-get -y purge -q 2>/dev/null || true
+sudo update-grub2 > /dev/null 2>&1 || sudo update-grub > /dev/null 2>&1 || true
 _A=$(free_space)
 report_freed "Old kernels" "$_B" "$_A"
 
@@ -103,92 +164,182 @@ report_freed "Old kernels" "$_B" "$_A"
 echo " /var/log — all service log sections in one measurement "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
+_rsyslog_reopen=false
 
 
 echo " -- Core "
-sudo rm -f /var/log/error /var/log/error.*
-sudo rm -f /var/log/network.log /var/log/pm-powersave.log*
-sudo rm -rf /var/log/cups/*
+sudo rm -f /var/log/error.* /var/log/pm-powersave.log*
 sudo rm -f /var/log/alternatives.log.* /var/log/dpkg.log.*
-sudo rm -f /var/log/kern.log /var/log/kern.log.*
-sudo rm -f /var/log/debug.* /var/log/daemon.log /var/log/daemon.log.*
-sudo rm -f /var/log/cron.log /var/log/cron.log.*
-sudo rm -f /var/log/boot.log.* /var/log/messages /var/log/messages.*
-sudo rm -f /var/log/apport.log /var/log/apport.log.*
+sudo rm -f /var/log/kern.log.* /var/log/debug.* /var/log/daemon.log.*
+sudo rm -f /var/log/cron.log.* /var/log/boot.log.* /var/log/messages.*
+sudo rm -f /var/log/apport.log.*
 sudo rm -f /var/log/aptitude.* /var/log/vmware-vmsvc.*
 sudo rm -f /var/log/apt/term.log.* /var/log/apt/history.log.*
-sudo rm -rf /var/log/upstart/*
-sudo rm -f /var/log/syslog /var/log/syslog.*
-sudo rm -f /var/log/ubuntu-advantage.log.* /var/log/ubuntu-advantage-timer.log.*
+sudo find /var/log/upstart -mindepth 1 -type f \( -name "*.log.*" -o -name "*.gz" -o -name "*.old" \) \
+    -delete 2>/dev/null || true
+sudo rm -f /var/log/syslog.* /var/log/ubuntu-advantage.log.* /var/log/ubuntu-advantage-timer.log.*
 sudo rm -f /var/log/installer/*.log.*
 sudo rm -f /var/log/vmware-vmsvc-root.* /var/log/vmware-vmtoolsd-root.*
-sudo rm -f /var/log/dmesg.* /var/log/netserver.debug_* /var/log/crypto.txt
-[ -d "/var/log/unattended-upgrades/" ] && sudo rm -rf /var/log/unattended-upgrades/*
-[ -d "/var/log/samba/" ] && sudo rm -f /var/log/samba/log.nmbd.* /var/log/samba/log.smbd.* /var/log/samba/log.*
-sudo rm -f /var/log/apcupsd.events
+sudo rm -f /var/log/dmesg.* /var/log/netserver.debug_*
+delete_live_logs_over_limit \
+    /var/log/error \
+    /var/log/network.log \
+    /var/log/alternatives.log \
+    /var/log/dpkg.log \
+    /var/log/kern.log \
+    /var/log/debug \
+    /var/log/daemon.log \
+    /var/log/cron.log \
+    /var/log/boot.log \
+    /var/log/messages \
+    /var/log/apport.log \
+    /var/log/syslog \
+    /var/log/ubuntu-advantage.log \
+    /var/log/ubuntu-advantage-timer.log \
+    /var/log/apt/term.log \
+    /var/log/apt/history.log \
+    /var/log/crypto.txt \
+    /var/log/apcupsd.events \
+    /var/log/cloud-init.log
+[ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && _rsyslog_reopen=true
+if [ -d "/var/log/cups/" ]; then
+    delete_rotated_logs_in_dir "/var/log/cups"
+    delete_live_logs_in_dir_over_limit "/var/log/cups"
+    [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && sudo systemctl restart cups 2>/dev/null || true
+fi
+if [ -d "/var/log/unattended-upgrades/" ]; then
+    delete_rotated_logs_in_dir "/var/log/unattended-upgrades"
+    delete_live_logs_in_dir_over_limit "/var/log/unattended-upgrades"
+fi
+if [ -d "/var/log/samba/" ]; then
+    delete_rotated_logs_in_dir "/var/log/samba"
+    delete_live_logs_in_dir_over_limit "/var/log/samba"
+    if [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ]; then
+        sudo systemctl restart smbd 2>/dev/null || true
+        sudo systemctl restart nmbd 2>/dev/null || true
+    fi
+fi
 
 echo " -- Security "
-sudo rm -f /var/log/user.log.* /var/log/auth.log /var/log/auth.log.*
+sudo rm -f /var/log/user.log.* /var/log/auth.log.*
 sudo rm -f /var/log/fail2ban.log.*
+delete_live_logs_over_limit /var/log/user.log /var/log/auth.log
+[ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && _rsyslog_reopen=true
+delete_live_logs_over_limit /var/log/fail2ban.log
+[ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && sudo systemctl restart fail2ban 2>/dev/null || true
 if [ -d "/var/log/clamav/" ]; then
-    sudo rm -f /var/log/clamav/clamav.log.* /var/log/clamav/freshclam.log.*
+    delete_rotated_logs_in_dir "/var/log/clamav"
+    delete_live_logs_over_limit /var/log/clamav/clamav.log /var/log/clamav/freshclam.log
+    if [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ]; then
+        sudo systemctl restart clamav-daemon 2>/dev/null || true
+        sudo systemctl restart clamav-freshclam 2>/dev/null || true
+    fi
     sudo rm -f /var/log/install_clamav.log
 fi
 
 echo " -- Databases "
+_mysql_logs_removed=0
 if [ -d "/var/log/mysql/" ]; then
-    sudo rm -rf /var/log/mysql/*
-    sudo rm -f /var/log/mysql.log.* /var/log/mysql/mysql_error.log /var/log/mysql/error.log
-    sudo systemctl restart mysql 2>/dev/null
+    delete_rotated_logs_in_dir "/var/log/mysql"
+    delete_live_logs_in_dir_over_limit "/var/log/mysql"
+    _mysql_logs_removed=$(( _mysql_logs_removed + LIVE_LOG_REMOVED_LAST ))
 fi
-[ -d "/var/log/mongodb/" ] && sudo rm -f /var/log/mongodb/*
-[ -d "/var/log/mongdb/" ]  && sudo rm -f /var/log/mongdb/*
-[ -d "/var/log/redis/" ]   && sudo rm -f /var/log/redis/*
+sudo rm -f /var/log/mysql.log.*
+delete_live_logs_over_limit /var/log/mysql.log
+_mysql_logs_removed=$(( _mysql_logs_removed + LIVE_LOG_REMOVED_LAST ))
+[ "$_mysql_logs_removed" -gt 0 ] && sudo systemctl restart mysql 2>/dev/null || true
+if [ -d "/var/log/mongodb/" ]; then
+    delete_rotated_logs_in_dir "/var/log/mongodb"
+    delete_live_logs_in_dir_over_limit "/var/log/mongodb"
+    [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && sudo systemctl restart mongodb 2>/dev/null || true
+fi
+if [ -d "/var/log/mongdb/" ]; then
+    delete_rotated_logs_in_dir "/var/log/mongdb"
+    delete_live_logs_in_dir_over_limit "/var/log/mongdb"
+fi
+if [ -d "/var/log/redis/" ]; then
+    delete_rotated_logs_in_dir "/var/log/redis"
+    delete_live_logs_in_dir_over_limit "/var/log/redis"
+    [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && sudo systemctl restart redis-server 2>/dev/null || true
+fi
 
 echo " -- ELK "
 if [ -d "/var/log/kibana/" ]; then
-    sudo rm -f /var/log/kibana/*
-    sudo systemctl restart kibana 2>/dev/null
+    delete_rotated_logs_in_dir "/var/log/kibana"
+    delete_live_logs_in_dir_over_limit "/var/log/kibana"
+    [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && sudo systemctl restart kibana 2>/dev/null || true
 fi
 if [ -d "/var/log/logstash/" ]; then
-    sudo rm -f /var/log/logstash/* /var/log/logstash/*.log.gz
-    sudo systemctl restart logstash 2>/dev/null
+    delete_rotated_logs_in_dir "/var/log/logstash"
+    delete_live_logs_in_dir_over_limit "/var/log/logstash"
+    [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && sudo systemctl restart logstash 2>/dev/null || true
 fi
 if [ -d "/var/log/elasticsearch/" ]; then
-    sudo rm -f /var/log/elasticsearch/* /var/log/elasticsearch/*.log.gz
-    sudo rm -f /var/log/elasticsearch/*.json.gz /var/log/elasticsearch/gc.log.*
-    sudo rm -f /var/log/elasticsearch/elasticsearch_deprecation.*
-    sudo rm -f /var/log/metricbeat/*
-    sudo systemctl restart elasticsearch 2>/dev/null
+    delete_rotated_logs_in_dir "/var/log/elasticsearch"
+    delete_live_logs_in_dir_over_limit "/var/log/elasticsearch"
+    if [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ]; then
+        sudo systemctl restart elasticsearch 2>/dev/null || true
+    fi
+fi
+if [ -d "/var/log/metricbeat/" ]; then
+    delete_rotated_logs_in_dir "/var/log/metricbeat"
+    delete_live_logs_in_dir_over_limit "/var/log/metricbeat"
+    [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && sudo systemctl restart metricbeat 2>/dev/null || true
 fi
 
 echo " -- Mail "
-if [ -d "/var/log/mail/" ]; then
-    sudo rm -f /var/log/mail.log /var/log/mail.log.* /var/log/mail.err.*
+if [ -d "/var/log/mail/" ] || [ -f "/var/log/mail.log" ] || [ -f "/var/log/mail.err" ]; then
+    sudo rm -f /var/log/mail.log.* /var/log/mail.err.*
+    delete_live_logs_over_limit /var/log/mail.log /var/log/mail.err
+    [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && _rsyslog_reopen=true
     sudo postsuper -d ALL 2>/dev/null
     sudo systemctl restart postfix 2>/dev/null
 fi
+if $_rsyslog_reopen; then
+    sudo systemctl kill -s HUP rsyslog 2>/dev/null || sudo systemctl restart rsyslog 2>/dev/null || true
+fi
 
 echo " -- Web / HTTP "
-[ -d "/var/log/letsencrypt/" ] && sudo rm -f /var/log/letsencrypt/letsencrypt.log.*
-[ -d "/var/log/apache2/" ]    && sudo rm -f /var/log/apache2/*
-[ -d "/var/log/lighttpd/" ]   && sudo rm -f /var/log/lighttpd/*
+if [ -d "/var/log/letsencrypt/" ]; then
+    delete_rotated_logs_in_dir "/var/log/letsencrypt"
+    delete_live_logs_in_dir_over_limit "/var/log/letsencrypt"
+fi
+if [ -d "/var/log/apache2/" ]; then
+    delete_rotated_logs_in_dir "/var/log/apache2"
+    delete_live_logs_in_dir_over_limit "/var/log/apache2"
+    [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && sudo systemctl restart apache2 2>/dev/null || true
+fi
+if [ -d "/var/log/lighttpd/" ]; then
+    delete_rotated_logs_in_dir "/var/log/lighttpd"
+    delete_live_logs_in_dir_over_limit "/var/log/lighttpd"
+    [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && sudo systemctl restart lighttpd 2>/dev/null || true
+fi
 if [ -d "/var/log/nginx/" ]; then
-    sudo rm -rf /var/log/nginx/*
+    _php_fpm_logs_removed=0
+    delete_rotated_logs_in_dir "/var/log/nginx"
+    delete_live_logs_in_dir_over_limit "/var/log/nginx"
+    [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && sudo systemctl restart nginx 2>/dev/null || true
     sudo rm -f /var/log/php*-fpm.log.*
-    for php_fpm in $(systemctl list-units --type=service --state=active --no-legend 2>/dev/null \
-                     | awk '{print $1}' | grep 'php.*-fpm'); do
-        sudo systemctl restart "$php_fpm" 2>/dev/null
-    done
-    sudo systemctl restart nginx 2>/dev/null
+    delete_live_logs_over_limit /var/log/php*-fpm.log
+    _php_fpm_logs_removed=$LIVE_LOG_REMOVED_LAST
+    if [ "$_php_fpm_logs_removed" -gt 0 ]; then
+        while read -r php_fpm; do
+            [ -n "$php_fpm" ] || continue
+            sudo systemctl restart "$php_fpm" 2>/dev/null
+        done < <(
+            systemctl list-units --type=service --state=active --no-legend 2>/dev/null \
+                | awk '$1 ~ /php.*-fpm/ {print $1}'
+        )
+    fi
 fi
 
 echo " -- Pi-Hole "
 if [ -d "/var/log/pihole/" ]; then
     sudo pihole -f 2>/dev/null
     sudo systemctl stop pihole-FTL dnsmasq 2>/dev/null
-    sudo rm -f /var/log/pihole/webserver.log.* /var/log/pihole/pihole.log.*
-    sudo rm -f /var/log/pihole/FTL.log.* /var/log/pihole/pihole_updateGravity.log
+    delete_rotated_logs_in_dir "/var/log/pihole"
+    delete_live_logs_in_dir_over_limit "/var/log/pihole"
+    sudo rm -f /var/log/pihole/pihole_updateGravity.log
     sudo rm -f /var/log/update_blocklists_local_servers.log
     sudo systemctl restart dnsmasq 2>/dev/null
     sudo systemctl restart pihole-FTL 2>/dev/null
@@ -196,10 +347,12 @@ fi
 
 echo " -- Misc "
 sudo rm -f /var/log/update_core.log /var/log/update_ubuntu.log
-sudo rm -f /var/log/sys_cleanup.log* /var/log/vmware-network.* /var/log/cloud-init.log
+sudo rm -f /var/log/sys_cleanup.log* /var/log/vmware-network.*
 
 echo " -- Large log files (>1GB) "
-sudo find /var/log -type f -name "*.log" -size +1G -delete 2>/dev/null
+sudo find /var/log -type f \
+    \( -name "*.log.*" -o -name "*.gz" -o -name "*.old" \) \
+    -size +1G -delete 2>/dev/null
 
 _A=$(free_space)
 report_freed "/var/log cleanup" "$_B" "$_A"
@@ -209,10 +362,23 @@ report_freed "/var/log cleanup" "$_B" "$_A"
 echo " -- /tmp "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
-rm -rf /tmp/pip-* /tmp/systemd-private-*
+sudo rm -rf /tmp/pip-* /tmp/systemd-private-*
 sudo rm -rf /tmp/resilio_dumps/
 _A=$(free_space)
 report_freed "/tmp cleanup" "$_B" "$_A"
+
+# ---------------------------------------------------------------------------
+echo " -- /var/tmp — stale files older than 30 days "
+# ---------------------------------------------------------------------------
+_B=$(free_space)
+if [ -d "/var/tmp" ]; then
+    sudo find /var/tmp -xdev -mindepth 1 \( -type f -o -type l \) \
+        -mtime +30 -delete 2>/dev/null || true
+    sudo find /var/tmp -xdev -depth -mindepth 1 -type d -empty \
+        -delete 2>/dev/null || true
+fi
+_A=$(free_space)
+report_freed "/var/tmp stale files" "$_B" "$_A"
 
 # ---------------------------------------------------------------------------
 echo " -- Resilio Sync — logs, metadata, and .sync/Archive folders     "
@@ -254,8 +420,6 @@ echo " -- Docker "
 # ---------------------------------------------------------------------------
 if [ -d "/var/lib/docker/" ]; then
     _B=$(free_space)
-    docker system prune -f              2>/dev/null
-    docker image prune -f               2>/dev/null
     docker system prune -a --volumes -f 2>/dev/null
     # Truncate live container logs in-place (safe for running containers)
     sudo find /var/lib/docker/containers -name "*.log" -exec truncate -s 0 {} \; 2>/dev/null
@@ -284,6 +448,19 @@ _A=$(free_space)
 report_freed "Python pip cache" "$_B" "$_A"
 
 # ---------------------------------------------------------------------------
+echo " -- Crash dumps "
+# ---------------------------------------------------------------------------
+_B=$(free_space)
+[ -d "/var/crash" ] && sudo find /var/crash -xdev -type f -mtime +7 -delete 2>/dev/null || true
+[ -d "/var/lib/systemd/coredump" ] && sudo find /var/lib/systemd/coredump -xdev \
+    -type f -mtime +7 -delete 2>/dev/null || true
+if have_cmd coredumpctl; then
+    sudo coredumpctl --vacuum-time=7d >/dev/null 2>&1 || true
+fi
+_A=$(free_space)
+report_freed "Crash dumps" "$_B" "$_A"
+
+# ---------------------------------------------------------------------------
 echo " -- Snap — remove old disabled revisions "
 # ---------------------------------------------------------------------------
 _B=$(free_space)
@@ -300,18 +477,33 @@ echo " -- Deleted-but-held-open files: truncate via /proc/<pid>/fd "
 # Frees disk space immediately without killing any process or rebooting.
 # ---------------------------------------------------------------------------
 _B=$(free_space)
-_held=$(sudo lsof 2>/dev/null | grep -c deleted || true)
-if [ "${_held:-0}" -gt 0 ]; then
-    sudo lsof 2>/dev/null | awk '/deleted/ {print $2, $4}' | \
-        while read -r pid fd; do
-            fd_num="${fd//[^0-9]/}"
-            proc_fd="/proc/$pid/fd/$fd_num"
-            [ -e "$proc_fd" ] && sudo truncate -s 0 "$proc_fd" 2>/dev/null
-        done
+_held=0
+_truncated=0
+if have_cmd lsof; then
+    while read -r pid fd; do
+        [ -n "${pid:-}" ] || continue
+        [ -n "${fd:-}" ] || continue
+
+        _held=$(( _held + 1 ))
+        fd_num="${fd//[^0-9]/}"
+        [ -n "$fd_num" ] || continue
+
+        proc_fd="/proc/$pid/fd/$fd_num"
+        if [ -e "$proc_fd" ] && sudo truncate -s 0 "$proc_fd" 2>/dev/null; then
+            _truncated=$(( _truncated + 1 ))
+        fi
+    done < <(
+        sudo lsof -nP +L1 2>/dev/null \
+            | awk 'NR > 1 && $5 == "REG" && $4 ~ /^[0-9]+[A-Za-z]*$/ {print $2, $4}'
+    )
+else
+    echo "  [!] lsof not installed; skipping held-open file scan"
 fi
 _A=$(free_space)
 report_freed "Held-open deleted files" "$_B" "$_A"
-[ "${_held:-0}" -gt 0 ] && echo "  (${_held} held-open deleted file descriptors truncated)"
+if [ "$_held" -gt 0 ]; then
+    echo "  (${_truncated}/${_held} held-open deleted regular file descriptors truncated)"
+fi
 
 # ---------------------------------------------------------------------------
 echo " -- RAM / Page cache "
@@ -319,7 +511,7 @@ echo " -- RAM / Page cache "
 _RAM_B=$(ram_used)
 sync
 echo 3 | sudo tee /proc/sys/vm/drop_caches  > /dev/null
-echo 1 | sudo tee /proc/sys/vm/compact_memory > /dev/null 2>&1
+echo 1 | sudo tee /proc/sys/vm/compact_memory > /dev/null 2>&1 || true
 
 _swap_cleared=false
 SWAP_USED=$(free -b | awk '/Swap/ {print $3}')
@@ -336,7 +528,7 @@ if [ "$_ram_diff" -gt 1048576 ]; then
     echo "  [+] RAM freed — ${_ram_human} (page cache drop + compaction)"
     SUMMARY+=("RAM page cache|${_ram_human}")
 fi
-$_swap_cleared && echo "  [+] Swap cleared" && SUMMARY+=("Swap|cleared")
+if $_swap_cleared; then echo "  [+] Swap cleared"; SUMMARY+=("Swap|cleared"); fi
 
 # ---------------------------------------------------------------------------
 echo " -- APT housekeeping (after cleanup so indexes are fresh) "
@@ -373,14 +565,14 @@ dpkg -l 'linux-image-[0-9]*-generic' \
 | awk '/^ii/ {print $2}' \
 | grep -vF -- "$current" \
 | grep -vF -- "$latest" \
-| xargs -r sudo apt-get -y purge
+| xargs -r sudo apt-get -y purge || true
 
 # Purge all related packages (modules, headers) for removed kernels
 dpkg -l \
 | awk '/^(ii|rc)/ && $2 ~ /^linux-(image|modules|headers)-[0-9]/ { print $2 }' \
 | grep -vF -- "$current" \
 | grep -vF -- "$latest" \
-| xargs -r sudo dpkg --purge
+| xargs -r sudo dpkg --purge || true
 
 
 sudo apt-get -y autoremove --purge
@@ -412,8 +604,13 @@ fi
 
 echo ""
 echo "  ----------------------------------------------------"
-printf "  %-36s  %s\n" "Total disk reclaimed" \
-    "$(numfmt --to=iec-i --suffix=B "$TOTAL_DISK_DIFF")"
+if [ "$TOTAL_DISK_DIFF" -ge 0 ]; then
+    printf "  %-36s  %s\n" "Total disk reclaimed" \
+        "$(numfmt --to=iec-i --suffix=B "$TOTAL_DISK_DIFF")"
+else
+    printf "  %-36s  -%s (upgrades used disk)\n" "Total disk reclaimed" \
+        "$(numfmt --to=iec-i --suffix=B "$(( -TOTAL_DISK_DIFF ))")"
+fi
 
 if [ "$TOTAL_RAM_DIFF" -gt 0 ]; then
     printf "  %-36s  %s\n" "Total RAM freed" \
