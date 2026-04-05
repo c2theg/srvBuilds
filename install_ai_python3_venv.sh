@@ -25,8 +25,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.41
-Last Updated:  2/18/2026
+Version:  0.2.42
+Last Updated:  4/4/2026
 
 What this does:
     Creates a GLOBAL Python3 Virtual Environment (I know you think that defeats the entire reason for an venv... it does not.
@@ -386,6 +386,10 @@ pip_install textblob wordcloud
 pip_install scikit-learn joblib
 
 # https://pypi.org/project/transformers/
+# Install PyTorch & other libraries
+pip_install torch accelerate
+
+# Install the transformers library
 pip_install transformers
 
 # https://pypi.org/project/datasets/
