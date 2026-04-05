@@ -403,7 +403,6 @@ pip_install PyMuPDF
 pip_install pymupdf-fonts
 pip_install fonttools
 
-pip_install pyzbar
 # https://github.com/ocrmypdf/OCRmyPDF
 #pip_install ocrmypdf
 
@@ -576,6 +575,10 @@ pip_install opencv-python # https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.
 # Install EasyOCR
 pip_install easyocr
 pip_install pytesseract pillow
+
+#--- barcodes ---
+sudo apt-get install libzbar0
+pip_install pyzbar
 
 #---- PaddleOCR -----
 #--- CPU ---
