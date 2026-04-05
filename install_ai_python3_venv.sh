@@ -25,7 +25,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.42
+Version:  0.2.43
 Last Updated:  4/4/2026
 
 What this does:
@@ -403,6 +403,7 @@ pip_install PyMuPDF
 pip_install pymupdf-fonts
 pip_install fonttools
 
+pip_install pyzbar
 # https://github.com/ocrmypdf/OCRmyPDF
 #pip_install ocrmypdf
 
