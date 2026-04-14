@@ -253,8 +253,8 @@ echo "
 Download & Install Containers (Ollama, Open-WebUI, etc.)
 
 "
-docker compose up -d
-sleep 10
+#docker compose up -d
+#sleep 10
 
 
 #---- AI MODELS ----
