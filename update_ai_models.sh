@@ -18,7 +18,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.25
+Version:  0.0.26
 Last Updated:  4/14/2026
 
 
@@ -110,7 +110,7 @@ docker system prune --all --volumes
 
 
 #-- General Version - CPU --
-docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+#docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
 
 #-- Nvidia Version --
 docker run -d -p 3000:8080 --gpus all --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:cuda
