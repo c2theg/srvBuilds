@@ -17,7 +17,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.1.11
+Version:  0.1.15
 Last Updated:  4/14/2026
 
 # https://ollama.com/search
@@ -26,8 +26,7 @@ Last Updated:  4/14/2026
 
 #-- Update yourself! --
 wget -O "install_ai.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
-wget -O "docker-compose.yml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_compose.txt
-
+#wget -O "docker-compose.yml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_compose.txt
 
 wget -O "install_ai_containers.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_containers.sh && chmod u+x install_ai_containers.sh
 wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
@@ -232,49 +231,30 @@ else
 fi
 
 
-
-# if echo "$GPU_INFO" | grep -qi "nvidia"; then
-#     echo "NVIDIA GPU detected."
-
-# elif echo "$GPU_INFO" | grep -qi "amd"; then
-#     echo "AMD GPU detected."
-#     #docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
-
-# else
-#     echo "No NVIDIA or AMD GPU found in relevant PCI slots."
-#     #-- CPU Only --
-#     #docker run -d -p 3000:8080 -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
-
-# fi
-
-
 echo "
 
 Download & Install Containers (Ollama, Open-WebUI, etc.)
 
 "
-#docker compose up -d
-#sleep 10
+sleep 5
+sudo ./install_ai_containers.sh
 
 
 #---- AI MODELS ----
 # https://ollama.com/search
-
-#--- force pull models ---
-# docker exec -it ollama ollama pull minimax-m2.1:cloud
-# docker exec -it ollama ollama pull ministral-3:8b
-# docker exec -it ollama ollama pull llama3.2:3b
-# docker exec -it ollama ollama pull qwen3-vl:8b
-# docker exec -it ollama ollama pull qwen3-embedding:0.6b
 
 echo "
 
 Download & Install AI Models
 
 "
-wget -O "install_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_models.sh && chmod +x install_ai_models.sh && ./install_ai_models.sh
-sleep 10
 
+wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
+./update_ai_models.sh
+
+#wget -O "install_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_models.sh && chmod +x install_ai_models.sh && ./install_ai_models.sh
+
+sleep 10
 
 echo "
 
