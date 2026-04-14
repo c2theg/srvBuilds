@@ -17,8 +17,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.1.9
-Last Updated:  3/18/2026
+Version:  0.1.11
+Last Updated:  4/14/2026
 
 # https://ollama.com/search
 
@@ -100,10 +100,13 @@ if echo "$GPU_INFO" | grep -qi "nvidia"; then
     #--- Ubuntu 24.04 ---
     wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
     sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
-    wget https://developer.download.nvidia.com/compute/cuda/13.1.0/local_installers/cuda-repo-ubuntu2404-13-1-local_13.1.0-590.44.01-1_amd64.deb
-    sudo dpkg -i cuda-repo-ubuntu2404-13-1-local_13.1.0-590.44.01-1_amd64.deb
+    wget -O "cuda-repo-ubuntu2404-13-1.deb" https://developer.download.nvidia.com/compute/cuda/13.1.0/local_installers/cuda-repo-ubuntu2404-13-1-local_13.1.0-590.44.01-1_amd64.deb
+    #sudo dpkg -i cuda-repo-ubuntu2404-13-1-local_13.1.0-590.44.01-1_amd64.deb
+    sudo dpkg -i cuda-repo-ubuntu2404-13-1.deb
     sudo cp /var/cuda-repo-ubuntu2404-13-1-local/cuda-*-keyring.gpg /usr/share/keyrings/
     sudo apt-get update
+
+    rm cuda-repo-ubuntu2404-13-1.deb # clean up the 3.9Gb file!!!
     #----- You need - nvidia-container-toolkit -------------------------
     sudo apt-get -y install cuda-toolkit-13-1
     #sudo apt-get -y install cuda-toolkit-12-6
