@@ -132,6 +132,47 @@ if echo "$GPU_INFO" | grep -qi "nvidia"; then
     sudo nvidia-ctk runtime configure --runtime=docker
     sudo systemctl restart docker
 
+
+
+#--- updated 4/14/2026 ---
+#--- These steps are for a Ubuntu 24.04 VM inside of Proxmox, with a nVidia eGPU (via opulink)  ---
+ 
+   # -- FIRST THING, Blacklist existing drivers from taking over Nvidia Drivers ---
+   # echo "blacklist nouveau" | sudo tee /etc/modprobe.d/blacklist-nouveau.conf
+   # echo "options nouveau modeset=0" | sudo tee -a /etc/modprobe.d/blacklist-nouveau.conf
+   # sudo update-initramfs -u
+
+   #--- uninstall all previous nvidia drivers ---
+   # sudo apt purge '^nvidia-.*'
+   # sudo apt autoremove
+
+   #--- install new nvidia drivers ---
+   # sudo apt update
+   # sudo ubuntu-drivers devices
+   
+   # -- auto install --
+   #   sudo ubuntu-drivers autoinstall
+   # -- or (specify a version) --
+   #   sudo apt install nvidia-driver-580
+   # --- REBOOT ---
+
+   
+   # lspci | grep -i nvidia
+   # dmesg | grep -e DMAR -e IOMMU
+
+   # update Grub
+   # nano /etc/default/grub
+   # Add for AMD:    amd_iommu=on
+   # Add for Intel: intel_iommu=on
+   # update-grub
+   # reboot
+
+   # lspci -nnk | grep -A 3 -i nvidia
+   # nvidia-smi
+   # --- you should see:  "Kernel driver in use: vfio-pci" OR "Kernel driver in use: nvidia"
+   
+
+
 elif echo "$GPU_INFO" | grep -qi "amd"; then
     echo "AMD GPU detected.
         
