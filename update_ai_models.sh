@@ -18,16 +18,16 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.22
-Last Updated:  12/22/2025
+Version:  0.0.25
+Last Updated:  4/14/2026
 
 
 Install:
-  rm update_ai_models.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
+  wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
 
 
 Recommended (first):
-  rm install_ai.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
+  wget -O "install_ai.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
 
 
 Crontab:
@@ -37,8 +37,7 @@ Crontab:
 "
 
 #-- update yourself! --
-rm update_ai_models.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
-
+wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
 
 ollama --version
 #service ollama status
