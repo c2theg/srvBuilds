@@ -137,7 +137,10 @@ if echo "$GPU_INFO" | grep -qi "nvidia"; then
 #--- updated 4/14/2026 ---
 #--- These steps are for a Ubuntu 24.04 VM inside of Proxmox, with a nVidia eGPU (via opulink)  ---
  
-   # -- FIRST THING, Blacklist existing drivers from taking over Nvidia Drivers ---
+   # -- FIRST THING, Blacklist existing drivers from taking over Nvidia Drivers, if present! ---
+   # lsmod | grep nouveau
+   #
+   # -- If present, disable it: 
    # echo "blacklist nouveau" | sudo tee /etc/modprobe.d/blacklist-nouveau.conf
    # echo "options nouveau modeset=0" | sudo tee -a /etc/modprobe.d/blacklist-nouveau.conf
    # sudo update-initramfs -u
