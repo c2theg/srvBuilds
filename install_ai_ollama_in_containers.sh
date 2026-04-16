@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-VERSION="0.2.0"
+VERSION="0.2.2"
 LAST_UPDATED="2026-04-16"
+
+wget -O "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_ollama_in_containers.sh" # update yourself with each run
 
 readonly PORT_OLLAMA=11434
 readonly PORT_OPENWEBUI=3000
@@ -341,6 +342,14 @@ Bound ports:
 Useful checks:
 - ${DOCKER_CMD[*]} ps
 - ${COMPOSE_CMD[*]} -p ollama-stack -f ${COMPOSE_FILE} logs -f
+
+Add models to Ollama:
+- ${DOCKER_CMD[*]} exec -it ollama ollama pull llama3.2:latest
+- ${DOCKER_CMD[*]} exec -it ollama ollama pull qwen2.5:latest
+- ${DOCKER_CMD[*]} exec -it ollama ollama list
+
+API example (host):
+- curl http://127.0.0.1:${PORT_OLLAMA}/api/tags
 EOF_SUMMARY
 }
 
