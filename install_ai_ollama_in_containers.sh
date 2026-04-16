@@ -3,7 +3,7 @@ set -euo pipefail
 VERSION="0.2.2"
 LAST_UPDATED="2026-04-16"
 
-wget -O "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_ollama_in_containers.sh" # update yourself with each run
+curl -O "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_ollama_in_containers.sh" # update yourself with each run
 
 readonly PORT_OLLAMA=11434
 readonly PORT_OPENWEBUI=3000
