@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.1.25
+Version:  0.1.26
 Last Updated:  4/21/2026
 
 
@@ -353,3 +353,18 @@ tailscale ip -4
 tailscale ip -6
 tailscale netcheck
 tailscale status
+
+
+echo " 
+
+Run this again to advertise exit-node
+
+
+sudo tailscale set \
+  --advertise-routes=10.1.1.0/24,192.168.1.0/24 \
+  --advertise-exit-node \
+  --ssh
+
+
+ "
+
