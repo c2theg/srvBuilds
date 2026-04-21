@@ -122,8 +122,8 @@ collect_routes() {
   echo
   echo "Enter the LAN subnet(s) you want reachable over Tailscale."
   echo "Examples:"
-  echo "  10.11.1.0/24"
-  echo "  10.13.1.0/24"
+  echo "  10.1.1.0/24"
+  echo "  192.168.1.0/24"
   echo
 
   while true; do
