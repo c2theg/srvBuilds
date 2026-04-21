@@ -15,8 +15,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.22
-Last Updated:  1/10/2026
+Version:  0.0.25
+Last Updated:  4/21/2026
 
 
 "
@@ -57,7 +57,7 @@ tailscale up --reset
 #sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=10.1.1.0/24 --ssh --accept-risk=lose-ssh
 #sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --ssh --accept-risk=lose-ssh
 
-tailscale up --netfilter-mode=off --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=10.13.1.0/24 --ssh --accept-risk=lose-ssh --exit-node-allow-lan-access
+tailscale up --netfilter-mode=off --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=10.13.1.0/24,10.11.1.0/24 --ssh --accept-risk=lose-ssh --exit-node-allow-lan-access
 
 tailscale status
 
