@@ -3,6 +3,20 @@
 # Updated: 2026-04-30
 # Updated by: AI (Claude)
 #  - [2026-04-30 v1.0] Initial release — Rocky 9.7 Docker CE + Compose installer - AI Claude
+#
+# ─── Install directly from GitHub (no local clone required) ──────────────────
+#
+#   curl:
+#     sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker_rocky97.sh)"
+#
+#   wget:
+#     sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker_rocky97.sh)"
+#
+#   Download first, then run (recommended — lets you inspect before executing):
+#     curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker_rocky97.sh -o install_docker_rocky97.sh
+#     sudo bash install_docker_rocky97.sh
+#
+# ─────────────────────────────────────────────────────────────────────────────
 
 set -euo pipefail
 
