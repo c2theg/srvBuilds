@@ -1,5 +1,5 @@
 #   Christopher Gray - 5/3/2026
-#	Version 0.0.19
+#	Version 0.0.20
 #	For: Ubuntu 24.04 Server (LTS)+
 #	Quick Download: 
 #		wget -O "netplan-24_04.yaml" https://bit.ly/4bnv0oy
@@ -56,6 +56,6 @@ network:
      addresses: [10.50.1.44/24]
      routes:
         - to: default
-        via: 10.50.1.1
+          via: 10.50.1.1
      nameservers:
        addresses: [10.50.1.1, 208.67.222.123, 1.1.1.3, 9.9.9.9, 2606:4700:4700::1113, 2620:119:35::123, 2620:fe::fe, 8.8.8.8]
