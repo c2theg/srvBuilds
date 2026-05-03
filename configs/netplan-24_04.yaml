@@ -1,5 +1,5 @@
-#   Christopher Gray - 3/4/2026
-#	Version 0.0.18
+#   Christopher Gray - 5/3/2026
+#	Version 0.0.19
 #	For: Ubuntu 24.04 Server (LTS)+
 #	Quick Download: 
 #		wget -O "netplan-24_04.yaml" https://bit.ly/4bnv0oy
@@ -31,12 +31,10 @@
 # -------------------------------------------------------
 # Source: https://netplan.io/examples
 #
-#
 # renderer: "networkd" or "NetworkManager"
 #
 # DEBUG: sudo netplan --debug apply
 #  or apply it with:   netplan apply
-#
 #
 #  if you get error: ' Permissions for /etc/netplan/01-network-manager-all.yaml are too open. Netplan configuration should NOT be accessible by others.' 
 #	sudo chmod 600 /etc/netplan/01-network-manager-all.yaml
@@ -44,21 +42,20 @@
 #	If you get the error "inconsistant indentation"
 #		sed 's/ /./g' 50-cloud-init.yaml
 #
-#
 #	routes:
 #	··- to: default
 #	····via: 192.168.1.1
-#
 # -------------------------------------------------------
 network:
   version: 2
 #  renderer: networkd
   ethernets:
+  # ens160: # VMWARE
     eno4:
      dhcp4: false
      addresses: [10.50.1.44/24]
-	 routes:
-    	- to: default
-          via: 10.50.1.1
+     routes:
+        - to: default
+        via: 10.50.1.1
      nameservers:
-       addresses: [208.67.222.123, 1.1.1.3, 9.9.9.9, 2606:4700:4700::1113, 2620:119:35::123, 2620:fe::fe, 8.8.8.8]
+       addresses: [10.50.1.1, 208.67.222.123, 1.1.1.3, 9.9.9.9, 2606:4700:4700::1113, 2620:119:35::123, 2620:fe::fe, 8.8.8.8]
