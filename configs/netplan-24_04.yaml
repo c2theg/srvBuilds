@@ -1,6 +1,6 @@
-#   Christopher Gray - 5/3/2026
-#	Version 0.0.20
-#	For: Ubuntu 24.04 Server (LTS)+
+#   Christopher Gray - 5/4/2026
+#	Version 0.0.21
+#	For: Ubuntu 24.04 Server (LTS)+  (and 26.04)
 #	Quick Download: 
 #		wget -O "netplan-24_04.yaml" https://bit.ly/4bnv0oy
 # -------------------------------------------------------
@@ -51,6 +51,7 @@ network:
 #  renderer: networkd
   ethernets:
   # ens160: # VMWARE
+  # ens18: # ubuntu 26.04
     eno4:
      dhcp4: false
      addresses: [10.50.1.44/24]
