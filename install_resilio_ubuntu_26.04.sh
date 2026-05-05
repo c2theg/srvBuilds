@@ -31,8 +31,7 @@ echo "Downloading required dependencies...\r\n\r\n"
 #--------------------------------------------------------------------------------------------
 echo "Installing ... \r\n \r\n"
 
-echo "deb http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" | sudo tee /etc/apt/sources.list.d/resilio-sync.list
-curl -LO https://linux-packages.resilio.com/resilio-sync/key.asc
-sudo apt-key add key.asc
+sudo rm -f /etc/apt/trusted.gpg.d/resilio-sync.asc
+wget -qO- https://linux-packages.resilio.com/resilio-sync/key.asc | sudo tee /etc/apt/trusted.gpg.d/resilio-sync.asc >/dev/null
 sudo apt update
-sudo apt install resilio-sync
+sudo apt install -y resilio-sync
