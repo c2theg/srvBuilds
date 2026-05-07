@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # =============================================================================
 #  install_vllm.sh — vLLM installer for Ubuntu 24.04 / 26.04+
+#  Updated: 5/6/2026
+#  Version: 0.0.3
+#
 #  Usage: sudo bash install_vllm.sh [--no-gpu] [--python 3.13] [--venv /opt/vllm]
 # =============================================================================
 curl -O https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_vllm_ubuntu24-26.sh
