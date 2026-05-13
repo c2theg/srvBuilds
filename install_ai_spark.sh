@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.16
+Version:  0.0.18
 Last Updated:  5/13/2026
 
 Update Yourself:
@@ -32,9 +32,39 @@ Update Yourself:
 # =============================================
 # CONFIGURATION — set these before running
 # =============================================
-HF_TOKEN=""     # HuggingFace token — required for gated models (nvidia/, some Qwen)
-                                   # Get yours at: https://huggingface.co/settings/tokens
-MODELS_DIR="/opt/models/vllm"      # Where all models will be downloaded
+HF_TOKEN=""                                  # HuggingFace token — fallback if not in .env
+                                             # Get yours at: https://huggingface.co/settings/tokens
+MODELS_DIR="/opt/models/vllm"                # Where all models will be downloaded
+VLLM_VENV="/opt/models/vllm-install/.vllm"  # venv created by the vLLM install script
+NEMO_VENV="/opt/models/nemo-venv"            # separate venv for NeMo ASR (avoids conflicts with vLLM)
+
+# Load .env from same directory as this script — overrides HF_TOKEN above if set there
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ENV_FILE="$SCRIPT_DIR/.env"
+if [ -f "$ENV_FILE" ]; then
+    ENV_HF_TOKEN=$(grep -E '^HF_TOKEN=' "$ENV_FILE" | head -1 | cut -d '=' -f2- | tr -d '"' | tr -d "'")
+    if [ -n "$ENV_HF_TOKEN" ]; then
+        HF_TOKEN="$ENV_HF_TOKEN"
+        echo "✅ HF_TOKEN loaded from .env"
+    fi
+fi
+
+# If .env has no token but the script variable is set, write it into .env for next time
+if [ -z "$ENV_HF_TOKEN" ] && [ -n "$HF_TOKEN" ]; then
+    if grep -qE '^HF_TOKEN=' "$ENV_FILE" 2>/dev/null; then
+        # Replace existing blank/empty entry
+        sed -i "s|^HF_TOKEN=.*|HF_TOKEN=$HF_TOKEN|" "$ENV_FILE"
+    else
+        # Append to file (create it if it doesn't exist)
+        echo "HF_TOKEN=$HF_TOKEN" >> "$ENV_FILE"
+    fi
+    echo "✅ HF_TOKEN saved to $ENV_FILE"
+fi
+
+if [ -z "$HF_TOKEN" ]; then
+    echo "⚠️  HF_TOKEN is not set in .env or in this script — gated models will fail."
+    echo "   Add HF_TOKEN=your_token_here to $ENV_FILE or set it at the top of this script."
+fi
 
 #--------------------------
 sudo apt update
@@ -62,15 +92,18 @@ curl -fsSL https://raw.githubusercontent.com/eelbaz/dgx-spark-vllm-setup/main/in
 
 #------ Download & install models -----
 
-# Install HuggingFace CLI and dependencies for all model types
-pip3 install -U "huggingface_hub[cli]" sentence-transformers
+# Install huggingface_hub + sentence-transformers into the vLLM venv (not system pip)
+# Ubuntu 22.04+ blocks system-wide pip installs — use the existing venv instead
+"$VLLM_VENV/bin/pip" install -U "huggingface_hub[cli]" sentence-transformers
 
-# Install NVIDIA NeMo for parakeet ASR inference (separate runtime from vLLM)
-pip3 install "nemo_toolkit[asr]"
+# NeMo goes in its own venv — its dependencies conflict with vLLM
+python3 -m venv "$NEMO_VENV"
+"$NEMO_VENV/bin/pip" install -U pip
+"$NEMO_VENV/bin/pip" install "nemo_toolkit[asr]"
 
 # Authenticate if token provided
 if [ -n "$HF_TOKEN" ]; then
-    huggingface-cli login --token "$HF_TOKEN" --add-to-git-credential
+    "$VLLM_VENV/bin/huggingface-cli" login --token "$HF_TOKEN" --add-to-git-credential
     HF_AUTH="--token $HF_TOKEN"
 else
     echo "⚠️  HF_TOKEN is not set — gated models (nvidia/, some Qwen) will fail. Set it at the top of this script."
@@ -80,7 +113,7 @@ fi
 mkdir -p "$MODELS_DIR"
 
 # Base download command — always write full files (no symlinks into HF cache)
-HF_DL="huggingface-cli download --local-dir-use-symlinks False $HF_AUTH"
+HF_DL="$VLLM_VENV/bin/huggingface-cli download --local-dir-use-symlinks False $HF_AUTH"
 
 
 # 1. General / RAG generation / Financial research / reasoning
@@ -210,12 +243,21 @@ docker run -d \
     --restart always \
     ghcr.io/open-webui/open-webui:main
 
-# Wait for OpenWebUI itself to come up (not vLLM)
+# Wait for OpenWebUI itself to come up (not vLLM) — timeout after 3 minutes
 echo "Waiting for OpenWebUI to be ready..."
-until curl -sf http://localhost:3000 > /dev/null 2>&1; do
-    printf "."
-    sleep 2
+OWUI_TIMEOUT=180
+OWUI_ELAPSED=0
+until curl -sf http://localhost:3000/health | grep -q '"status":true' 2>/dev/null; do
+    if [ "$OWUI_ELAPSED" -ge "$OWUI_TIMEOUT" ]; then
+        echo ""
+        echo "⚠️  OpenWebUI did not become ready after ${OWUI_TIMEOUT}s — check logs with: docker logs open-webui"
+        break
+    fi
+    printf "  [%ds] waiting...\n" "$OWUI_ELAPSED"
+    sleep 5
+    OWUI_ELAPSED=$((OWUI_ELAPSED + 5))
 done
-echo ""
-echo "✅ OpenWebUI running at http://localhost:3000  (models will appear once vLLM starts below)"
+if [ "$OWUI_ELAPSED" -lt "$OWUI_TIMEOUT" ]; then
+    echo "✅ OpenWebUI running at http://localhost:3000  (models will appear once vLLM starts)"
+fi
 
