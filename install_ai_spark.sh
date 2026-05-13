@@ -17,14 +17,16 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.10
+Version:  0.0.13
 Last Updated:  5/13/2026
 
-# https://ollama.com/search
+wget -O "install_ai_spark.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh && chmod u+x install_ai_spark.sh
+
+
+  Huggingface models:   https://huggingface.co/models
 
 
 "
-
 # =============================================
 # CONFIGURATION — set these before running
 # =============================================
@@ -32,22 +34,13 @@ HF_TOKEN=""                        # HuggingFace token — required for gated mo
                                    # Get yours at: https://huggingface.co/settings/tokens
 MODELS_DIR="/opt/models/vllm"      # Where all models will be downloaded
 
-
-#-- Update yourself! --
-wget -O "install_ai_spark.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh && chmod u+x install_ai_spark.sh
-#wget -O "docker-compose.yml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_compose.txt
-#wget -O "install_ai_containers.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_containers.sh && chmod u+x install_ai_containers.sh
-#wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
-
 #--------------------------
 sudo apt update
 sudo apt install -y --no-install-recommends wget curl gnupg2 git libgl1 libglib2.0-0
 sudo apt install -y jq
 sudo apt install -y python3.12-dev python3-dev build-essential ninja-build
 
-
 #-------- Docker / Containers ------------
-
 # Check if docker is in the system's PATH
 if command -v docker >/dev/null 2>&1; then
     echo "✅ Docker is installed. Version: $(docker --version)"
