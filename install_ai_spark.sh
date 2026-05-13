@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.23-1
+Version:  0.0.25
 Last Updated:  5/13/2026
 
 Update Yourself:
@@ -87,10 +87,13 @@ else
     ./install_docker.sh
 fi
 
+
 #--- SETUP vLLM on DGX Spark ---
+
 curl -fsSL https://raw.githubusercontent.com/eelbaz/dgx-spark-vllm-setup/main/install.sh | bash
 
 #------ Download & install models -----
+
 # Auto-detect where the vLLM installer put its venv — try config path first, then known defaults
 VENV_PIP=""
 VENV_DIR=""
@@ -267,21 +270,24 @@ echo "--- Starting OpenWebUI container ---"
 docker rm -f open-webui 2>/dev/null || true
 
 # --network host: avoids Docker NAT overhead, direct access to vLLM on localhost:8000
+# PORT=3000: override OpenWebUI's default port (8080) — required with --network host (no -p mapping)
 # OPENAI_API_BASE_URL: points OpenWebUI at vLLM's OpenAI-compatible endpoint
 # WEBUI_AUTH=false: skip login for local/private use (remove if you want auth)
 docker run -d \
     --name open-webui \
     --network host \
     -v open-webui:/app/backend/data \
+    -e PORT=3000 \
     -e OPENAI_API_BASE_URL=http://localhost:8000/v1 \
     -e OPENAI_API_KEY=sk-no-key-required \
     -e WEBUI_AUTH=false \
     --restart always \
     ghcr.io/open-webui/open-webui:main
 
-# Wait for OpenWebUI itself to come up (not vLLM) — timeout after 3 minutes
+# Wait for OpenWebUI itself to come up (not vLLM) — timeout after 5 minutes
+# OpenWebUI loads ML models on startup and can take 2-3 minutes on first run
 echo "Waiting for OpenWebUI to be ready..."
-OWUI_TIMEOUT=180
+OWUI_TIMEOUT=300
 OWUI_ELAPSED=0
 until curl -sf http://localhost:3000/health > /dev/null 2>&1; do
     if [ "$OWUI_ELAPSED" -ge "$OWUI_TIMEOUT" ]; then
