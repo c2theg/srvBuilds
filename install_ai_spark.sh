@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.26
+Version:  0.0.27
 Last Updated:  5/13/2026
 
 Update Yourself:
@@ -117,6 +117,19 @@ if [ -z "$VENV_PIP" ]; then
     VENV_DIR="$VLLM_VENV"
 fi
 
+# Ensure vllm is actually installed — the eelbaz script can fail silently (e.g. Triton build error)
+if ! "$VENV_DIR/bin/python" -c "import vllm" 2>/dev/null; then
+    echo "⚠️  vllm not found in venv — installing via pip..."
+    "$VENV_PIP" install -U vllm
+    if "$VENV_DIR/bin/python" -c "import vllm" 2>/dev/null; then
+        echo "✅ vllm installed successfully"
+    else
+        echo "❌ vllm install failed — check pip output above"
+    fi
+else
+    echo "✅ vllm already installed: $("$VENV_DIR/bin/python" -c 'import vllm; print(vllm.__version__)')"
+fi
+
 # Install huggingface_hub + sentence-transformers into the detected venv
 "$VENV_PIP" install -U "huggingface_hub[cli]" sentence-transformers
 
@@ -208,20 +221,49 @@ echo "✅ All models downloaded to $MODELS_DIR"
 # OpenWebUI connects to port 8000 automatically. Add port 8001 manually:
 #   OpenWebUI → Admin Settings → Connections → Add → http://localhost:8001/v1
 
-VLLM_BIN="$VENV_DIR/bin/vllm"
+VLLM_LOGS="$BASE_DIR/logs"
+mkdir -p "$VLLM_LOGS"
+
+# Locate the vllm binary — eelbaz uses uv which may not put it in the standard venv bin
+VLLM_BIN=""
+for candidate in \
+    "$VENV_DIR/bin/vllm" \
+    "$HOME/vllm-install/.vllm/bin/vllm" \
+    "$HOME/.local/bin/vllm" \
+    "/usr/local/bin/vllm" \
+    "$(find "$HOME/vllm-install" -name vllm -type f 2>/dev/null | head -1)"; do
+    if [ -x "$candidate" ]; then
+        VLLM_BIN="$candidate"
+        echo "✅ Found vllm binary at $VLLM_BIN"
+        break
+    fi
+done
+
+# Shell function so serve calls work whether we use the CLI or the Python module fallback
+vllm_serve() {
+    if [ -n "$VLLM_BIN" ]; then
+        "$VLLM_BIN" serve "$@"
+    else
+        echo "⚠️  vllm not found — trying python module fallback"
+        "$VENV_DIR/bin/python" -m vllm.entrypoints.openai.api_server "$@"
+    fi
+}
 
 #--- Qwen3.6-35B-A3B  (port 8000 — OpenWebUI primary connection) ---
 if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
     echo "--- Starting vLLM: Qwen3.6-35B-A3B on port 8000 ---"
-    "$VLLM_BIN" serve "$MODELS_DIR/Qwen3.6-35B-A3B" \
+    vllm_serve "$MODELS_DIR/Qwen3.6-35B-A3B" \
         --host 0.0.0.0 --port 8000 \
         --served-model-name "Qwen3.6-35B-A3B" \
         --dtype auto \
         --gpu-memory-utilization 0.45 \
         --max-model-len 32768 \
         --enable-prefix-caching \
-        --trust-remote-code &
+        --trust-remote-code \
+        >> "$VLLM_LOGS/vllm-8000.log" 2>&1 &
     echo "✅ Qwen3.6-35B-A3B starting on port 8000 (pid $!)"
+    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8000.log"
+    echo "   → Status: curl -s http://localhost:8000/v1/models | jq ."
 else
     echo "⚠️  Qwen3.6-35B-A3B not found in $MODELS_DIR — skipping."
 fi
@@ -229,15 +271,18 @@ fi
 #--- Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16  (port 8001 — add to OpenWebUI manually) ---
 if [ -f "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16/config.json" ]; then
     echo "--- Starting vLLM: Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 on port 8001 ---"
-    "$VLLM_BIN" serve "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16" \
+    vllm_serve "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16" \
         --host 0.0.0.0 --port 8001 \
         --served-model-name "Nemotron-3-Nano-Omni-30B-A3B" \
         --dtype bfloat16 \
         --gpu-memory-utilization 0.45 \
         --max-model-len 32768 \
         --enable-prefix-caching \
-        --trust-remote-code &
+        --trust-remote-code \
+        >> "$VLLM_LOGS/vllm-8001.log" 2>&1 &
     echo "✅ Nemotron-3-Nano-Omni-30B-A3B starting on port 8001 (pid $!)"
+    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8001.log"
+    echo "   → Status: curl -s http://localhost:8001/v1/models | jq ."
     echo "   → Add to OpenWebUI: Admin Settings → Connections → http://localhost:8001/v1"
 else
     echo "⚠️  Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 not found in $MODELS_DIR — skipping."
