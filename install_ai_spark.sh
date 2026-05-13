@@ -1,6 +1,5 @@
 #!/bin/sh
-#
-clear
+# clear
 echo "
 
 
@@ -17,24 +16,23 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.14
+Version:  0.0.16
 Last Updated:  5/13/2026
 
-wget -O 'install_ai_spark.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh' && chmod u+x install_ai_spark.sh
-
-
-  Huggingface models:   https://huggingface.co/models
-
+Update Yourself:
+  wget -O 'install_ai_spark.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh' && chmod u+x install_ai_spark.sh
 
 
   YOU MUST HAVE A HUGGINGFACE ACCOUNT AND TOKEN TO DOWNLOAD MODELS!
-    *** Update that on line 37 before running this script! ***
+    *** Update 'HF_TOKEN' on line 35 before running this script! ***
+        Huggingface models:   https://huggingface.co/models
+
 
 "
 # =============================================
 # CONFIGURATION — set these before running
 # =============================================
-HF_TOKEN=""                        # HuggingFace token — required for gated models (nvidia/, some Qwen)
+HF_TOKEN=""     # HuggingFace token — required for gated models (nvidia/, some Qwen)
                                    # Get yours at: https://huggingface.co/settings/tokens
 MODELS_DIR="/opt/models/vllm"      # Where all models will be downloaded
 
@@ -61,38 +59,6 @@ fi
 #--- SETUP vLLM on DGX Spark ---
 
 curl -fsSL https://raw.githubusercontent.com/eelbaz/dgx-spark-vllm-setup/main/install.sh | bash
-
-
-#--- Install OpenWebUI (Docker, connected to vLLM) ---
-# OpenWebUI starts now and waits for vLLM — no need to block here.
-# vLLM is not running yet; it starts after models are downloaded below.
-
-echo "--- Starting OpenWebUI container ---"
-# Remove existing container if it exists (re-run safe)
-docker rm -f open-webui 2>/dev/null || true
-
-# --network host: avoids Docker NAT overhead, direct access to vLLM on localhost:8000
-# OPENAI_API_BASE_URL: points OpenWebUI at vLLM's OpenAI-compatible endpoint
-# WEBUI_AUTH=false: skip login for local/private use (remove if you want auth)
-docker run -d \
-    --name open-webui \
-    --network host \
-    -v open-webui:/app/backend/data \
-    -e OPENAI_API_BASE_URL=http://localhost:8000/v1 \
-    -e OPENAI_API_KEY=sk-no-key-required \
-    -e WEBUI_AUTH=false \
-    --restart always \
-    ghcr.io/open-webui/open-webui:main
-
-# Wait for OpenWebUI itself to come up (not vLLM)
-echo "Waiting for OpenWebUI to be ready..."
-until curl -sf http://localhost:3000 > /dev/null 2>&1; do
-    printf "."
-    sleep 2
-done
-echo ""
-echo "✅ OpenWebUI running at http://localhost:3000  (models will appear once vLLM starts below)"
-
 
 #------ Download & install models -----
 
@@ -219,3 +185,37 @@ fi
 # model = nemo_asr.models.EncDecRNNTBPEModel.restore_from('$MODELS_DIR/parakeet-tdt-0.6b-v3/model.nemo')
 # print(model.transcribe(['your_audio.wav']))
 # "
+
+
+
+
+#--- Install OpenWebUI (Docker, connected to vLLM) ---
+# OpenWebUI starts now and waits for vLLM — no need to block here.
+# vLLM is not running yet; it starts after models are downloaded below.
+
+echo "--- Starting OpenWebUI container ---"
+# Remove existing container if it exists (re-run safe)
+docker rm -f open-webui 2>/dev/null || true
+
+# --network host: avoids Docker NAT overhead, direct access to vLLM on localhost:8000
+# OPENAI_API_BASE_URL: points OpenWebUI at vLLM's OpenAI-compatible endpoint
+# WEBUI_AUTH=false: skip login for local/private use (remove if you want auth)
+docker run -d \
+    --name open-webui \
+    --network host \
+    -v open-webui:/app/backend/data \
+    -e OPENAI_API_BASE_URL=http://localhost:8000/v1 \
+    -e OPENAI_API_KEY=sk-no-key-required \
+    -e WEBUI_AUTH=false \
+    --restart always \
+    ghcr.io/open-webui/open-webui:main
+
+# Wait for OpenWebUI itself to come up (not vLLM)
+echo "Waiting for OpenWebUI to be ready..."
+until curl -sf http://localhost:3000 > /dev/null 2>&1; do
+    printf "."
+    sleep 2
+done
+echo ""
+echo "✅ OpenWebUI running at http://localhost:3000  (models will appear once vLLM starts below)"
+
