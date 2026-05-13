@@ -26,6 +26,10 @@ wget -O 'install_ai_spark.sh' 'https://raw.githubusercontent.com/c2theg/srvBuild
   Huggingface models:   https://huggingface.co/models
 
 
+
+  YOU MUST HAVE A HUGGINGFACE ACCOUNT AND TOKEN TO DOWNLOAD MODELS!
+    *** Update that on line 37 before running this script! ***
+
 "
 # =============================================
 # CONFIGURATION — set these before running
