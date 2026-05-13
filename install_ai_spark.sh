@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.18
+Version:  0.0.20
 Last Updated:  5/13/2026
 
 Update Yourself:
@@ -32,11 +32,13 @@ Update Yourself:
 # =============================================
 # CONFIGURATION — set these before running
 # =============================================
-HF_TOKEN=""                                  # HuggingFace token — fallback if not in .env
-                                             # Get yours at: https://huggingface.co/settings/tokens
-MODELS_DIR="/opt/models/vllm"                # Where all models will be downloaded
-VLLM_VENV="/opt/models/vllm-install/.vllm"  # venv created by the vLLM install script
-NEMO_VENV="/opt/models/nemo-venv"            # separate venv for NeMo ASR (avoids conflicts with vLLM)
+HF_TOKEN=""                  # HuggingFace token — fallback if not in .env
+                             # Get yours at: https://huggingface.co/settings/tokens
+BASE_DIR="/opt/models"       # All paths derive from here — change this one line to relocate everything
+
+MODELS_DIR="$BASE_DIR/vllm"           # Where all models will be downloaded
+VLLM_VENV="$BASE_DIR/vllm-install/.vllm"  # venv created by the vLLM install script
+NEMO_VENV="$BASE_DIR/nemo-venv"       # separate venv for NeMo ASR (avoids conflicts with vLLM)
 
 # Load .env from same directory as this script — overrides HF_TOKEN above if set there
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -92,9 +94,28 @@ curl -fsSL https://raw.githubusercontent.com/eelbaz/dgx-spark-vllm-setup/main/in
 
 #------ Download & install models -----
 
-# Install huggingface_hub + sentence-transformers into the vLLM venv (not system pip)
-# Ubuntu 22.04+ blocks system-wide pip installs — use the existing venv instead
-"$VLLM_VENV/bin/pip" install -U "huggingface_hub[cli]" sentence-transformers
+# Auto-detect where the vLLM installer put its venv — try config path first, then known defaults
+VENV_PIP=""
+HF_CLI=""
+for candidate in "$VLLM_VENV" "$HOME/vllm-install/.vllm" "/home/cgray/vllm-install/.vllm"; do
+    if [ -x "$candidate/bin/pip" ]; then
+        VENV_PIP="$candidate/bin/pip"
+        HF_CLI="$candidate/bin/huggingface-cli"
+        echo "✅ Using vLLM venv at $candidate"
+        break
+    fi
+done
+
+# If vLLM venv not found, create a dedicated downloader venv
+if [ -z "$VENV_PIP" ]; then
+    echo "⚠️  vLLM venv not found — creating dedicated downloader venv at $VLLM_VENV"
+    python3 -m venv "$VLLM_VENV"
+    VENV_PIP="$VLLM_VENV/bin/pip"
+    HF_CLI="$VLLM_VENV/bin/huggingface-cli"
+fi
+
+# Install huggingface_hub + sentence-transformers into the detected venv
+"$VENV_PIP" install -U "huggingface_hub[cli]" sentence-transformers
 
 # NeMo goes in its own venv — its dependencies conflict with vLLM
 python3 -m venv "$NEMO_VENV"
@@ -103,7 +124,7 @@ python3 -m venv "$NEMO_VENV"
 
 # Authenticate if token provided
 if [ -n "$HF_TOKEN" ]; then
-    "$VLLM_VENV/bin/huggingface-cli" login --token "$HF_TOKEN" --add-to-git-credential
+    "$HF_CLI" login --token "$HF_TOKEN" --add-to-git-credential
     HF_AUTH="--token $HF_TOKEN"
 else
     echo "⚠️  HF_TOKEN is not set — gated models (nvidia/, some Qwen) will fail. Set it at the top of this script."
@@ -113,13 +134,17 @@ fi
 mkdir -p "$MODELS_DIR"
 
 # Base download command — always write full files (no symlinks into HF cache)
-HF_DL="$VLLM_VENV/bin/huggingface-cli download --local-dir-use-symlinks False $HF_AUTH"
+HF_DL="$HF_CLI download --local-dir-use-symlinks False $HF_AUTH"
 
 
 # 1. General / RAG generation / Financial research / reasoning
 echo "--- Downloading Qwen/Qwen3.6-35B-A3B ---"
 $HF_DL Qwen/Qwen3.6-35B-A3B \
     --local-dir "$MODELS_DIR/Qwen3.6-35B-A3B"
+
+echo "--- Downloading nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 ---"
+$HF_DL nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 \
+    --local-dir "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16"
 
 
 # 2. Coding
@@ -138,6 +163,10 @@ $HF_DL deepseek-ai/DeepSeek-R1-Distill-Qwen-32B \
 echo "--- Downloading nvidia/parakeet-tdt-0.6b-v3 ---"
 $HF_DL nvidia/parakeet-tdt-0.6b-v3 \
     --local-dir "$MODELS_DIR/parakeet-tdt-0.6b-v3"
+
+echo "--- Downloading nvidia/nemotron-speech-streaming-en-0.6b ---"
+$HF_DL nvidia/nemotron-speech-streaming-en-0.6b \
+    --local-dir "$MODELS_DIR/nemotron-speech-streaming-en-0.6b"
 
 
 # 5. RAG embeddings (served via vLLM --task embedding, or sentence-transformers)
@@ -247,7 +276,7 @@ docker run -d \
 echo "Waiting for OpenWebUI to be ready..."
 OWUI_TIMEOUT=180
 OWUI_ELAPSED=0
-until curl -sf http://localhost:3000/health | grep -q '"status":true' 2>/dev/null; do
+until curl -sf http://localhost:3000/health > /dev/null 2>&1; do
     if [ "$OWUI_ELAPSED" -ge "$OWUI_TIMEOUT" ]; then
         echo ""
         echo "⚠️  OpenWebUI did not become ready after ${OWUI_TIMEOUT}s — check logs with: docker logs open-webui"
