@@ -1,6 +1,5 @@
 #!/bin/sh
-#
-clear
+#clear
 echo "
 
 
@@ -20,7 +19,7 @@ echo "
 Version:  0.0.13
 Last Updated:  5/13/2026
 
-wget -O "install_ai_spark.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh && chmod u+x install_ai_spark.sh
+wget -O 'install_ai_spark.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh && chmod u+x install_ai_spark.sh
 
 
   Huggingface models:   https://huggingface.co/models
