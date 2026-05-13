@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.20
+Version:  0.0.21
 Last Updated:  5/13/2026
 
 Update Yourself:
@@ -96,11 +96,11 @@ curl -fsSL https://raw.githubusercontent.com/eelbaz/dgx-spark-vllm-setup/main/in
 
 # Auto-detect where the vLLM installer put its venv — try config path first, then known defaults
 VENV_PIP=""
-HF_CLI=""
+VENV_DIR=""
 for candidate in "$VLLM_VENV" "$HOME/vllm-install/.vllm" "/home/cgray/vllm-install/.vllm"; do
     if [ -x "$candidate/bin/pip" ]; then
         VENV_PIP="$candidate/bin/pip"
-        HF_CLI="$candidate/bin/huggingface-cli"
+        VENV_DIR="$candidate"
         echo "✅ Using vLLM venv at $candidate"
         break
     fi
@@ -111,11 +111,21 @@ if [ -z "$VENV_PIP" ]; then
     echo "⚠️  vLLM venv not found — creating dedicated downloader venv at $VLLM_VENV"
     python3 -m venv "$VLLM_VENV"
     VENV_PIP="$VLLM_VENV/bin/pip"
-    HF_CLI="$VLLM_VENV/bin/huggingface-cli"
+    VENV_DIR="$VLLM_VENV"
 fi
 
 # Install huggingface_hub + sentence-transformers into the detected venv
 "$VENV_PIP" install -U "huggingface_hub[cli]" sentence-transformers
+
+# Prefer new 'hf' CLI (replaces deprecated 'huggingface-cli')
+if [ -x "$VENV_DIR/bin/hf" ]; then
+    HF_CLI="$VENV_DIR/bin/hf"
+    HF_LOGIN="$HF_CLI auth login"
+else
+    HF_CLI="$VENV_DIR/bin/huggingface-cli"
+    HF_LOGIN="$HF_CLI login"
+fi
+echo "✅ Using HF CLI: $HF_CLI"
 
 # NeMo goes in its own venv — its dependencies conflict with vLLM
 python3 -m venv "$NEMO_VENV"
@@ -124,7 +134,7 @@ python3 -m venv "$NEMO_VENV"
 
 # Authenticate if token provided
 if [ -n "$HF_TOKEN" ]; then
-    "$HF_CLI" login --token "$HF_TOKEN" --add-to-git-credential
+    $HF_LOGIN --token "$HF_TOKEN"
     HF_AUTH="--token $HF_TOKEN"
 else
     echo "⚠️  HF_TOKEN is not set — gated models (nvidia/, some Qwen) will fail. Set it at the top of this script."
