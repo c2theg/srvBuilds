@@ -1,5 +1,6 @@
 #!/bin/sh
-#clear
+#
+clear
 echo "
 
 
@@ -16,10 +17,10 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.13
+Version:  0.0.14
 Last Updated:  5/13/2026
 
-wget -O 'install_ai_spark.sh' https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh && chmod u+x install_ai_spark.sh
+wget -O 'install_ai_spark.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh' && chmod u+x install_ai_spark.sh
 
 
   Huggingface models:   https://huggingface.co/models
@@ -59,13 +60,12 @@ curl -fsSL https://raw.githubusercontent.com/eelbaz/dgx-spark-vllm-setup/main/in
 
 
 #--- Install OpenWebUI (Docker, connected to vLLM) ---
+# OpenWebUI starts now and waits for vLLM — no need to block here.
+# vLLM is not running yet; it starts after models are downloaded below.
 
-# Wait for vLLM API to be ready on port 8000
-echo "Waiting for vLLM to be ready..."
-until curl -sf http://localhost:8000/health > /dev/null 2>&1; do
-    sleep 3
-done
-echo "vLLM is ready."
+echo "--- Starting OpenWebUI container ---"
+# Remove existing container if it exists (re-run safe)
+docker rm -f open-webui 2>/dev/null || true
 
 # --network host: avoids Docker NAT overhead, direct access to vLLM on localhost:8000
 # OPENAI_API_BASE_URL: points OpenWebUI at vLLM's OpenAI-compatible endpoint
@@ -80,7 +80,14 @@ docker run -d \
     --restart always \
     ghcr.io/open-webui/open-webui:main
 
-echo "✅ OpenWebUI running at http://localhost:3000"
+# Wait for OpenWebUI itself to come up (not vLLM)
+echo "Waiting for OpenWebUI to be ready..."
+until curl -sf http://localhost:3000 > /dev/null 2>&1; do
+    printf "."
+    sleep 2
+done
+echo ""
+echo "✅ OpenWebUI running at http://localhost:3000  (models will appear once vLLM starts below)"
 
 
 #------ Download & install models -----
