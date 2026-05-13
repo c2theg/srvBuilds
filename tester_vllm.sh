@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 # vLLM smoke test — checks health, discovers models, and sends sample prompts
 #
-# Version: 0.0.1
+# Version: 0.0.2
 # Update: 5/13/2026
-#
 #
 #
 # Usage: ./tester_vllm.sh [HOST] [PORT]
 #   HOST defaults to localhost, PORT defaults to 8000
 
 set -euo pipefail
+
+# update yourself
+wget --no-cache -O 'tester_vllm.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/tester_vllm.sh' && chmod u+x tester_vllm.sh
 
 HOST="${1:-localhost}"
 PORT="${2:-8000}"
