@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.22
+Version:  0.0.23
 Last Updated:  5/13/2026
 
 Update Yourself:
@@ -144,7 +144,7 @@ fi
 mkdir -p "$MODELS_DIR"
 
 # Base download command — always write full files (no symlinks into HF cache)
-HF_DL="$HF_CLI download --local-dir-use-symlinks False $HF_AUTH"
+HF_DL="$HF_CLI download $HF_AUTH"
 
 
 # 1. General / RAG generation / Financial research / reasoning
