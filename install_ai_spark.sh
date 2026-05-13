@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.25
+Version:  0.0.26
 Last Updated:  5/13/2026
 
 Update Yourself:
@@ -29,6 +29,9 @@ Update Yourself:
 
 
 "
+
+echo "Update Yourself:"
+wget --no-cache -O 'install_ai_spark.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh' && chmod u+x install_ai_spark.sh
 # =============================================
 # CONFIGURATION — set these before running
 # =============================================
@@ -199,20 +202,45 @@ echo "✅ All models downloaded to $MODELS_DIR"
 
 
 #----- Serve models with vLLM ------------------------------
-# Uncomment and adjust the model you want to serve. Each needs its own port.
+# Both models run in background (&) so the script continues.
+# gpu-memory-utilization 0.45 each lets both share the DGX Spark's 128GB unified memory.
+# Raise to 0.85 (and remove the other) if you want to run only one at a time.
+# OpenWebUI connects to port 8000 automatically. Add port 8001 manually:
+#   OpenWebUI → Admin Settings → Connections → Add → http://localhost:8001/v1
 
-#--- Text generation / reasoning ---
+VLLM_BIN="$VENV_DIR/bin/vllm"
+
+#--- Qwen3.6-35B-A3B  (port 8000 — OpenWebUI primary connection) ---
 if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
     echo "--- Starting vLLM: Qwen3.6-35B-A3B on port 8000 ---"
-    vllm serve "$MODELS_DIR/Qwen3.6-35B-A3B" \
+    "$VLLM_BIN" serve "$MODELS_DIR/Qwen3.6-35B-A3B" \
         --host 0.0.0.0 --port 8000 \
+        --served-model-name "Qwen3.6-35B-A3B" \
         --dtype auto \
-        --gpu-memory-utilization 0.85 \
+        --gpu-memory-utilization 0.45 \
         --max-model-len 32768 \
         --enable-prefix-caching \
-        --trust-remote-code
+        --trust-remote-code &
+    echo "✅ Qwen3.6-35B-A3B starting on port 8000 (pid $!)"
 else
-    echo "⚠️  Qwen3.6-35B-A3B not found in $MODELS_DIR — skipping. Set HF_TOKEN and re-run to download it."
+    echo "⚠️  Qwen3.6-35B-A3B not found in $MODELS_DIR — skipping."
+fi
+
+#--- Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16  (port 8001 — add to OpenWebUI manually) ---
+if [ -f "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16/config.json" ]; then
+    echo "--- Starting vLLM: Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 on port 8001 ---"
+    "$VLLM_BIN" serve "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16" \
+        --host 0.0.0.0 --port 8001 \
+        --served-model-name "Nemotron-3-Nano-Omni-30B-A3B" \
+        --dtype bfloat16 \
+        --gpu-memory-utilization 0.45 \
+        --max-model-len 32768 \
+        --enable-prefix-caching \
+        --trust-remote-code &
+    echo "✅ Nemotron-3-Nano-Omni-30B-A3B starting on port 8001 (pid $!)"
+    echo "   → Add to OpenWebUI: Admin Settings → Connections → http://localhost:8001/v1"
+else
+    echo "⚠️  Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 not found in $MODELS_DIR — skipping."
 fi
 
 # vllm serve "$MODELS_DIR/Qwen3-Coder-30B-A3B-Instruct" \
