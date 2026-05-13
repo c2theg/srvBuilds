@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.23
+Version:  0.0.23-1
 Last Updated:  5/13/2026
 
 Update Yourself:
@@ -87,13 +87,10 @@ else
     ./install_docker.sh
 fi
 
-
 #--- SETUP vLLM on DGX Spark ---
-
 curl -fsSL https://raw.githubusercontent.com/eelbaz/dgx-spark-vllm-setup/main/install.sh | bash
 
 #------ Download & install models -----
-
 # Auto-detect where the vLLM installer put its venv — try config path first, then known defaults
 VENV_PIP=""
 VENV_DIR=""
