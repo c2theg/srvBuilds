@@ -16,11 +16,11 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.21
+Version:  0.0.22
 Last Updated:  5/13/2026
 
 Update Yourself:
-  wget -O 'install_ai_spark.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh' && chmod u+x install_ai_spark.sh
+  wget --no-cache -O 'install_ai_spark.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh' && chmod u+x install_ai_spark.sh
 
 
   YOU MUST HAVE A HUGGINGFACE ACCOUNT AND TOKEN TO DOWNLOAD MODELS!
