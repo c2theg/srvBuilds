@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.36
+Version:  0.0.38
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -262,70 +262,12 @@ sleep 3
 rm -f "$VLLM_LOGS"/vllm-*.log
 echo "✅ Old vLLM processes killed and logs cleared"
 
-# #--- Qwen3.6-35B-A3B  (port 8000 — OpenWebUI primary connection) ---
-# if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
-#     echo "--- Starting vLLM: Qwen3.6-35B-A3B on port 8000 ---"
-#     vllm_serve "$MODELS_DIR/Qwen3.6-35B-A3B" \
-#         --host 0.0.0.0 --port 8000 \
-#         --served-model-name "Qwen3.6-35B-A3B" \
-#         --dtype auto \
-#         --gpu-memory-utilization 0.40 \
-#         --max-model-len 32768 \
-#         --enable-prefix-caching \
-#         --trust-remote-code \
-#         >> "$VLLM_LOGS/vllm-8000.log" 2>&1 &
-#     echo "✅ Qwen3.6-35B-A3B starting on port 8000 (pid $!)"
-#     echo "   → Logs: tail -f $VLLM_LOGS/vllm-8000.log"
-#     echo "   → Status: curl -s http://localhost:8000/v1/models | jq ."
-# else
-#     echo "⚠️  Qwen3.6-35B-A3B not found in $MODELS_DIR — skipping."
-# fi
-
-#--- Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16  (port 8001 — add to OpenWebUI manually) ---
-# if [ -f "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16/config.json" ]; then
-#     echo "--- Starting vLLM: Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 on port 8001 ---"
-#     vllm_serve "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16" \
-#         --host 0.0.0.0 --port 8001 \
-#         --served-model-name "Nemotron-3-Nano-Omni-30B-A3B" \
-#         --dtype bfloat16 \
-#         --gpu-memory-utilization 0.70 \
-#         --max-model-len 32768 \
-#         --enable-prefix-caching \
-#         --trust-remote-code \
-#         >> "$VLLM_LOGS/vllm-8001.log" 2>&1 &
-#     echo "✅ Nemotron-3-Nano-Omni-30B-A3B starting on port 8001 (pid $!)"
-#     echo "   → Logs: tail -f $VLLM_LOGS/vllm-8001.log"
-#     echo "   → Status: curl -s http://localhost:8001/v1/models | jq ."
-#     echo "   → Add to OpenWebUI: Admin Settings → Connections → http://localhost:8001/v1"
-# else
-#     echo "⚠️  Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 not found in $MODELS_DIR — skipping."
-# fi
-
-#--- NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4  (port 8002 — DGX Spark optimised, default model) ---
-if [ -f "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4/config.json" ]; then
-    echo "--- Starting vLLM: NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 on port 8002 ---"
-    vllm_serve "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4" \
-        --host 0.0.0.0 --port 8002 \
-        --served-model-name "Nemotron-3-Nano-30B-NVFP4" \
-        --dtype auto \
-        --quantization modelopt_fp4 \
-        --gpu-memory-utilization 0.70 \
-        --max-model-len 32768 \
-        --enable-prefix-caching \
-        --trust-remote-code \
-        >> "$VLLM_LOGS/vllm-8002.log" 2>&1 &
-    echo "✅ Nemotron-3-Nano-30B-NVFP4 starting on port 8002 (pid $!)"
-    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8002.log"
-    echo "   → Status: curl -s http://localhost:8002/v1/models | jq ."
-    echo "   → Add to OpenWebUI: Admin Settings → Connections → http://localhost:8002/v1"
-else
-    echo "⚠️  NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 not found in $MODELS_DIR — skipping."
-fi
+# Enable TF32 for better matrix multiplication performance on Blackwell tensor cores
+export TORCH_FLOAT32_MATMUL_PRECISION=high
 
 
-
-
-
+#---- Coding -----
+echo "\r\n \r\n --- Coding --- \r\n \r\n"
 # vllm serve "$MODELS_DIR/Qwen3-Coder-30B-A3B-Instruct" \
 #   --host 0.0.0.0 --port 8001 \
 #   --dtype auto \
@@ -342,25 +284,107 @@ fi
 #   --enable-prefix-caching \
 #   --trust-remote-code
 
-#--- Embeddings ---
-# vllm serve "$MODELS_DIR/bge-m3" \
-#   --host 0.0.0.0 --port 8010 \
-#   --task embedding \
-#   --dtype auto \
-#   --trust-remote-code
 
-# vllm serve "$MODELS_DIR/Qwen3-Embedding-4B" \
-#   --host 0.0.0.0 --port 8011 \
-#   --task embedding \
-#   --dtype auto \
-#   --trust-remote-code
+#--- Qwen3.6-35B-A3B  (port 8005) ---
+if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
+    echo "--- Starting vLLM: Qwen3.6-35B-A3B on port 8005 ---"
+    vllm_serve "$MODELS_DIR/Qwen3.6-35B-A3B" \
+        --host 0.0.0.0 --port 8005 \
+        --served-model-name "Qwen3.6-35B-A3B" \
+        --dtype auto \
+        --gpu-memory-utilization 0.85 \
+        --max-model-len 32768 \
+        --enable-prefix-caching \
+        --trust-remote-code \
+        >> "$VLLM_LOGS/vllm-8005.log" 2>&1 &
+    echo "✅ Qwen3.6-35B-A3B starting on port 8005 (pid $!)"
+    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8005.log"
+    echo "   → Status: curl -s http://localhost:8005/v1/models | jq ."
+else
+    echo "⚠️  Qwen3.6-35B-A3B not found in $MODELS_DIR — skipping."
+fi
 
-#--- Reranking ---
-# vllm serve "$MODELS_DIR/bge-reranker-v2-m3" \
-#   --host 0.0.0.0 --port 8020 \
-#   --task classify \
-#   --dtype auto \
-#   --trust-remote-code
+
+
+echo "\r\n \r\n --- General Purpose --- \r\n \r\n"
+#--- Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16  (port 8001 — add to OpenWebUI manually) ---
+# if [ -f "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16/config.json" ]; then
+#     echo "--- Starting vLLM: Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 on port 8001 ---"
+#     vllm_serve "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16" \
+#         --host 0.0.0.0 --port 8001 \
+#         --served-model-name "Nemotron-3-Nano-Omni-30B-A3B" \
+#         --dtype bfloat16 \
+#         --gpu-memory-utilization 0.85 \
+#         --max-model-len 32768 \
+#         --enable-prefix-caching \
+#         --trust-remote-code \
+#         >> "$VLLM_LOGS/vllm-8001.log" 2>&1 &
+#     echo "✅ Nemotron-3-Nano-Omni-30B-A3B starting on port 8001 (pid $!)"
+#     echo "   → Logs: tail -f $VLLM_LOGS/vllm-8001.log"
+#     echo "   → Status: curl -s http://localhost:8001/v1/models | jq ."
+#     echo "   → Add to OpenWebUI: Admin Settings → Connections → http://localhost:8001/v1"
+# else
+#     echo "⚠️  Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 not found in $MODELS_DIR — skipping."
+# fi
+
+#--- NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4  (port 8002 — DGX Spark optimised, default model) ---
+if [ -f "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4/config.json" ]; then
+    echo "--- Starting vLLM: NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 on port 8006 ---"
+    vllm_serve "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4" \
+        --host 0.0.0.0 --port 8006 \
+        --served-model-name "Nemotron-3-Nano-30B-NVFP4" \
+        --dtype auto \
+        --quantization modelopt_fp4 \
+        --gpu-memory-utilization 0.85 \
+        --max-model-len 32768 \
+        --enable-prefix-caching \
+        --trust-remote-code \
+        >> "$VLLM_LOGS/vllm-8006.log" 2>&1 &
+    echo "✅ Nemotron-3-Nano-30B-NVFP4 starting on port 8006 (pid $!)"
+    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8006.log"
+    echo "   → Status: curl -s http://localhost:8006/v1/models | jq ."
+    echo "   → Add to OpenWebUI: Admin Settings → Connections → http://localhost:8006/v1"
+else
+    echo "⚠️  NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 not found in $MODELS_DIR — skipping."
+fi
+
+
+#--- Qwen3-Embedding-4B  (port 8010) ---
+if [ -f "$MODELS_DIR/Qwen3-Embedding-4B/config.json" ]; then
+    echo "--- Starting vLLM: Qwen3-Embedding-4B on port 8010 ---"
+    vllm_serve "$MODELS_DIR/Qwen3-Embedding-4B" \
+        --host 0.0.0.0 --port 8010 \
+        --served-model-name "Qwen3-Embedding-4B" \
+        --task embedding \
+        --dtype auto \
+        --gpu-memory-utilization 0.50 \
+        --trust-remote-code \
+        >> "$VLLM_LOGS/vllm-8010.log" 2>&1 &
+    echo "✅ Qwen3-Embedding-4B starting on port 8010 (pid $!)"
+    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8010.log"
+    echo "   → Status: curl -s http://localhost:8010/v1/models | jq ."
+else
+    echo "⚠️  Qwen3-Embedding-4B not found in $MODELS_DIR — skipping."
+fi
+
+#--- bge-reranker-v2-m3  (port 8020) ---
+if [ -f "$MODELS_DIR/bge-reranker-v2-m3/config.json" ]; then
+    echo "--- Starting vLLM: bge-reranker-v2-m3 on port 8020 ---"
+    vllm_serve "$MODELS_DIR/bge-reranker-v2-m3" \
+        --host 0.0.0.0 --port 8020 \
+        --served-model-name "bge-reranker-v2-m3" \
+        --task classify \
+        --dtype auto \
+        --gpu-memory-utilization 0.50 \
+        --trust-remote-code \
+        >> "$VLLM_LOGS/vllm-8020.log" 2>&1 &
+    echo "✅ bge-reranker-v2-m3 starting on port 8020 (pid $!)"
+    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8020.log"
+    echo "   → Status: curl -s http://localhost:8020/v1/models | jq ."
+else
+    echo "⚠️  bge-reranker-v2-m3 not found in $MODELS_DIR — skipping."
+fi
+
 
 #--- Audio transcription (NeMo, not vLLM) ---
 # python3 -c "
@@ -371,11 +395,10 @@ fi
 
 
 #---------------------------------------------------------------------------------------------------------------
-#--- Start OpenWebUI (Docker, connected to vLLM on port 8002) ---
-# vLLM is already running in the background by this point.
-# --network host: direct access to vLLM on localhost without Docker NAT
-# PORT=3000: overrides OpenWebUI's default 8080 (required with --network host)
-# WEBUI_AUTH=false: no login for local/private use — remove if you want auth
+#--- Start OpenWebUI (Docker, connected to all vLLM instances) ---
+# --network host: direct access to all vLLM ports without Docker NAT
+# OPENAI_API_BASE_URLS: semicolon-separated list of all active vLLM endpoints
+# OPENAI_API_KEYS: matching semicolon-separated keys (one per endpoint)
 
 echo "--- Starting OpenWebUI container ---"
 docker rm -f open-webui 2>/dev/null || true
@@ -385,8 +408,8 @@ docker run -d \
     --network host \
     -v open-webui:/app/backend/data \
     -e PORT=3000 \
-    -e OPENAI_API_BASE_URL=http://localhost:8002/v1 \
-    -e OPENAI_API_KEY=sk-no-key-required \
+    -e OPENAI_API_BASE_URLS="http://localhost:8006/v1;http://localhost:8005/v1;http://localhost:8010/v1;http://localhost:8020/v1" \
+    -e OPENAI_API_KEYS="sk-no-key-required;sk-no-key-required;sk-no-key-required;sk-no-key-required" \
     -e WEBUI_AUTH=false \
     --restart always \
     ghcr.io/open-webui/open-webui:main
@@ -405,6 +428,13 @@ until curl -sf http://localhost:3000/health > /dev/null 2>&1; do
     OWUI_ELAPSED=$((OWUI_ELAPSED + 5))
 done
 if [ "$OWUI_ELAPSED" -lt "$OWUI_TIMEOUT" ]; then
-    echo "✅ OpenWebUI ready at http://localhost:3000 — connected to Nemotron on port 8002"
+    echo "✅ OpenWebUI ready at http://localhost:3000"
+    echo "   Models available:"
+    echo "   → Nemotron-3-Nano-30B-NVFP4    port 8006  (default)"
+    echo "   → Qwen3.6-35B-A3B              port 8005"
+    echo "   → Qwen3-Embedding-4B           port 8010"
+    echo "   → bge-reranker-v2-m3           port 8020"
 fi
+
+
 
