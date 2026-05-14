@@ -3,7 +3,7 @@
 Multi-modal LLM capability tester.
 
     Updated: 5/13/2026
-    Version: 0.0.9
+    Version: 0.0.10
 
 Update Yourself:
   wget --no-cache -O 'test_llm.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/test_llm.sh' && chmod u+x test_llm.sh
@@ -53,12 +53,12 @@ def _bootstrap_venv() -> None:
     # Always ensure base packages are present — pip skips already-installed ones.
     _venv_pip = os.path.join(os.path.dirname(_venv_python), "pip")
     _pkgs_ok  = subprocess.run(
-        [_venv_python, "-c", "import requests, yfinance"],
+        [_venv_python, "-c", "import requests, yfinance, certifi"],
         capture_output=True,
     ).returncode == 0
     if not _pkgs_ok:
-        print("  Installing base packages (requests, yfinance) …", flush=True)
-        subprocess.check_call([_venv_pip, "install", "requests", "yfinance", "-q"])
+        print("  Installing base packages (requests, yfinance, certifi) …", flush=True)
+        subprocess.check_call([_venv_pip, "install", "requests", "yfinance", "certifi", "-q"])
 
     print(f"  Activating venv: {_venv_python}", flush=True)
     os.execv(_venv_python, [_venv_python] + sys.argv)
@@ -81,6 +81,17 @@ from pathlib import Path
 from typing import Optional
 
 import requests
+
+# Point requests and curl-backed libs at certifi's CA bundle to avoid SSL
+# failures on servers with missing/outdated system certificates.
+try:
+    import certifi as _certifi, os as _os
+    _ca = _certifi.where()
+    _os.environ.setdefault("SSL_CERT_FILE",      _ca)
+    _os.environ.setdefault("REQUESTS_CA_BUNDLE", _ca)
+    _os.environ.setdefault("CURL_CA_BUNDLE",     _ca)
+except ImportError:
+    pass
 
 try:
     import yfinance
