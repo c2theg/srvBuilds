@@ -3,9 +3,10 @@
 Multi-modal LLM capability tester.
 
     Updated: 5/13/2026
-    Version: 0.0.3
+    Version: 0.0.4
 
-    wget --no-cache -O 'test_llm.py' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/test_llm.py' && chmod u+x test_llm.py
+Update Yourself:
+  wget --no-cache -O 'test_llm.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/test_llm.sh' && chmod u+x test_llm.sh
 
 
 Tests text, image, audio, and video modalities via an OpenAI-compatible API
@@ -41,7 +42,15 @@ try:
     import yfinance
     _YFINANCE_OK = True
 except ImportError:
-    _YFINANCE_OK = False
+    import subprocess as _sp
+    try:
+        print("  yfinance not found — installing…", flush=True)
+        _sp.check_call([sys.executable, "-m", "pip", "install", "yfinance", "-q"],
+                       stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+        import yfinance
+        _YFINANCE_OK = True
+    except Exception:
+        _YFINANCE_OK = False
 
 # ── Defaults ──────────────────────────────────────────────────────────────────
 DEFAULT_MODEL = "Nemotron-3-Nano-Omni-30B-A3B"
@@ -124,6 +133,25 @@ def _mime_for(path: str, default: str) -> str:
         "avi": "video/x-msvideo", "mov": "video/quicktime", "mkv": "video/x-matroska",
     }
     return table.get(ext, default)
+
+
+# ── Sample media URLs ─────────────────────────────────────────────────────────
+_SAMPLE_VIDEO_URL = (
+    "https://file-examples.com/storage/fe71bb2a3a6a0532b94b6cd/2017/04/"
+    "file_example_MP4_480_1_5MG.mp4"
+)
+_SAMPLE_AUDIO_URL = "https://samplelib.com/mp3/sample-speech-1m.mp3"
+
+
+def _download_sample(url: str, label: str, timeout: int = 30) -> bytes:
+    """Download a sample file, raising RuntimeError on failure."""
+    try:
+        r = requests.get(url, timeout=timeout,
+                         headers={"User-Agent": "Mozilla/5.0 test_llm/1.0"})
+        r.raise_for_status()
+        return r.content
+    except Exception as exc:
+        raise RuntimeError(f"Could not download {label}: {exc}") from exc
 
 
 # ── API client ────────────────────────────────────────────────────────────────
@@ -304,33 +332,69 @@ def test_audio(client: Client, audio_path: Optional[str] = None,
 
 
 def test_audio_with_fallback(client: Client, audio_path: Optional[str] = None) -> list[TestResult]:
-    """Try audio_url first, fall back to input_audio if the first fails."""
+    """Try audio_url first; on 400/422 download a real speech sample and retry as input_audio."""
     r1 = test_audio(client, audio_path, audio_format="audio_url")
     results = [r1]
-    if not r1.passed and ("422" in r1.error or "400" in r1.error or "not supported" in r1.error.lower()):
-        r2 = test_audio(client, audio_path, audio_format="input_audio")
+    is_api_rejection = not r1.passed and any(
+        s in r1.error for s in ("400", "422", "415", "not supported")
+    )
+    if is_api_rejection:
+        # Resolve the audio bytes — prefer user file, otherwise fetch the sample
+        if audio_path:
+            fallback_path = audio_path
+            fetched_raw   = None
+        else:
+            try:
+                fetched_raw = _download_sample(_SAMPLE_AUDIO_URL, "speech sample MP3")
+                fallback_path = None
+            except RuntimeError as exc:
+                results.append(TestResult(
+                    name="audio (input_audio)", passed=False, error=str(exc)))
+                return results
+
+        # Build the input_audio content block directly so we can inject fetched bytes
+        if fetched_raw is not None:
+            raw, fmt = fetched_raw, "mp3"
+        else:
+            raw = Path(fallback_path).read_bytes()  # type: ignore[arg-type]
+            fmt = Path(fallback_path).suffix.lower().lstrip(".")
+
+        content_block = {
+            "type":        "input_audio",
+            "input_audio": {"data": _b64(raw), "format": fmt},
+        }
+        messages = [{
+            "role": "user",
+            "content": [
+                content_block,
+                {"type": "text", "text": "Describe what you hear in this audio. Be brief."},
+            ],
+        }]
+        r2 = _run(client, messages, name="audio (input_audio)", max_tokens=200)
         results.append(r2)
     return results
 
 
 def test_video(client: Client, video_path: Optional[str] = None) -> TestResult:
-    """
-    Test video understanding via video_url content block.
-    Requires a real video file — synthetic video generation is out of scope.
-    """
-    if not video_path:
-        return TestResult(
-            name="video", passed=False, skipped=True,
-            error="No video file — pass --video <path.mp4> to enable this test.",
-        )
+    """Test video understanding via video_url content block.
+    Downloads a sample MP4 automatically when no --video file is provided."""
+    t0 = time.monotonic()
+    if video_path:
+        raw  = Path(video_path).read_bytes()
+        mime = _mime_for(video_path, "video/mp4")
+    else:
+        try:
+            raw  = _download_sample(_SAMPLE_VIDEO_URL, "sample MP4")
+            mime = "video/mp4"
+        except RuntimeError as exc:
+            return TestResult(name="video", passed=False, skipped=True,
+                              error=str(exc),
+                              latency_ms=int((time.monotonic() - t0) * 1000))
 
-    raw   = Path(video_path).read_bytes()
-    mime  = _mime_for(video_path, "video/mp4")
-    url   = _data_url(mime, raw)
     messages = [{
         "role": "user",
         "content": [
-            {"type": "video_url", "video_url": {"url": url}},
+            {"type": "video_url", "video_url": {"url": _data_url(mime, raw)}},
             {"type": "text", "text": "Briefly describe what happens in this video in 1–2 sentences."},
         ],
     }]
