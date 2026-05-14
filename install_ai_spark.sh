@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.39
+Version:  0.0.40
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -254,6 +254,7 @@ vllm_serve() {
 # Kill all vLLM processes, stop Docker, and wipe old logs for a clean start.
 echo "--- Clean start: killing all vLLM processes and removing old logs ---"
 docker stop open-webui 2>/dev/null || true
+docker rm open-webui 2>/dev/null || true   # remove immediately so --restart policy can't revive it
 pkill -9 -f "vllm serve" 2>/dev/null || true
 pkill -9 -f "vllm.entrypoints" 2>/dev/null || true
 pkill -9 -f "VLLM::EngineCore" 2>/dev/null || true
@@ -398,7 +399,7 @@ fi
 # OPENAI_API_KEYS: matching semicolon-separated keys (one per endpoint)
 
 echo "--- Starting OpenWebUI container ---"
-docker rm -f open-webui 2>/dev/null || true
+docker pull ghcr.io/open-webui/open-webui:main
 
 docker run -d \
     --name open-webui \
@@ -408,7 +409,6 @@ docker run -d \
     -e OPENAI_API_BASE_URLS="http://localhost:8006/v1;http://localhost:8005/v1;http://localhost:8010/v1;http://localhost:8020/v1" \
     -e OPENAI_API_KEYS="sk-no-key-required;sk-no-key-required;sk-no-key-required;sk-no-key-required" \
     -e WEBUI_AUTH=false \
-    --restart always \
     ghcr.io/open-webui/open-webui:main
 
 echo "Waiting for OpenWebUI to be ready..."
@@ -431,7 +431,11 @@ if [ "$OWUI_ELAPSED" -lt "$OWUI_TIMEOUT" ]; then
     echo "   → Qwen3.6-35B-A3B              port 8005"
     echo "   → Qwen3-Embedding-4B           port 8010"
     echo "   → bge-reranker-v2-m3           port 8020"
+    echo "\r\n \r\n \r\n  GIVE THIS 5-10 minutes to be available in OpenWebUI!  \r\n \r\n \r\n"
 fi
 
-
-
+echo "--- Disk usage: $BASE_DIR ---"
+du -sh "$BASE_DIR" 2>/dev/null
+echo ""
+echo "--- Per-model breakdown ---"
+du -sh "$MODELS_DIR"/*/  2>/dev/null | sort -rh
