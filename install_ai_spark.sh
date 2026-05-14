@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.29
+Version:  0.0.30
 Last Updated:  5/13/2026
 
 Update Yourself:
@@ -214,7 +214,7 @@ echo "✅ All models downloaded to $MODELS_DIR"
 
 #----- Serve models with vLLM ------------------------------
 # Both models run in background (&) so the script continues.
-# gpu-memory-utilization 0.45 each lets both share the DGX Spark's 128GB unified memory.
+# gpu-memory-utilization 0.40 each lets both share the DGX Spark's 128GB unified memory.
 # Raise to 0.85 (and remove the other) if you want to run only one at a time.
 # OpenWebUI connects to port 8000 automatically. Add port 8001 manually:
 #   OpenWebUI → Admin Settings → Connections → Add → http://localhost:8001/v1
@@ -247,24 +247,30 @@ vllm_serve() {
     fi
 }
 
-#--- Qwen3.6-35B-A3B  (port 8000 — OpenWebUI primary connection) ---
-if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
-    echo "--- Starting vLLM: Qwen3.6-35B-A3B on port 8000 ---"
-    vllm_serve "$MODELS_DIR/Qwen3.6-35B-A3B" \
-        --host 0.0.0.0 --port 8000 \
-        --served-model-name "Qwen3.6-35B-A3B" \
-        --dtype auto \
-        --gpu-memory-utilization 0.45 \
-        --max-model-len 32768 \
-        --enable-prefix-caching \
-        --trust-remote-code \
-        >> "$VLLM_LOGS/vllm-8000.log" 2>&1 &
-    echo "✅ Qwen3.6-35B-A3B starting on port 8000 (pid $!)"
-    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8000.log"
-    echo "   → Status: curl -s http://localhost:8000/v1/models | jq ."
-else
-    echo "⚠️  Qwen3.6-35B-A3B not found in $MODELS_DIR — skipping."
-fi
+# Kill any stale vLLM processes from a previous run before reserving memory
+echo "--- Stopping any existing vLLM processes ---"
+pkill -f "vllm serve" 2>/dev/null || true
+pkill -f "vllm.entrypoints" 2>/dev/null || true
+sleep 3
+
+# #--- Qwen3.6-35B-A3B  (port 8000 — OpenWebUI primary connection) ---
+# if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
+#     echo "--- Starting vLLM: Qwen3.6-35B-A3B on port 8000 ---"
+#     vllm_serve "$MODELS_DIR/Qwen3.6-35B-A3B" \
+#         --host 0.0.0.0 --port 8000 \
+#         --served-model-name "Qwen3.6-35B-A3B" \
+#         --dtype auto \
+#         --gpu-memory-utilization 0.40 \
+#         --max-model-len 32768 \
+#         --enable-prefix-caching \
+#         --trust-remote-code \
+#         >> "$VLLM_LOGS/vllm-8000.log" 2>&1 &
+#     echo "✅ Qwen3.6-35B-A3B starting on port 8000 (pid $!)"
+#     echo "   → Logs: tail -f $VLLM_LOGS/vllm-8000.log"
+#     echo "   → Status: curl -s http://localhost:8000/v1/models | jq ."
+# else
+#     echo "⚠️  Qwen3.6-35B-A3B not found in $MODELS_DIR — skipping."
+# fi
 
 #--- Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16  (port 8001 — add to OpenWebUI manually) ---
 if [ -f "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16/config.json" ]; then
@@ -273,7 +279,7 @@ if [ -f "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16/config.json" ];
         --host 0.0.0.0 --port 8001 \
         --served-model-name "Nemotron-3-Nano-Omni-30B-A3B" \
         --dtype bfloat16 \
-        --gpu-memory-utilization 0.45 \
+        --gpu-memory-utilization 0.40 \
         --max-model-len 32768 \
         --enable-prefix-caching \
         --trust-remote-code \
