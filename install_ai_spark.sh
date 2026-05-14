@@ -16,8 +16,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.30
-Last Updated:  5/13/2026
+Version:  0.0.35
+Last Updated:  5/14/2026
 
 Update Yourself:
   wget --no-cache -O 'install_ai_spark.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh' && chmod u+x install_ai_spark.sh
@@ -170,6 +170,10 @@ echo "--- Downloading nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 ---"
 $HF_DL nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 \
     --local-dir "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16"
 
+echo "--- Downloading nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 ---"
+$HF_DL nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 \
+    --local-dir "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4"
+
 
 # 2. Coding
 echo "--- Downloading Qwen/Qwen3-Coder-30B-A3B-Instruct ---"
@@ -214,7 +218,7 @@ echo "✅ All models downloaded to $MODELS_DIR"
 
 #----- Serve models with vLLM ------------------------------
 # Both models run in background (&) so the script continues.
-# gpu-memory-utilization 0.40 each lets both share the DGX Spark's 128GB unified memory.
+# gpu-memory-utilization 0.70 for single-model use (30B BF16 weights alone need ~60 GiB).
 # Raise to 0.85 (and remove the other) if you want to run only one at a time.
 # OpenWebUI connects to port 8000 automatically. Add port 8001 manually:
 #   OpenWebUI → Admin Settings → Connections → Add → http://localhost:8001/v1
@@ -247,11 +251,14 @@ vllm_serve() {
     fi
 }
 
-# Kill any stale vLLM processes from a previous run before reserving memory
-echo "--- Stopping any existing vLLM processes ---"
-pkill -f "vllm serve" 2>/dev/null || true
-pkill -f "vllm.entrypoints" 2>/dev/null || true
+# Kill all vLLM processes, stop Docker, and wipe old logs for a clean start.
+echo "--- Clean start: killing all vLLM processes and removing old logs ---"
+docker stop open-webui 2>/dev/null || true
+pkill -9 -f "vllm serve" 2>/dev/null || true
+pkill -9 -f "vllm.entrypoints" 2>/dev/null || true
 sleep 3
+rm -f "$VLLM_LOGS"/vllm-*.log
+echo "✅ Old vLLM processes killed and logs cleared"
 
 # #--- Qwen3.6-35B-A3B  (port 8000 — OpenWebUI primary connection) ---
 # if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
@@ -273,24 +280,49 @@ sleep 3
 # fi
 
 #--- Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16  (port 8001 — add to OpenWebUI manually) ---
-if [ -f "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16/config.json" ]; then
-    echo "--- Starting vLLM: Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 on port 8001 ---"
-    vllm_serve "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16" \
-        --host 0.0.0.0 --port 8001 \
-        --served-model-name "Nemotron-3-Nano-Omni-30B-A3B" \
-        --dtype bfloat16 \
-        --gpu-memory-utilization 0.40 \
+# if [ -f "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16/config.json" ]; then
+#     echo "--- Starting vLLM: Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 on port 8001 ---"
+#     vllm_serve "$MODELS_DIR/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16" \
+#         --host 0.0.0.0 --port 8001 \
+#         --served-model-name "Nemotron-3-Nano-Omni-30B-A3B" \
+#         --dtype bfloat16 \
+#         --gpu-memory-utilization 0.70 \
+#         --max-model-len 32768 \
+#         --enable-prefix-caching \
+#         --trust-remote-code \
+#         >> "$VLLM_LOGS/vllm-8001.log" 2>&1 &
+#     echo "✅ Nemotron-3-Nano-Omni-30B-A3B starting on port 8001 (pid $!)"
+#     echo "   → Logs: tail -f $VLLM_LOGS/vllm-8001.log"
+#     echo "   → Status: curl -s http://localhost:8001/v1/models | jq ."
+#     echo "   → Add to OpenWebUI: Admin Settings → Connections → http://localhost:8001/v1"
+# else
+#     echo "⚠️  Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 not found in $MODELS_DIR — skipping."
+# fi
+
+#--- NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4  (port 8002 — DGX Spark optimised, default model) ---
+if [ -f "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4/config.json" ]; then
+    echo "--- Starting vLLM: NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 on port 8002 ---"
+    vllm_serve "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4" \
+        --host 0.0.0.0 --port 8002 \
+        --served-model-name "Nemotron-3-Nano-30B-NVFP4" \
+        --dtype auto \
+        --quantization nvfp4 \
+        --gpu-memory-utilization 0.70 \
         --max-model-len 32768 \
         --enable-prefix-caching \
         --trust-remote-code \
-        >> "$VLLM_LOGS/vllm-8001.log" 2>&1 &
-    echo "✅ Nemotron-3-Nano-Omni-30B-A3B starting on port 8001 (pid $!)"
-    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8001.log"
-    echo "   → Status: curl -s http://localhost:8001/v1/models | jq ."
-    echo "   → Add to OpenWebUI: Admin Settings → Connections → http://localhost:8001/v1"
+        >> "$VLLM_LOGS/vllm-8002.log" 2>&1 &
+    echo "✅ Nemotron-3-Nano-30B-NVFP4 starting on port 8002 (pid $!)"
+    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8002.log"
+    echo "   → Status: curl -s http://localhost:8002/v1/models | jq ."
+    echo "   → Add to OpenWebUI: Admin Settings → Connections → http://localhost:8002/v1"
 else
-    echo "⚠️  Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 not found in $MODELS_DIR — skipping."
+    echo "⚠️  NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 not found in $MODELS_DIR — skipping."
 fi
+
+
+
+
 
 # vllm serve "$MODELS_DIR/Qwen3-Coder-30B-A3B-Instruct" \
 #   --host 0.0.0.0 --port 8001 \
@@ -336,33 +368,27 @@ fi
 # "
 
 
-
-
-#--- Install OpenWebUI (Docker, connected to vLLM) ---
-# OpenWebUI starts now and waits for vLLM — no need to block here.
-# vLLM is not running yet; it starts after models are downloaded below.
+#---------------------------------------------------------------------------------------------------------------
+#--- Start OpenWebUI (Docker, connected to vLLM on port 8002) ---
+# vLLM is already running in the background by this point.
+# --network host: direct access to vLLM on localhost without Docker NAT
+# PORT=3000: overrides OpenWebUI's default 8080 (required with --network host)
+# WEBUI_AUTH=false: no login for local/private use — remove if you want auth
 
 echo "--- Starting OpenWebUI container ---"
-# Remove existing container if it exists (re-run safe)
 docker rm -f open-webui 2>/dev/null || true
 
-# --network host: avoids Docker NAT overhead, direct access to vLLM on localhost:8000
-# PORT=3000: override OpenWebUI's default port (8080) — required with --network host (no -p mapping)
-# OPENAI_API_BASE_URL: points OpenWebUI at vLLM's OpenAI-compatible endpoint
-# WEBUI_AUTH=false: skip login for local/private use (remove if you want auth)
 docker run -d \
     --name open-webui \
     --network host \
     -v open-webui:/app/backend/data \
     -e PORT=3000 \
-    -e OPENAI_API_BASE_URL=http://localhost:8000/v1 \
+    -e OPENAI_API_BASE_URL=http://localhost:8002/v1 \
     -e OPENAI_API_KEY=sk-no-key-required \
     -e WEBUI_AUTH=false \
     --restart always \
     ghcr.io/open-webui/open-webui:main
 
-# Wait for OpenWebUI itself to come up (not vLLM) — timeout after 5 minutes
-# OpenWebUI loads ML models on startup and can take 2-3 minutes on first run
 echo "Waiting for OpenWebUI to be ready..."
 OWUI_TIMEOUT=300
 OWUI_ELAPSED=0
@@ -377,6 +403,6 @@ until curl -sf http://localhost:3000/health > /dev/null 2>&1; do
     OWUI_ELAPSED=$((OWUI_ELAPSED + 5))
 done
 if [ "$OWUI_ELAPSED" -lt "$OWUI_TIMEOUT" ]; then
-    echo "✅ OpenWebUI running at http://localhost:3000  (models will appear once vLLM starts)"
+    echo "✅ OpenWebUI ready at http://localhost:3000 — connected to Nemotron on port 8002"
 fi
 
