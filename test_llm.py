@@ -45,7 +45,7 @@ except ImportError:
 
 # ── Defaults ──────────────────────────────────────────────────────────────────
 DEFAULT_MODEL = "Nemotron-3-Nano-Omni-30B-A3B"
-DEFAULT_HOST  = "http://localhost:8000"
+DEFAULT_HOST  = "http://localhost:8001"
 
 # ── ANSI colours ──────────────────────────────────────────────────────────────
 GREEN  = "\033[32m"
