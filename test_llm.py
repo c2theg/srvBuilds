@@ -3,7 +3,7 @@
 Multi-modal LLM capability tester.
 
     Updated: 5/13/2026
-    Version: 0.0.7
+    Version: 0.0.8
 
 Update Yourself:
   wget --no-cache -O 'test_llm.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/test_llm.sh' && chmod u+x test_llm.sh
@@ -49,6 +49,9 @@ def _bootstrap_venv() -> None:
         subprocess.check_call([sys.executable, "-m", "venv", _venv_dir],
                               stdout=subprocess.DEVNULL)
         _venv_python = os.path.join(_venv_dir, "bin", "python3")
+        _venv_pip    = os.path.join(_venv_dir, "bin", "pip")
+        print("  Installing base packages (requests, yfinance) …", flush=True)
+        subprocess.check_call([_venv_pip, "install", "requests", "yfinance", "-q"])
 
     print(f"  Activating venv: {_venv_python}", flush=True)
     os.execv(_venv_python, [_venv_python] + sys.argv)
