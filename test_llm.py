@@ -13,7 +13,7 @@ Tests text, image, audio, and video modalities via an OpenAI-compatible API
 
 Usage:
     python3 test_llm.py [--host URL] [--model NAME] [options]
-    python3 test_llm.py --host http://127.0.0.1:8000 --model Nemotron-3-Nano-Omni-30B-A3B
+    python3 test_llm.py --host http://127.0.0.1:8001 --model Nemotron-3-Nano-Omni-30B-A3B
     python3 test_llm.py --image /path/to/photo.jpg --audio /path/to/clip.wav
     python3 test_llm.py --skip audio video            # text + image only
     python3 test_llm.py --json                        # machine-readable output
