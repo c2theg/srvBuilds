@@ -46,7 +46,7 @@ NEMO_VENV="$BASE_DIR/nemo-venv"       # separate venv for NeMo ASR (avoids confl
 # =============================================
 # NOTE: Gemma 4 26B-A4B is BF16 (~52GB). No vLLM-compatible INT4 exists yet.
 # Enable only when not running other large models simultaneously.
-ENABLE_GEMMA4=false          # set to true to download and serve Gemma 4 26B-A4B on port 8007
+ENABLE_GEMMA4=true          # set to true to download and serve Gemma 4 26B-A4B on port 8007
 
 ENABLE_SEARXNG=true          # SearXNG web search engine for OpenWebUI (runs on port 4040)
 SEARXNG_PORT=4040            # host port for SearXNG — change if 4040 is in use
