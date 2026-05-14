@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.35
+Version:  0.0.36
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -256,6 +256,8 @@ echo "--- Clean start: killing all vLLM processes and removing old logs ---"
 docker stop open-webui 2>/dev/null || true
 pkill -9 -f "vllm serve" 2>/dev/null || true
 pkill -9 -f "vllm.entrypoints" 2>/dev/null || true
+pkill -9 -f "VLLM::EngineCore" 2>/dev/null || true
+pkill -9 -f "vllm.engine" 2>/dev/null || true
 sleep 3
 rm -f "$VLLM_LOGS"/vllm-*.log
 echo "✅ Old vLLM processes killed and logs cleared"
@@ -306,7 +308,7 @@ if [ -f "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4/config.json" ]; then
         --host 0.0.0.0 --port 8002 \
         --served-model-name "Nemotron-3-Nano-30B-NVFP4" \
         --dtype auto \
-        --quantization nvfp4 \
+        --quantization modelopt_fp4 \
         --gpu-memory-utilization 0.70 \
         --max-model-len 32768 \
         --enable-prefix-caching \
