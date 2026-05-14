@@ -3,7 +3,7 @@
 Multi-modal LLM capability tester.
 
     Updated: 5/13/2026
-    Version: 0.0.4
+    Version: 0.0.5
 
 Update Yourself:
   wget --no-cache -O 'test_llm.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/test_llm.sh' && chmod u+x test_llm.sh
