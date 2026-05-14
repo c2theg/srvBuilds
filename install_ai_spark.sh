@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.45
+Version:  0.0.46
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -59,8 +59,8 @@ BRAVE_SEARCH_API_KEY=""      # Brave Search API key — takes priority over Sear
 # =============================================
 # Set your OpenWebUI admin credentials here to auto-register all model connections on each run.
 # Leave blank to skip (you'll see manual connection instructions instead).
-OWUI_ADMIN_EMAIL=""
-OWUI_ADMIN_PASSWORD=""
+OWUI_ADMIN_EMAIL="" # admin@local
+OWUI_ADMIN_PASSWORD="" # Abc123!@#
 
 # Load .env from same directory as this script — overrides tokens above if set there
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -118,6 +118,12 @@ if [ -n "$ENV_OWUI_PASS" ]; then
 elif [ -n "$OWUI_ADMIN_PASSWORD" ]; then
     _env_save OWUI_ADMIN_PASSWORD "$OWUI_ADMIN_PASSWORD"
     echo "✅ OWUI_ADMIN_PASSWORD saved to $ENV_FILE"
+fi
+if [ -z "$OWUI_ADMIN_EMAIL" ] || [ -z "$OWUI_ADMIN_PASSWORD" ]; then
+    echo "⚠️  OWUI_ADMIN_EMAIL / OWUI_ADMIN_PASSWORD not set."
+    echo "   On first run, visit http://localhost:3000 to create your admin account."
+    echo "   Then set these credentials at the top of this script (or in $ENV_FILE) and re-run"
+    echo "   to enable automatic model connection registration."
 fi
 
 #--------------------------
