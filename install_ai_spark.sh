@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.46
+Version:  0.0.47
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -46,6 +46,7 @@ NEMO_VENV="$BASE_DIR/nemo-venv"       # separate venv for NeMo ASR (avoids confl
 # =============================================
 # NOTE: Gemma 4 26B-A4B is BF16 (~52GB). No vLLM-compatible INT4 exists yet.
 # Enable only when not running other large models simultaneously.
+ENABLE_NEMOTRON=false       # set to true to download and serve Nemotron-3-Nano-30B-NVFP4 on port 8006
 ENABLE_GEMMA4=true          # set to true to download and serve Gemma 4 26B-A4B on port 8007
 
 ENABLE_SEARXNG=true          # SearXNG web search engine for OpenWebUI (runs on port 4040)
@@ -393,25 +394,30 @@ echo "\r\n \r\n --- General Purpose --- \r\n \r\n"
 #     echo "⚠️  Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 not found in $MODELS_DIR — skipping."
 # fi
 
-#--- NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4  (port 8002 — DGX Spark optimised, default model) ---
-if [ -f "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4/config.json" ]; then
-    echo "--- Starting vLLM: NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 on port 8006 ---"
-    vllm_serve "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4" \
-        --host 0.0.0.0 --port 8006 \
-        --served-model-name "Nemotron-3-Nano-30B-NVFP4" \
-        --dtype auto \
-        --quantization modelopt_fp4 \
-        --gpu-memory-utilization 0.85 \
-        --max-model-len 32768 \
-        --enable-prefix-caching \
-        --trust-remote-code \
-        >> "$VLLM_LOGS/vllm-8006.log" 2>&1 &
-    echo "✅ Nemotron-3-Nano-30B-NVFP4 starting on port 8006 (pid $!)"
-    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8006.log"
-    echo "   → Status: curl -s http://localhost:8006/v1/models | jq ."
-    echo "   → Add to OpenWebUI: Admin Settings → Connections → http://localhost:8006/v1"
+#--- NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4  (port 8006 — DGX Spark optimised) ---
+if [ "$ENABLE_NEMOTRON" = "true" ]; then
+    if [ -f "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4/config.json" ]; then
+        echo "--- Starting vLLM: NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 on port 8006 ---"
+        vllm_serve "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4" \
+            --host 0.0.0.0 --port 8006 \
+            --served-model-name "Nemotron-3-Nano-30B-NVFP4" \
+            --dtype auto \
+            --quantization modelopt_fp4 \
+            --gpu-memory-utilization 0.85 \
+            --max-model-len 32768 \
+            --max-num-seqs 178 \
+            --enable-prefix-caching \
+            --trust-remote-code \
+            >> "$VLLM_LOGS/vllm-8006.log" 2>&1 &
+        echo "✅ Nemotron-3-Nano-30B-NVFP4 starting on port 8006 (pid $!)"
+        echo "   → Logs: tail -f $VLLM_LOGS/vllm-8006.log"
+        echo "   → Status: curl -s http://localhost:8006/v1/models | jq ."
+        echo "   → Add to OpenWebUI: Admin Settings → Connections → http://localhost:8006/v1"
+    else
+        echo "⚠️  NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 not found in $MODELS_DIR — skipping."
+    fi
 else
-    echo "⚠️  NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 not found in $MODELS_DIR — skipping."
+    echo "⏭️  Nemotron-3-Nano-30B-NVFP4 disabled (ENABLE_NEMOTRON=false)"
 fi
 
 
