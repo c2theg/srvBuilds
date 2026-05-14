@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.41
+Version:  0.0.45
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -41,32 +41,83 @@ MODELS_DIR="$BASE_DIR/vllm"           # Where all models will be downloaded
 VLLM_VENV="$BASE_DIR/vllm-install/.vllm"  # venv created by the vLLM install script
 NEMO_VENV="$BASE_DIR/nemo-venv"       # separate venv for NeMo ASR (avoids conflicts with vLLM)
 
-# Load .env from same directory as this script — overrides HF_TOKEN above if set there
+# =============================================
+# OPTIONAL FEATURES — toggle on/off
+# =============================================
+# NOTE: Gemma 4 26B-A4B is BF16 (~52GB). No vLLM-compatible INT4 exists yet.
+# Enable only when not running other large models simultaneously.
+ENABLE_GEMMA4=false          # set to true to download and serve Gemma 4 26B-A4B on port 8007
+
+ENABLE_SEARXNG=true          # SearXNG web search engine for OpenWebUI (runs on port 4040)
+SEARXNG_PORT=4040            # host port for SearXNG — change if 4040 is in use
+
+BRAVE_SEARCH_API_KEY=""      # Brave Search API key — takes priority over SearXNG when set
+                             # Get yours at: https://api.search.brave.com/
+
+# =============================================
+# OPENWEBUI AUTO-REGISTRATION
+# =============================================
+# Set your OpenWebUI admin credentials here to auto-register all model connections on each run.
+# Leave blank to skip (you'll see manual connection instructions instead).
+OWUI_ADMIN_EMAIL=""
+OWUI_ADMIN_PASSWORD=""
+
+# Load .env from same directory as this script — overrides tokens above if set there
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ENV_FILE="$SCRIPT_DIR/.env"
-if [ -f "$ENV_FILE" ]; then
-    ENV_HF_TOKEN=$(grep -E '^HF_TOKEN=' "$ENV_FILE" | head -1 | cut -d '=' -f2- | tr -d '"' | tr -d "'")
-    if [ -n "$ENV_HF_TOKEN" ]; then
-        HF_TOKEN="$ENV_HF_TOKEN"
-        echo "✅ HF_TOKEN loaded from .env"
-    fi
-fi
 
-# If .env has no token but the script variable is set, write it into .env for next time
-if [ -z "$ENV_HF_TOKEN" ] && [ -n "$HF_TOKEN" ]; then
-    if grep -qE '^HF_TOKEN=' "$ENV_FILE" 2>/dev/null; then
-        # Replace existing blank/empty entry
-        sed -i "s|^HF_TOKEN=.*|HF_TOKEN=$HF_TOKEN|" "$ENV_FILE"
+_env_load() {
+    grep -E "^$1=" "$ENV_FILE" 2>/dev/null | head -1 | cut -d '=' -f2- | tr -d '"' | tr -d "'"
+}
+_env_save() {
+    if grep -qE "^$1=" "$ENV_FILE" 2>/dev/null; then
+        sed -i "s|^$1=.*|$1=$2|" "$ENV_FILE"
     else
-        # Append to file (create it if it doesn't exist)
-        echo "HF_TOKEN=$HF_TOKEN" >> "$ENV_FILE"
+        echo "$1=$2" >> "$ENV_FILE"
     fi
+}
+
+# HF_TOKEN
+ENV_HF_TOKEN=$(_env_load HF_TOKEN)
+if [ -n "$ENV_HF_TOKEN" ]; then
+    HF_TOKEN="$ENV_HF_TOKEN"
+    echo "✅ HF_TOKEN loaded from .env"
+elif [ -n "$HF_TOKEN" ]; then
+    _env_save HF_TOKEN "$HF_TOKEN"
     echo "✅ HF_TOKEN saved to $ENV_FILE"
 fi
-
 if [ -z "$HF_TOKEN" ]; then
-    echo "⚠️  HF_TOKEN is not set in .env or in this script — gated models will fail."
-    echo "   Add HF_TOKEN=your_token_here to $ENV_FILE or set it at the top of this script."
+    echo "⚠️  HF_TOKEN is not set — gated models will fail. Set it at the top of this script or in $ENV_FILE"
+fi
+
+# BRAVE_SEARCH_API_KEY
+ENV_BRAVE_KEY=$(_env_load BRAVE_SEARCH_API_KEY)
+if [ -n "$ENV_BRAVE_KEY" ]; then
+    BRAVE_SEARCH_API_KEY="$ENV_BRAVE_KEY"
+    echo "✅ BRAVE_SEARCH_API_KEY loaded from .env"
+elif [ -n "$BRAVE_SEARCH_API_KEY" ]; then
+    _env_save BRAVE_SEARCH_API_KEY "$BRAVE_SEARCH_API_KEY"
+    echo "✅ BRAVE_SEARCH_API_KEY saved to $ENV_FILE"
+fi
+
+# OWUI_ADMIN_EMAIL
+ENV_OWUI_EMAIL=$(_env_load OWUI_ADMIN_EMAIL)
+if [ -n "$ENV_OWUI_EMAIL" ]; then
+    OWUI_ADMIN_EMAIL="$ENV_OWUI_EMAIL"
+    echo "✅ OWUI_ADMIN_EMAIL loaded from .env"
+elif [ -n "$OWUI_ADMIN_EMAIL" ]; then
+    _env_save OWUI_ADMIN_EMAIL "$OWUI_ADMIN_EMAIL"
+    echo "✅ OWUI_ADMIN_EMAIL saved to $ENV_FILE"
+fi
+
+# OWUI_ADMIN_PASSWORD
+ENV_OWUI_PASS=$(_env_load OWUI_ADMIN_PASSWORD)
+if [ -n "$ENV_OWUI_PASS" ]; then
+    OWUI_ADMIN_PASSWORD="$ENV_OWUI_PASS"
+    echo "✅ OWUI_ADMIN_PASSWORD loaded from .env"
+elif [ -n "$OWUI_ADMIN_PASSWORD" ]; then
+    _env_save OWUI_ADMIN_PASSWORD "$OWUI_ADMIN_PASSWORD"
+    echo "✅ OWUI_ADMIN_PASSWORD saved to $ENV_FILE"
 fi
 
 #--------------------------
@@ -213,6 +264,15 @@ echo "--- Downloading BAAI/bge-reranker-v2-m3 ---"
 $HF_DL BAAI/bge-reranker-v2-m3 \
     --local-dir "$MODELS_DIR/bge-reranker-v2-m3"
 
+# 7. Gemma 4 26B-A4B (optional — default off, ~52GB BF16, needs exclusive GPU access)
+if [ "$ENABLE_GEMMA4" = "true" ]; then
+    echo "--- Downloading google/gemma-4-26B-A4B-it ---"
+    $HF_DL google/gemma-4-26B-A4B-it \
+        --local-dir "$MODELS_DIR/gemma-4-26B-A4B-it"
+else
+    echo "⏭️  Gemma 4 download skipped (ENABLE_GEMMA4=false)"
+fi
+
 
 echo "✅ All models downloaded to $MODELS_DIR"
 
@@ -254,8 +314,8 @@ vllm_serve() {
 
 # Kill all vLLM processes, stop Docker, and wipe old logs for a clean start.
 echo "--- Clean start: killing all vLLM processes and removing old logs ---"
-docker stop open-webui 2>/dev/null || true
-docker rm open-webui 2>/dev/null || true   # remove immediately so --restart policy can't revive it
+docker stop open-webui searxng 2>/dev/null || true
+docker rm open-webui searxng 2>/dev/null || true   # remove immediately so --restart policy can't revive them
 pkill -9 -f "vllm serve" 2>/dev/null || true
 pkill -9 -f "vllm.entrypoints" 2>/dev/null || true
 pkill -9 -f "VLLM::EngineCore" 2>/dev/null || true
@@ -385,6 +445,30 @@ else
     echo "⚠️  bge-reranker-v2-m3 not found in $MODELS_DIR — skipping."
 fi
 
+#--- Gemma 4 26B-A4B  (port 8007 — optional, default off) ---
+# BF16 ~52GB. Disable other large models when running this one.
+# No vLLM-compatible INT4 quantization exists yet — update HF model ID when one is released.
+if [ "$ENABLE_GEMMA4" = "true" ]; then
+    if [ -f "$MODELS_DIR/gemma-4-26B-A4B-it/config.json" ]; then
+        echo "--- Starting vLLM: gemma-4-26B-A4B-it on port 8007 ---"
+        vllm_serve "$MODELS_DIR/gemma-4-26B-A4B-it" \
+            --host 0.0.0.0 --port 8007 \
+            --served-model-name "gemma-4-26B-A4B" \
+            --dtype auto \
+            --gpu-memory-utilization 0.85 \
+            --max-model-len 32768 \
+            --enable-prefix-caching \
+            --trust-remote-code \
+            >> "$VLLM_LOGS/vllm-8007.log" 2>&1 &
+        echo "✅ gemma-4-26B-A4B starting on port 8007 (pid $!)"
+        echo "   → Logs: tail -f $VLLM_LOGS/vllm-8007.log"
+        echo "   → Status: curl -s http://localhost:8007/v1/models | jq ."
+    else
+        echo "⚠️  gemma-4-26B-A4B-it not found in $MODELS_DIR — skipping."
+    fi
+else
+    echo "⏭️  Gemma 4 skipped (ENABLE_GEMMA4=false)"
+fi
 
 #--- Audio transcription (NeMo, not vLLM) ---
 # python3 -c "
@@ -395,23 +479,81 @@ fi
 
 
 #---------------------------------------------------------------------------------------------------------------
+#--- SearXNG (web search backend for OpenWebUI) ---
+if [ "$ENABLE_SEARXNG" = "true" ]; then
+    echo "--- Starting SearXNG container ---"
+    mkdir -p "$BASE_DIR/searxng"
+
+    # Write settings.yml only on first run — preserves existing secret_key on re-runs
+    if [ ! -f "$BASE_DIR/searxng/settings.yml" ]; then
+        SEARXNG_SECRET=$(openssl rand -hex 32 2>/dev/null || echo "change-me-$(date +%s)")
+        cat > "$BASE_DIR/searxng/settings.yml" << SEARXNG_EOF
+use_default_settings: true
+
+server:
+  secret_key: "$SEARXNG_SECRET"
+  bind_address: "0.0.0.0:$SEARXNG_PORT"
+
+search:
+  formats:
+    - html
+    - json
+SEARXNG_EOF
+        echo "✅ SearXNG settings.yml created at $BASE_DIR/searxng/settings.yml"
+    fi
+
+    docker pull searxng/searxng:latest
+    docker run -d \
+        --name searxng \
+        --network host \
+        -v "$BASE_DIR/searxng:/etc/searxng:rw" \
+        searxng/searxng:latest
+    echo "✅ SearXNG starting on http://localhost:$SEARXNG_PORT"
+fi
+
 #--- Start OpenWebUI (Docker, connected to all vLLM instances) ---
 # --network host: direct access to all vLLM ports without Docker NAT
-# OPENAI_API_BASE_URLS: semicolon-separated list of all active vLLM endpoints
-# OPENAI_API_KEYS: matching semicolon-separated keys (one per endpoint)
 
 echo "--- Starting OpenWebUI container ---"
 docker pull ghcr.io/open-webui/open-webui:main
 
-docker run -d \
-    --name open-webui \
-    --network host \
-    -v open-webui:/app/backend/data \
-    -e PORT=3000 \
-    -e OPENAI_API_BASE_URL=http://localhost:8006/v1 \
-    -e OPENAI_API_KEY=sk-no-key-required \
-    -e WEBUI_AUTH=false \
-    ghcr.io/open-webui/open-webui:main
+if [ -n "$BRAVE_SEARCH_API_KEY" ]; then
+    echo "   → Web search: Brave Search API"
+    docker run -d \
+        --name open-webui \
+        --network host \
+        -v open-webui:/app/backend/data \
+        -e PORT=3000 \
+        -e OPENAI_API_BASE_URL=http://localhost:8006/v1 \
+        -e OPENAI_API_KEY=sk-no-key-required \
+        -e ENABLE_RAG_WEB_SEARCH=true \
+        -e WEB_SEARCH_ENGINE=brave \
+        -e BRAVE_SEARCH_API_KEY="$BRAVE_SEARCH_API_KEY" \
+        ghcr.io/open-webui/open-webui:main
+elif [ "$ENABLE_SEARXNG" = "true" ]; then
+    echo "   → Web search: SearXNG (port $SEARXNG_PORT)"
+    docker run -d \
+        --name open-webui \
+        --network host \
+        -v open-webui:/app/backend/data \
+        -e PORT=3000 \
+        -e OPENAI_API_BASE_URL=http://localhost:8006/v1 \
+        -e OPENAI_API_KEY=sk-no-key-required \
+        -e ENABLE_RAG_WEB_SEARCH=true \
+        -e WEB_SEARCH_ENGINE=searxng \
+        -e "SEARXNG_QUERY_URL=http://localhost:${SEARXNG_PORT}/search?q=<query>&format=json" \
+        ghcr.io/open-webui/open-webui:main
+else
+    echo "   → Web search: disabled"
+    docker run -d \
+        --name open-webui \
+        --network host \
+        -v open-webui:/app/backend/data \
+        -e PORT=3000 \
+        -e OPENAI_API_BASE_URL=http://localhost:8006/v1 \
+        -e OPENAI_API_KEY=sk-no-key-required \
+        ghcr.io/open-webui/open-webui:main
+fi
 
 echo "Waiting for OpenWebUI to be ready..."
 OWUI_TIMEOUT=300
@@ -428,15 +570,57 @@ until curl -sf http://localhost:3000/health > /dev/null 2>&1; do
 done
 if [ "$OWUI_ELAPSED" -lt "$OWUI_TIMEOUT" ]; then
     echo "✅ OpenWebUI ready at http://localhost:3000"
-    echo ""
-    echo "   Primary model auto-configured: Nemotron-3-Nano-30B-NVFP4 (port 8006)"
-    echo ""
-    echo "   To add additional models: Admin Settings → Connections → + Add Connection"
-    echo "     http://localhost:8005/v1   key: sk-no-key-required   (Qwen3.6-35B-A3B)"
-    echo "     http://localhost:8010/v1   key: sk-no-key-required   (Qwen3-Embedding-4B)"
-    echo "     http://localhost:8020/v1   key: sk-no-key-required   (bge-reranker-v2-m3)"
-    # http://localhost:8006/v1;http://localhost:8005/v1;http://localhost:8010/v1;http://localhost:8020/v1
-    #
+
+    # Build URL/key lists for all models that were started
+    OWUI_URLS='"http://localhost:8006/v1"'
+    OWUI_KEYS='"sk-no-key-required"'
+
+    if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B-FP8/config.json" ]; then
+        OWUI_URLS="$OWUI_URLS,\"http://localhost:8005/v1\""
+        OWUI_KEYS="$OWUI_KEYS,\"sk-no-key-required\""
+    fi
+    if [ -f "$MODELS_DIR/Qwen3-Embedding-4B/config.json" ]; then
+        OWUI_URLS="$OWUI_URLS,\"http://localhost:8010/v1\""
+        OWUI_KEYS="$OWUI_KEYS,\"sk-no-key-required\""
+    fi
+    if [ -f "$MODELS_DIR/bge-reranker-v2-m3/config.json" ]; then
+        OWUI_URLS="$OWUI_URLS,\"http://localhost:8020/v1\""
+        OWUI_KEYS="$OWUI_KEYS,\"sk-no-key-required\""
+    fi
+    if [ "$ENABLE_GEMMA4" = "true" ] && [ -f "$MODELS_DIR/gemma-4-26B-A4B-it/config.json" ]; then
+        OWUI_URLS="$OWUI_URLS,\"http://localhost:8007/v1\""
+        OWUI_KEYS="$OWUI_KEYS,\"sk-no-key-required\""
+    fi
+
+    if [ -n "$OWUI_ADMIN_EMAIL" ] && [ -n "$OWUI_ADMIN_PASSWORD" ]; then
+        echo "--- Auto-registering model connections in OpenWebUI ---"
+        OWUI_TOKEN=$(curl -sf -X POST http://localhost:3000/api/v1/auths/signin \
+            -H "Content-Type: application/json" \
+            -d "{\"email\":\"$OWUI_ADMIN_EMAIL\",\"password\":\"$OWUI_ADMIN_PASSWORD\"}" \
+            | jq -r '.token // empty')
+
+        if [ -n "$OWUI_TOKEN" ]; then
+            curl -sf -X POST http://localhost:3000/api/v1/openai/config/update \
+                -H "Authorization: Bearer $OWUI_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d "{\"ENABLE_OPENAI_API\":true,\"OPENAI_API_BASE_URLS\":[$OWUI_URLS],\"OPENAI_API_KEYS\":[$OWUI_KEYS]}" \
+                > /dev/null
+            echo "✅ All model connections registered in OpenWebUI"
+        else
+            echo "⚠️  OpenWebUI login failed — check OWUI_ADMIN_EMAIL / OWUI_ADMIN_PASSWORD"
+        fi
+    else
+        echo ""
+        echo "   Set OWUI_ADMIN_EMAIL and OWUI_ADMIN_PASSWORD in this script to auto-register connections."
+        echo "   Or add them manually: Admin Settings → Connections → + Add Connection"
+        echo "     http://localhost:8005/v1   (Qwen3.6-35B-A3B-FP8)"
+        echo "     http://localhost:8010/v1   (Qwen3-Embedding-4B)"
+        echo "     http://localhost:8020/v1   (bge-reranker-v2-m3)"
+        if [ "$ENABLE_GEMMA4" = "true" ]; then
+            echo "     http://localhost:8007/v1   (gemma-4-26B-A4B)"
+        fi
+    fi
+
     echo ""
     echo "  ⏳ Allow 5-10 minutes for vLLM models to finish loading before they appear."
 fi
@@ -450,5 +634,19 @@ du -sh "$MODELS_DIR"/*/  2>/dev/null | sort -rh
 echo "\r\n \r\n ---------- \r\n \r\n "
 nvidia-smi
 
-echo "\r\n \r\n ---------- \r\n \r\n "
-tail -f /opt/models/logs/vllm-8006.log
+echo "\r\n \r\n ---- Monitor vLLM Startups ---- \r\n \r\n "
+
+echo "NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 on port 8006
+
+    tail -f /opt/models/logs/vllm-8006.log
+
+
+"
+#tail -f /opt/models/logs/vllm-8006.log
+
+echo "Qwen3.6-35B-A3B-FP8 starting on port 8005
+
+    tail -f /opt/models/logs/vllm-8005.log
+
+"
+tail -f /opt/models/logs/vllm-8005.log
