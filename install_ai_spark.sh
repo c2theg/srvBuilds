@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.28
+Version:  0.0.29
 Last Updated:  5/13/2026
 
 Update Yourself:
@@ -30,8 +30,6 @@ Update Yourself:
 
 "
 
-echo "Update Yourself:"
-wget --no-cache -O 'install_ai_spark.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_spark.sh' && chmod u+x install_ai_spark.sh
 # =============================================
 # CONFIGURATION — set these before running
 # =============================================
