@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.38
+Version:  0.0.39
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -265,7 +265,6 @@ echo "✅ Old vLLM processes killed and logs cleared"
 # Enable TF32 for better matrix multiplication performance on Blackwell tensor cores
 export TORCH_FLOAT32_MATMUL_PRECISION=high
 
-
 #---- Coding -----
 echo "\r\n \r\n --- Coding --- \r\n \r\n"
 # vllm serve "$MODELS_DIR/Qwen3-Coder-30B-A3B-Instruct" \
@@ -284,7 +283,6 @@ echo "\r\n \r\n --- Coding --- \r\n \r\n"
 #   --enable-prefix-caching \
 #   --trust-remote-code
 
-
 #--- Qwen3.6-35B-A3B  (port 8005) ---
 if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
     echo "--- Starting vLLM: Qwen3.6-35B-A3B on port 8005 ---"
@@ -292,7 +290,7 @@ if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
         --host 0.0.0.0 --port 8005 \
         --served-model-name "Qwen3.6-35B-A3B" \
         --dtype auto \
-        --gpu-memory-utilization 0.85 \
+        --gpu-memory-utilization 0.73 \
         --max-model-len 32768 \
         --enable-prefix-caching \
         --trust-remote-code \
@@ -303,7 +301,6 @@ if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
 else
     echo "⚠️  Qwen3.6-35B-A3B not found in $MODELS_DIR — skipping."
 fi
-
 
 
 echo "\r\n \r\n --- General Purpose --- \r\n \r\n"
