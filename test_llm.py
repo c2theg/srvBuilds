@@ -3,7 +3,7 @@
 Multi-modal LLM capability tester.
 
     Updated: 5/13/2026
-    Version: 0.0.11
+    Version: 0.0.12
 
 Update Yourself:
   wget --no-cache -O 'test_llm.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/test_llm.sh' && chmod u+x test_llm.sh
@@ -494,14 +494,20 @@ def _rsi(closes: list[float], period: int = 14) -> float:
 
 def _fetch_stock_data(ticker: str) -> dict:
     """Fetch price history and fundamentals via yfinance."""
-    # yfinance 1.x uses curl_cffi internally. On servers with missing/outdated
-    # system CA certs we must pass an explicit curl_cffi session that points at
-    # certifi's CA bundle — env vars alone don't reach libcurl reliably.
+    # yfinance 1.x uses curl_cffi internally. Servers with missing/outdated
+    # system CA certs must get an explicit session. Try certifi first; if that
+    # fails for any reason, fall back to verify=False (acceptable for a test
+    # script fetching public market data).
     _session = None
     try:
         from curl_cffi import requests as _cffi_req
-        import certifi as _c
-        _session = _cffi_req.Session(impersonate="chrome", verify=_c.where())
+        _verify: str | bool = False
+        try:
+            import certifi as _c
+            _verify = _c.where()
+        except ImportError:
+            pass
+        _session = _cffi_req.Session(impersonate="chrome", verify=_verify)
     except Exception:
         pass
     t    = yfinance.Ticker(ticker, session=_session)
