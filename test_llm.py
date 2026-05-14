@@ -3,7 +3,7 @@
 Multi-modal LLM capability tester.
 
     Updated: 5/13/2026
-    Version: 0.0.2
+    Version: 0.0.3
 
     wget --no-cache -O 'test_llm.py' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/test_llm.py' && chmod u+x test_llm.py
 
