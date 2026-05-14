@@ -3,7 +3,7 @@
 Multi-modal LLM capability tester.
 
     Updated: 5/13/2026
-    Version: 0.0.5
+    Version: 0.0.6
 
 Update Yourself:
   wget --no-cache -O 'test_llm.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/test_llm.sh' && chmod u+x test_llm.sh
@@ -42,11 +42,10 @@ try:
     import yfinance
     _YFINANCE_OK = True
 except ImportError:
-    import subprocess as _sp
+    import subprocess as _subp
+    print("  yfinance not found — installing…", flush=True)
     try:
-        print("  yfinance not found — installing…", flush=True)
-        _sp.check_call([sys.executable, "-m", "pip", "install", "yfinance", "-q"],
-                       stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+        _subp.check_call([sys.executable, "-m", "pip", "install", "yfinance", "-q"])
         import yfinance
         _YFINANCE_OK = True
     except Exception:
