@@ -3,7 +3,7 @@
 Multi-modal LLM capability tester.
 
     Updated: 5/13/2026
-    Version: 0.0.6
+    Version: 0.0.7
 
 Update Yourself:
   wget --no-cache -O 'test_llm.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/test_llm.sh' && chmod u+x test_llm.sh
@@ -21,6 +21,40 @@ Usage:
 """
 
 from __future__ import annotations
+
+# ── Venv bootstrap — must run before any third-party imports ──────────────────
+# On Debian/Ubuntu the system Python blocks pip ("externally managed").
+# This block transparently re-execs the script inside a venv so pip works.
+def _bootstrap_venv() -> None:
+    import os, subprocess, sys
+
+    # Already inside a venv — nothing to do.
+    if hasattr(sys, "real_prefix") or sys.prefix != sys.base_prefix:
+        return
+
+    _script = os.path.abspath(__file__)
+    _here   = os.path.dirname(_script)
+
+    # Candidate venv pythons — shared first, local fallback.
+    _candidates = [
+        "/opt/python3_shared/venv/bin/python3",
+        os.path.join(_here, ".venv", "bin", "python3"),
+        os.path.expanduser("~/.local/share/test_llm_venv/bin/python3"),
+    ]
+    _venv_python = next((c for c in _candidates if os.path.isfile(c)), None)
+
+    if _venv_python is None:
+        _venv_dir = os.path.join(_here, ".venv")
+        print(f"  No venv found — creating {_venv_dir} …", flush=True)
+        subprocess.check_call([sys.executable, "-m", "venv", _venv_dir],
+                              stdout=subprocess.DEVNULL)
+        _venv_python = os.path.join(_venv_dir, "bin", "python3")
+
+    print(f"  Activating venv: {_venv_python}", flush=True)
+    os.execv(_venv_python, [_venv_python] + sys.argv)
+
+_bootstrap_venv()
+# ─────────────────────────────────────────────────────────────────────────────
 
 import argparse
 import base64
