@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.40
+Version:  0.0.41
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -162,9 +162,10 @@ HF_DL="$HF_CLI download $HF_AUTH"
 
 
 # 1. General / RAG generation / Financial research / reasoning
-echo "--- Downloading Qwen/Qwen3.6-35B-A3B ---"
-$HF_DL Qwen/Qwen3.6-35B-A3B \
-    --local-dir "$MODELS_DIR/Qwen3.6-35B-A3B"
+echo "--- Downloading Qwen/Qwen3.6-35B-A3B-FP8 (replacing BF16 version) ---"
+rm -rf "$MODELS_DIR/Qwen3.6-35B-A3B"
+$HF_DL Qwen/Qwen3.6-35B-A3B-FP8 \
+    --local-dir "$MODELS_DIR/Qwen3.6-35B-A3B-FP8"
 
 echo "--- Downloading nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 ---"
 $HF_DL nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 \
@@ -285,9 +286,10 @@ echo "\r\n \r\n --- Coding --- \r\n \r\n"
 #   --trust-remote-code
 
 #--- Qwen3.6-35B-A3B  (port 8005) ---
-if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
-    echo "--- Starting vLLM: Qwen3.6-35B-A3B on port 8005 ---"
-    vllm_serve "$MODELS_DIR/Qwen3.6-35B-A3B" \
+#--- Qwen3.6-35B-A3B-FP8  (port 8005 — ~35GB, half the size of BF16) ---
+if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B-FP8/config.json" ]; then
+    echo "--- Starting vLLM: Qwen3.6-35B-A3B-FP8 on port 8005 ---"
+    vllm_serve "$MODELS_DIR/Qwen3.6-35B-A3B-FP8" \
         --host 0.0.0.0 --port 8005 \
         --served-model-name "Qwen3.6-35B-A3B" \
         --dtype auto \
@@ -296,11 +298,11 @@ if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B/config.json" ]; then
         --enable-prefix-caching \
         --trust-remote-code \
         >> "$VLLM_LOGS/vllm-8005.log" 2>&1 &
-    echo "✅ Qwen3.6-35B-A3B starting on port 8005 (pid $!)"
+    echo "✅ Qwen3.6-35B-A3B-FP8 starting on port 8005 (pid $!)"
     echo "   → Logs: tail -f $VLLM_LOGS/vllm-8005.log"
     echo "   → Status: curl -s http://localhost:8005/v1/models | jq ."
 else
-    echo "⚠️  Qwen3.6-35B-A3B not found in $MODELS_DIR — skipping."
+    echo "⚠️  Qwen3.6-35B-A3B-FP8 not found in $MODELS_DIR — skipping."
 fi
 
 
@@ -406,8 +408,8 @@ docker run -d \
     --network host \
     -v open-webui:/app/backend/data \
     -e PORT=3000 \
-    -e OPENAI_API_BASE_URLS="http://localhost:8006/v1;http://localhost:8005/v1;http://localhost:8010/v1;http://localhost:8020/v1" \
-    -e OPENAI_API_KEYS="sk-no-key-required;sk-no-key-required;sk-no-key-required;sk-no-key-required" \
+    -e OPENAI_API_BASE_URL=http://localhost:8006/v1 \
+    -e OPENAI_API_KEY=sk-no-key-required \
     -e WEBUI_AUTH=false \
     ghcr.io/open-webui/open-webui:main
 
@@ -426,12 +428,17 @@ until curl -sf http://localhost:3000/health > /dev/null 2>&1; do
 done
 if [ "$OWUI_ELAPSED" -lt "$OWUI_TIMEOUT" ]; then
     echo "✅ OpenWebUI ready at http://localhost:3000"
-    echo "   Models available:"
-    echo "   → Nemotron-3-Nano-30B-NVFP4    port 8006  (default)"
-    echo "   → Qwen3.6-35B-A3B              port 8005"
-    echo "   → Qwen3-Embedding-4B           port 8010"
-    echo "   → bge-reranker-v2-m3           port 8020"
-    echo "\r\n \r\n \r\n  GIVE THIS 5-10 minutes to be available in OpenWebUI!  \r\n \r\n \r\n"
+    echo ""
+    echo "   Primary model auto-configured: Nemotron-3-Nano-30B-NVFP4 (port 8006)"
+    echo ""
+    echo "   To add additional models: Admin Settings → Connections → + Add Connection"
+    echo "     http://localhost:8005/v1   key: sk-no-key-required   (Qwen3.6-35B-A3B)"
+    echo "     http://localhost:8010/v1   key: sk-no-key-required   (Qwen3-Embedding-4B)"
+    echo "     http://localhost:8020/v1   key: sk-no-key-required   (bge-reranker-v2-m3)"
+    # http://localhost:8006/v1;http://localhost:8005/v1;http://localhost:8010/v1;http://localhost:8020/v1
+    #
+    echo ""
+    echo "  ⏳ Allow 5-10 minutes for vLLM models to finish loading before they appear."
 fi
 
 echo "--- Disk usage: $BASE_DIR ---"
@@ -439,3 +446,9 @@ du -sh "$BASE_DIR" 2>/dev/null
 echo ""
 echo "--- Per-model breakdown ---"
 du -sh "$MODELS_DIR"/*/  2>/dev/null | sort -rh
+
+echo "\r\n \r\n ---------- \r\n \r\n "
+nvidia-smi
+
+echo "\r\n \r\n ---------- \r\n \r\n "
+tail -f /opt/models/logs/vllm-8006.log
