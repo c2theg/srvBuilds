@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.51
+Version:  0.0.52
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -429,6 +429,33 @@ else
 fi
 
 
+#--- Gemma 4 26B-A4B  (port 8007 — optional, default off) ---
+# BF16 ~52GB. Disable other large models when running this one.
+# No vLLM-compatible INT4 quantization exists yet — update HF model ID when one is released.
+if [ "$ENABLE_GEMMA4" = "true" ]; then
+    if [ -f "$MODELS_DIR/gemma-4-26B-A4B-it/config.json" ]; then
+        echo "--- Starting vLLM: gemma-4-26B-A4B-it on port 8007 ---"
+        vllm_serve "$MODELS_DIR/gemma-4-26B-A4B-it" \
+            --host 0.0.0.0 --port 8007 \
+            --served-model-name "gemma-4-26B-A4B" \
+            --dtype auto \
+            --gpu-memory-utilization 0.55 \
+            --max-model-len 16384 \
+            --max-num-batched-tokens 4096 \
+            --enable-prefix-caching \
+            --trust-remote-code \
+            >> "$VLLM_LOGS/vllm-8007.log" 2>&1 &
+        echo "✅ gemma-4-26B-A4B starting on port 8007 (pid $!)"
+        echo "   → Logs: tail -f $VLLM_LOGS/vllm-8007.log"
+        echo "   → Status: curl -s http://localhost:8007/v1/models | jq ."
+    else
+        echo "⚠️  gemma-4-26B-A4B-it not found in $MODELS_DIR — skipping."
+    fi
+else
+    echo "⏭️  Gemma 4 skipped (ENABLE_GEMMA4=false)"
+fi
+
+
 #--- Qwen3-Embedding-4B  (port 8010) ---
 if [ -f "$MODELS_DIR/Qwen3-Embedding-4B/config.json" ]; then
     echo "--- Starting vLLM: Qwen3-Embedding-4B on port 8010 ---"
@@ -465,31 +492,7 @@ else
     echo "⚠️  bge-reranker-v2-m3 not found in $MODELS_DIR — skipping."
 fi
 
-#--- Gemma 4 26B-A4B  (port 8007 — optional, default off) ---
-# BF16 ~52GB. Disable other large models when running this one.
-# No vLLM-compatible INT4 quantization exists yet — update HF model ID when one is released.
-if [ "$ENABLE_GEMMA4" = "true" ]; then
-    if [ -f "$MODELS_DIR/gemma-4-26B-A4B-it/config.json" ]; then
-        echo "--- Starting vLLM: gemma-4-26B-A4B-it on port 8007 ---"
-        vllm_serve "$MODELS_DIR/gemma-4-26B-A4B-it" \
-            --host 0.0.0.0 --port 8007 \
-            --served-model-name "gemma-4-26B-A4B" \
-            --dtype auto \
-            --gpu-memory-utilization 0.55 \
-            --max-model-len 16384 \
-            --max-num-batched-tokens 4096 \
-            --enable-prefix-caching \
-            --trust-remote-code \
-            >> "$VLLM_LOGS/vllm-8007.log" 2>&1 &
-        echo "✅ gemma-4-26B-A4B starting on port 8007 (pid $!)"
-        echo "   → Logs: tail -f $VLLM_LOGS/vllm-8007.log"
-        echo "   → Status: curl -s http://localhost:8007/v1/models | jq ."
-    else
-        echo "⚠️  gemma-4-26B-A4B-it not found in $MODELS_DIR — skipping."
-    fi
-else
-    echo "⏭️  Gemma 4 skipped (ENABLE_GEMMA4=false)"
-fi
+
 
 #--- Audio transcription (NeMo, not vLLM) ---
 # python3 -c "
@@ -534,6 +537,8 @@ fi
 
 #--- Start OpenWebUI (Docker, connected to all vLLM instances) ---
 # --network host: direct access to all vLLM ports without Docker NAT
+
+# docker stop open-webui && docker rm open-webui && docker volume rm open-webui
 
 echo "--- Starting OpenWebUI container ---"
 docker pull ghcr.io/open-webui/open-webui:main
@@ -621,6 +626,18 @@ if [ "$OWUI_ELAPSED" -lt "$OWUI_TIMEOUT" ]; then
             -d "{\"email\":\"$OWUI_ADMIN_EMAIL\",\"password\":\"$OWUI_ADMIN_PASSWORD\"}" \
             | jq -r '.token // empty')
 
+        if [ -z "$OWUI_TOKEN" ]; then
+            echo "   Sign-in failed — attempting to create admin account..."
+            curl -sf -X POST http://localhost:3000/api/v1/auths/signup \
+                -H "Content-Type: application/json" \
+                -d "{\"name\":\"Admin\",\"email\":\"$OWUI_ADMIN_EMAIL\",\"password\":\"$OWUI_ADMIN_PASSWORD\"}" \
+                > /dev/null
+            OWUI_TOKEN=$(curl -sf -X POST http://localhost:3000/api/v1/auths/signin \
+                -H "Content-Type: application/json" \
+                -d "{\"email\":\"$OWUI_ADMIN_EMAIL\",\"password\":\"$OWUI_ADMIN_PASSWORD\"}" \
+                | jq -r '.token // empty')
+        fi
+
         if [ -n "$OWUI_TOKEN" ]; then
             curl -sf -X POST http://localhost:3000/api/v1/openai/config/update \
                 -H "Authorization: Bearer $OWUI_TOKEN" \
@@ -669,4 +686,4 @@ echo "Qwen3.6-35B-A3B-FP8 starting on port 8005
     tail -f /opt/models/logs/vllm-8005.log
 
 "
-tail -f /opt/models/logs/vllm-8005.log
+#tail -f /opt/models/logs/vllm-8007.log
