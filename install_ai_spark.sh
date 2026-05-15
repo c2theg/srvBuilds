@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.48
+Version:  0.0.49
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -469,6 +469,7 @@ if [ "$ENABLE_GEMMA4" = "true" ]; then
             --dtype auto \
             --gpu-memory-utilization 0.85 \
             --max-model-len 32768 \
+            --max-num-batched-tokens 4096 \
             --enable-prefix-caching \
             --trust-remote-code \
             >> "$VLLM_LOGS/vllm-8007.log" 2>&1 &
