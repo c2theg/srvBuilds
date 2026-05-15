@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.47
+Version:  0.0.48
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -60,8 +60,8 @@ BRAVE_SEARCH_API_KEY=""      # Brave Search API key — takes priority over Sear
 # =============================================
 # Set your OpenWebUI admin credentials here to auto-register all model connections on each run.
 # Leave blank to skip (you'll see manual connection instructions instead).
-OWUI_ADMIN_EMAIL="" # admin@local
-OWUI_ADMIN_PASSWORD="" # Abc123!@#
+OWUI_ADMIN_EMAIL="admin@local" # 
+OWUI_ADMIN_PASSWORD="Abc123!@#" # 
 
 # Load .env from same directory as this script — overrides tokens above if set there
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
