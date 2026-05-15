@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.49
+Version:  0.0.50
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -467,7 +467,7 @@ if [ "$ENABLE_GEMMA4" = "true" ]; then
             --host 0.0.0.0 --port 8007 \
             --served-model-name "gemma-4-26B-A4B" \
             --dtype auto \
-            --gpu-memory-utilization 0.85 \
+            --gpu-memory-utilization 0.58 \
             --max-model-len 32768 \
             --max-num-batched-tokens 4096 \
             --enable-prefix-caching \
