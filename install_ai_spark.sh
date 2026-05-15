@@ -16,7 +16,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.0.50
+Version:  0.0.51
 Last Updated:  5/14/2026
 
 Update Yourself:
@@ -46,6 +46,7 @@ NEMO_VENV="$BASE_DIR/nemo-venv"       # separate venv for NeMo ASR (avoids confl
 # =============================================
 # NOTE: Gemma 4 26B-A4B is BF16 (~52GB). No vLLM-compatible INT4 exists yet.
 # Enable only when not running other large models simultaneously.
+ENABLE_QWEN35=false          # set to true to download and serve Qwen3.6-35B-A3B-FP8 on port 8005
 ENABLE_NEMOTRON=false       # set to true to download and serve Nemotron-3-Nano-30B-NVFP4 on port 8006
 ENABLE_GEMMA4=true          # set to true to download and serve Gemma 4 26B-A4B on port 8007
 
@@ -220,10 +221,14 @@ HF_DL="$HF_CLI download $HF_AUTH"
 
 
 # 1. General / RAG generation / Financial research / reasoning
-echo "--- Downloading Qwen/Qwen3.6-35B-A3B-FP8 (replacing BF16 version) ---"
-rm -rf "$MODELS_DIR/Qwen3.6-35B-A3B"
-$HF_DL Qwen/Qwen3.6-35B-A3B-FP8 \
-    --local-dir "$MODELS_DIR/Qwen3.6-35B-A3B-FP8"
+if [ "$ENABLE_QWEN35" = "true" ]; then
+    echo "--- Downloading Qwen/Qwen3.6-35B-A3B-FP8 (replacing BF16 version) ---"
+    rm -rf "$MODELS_DIR/Qwen3.6-35B-A3B"
+    $HF_DL Qwen/Qwen3.6-35B-A3B-FP8 \
+        --local-dir "$MODELS_DIR/Qwen3.6-35B-A3B-FP8"
+else
+    echo "⏭️  Qwen3.6-35B-A3B-FP8 download skipped (ENABLE_QWEN35=false)"
+fi
 
 echo "--- Downloading nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 ---"
 $HF_DL nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 \
@@ -352,24 +357,27 @@ echo "\r\n \r\n --- Coding --- \r\n \r\n"
 #   --enable-prefix-caching \
 #   --trust-remote-code
 
-#--- Qwen3.6-35B-A3B  (port 8005) ---
-#--- Qwen3.6-35B-A3B-FP8  (port 8005 — ~35GB, half the size of BF16) ---
-if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B-FP8/config.json" ]; then
-    echo "--- Starting vLLM: Qwen3.6-35B-A3B-FP8 on port 8005 ---"
-    vllm_serve "$MODELS_DIR/Qwen3.6-35B-A3B-FP8" \
-        --host 0.0.0.0 --port 8005 \
-        --served-model-name "Qwen3.6-35B-A3B" \
-        --dtype auto \
-        --gpu-memory-utilization 0.73 \
-        --max-model-len 32768 \
-        --enable-prefix-caching \
-        --trust-remote-code \
-        >> "$VLLM_LOGS/vllm-8005.log" 2>&1 &
-    echo "✅ Qwen3.6-35B-A3B-FP8 starting on port 8005 (pid $!)"
-    echo "   → Logs: tail -f $VLLM_LOGS/vllm-8005.log"
-    echo "   → Status: curl -s http://localhost:8005/v1/models | jq ."
+#--- Qwen3.6-35B-A3B-FP8  (port 8005 — ~35GB FP8) ---
+if [ "$ENABLE_QWEN35" = "true" ]; then
+    if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B-FP8/config.json" ]; then
+        echo "--- Starting vLLM: Qwen3.6-35B-A3B-FP8 on port 8005 ---"
+        vllm_serve "$MODELS_DIR/Qwen3.6-35B-A3B-FP8" \
+            --host 0.0.0.0 --port 8005 \
+            --served-model-name "Qwen3.6-35B-A3B" \
+            --dtype auto \
+            --gpu-memory-utilization 0.73 \
+            --max-model-len 32768 \
+            --enable-prefix-caching \
+            --trust-remote-code \
+            >> "$VLLM_LOGS/vllm-8005.log" 2>&1 &
+        echo "✅ Qwen3.6-35B-A3B-FP8 starting on port 8005 (pid $!)"
+        echo "   → Logs: tail -f $VLLM_LOGS/vllm-8005.log"
+        echo "   → Status: curl -s http://localhost:8005/v1/models | jq ."
+    else
+        echo "⚠️  Qwen3.6-35B-A3B-FP8 not found in $MODELS_DIR — skipping."
+    fi
 else
-    echo "⚠️  Qwen3.6-35B-A3B-FP8 not found in $MODELS_DIR — skipping."
+    echo "⏭️  Qwen3.6-35B-A3B-FP8 disabled (ENABLE_QWEN35=false)"
 fi
 
 
@@ -467,8 +475,8 @@ if [ "$ENABLE_GEMMA4" = "true" ]; then
             --host 0.0.0.0 --port 8007 \
             --served-model-name "gemma-4-26B-A4B" \
             --dtype auto \
-            --gpu-memory-utilization 0.58 \
-            --max-model-len 32768 \
+            --gpu-memory-utilization 0.55 \
+            --max-model-len 16384 \
             --max-num-batched-tokens 4096 \
             --enable-prefix-caching \
             --trust-remote-code \
@@ -584,28 +592,29 @@ done
 if [ "$OWUI_ELAPSED" -lt "$OWUI_TIMEOUT" ]; then
     echo "✅ OpenWebUI ready at http://localhost:3000"
 
-    # Build URL/key lists for all models that were started
-    OWUI_URLS='"http://localhost:8006/v1"'
-    OWUI_KEYS='"sk-no-key-required"'
+    # Build URL/key lists dynamically from whatever is enabled + present on disk
+    OWUI_URLS=""
+    OWUI_KEYS=""
+    OWUI_MANUAL=""
+    _owui_add() {
+        # $1 = url, $2 = label
+        if [ -z "$OWUI_URLS" ]; then
+            OWUI_URLS="\"$1\""
+            OWUI_KEYS='"sk-no-key-required"'
+        else
+            OWUI_URLS="$OWUI_URLS,\"$1\""
+            OWUI_KEYS="$OWUI_KEYS,\"sk-no-key-required\""
+        fi
+        OWUI_MANUAL="$OWUI_MANUAL\n     $1   ($2)"
+    }
 
-    if [ -f "$MODELS_DIR/Qwen3.6-35B-A3B-FP8/config.json" ]; then
-        OWUI_URLS="$OWUI_URLS,\"http://localhost:8005/v1\""
-        OWUI_KEYS="$OWUI_KEYS,\"sk-no-key-required\""
-    fi
-    if [ -f "$MODELS_DIR/Qwen3-Embedding-4B/config.json" ]; then
-        OWUI_URLS="$OWUI_URLS,\"http://localhost:8010/v1\""
-        OWUI_KEYS="$OWUI_KEYS,\"sk-no-key-required\""
-    fi
-    if [ -f "$MODELS_DIR/bge-reranker-v2-m3/config.json" ]; then
-        OWUI_URLS="$OWUI_URLS,\"http://localhost:8020/v1\""
-        OWUI_KEYS="$OWUI_KEYS,\"sk-no-key-required\""
-    fi
-    if [ "$ENABLE_GEMMA4" = "true" ] && [ -f "$MODELS_DIR/gemma-4-26B-A4B-it/config.json" ]; then
-        OWUI_URLS="$OWUI_URLS,\"http://localhost:8007/v1\""
-        OWUI_KEYS="$OWUI_KEYS,\"sk-no-key-required\""
-    fi
+    [ "$ENABLE_QWEN35"   = "true" ] && [ -f "$MODELS_DIR/Qwen3.6-35B-A3B-FP8/config.json"       ] && _owui_add "http://localhost:8005/v1" "Qwen3.6-35B-A3B-FP8"
+    [ "$ENABLE_NEMOTRON" = "true" ] && [ -f "$MODELS_DIR/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4/config.json" ] && _owui_add "http://localhost:8006/v1" "Nemotron-3-Nano-30B-NVFP4"
+    [ "$ENABLE_GEMMA4"   = "true" ] && [ -f "$MODELS_DIR/gemma-4-26B-A4B-it/config.json"          ] && _owui_add "http://localhost:8007/v1" "gemma-4-26B-A4B"
+    [ -f "$MODELS_DIR/Qwen3-Embedding-4B/config.json" ] && _owui_add "http://localhost:8010/v1" "Qwen3-Embedding-4B"
+    [ -f "$MODELS_DIR/bge-reranker-v2-m3/config.json" ] && _owui_add "http://localhost:8020/v1" "bge-reranker-v2-m3"
 
-    if [ -n "$OWUI_ADMIN_EMAIL" ] && [ -n "$OWUI_ADMIN_PASSWORD" ]; then
+    if [ -n "$OWUI_ADMIN_EMAIL" ] && [ -n "$OWUI_ADMIN_PASSWORD" ] && [ -n "$OWUI_URLS" ]; then
         echo "--- Auto-registering model connections in OpenWebUI ---"
         OWUI_TOKEN=$(curl -sf -X POST http://localhost:3000/api/v1/auths/signin \
             -H "Content-Type: application/json" \
@@ -619,19 +628,17 @@ if [ "$OWUI_ELAPSED" -lt "$OWUI_TIMEOUT" ]; then
                 -d "{\"ENABLE_OPENAI_API\":true,\"OPENAI_API_BASE_URLS\":[$OWUI_URLS],\"OPENAI_API_KEYS\":[$OWUI_KEYS]}" \
                 > /dev/null
             echo "✅ All model connections registered in OpenWebUI"
+            printf "   Registered:%b\n" "$OWUI_MANUAL"
         else
             echo "⚠️  OpenWebUI login failed — check OWUI_ADMIN_EMAIL / OWUI_ADMIN_PASSWORD"
         fi
+    elif [ -z "$OWUI_URLS" ]; then
+        echo "⚠️  No models are enabled — nothing to register in OpenWebUI."
     else
         echo ""
         echo "   Set OWUI_ADMIN_EMAIL and OWUI_ADMIN_PASSWORD in this script to auto-register connections."
         echo "   Or add them manually: Admin Settings → Connections → + Add Connection"
-        echo "     http://localhost:8005/v1   (Qwen3.6-35B-A3B-FP8)"
-        echo "     http://localhost:8010/v1   (Qwen3-Embedding-4B)"
-        echo "     http://localhost:8020/v1   (bge-reranker-v2-m3)"
-        if [ "$ENABLE_GEMMA4" = "true" ]; then
-            echo "     http://localhost:8007/v1   (gemma-4-26B-A4B)"
-        fi
+        printf "%b\n" "$OWUI_MANUAL"
     fi
 
     echo ""
