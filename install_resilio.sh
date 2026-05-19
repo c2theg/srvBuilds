@@ -1,91 +1,84 @@
-#!/bin/sh
+#!/bin/bash
+set -e
+set -o pipefail
+
 clear
 echo "
- _____             _         _    _          _                                   
-|     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
-|   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
-|_____|_| |___|__,|_| |___|___|  |___|_  |  |_|                                  
-                                     |___|                                       
-                                                                                 
- _____ _       _     _           _              _____    __    _____             
-|     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _ 
+ _____             _         _    _          _
+|     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|
+|   --|  _| -_| .'|  _| -_| . |  | . | | |   _
+|_____|_| |___|__,|_| |___|___|  |___|_  |  |_|
+                                     |___|
+
+ _____ _       _     _           _              _____    __    _____
+|     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
 
 
-Version:  0.6.15
-Last Updated:  12/30/2025
-This is really meant for 18.04+ - 24.04+)
+Version:  0.7.0
+Last Updated:  5/19/2026
+Designed for Ubuntu 22.04+
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_resilio.sh && chmod u+x install_resilio.sh
+Install:
+curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_resilio.sh -o install_resilio.sh && chmod u+x install_resilio.sh
+
 
 Updating system first..."
-sudo -E apt-get update
-wait
-sudo -E apt-get upgrade -y
-wait
-echo "Downloading required dependencies...\r\n\r\n"
-#--------------------------------------------------------------------------------------------
-echo "Installing ... \r\n \r\n"
-echo "deb http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" | sudo tee /etc/apt/sources.list.d/resilio-sync.list
-wait
-wget -qO - https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add -
-wait
+if ! sudo -v 2>/dev/null; then
+    echo "Error: this script requires sudo privileges." >&2
+    exit 1
+fi
+
+# Force IPv4 before any apt operations
+echo 'Acquire::ForceIPv4 "true";' | sudo tee /etc/apt/apt.conf.d/99force-ipv4 > /dev/null
+sudo apt clean
 sudo apt update
-wait
-wait
-sudo apt-get install -y resilio-sync
-#---------------------------------------------------------------------------------------------------------
-#if [ -s "/etc/resilio-sync/config.json" ]
-#then
-#     echo "Deleting file Resilio config "
-#     rm /etc/resilio-sync/config.json
-#     rm resilio_config.json
-#     rm resilio-sync.service
-#fi
-echo "Downloading Resilio Config"
-wget -O "resilio_config.json" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio_config.json"
-#wget -O "resilio-sync.service" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio-sync.service"
-wget -O "fix_permissions.sh" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/fix_permissions.sh"
-wait
-echo "Resilio Config Download Complete"
-#---------------------------------------------------------------------------------------------------------
-sudo systemctl start resilio-sync
-wait
-sudo systemctl enable resilio-sync
-wait
-#----------- Copy Configs --------------------
+sudo apt list --upgradable
+sudo apt upgrade -y
+
+echo ""
+echo "Installing Resilio Sync..."
+echo ""
+
+curl -fsSL https://linux-packages.resilio.com/resilio-sync/key.asc | gpg --dearmor | sudo tee /usr/share/keyrings/resilio-sync.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/resilio-sync.gpg] http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" | sudo tee /etc/apt/sources.list.d/resilio-sync.list > /dev/null
+
+sudo apt update
+sudo apt install -y resilio-sync
+
+echo ""
+echo "Downloading Resilio config and helper scripts..."
+curl -fsSL -o "resilio_config.json" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resilio_config.json"
+curl -fsSL -o "fix_permissions.sh" "https://raw.githubusercontent.com/c2theg/srvBuilds/master/fix_permissions.sh"
+echo "WARNING: fix_permissions.sh is a remotely downloaded script — review it at /media/data/sync/fix_permissions.sh before running."
+echo "Resilio config download complete."
+
+# Place config before starting the service
 sudo mv "resilio_config.json" "/etc/resilio-sync/config.json"
-
 sudo systemctl daemon-reload
+sudo systemctl enable --now resilio-sync
 sudo systemctl restart resilio-sync.service
-/etc/init.d/resilio-sync restart
 
-ps aux | grep rslsync
-#-----------------------
-#sudo chmod -R 755 /var/www/
-#sudo chown -R www-data:www-data /var/www/
-#sudo chown -R rslsync:rslsync /var/www/
+echo ""
+systemctl status resilio-sync --no-pager
 
-mkdir -p /media/data/sync
-sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/
+sudo mkdir -p /media/data/sync
+sudo chmod -R 755 /media/data/sync/
+sudo chown -R rslsync:rslsync /media/data/sync/
 
 sudo mv "fix_permissions.sh" "/media/data/sync/fix_permissions.sh"
-chmod u+x /media/data/sync/fix_permissions.sh
+sudo chmod u+x /media/data/sync/fix_permissions.sh
 
-cd /home/rslsync
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/btsync.btskey
-sudo chown -R rslsync:rslsync btsync.btskey
+curl -fsSL -o "/home/rslsync/btsync.btskey" "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/btsync.btskey"
+sudo chown rslsync:rslsync /home/rslsync/btsync.btskey
 
+echo ""
 echo "DONE. Now visit the server in your webbrowser at https://<SERVERIP>:8888"
-echo "\r\n \r\n"
-echo "To fix permissions use: sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/  \r\n \r\n"
-echo "Edit the config with: nano /etc/resilio-sync/config.json  - and change listen to: 0.0.0.0:8888   \r\n \r\n"
-
-#--- fix repo error --
-cd /etc/apt
-sudo cp trusted.gpg trusted.gpg.d
-# move back to home
-cd ~
+echo ""
+echo "To fix permissions: sudo chmod -R 755 /media/data/sync/ && sudo chown -R rslsync:rslsync /media/data/sync/"
+echo ""
+echo "Edit the config: nano /etc/resilio-sync/config.json  — change listen to: 0.0.0.0:8888"
+echo ""
