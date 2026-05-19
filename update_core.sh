@@ -1,140 +1,115 @@
-#!/bin/sh
+#!/bin/bash
+set -euo pipefail
+
+if [ "$EUID" -ne 0 ]; then
+    echo "This script must be run as root: sudo $0"
+    exit 1
+fi
+
 clear
 SCRIPT=$(readlink -f "$0")
-# Absolute path this script is in, thus /home/user/bin
 SCRIPTPATH=$(dirname "$SCRIPT")
-now=$(date)
-echo "Running update_core.sh at $now 
-Current working dir: $SCRIPTPATH 
- _____             _         _    _          _                                   
-|     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
-|   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
-|_____|_| |___|__,|_| |___|___|  |___|_  |  |_|                                  
-                                     |___|                                       
-                                                                                 
- _____ _       _     _           _              _____    __    _____             
-|     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _ 
+cd "$SCRIPTPATH"
+
+log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
+
+echo "Running update_core.sh at $(date)
+Current working dir: $SCRIPTPATH
+ _____             _         _    _          _
+|     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|
+|   --|  _| -_| .'|  _| -_| . |  | . | | |   _
+|_____|_| |___|__,|_| |___|___|  |___|_  |  |_|
+                                     |___|
+
+ _____ _       _     _           _              _____    __    _____
+|     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
 
-Version:  1.6.9
-Last Updated:  12/31/2025
-
-
+Version:  1.8.0
+Last Updated:  05/19/2026
 "
-wait
+
+BASE_URL="https://raw.githubusercontent.com/c2theg/srvBuilds/master"
+
+# Canonical list of managed scripts — used for cleanup, download, and copy
+SCRIPTS=(
+    update_core.sh
+    update_ubuntu14.04.sh
+    sys_cleanup.sh
+    sys_restart.sh
+    install_common.sh
+    install_clamav.sh
+)
+
+fetch() {
+    local url="$1" out="$2"
+    log "  Fetching $out..."
+    curl -4 -fsSL -o "$out" "$url"
+    chmod u+x "$out"
+}
+
+add_cron() {
+    (crontab -u root -l 2>/dev/null; echo "$1") | crontab -u root -
+}
+
 #--------------------------------------------------------------------------------------------
-echo "Checking Internet status...
+log "Checking Internet status..."
 
-"
-#ping -q -c3 github.com > /dev/null
-#if [ $? -eq 0 ]
-if nc -zw1 google.com 443; then
-	echo "Connected!!! \r\n \r\n"
-	if [ -s "update_core.sh" ]; then
-		echo "Deleting old files \r\n"
-		rm sys_cleanup.sh
- 		rm update_ubuntu14.04.sh
- 		rm install_common.sh
-		rm update_core.sh
-		rm sys_restart.*
-		rm install_monitoring.*
-		rm update_blocklists_local_servers.*
-		rm update_time.sh
-		rm update_kernel_u20-lt.sh
-		rm install_clamav.sh
-	fi
-	if [ -s "/root/update_core.sh" ]; then
-		echo "Deleting old files 2 \r\n"	
-		#------ under crontab -----
-		rm /root/sys_cleanup.sh
- 		rm /root/update_ubuntu14.04.sh
- 		#rm /root/install_common.sh
-		rm /root/update_core.sh
-		#rm /root/install_monitoring.*
-		rm /root/sys_restart.*
-		#rm /root/update_blocklists_local_servers.*
-		#rm /root/update_time.sh
-	fi
-	rm *.sh.1
-	echo "Downloading latest versions... 
-	
-	"
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_core.sh && chmod u+x update_core.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh && chmod u+x update_ubuntu14.04.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_restart.sh && chmod u+x sys_restart.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_common.sh && chmod u+x install_common.sh
-	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_monitoring.sh && chmod u+x install_monitoring.sh
-	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_blocklists_local_servers.sh && chmod u+x update_blocklists_local_servers.sh
-	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh && chmod u+x update_time.sh
-	#sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_kernel_u20-lt.sh && chmod u+x update_kernel_u20-lt.sh
-	sudo wget https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_clamav.sh && chmod u+x install_clamav.sh
-	#wget -O - -q -t 1 --timeout=1 https://api.magnetoai.com/update_check.php?f=update_core > /dev/null
-	
-	#-----------------------------------------------
-	wait
-	if [ -d "/root/" ]; then
-		cp update_core.sh /root/update_core.sh
-		cp sys_cleanup.sh /root/sys_cleanup.sh
-		cp update_ubuntu14.04.sh /root/update_ubuntu14.04.sh
-#		cp install_common.sh /root/install_common.sh
-		cp sys_restart.sh /root/sys_restart.sh
-#		cp install_monitoring.sh /root/install_monitoring.sh
-#		cp update_blocklists_local_servers.sh /root/update_blocklists_local_servers.sh
-#		cp update_time.sh /root/update_time.sh
-#		cp install_clamav.sh /root/install_clamav.sh
-	fi
-	
-	wait
-	if [ -d "/home/ubuntu/" ]; then
-		rm /home/ubuntu/update_core.sh
-		rm /home/ubuntu/sys_cleanup.sh
-		rm /home/ubuntu/update_ubuntu14.04.sh
+# Use curl (already required) instead of nc which may not be installed on minimal Ubuntu
+if ! curl -4 -fs --max-time 5 -o /dev/null https://github.com; then
+    log "ERROR: Not connected to the Internet. Fix that first and try again."
+    exit 1
+fi
+log "Connected!"
 
-		cp /root/update_core.sh /home/ubuntu/update_core.sh
-		cp /root/sys_cleanup.sh /home/ubuntu/sys_cleanup.sh
-		cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
-	fi	
-	wait
+# Remove stale copies from current directory
+log "Removing stale files..."
+rm -f "${SCRIPTS[@]}" sys_restart.* install_monitoring.* \
+      update_blocklists_local_servers.* update_time.sh \
+      update_kernel_u20-lt.sh *.sh.1 2>/dev/null || true
 
-	sh /root/update_ubuntu14.04.sh
+# Remove stale copies from /root
+for s in "${SCRIPTS[@]}"; do
+    rm -f "/root/$s"
+done
+
+log "Downloading latest versions..."
+for s in "${SCRIPTS[@]}"; do
+    fetch "$BASE_URL/$s" "$s"
+done
+
+# Install to /root for crontab use
+for s in "${SCRIPTS[@]}"; do
+    cp "$s" "/root/$s"
+done
+
+# Sync subset to /home/ubuntu if the user exists
+if [ -d "/home/ubuntu" ]; then
+    cp /root/update_core.sh        /home/ubuntu/update_core.sh
+    cp /root/sys_cleanup.sh        /home/ubuntu/sys_cleanup.sh
+    cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
+fi
+
+log "Running system update..."
+bash /root/update_ubuntu14.04.sh
+
+# --- Crontab setup ---
+if ! crontab -u root -l 2>/dev/null | grep -q "update_core.sh"; then
+    log "Adding update_core.sh to crontab."
+    add_cron "20 4 * * *  /root/update_core.sh >> /var/log/update_core.log 2>&1"
+    add_cron "50 4 * * 7  /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
+    add_cron "@reboot     /root/update_core.sh >> /var/log/update_core.log 2>&1"
 else
-	echo "Not connected to the Internet. Fix that first and try again "
+    log "update_core.sh already in crontab. Skipping."
 fi
 
-Cron_output=$(crontab -l | grep "update_core.sh")
-#echo "The output is: [ $Cron_output ]"
-if [ -z "$Cron_output" ]; then
-    echo "Script not in crontab. Adding."
-
-    # run “At 04:20.” everyday
-    line="20 4 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1"
-    (crontab -u root -l; echo "$line" ) | crontab -u root -
-    
-    # run “At 04:50 on Sunday.”
-    line="50 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1"
-    (crontab -u root -l; echo "$line" ) | crontab -u root -
-    
-    line="@reboot /root/update_core.sh >> /var/log/update_core.log 2>&1"
-    (crontab -u root -l; echo "$line" ) | crontab -u root -
-    
-    wait
-    /etc/init.d/cron restart  > /dev/null
-else
-    echo "Script was found in crontab. skipping addition"
+if ! crontab -u root -l 2>/dev/null | grep -q "sys_restart.sh"; then
+    add_cron "13 3 7 * *  /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1"
 fi
 
-Cron_output=$(crontab -l | grep "sys_restart.sh")
-#echo "The output is: [ $Cron_output ]"
-if [ -z "$Cron_output" ]; then
-    #-- Restart Server “At 03:13 on day-of-month 7.”
-    line="13 3 7 * * /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1"
-    (crontab -u root -l; echo "$line" ) | crontab -u root -
-fi
+systemctl restart cron > /dev/null 2>&1
 
-echo "Done!
-
-"
+log "Done!"
