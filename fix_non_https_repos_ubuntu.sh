@@ -2,7 +2,11 @@
 # fixes all repos that are not using https
 # Updated: 5/19/2026
 # Version: 0.0.2
-# namely - DGX spark / GB10
+#   Notes: DGX spark / GB10
+#
+# install:
+# curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/fix_non_https_repos_ubuntu.sh -o fix_non_https_repos_ubuntu.sh && chmod u+x fix_non_https_repos_ubuntu.sh
+#
 #----------------------------------------
 
 set -euo pipefail
