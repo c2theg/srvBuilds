@@ -1,11 +1,6 @@
-#  By: Christopher Gray  |  Updated: 5/25/2026  |  Version 0.1.0  |  https://github.com/c2theg
+#  By: Christopher Gray  |  Updated: 5/25/2026  |  Version 0.1.1  |  https://github.com/c2theg
 #  Purpose: Static IPv4/IPv6 assignment with VLAN — generic template
 #  For: Ubuntu 26.04 Server (LTS)
-#
-#  Quick Download: 
-#     curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-2604-vlans.yaml -o netplan-2604-vlans.yaml && sudo chmod 600 netplan-2604-vlans.yaml
-#     mv netplan-2604-vlans.yaml /etc/netplan/netplan-2604-vlans.yaml
-#     cd /etc/netplan/
 #
 # -------------------------------------------------------
 #  SETUP STEPS
@@ -15,11 +10,11 @@
 #       ip a
 #       ip route | grep default
 #
-#  2) Edit this file — replace all <PLACEHOLDERS>:
-#       sudo nano /etc/netplan/netplan-2604-vlans.yaml
+#  2) Backup the old config:
+#       sudo cp /etc/netplan/<old-file> /root/<old-file>.backup
 #
-#  3) Backup the old config:
-#       sudo cp /etc/netplan/<old-file> /home/ubuntu/<old-file>.backup
+#  3) Edit this file — replace all <PLACEHOLDERS>:
+#       sudo nano /etc/netplan/netplan-2604-vlans.yaml
 #
 #  4) Set correct permissions:
 #       sudo chmod 600 /etc/netplan/netplan-2604-vlans.yaml
