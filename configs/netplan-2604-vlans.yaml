@@ -1,100 +1,92 @@
-#  By: Christopher Gray  |  Updated: 5/25/2026  |  Version 0.0.12  | https://github.com/c2theg
-#	 Purpose: To staticly assign an ipv4 address to an interface with vlans
-#	 For: Ubuntu 26.04 Server (LTS)
-#
-#  Quick Download: 
-#     curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-2604-vlans.yaml -o netplan-2604-vlans.yaml && sudo chmod 600 netplan-2604-vlans.yaml
-#     mv netplan-2604-vlans.yaml /etc/netplan/netplan-2604-vlans.yaml
-#     cd /etc/netplan/
-# -------------------------------------------------------
-#	1) First identify the interface name (like ens33, eth0, enp0s3, eno4 (Dell Servers), ens160 (VMWare), enp0s3, etc.).
-#      ip a
-#      ip route | grep default   ( get the current Default Gateway from DHCP )
-#
-#	2) ls /etc/netplan/
-#
-#	3) backup the old config with bellow
-#		  sudo cp /etc/netplan/<filename> /home/ubuntu/<filename>.backup
-#
-# 4) Modify the config with bellow
-#		  sudo nano netplan-2604-vlans.yaml
-#		  - save and close (Ctrl + X, then Y, then Enter)
-#
-# 5) *** TEST THE PLAN BEFORE DEPLOYING! ***
-#      netplan --debug generate   (This will test the config for syntax errors)
-#      sudo netplan try           (This will apply the config for 60 seconds and revert back, so you can see if it all works. if it fails it resets)
-#   
-#    ** if it all works, then continue **
-#
-#	6) Apply Settings
-#		   sudo netplan apply
-#
-#	7) ping 1.1.1.1
-#	8) ping t.co
+#  By: Christopher Gray  |  Updated: 5/25/2026  |  Version 0.1.0  |  https://github.com/c2theg
+#  Purpose: Static IPv4/IPv6 assignment with VLAN — generic template
+#  For: Ubuntu 26.04 Server (LTS)
 #
 # -------------------------------------------------------
-#   NextDNS, Cloudflare Family Sheild (backups), OpenDNS Family - (Servers dont need to access porn!)
-#       45.90.30.148, 45.90.28.148, 2a07:a8c0::b5:c827, 208.67.222.123, 1.0.0.3, 9.9.9.9, 2606:4700:4700::1003, 2620:119:35::123, 2620:fe::fe
-# 
-#   List of Non-Security Focused DNS Providers:
-#       208.67.222.222, 1.1.1.1, 8.8.8.8, 2001:4860:4860::8888, 2620:0:ccc::2, 2606:4700:4700::1111
+#  SETUP STEPS
+# -------------------------------------------------------
+#
+#  1) Identify your interface name and MAC address:
+#       ip a
+#       ip route | grep default
+#
+#  2) Edit this file — replace all <PLACEHOLDERS>:
+#       sudo nano /etc/netplan/netplan-2604-vlans.yaml
+#
+#  3) Backup the old config:
+#       sudo cp /etc/netplan/<old-file> /home/ubuntu/<old-file>.backup
+#
+#  4) Set correct permissions:
+#       sudo chmod 600 /etc/netplan/netplan-2604-vlans.yaml
+#
+#  5) Test before applying:
+#       sudo netplan try           (applies for 60s, auto-reverts on failure)
+#       sudo netplan --debug generate  (syntax check only)
+#
+#  6) Apply if test passed:
+#       sudo netplan apply
+#
+#  7) Verify:
+#       ping 1.1.1.1     (IP resolution)
+#       ping x.co        (DNS resolution)
 #
 # -------------------------------------------------------
-#  Source: https://netplan.io/examples
+#  COMMON INTERFACE NAMES
+#    ens33     — VMware (older)
+#    ens160    — VMware (newer)
+#    enp0s3    — VirtualBox
+#    eno4      — Dell servers
+#    eth0      — generic
 #
-#  renderer: "networkd" or "NetworkManager"
+# -------------------------------------------------------
+#  DNS OPTIONS (pick 3, systemd-resolved ignores beyond that)
+#    Security/filtering:
+#      NextDNS:             45.90.30.148, 45.90.28.148
+#      Cloudflare Families: 1.1.1.3, 1.0.0.3
+#      OpenDNS Family:      208.67.222.123, 208.67.220.123
+#      Quad9:               9.9.9.9, 149.112.112.112
+#    No filtering:
+#      Cloudflare:          1.1.1.1, 1.0.0.1
+#      Google:              8.8.8.8, 8.8.4.4
 #
+# -------------------------------------------------------
 #  DEBUGGING
 #    sudo netplan --debug apply
-#      or
-#    sudo netplan try
+#    sudo systemd-resolve --status          (verify DNS servers are active)
+#    resolvectl query x.co                  (test DNS resolution)
 #
-#  if you get error: ' Permissions for /etc/netplan/netplan-2604-vlans.yaml are too open. Netplan configuration should NOT be accessible by others.' 
-#     sudo chmod 600 /etc/netplan/netplan-2604-vlans.yaml
-#
-#	 If you get the error "inconsistant indentation"
-#		  sed 's/ /./g' 50-cloud-init.yaml
+#  Errors:
+#    "Permissions too open"  →  sudo chmod 600 /etc/netplan/*.yaml
+#    "Inconsistent indentation"  →  sed 's/ /./g' <file>  (reveals tabs vs spaces)
 #
 # -------------------------------------------------------
+
 network:
   version: 2
-  wifis: {}
-  # renderer: networkd
+  renderer: networkd
   ethernets:
-  # ens160: # VMWARE
-  # eno4:
-    enp193s0:
-      set-name: enp193s0
-      dhcp6: true
+    <INTERFACE>:                     # e.g. enp193s0, ens160, eno4
       dhcp4: false
-      nameservers:
-        addresses: [10.50.1.1, 45.90.30.148, 1.0.0.3, 208.67.222.123, 9.9.9.9, 2606:4700:4700::1003, 2620:119:35::123, 2620:fe::fe, 1.0.0.2]
+      dhcp6: false
       match:
-        macaddress: 78:55:36:08:f2:d6
-    #enp197s0:
-    #  accept-ra: true
+        macaddress: <MAC_ADDRESS>    # e.g. 78:55:36:08:f2:d6  (from: ip a)
+
   vlans:
-      vlan200:
-        id: 200
-        link: enp193s0
+    vlan<VLAN_ID>:                   # e.g. vlan200
+      id: <VLAN_ID>                  # e.g. 200
+      link: <INTERFACE>              # must match ethernet key above
+      addresses:
+        - <IP_ADDRESS>/<PREFIX>      # e.g. 10.50.1.10/24
+      routes:
+        - to: default
+          via: <GATEWAY>             # e.g. 10.50.1.1
+          metric: 100
+      dhcp6: true                    # remove if IPv6 not needed
+      nameservers:
         addresses:
-          - 10.50.1.10/24
-        routes:
-          - to: default
-            via: 10.50.1.1
-
-
-#------ stock settings ------------------------------
-# This is the network config written by 'subiquity'
-# network:
-#   ethernets:
-#     enp193s0:
-#       dhcp4: true
-#       dhcp6: true
-#       match:
-#         macaddress: 78:55:36:08:f2:d6
-#       set-name: enp193s0
-#     enp197s0:
-#       accept-ra: true
-#   version: 2
-#   wifis: {}
+          - <GATEWAY>                # local router first (handles LAN hostnames)
+          - 45.90.30.148             # NextDNS primary
+          - 1.0.0.3                  # OpenDNS secondary
+        search:
+          - home.lan                 # local domain (remove if not using local DNS)
+      optional: true                 # prevents boot delay if network is slow
