@@ -2,6 +2,11 @@
 #  Purpose: Static IPv4/IPv6 assignment with VLAN — generic template
 #  For: Ubuntu 26.04 Server (LTS)
 #
+#  Quick Download: 
+#     curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-2604.yaml -o netplan-2604.yaml && sudo chmod 600 netplan-2604.yaml
+#     mv netplan-2604.yaml /etc/netplan/netplan-2604.yaml
+#     cd /etc/netplan/
+#
 # -------------------------------------------------------
 #  SETUP STEPS
 # -------------------------------------------------------
