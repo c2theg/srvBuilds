@@ -8,24 +8,29 @@
 #     cd /etc/netplan/
 # -------------------------------------------------------
 #	1) First identify the interface name (like ens33, eth0, enp0s3, eno4 (Dell Servers), ens160 (VMWare), enp0s3, etc.).
-#		 ip a
-#    ip route | grep default   ( get the current Default Gateway from DHCP )
+#      ip a
+#      ip route | grep default   ( get the current Default Gateway from DHCP )
 #
 #	2) ls /etc/netplan/
 #
-#	3) Override the config with bellow
-#		sudo nano netplan-2604-vlans.yaml
-#		- save and close
+#	3) backup the old config with bellow
+#		  sudo cp /etc/netplan/<filename> /home/ubuntu/<filename>.backup
 #
-# 4) TEST THE PLAN BEFORE DEPLOYING!!!! ***
-#    sudo netplan try
-#   ** if it all works, then continue **
+# 4) Modify the config with bellow
+#		  sudo nano netplan-2604-vlans.yaml
+#		  - save and close (Ctrl + X, then Y, then Enter)
 #
-#	5) Apply Settings
-#		sudo netplan apply
+# 5) *** TEST THE PLAN BEFORE DEPLOYING! ***
+#      netplan --debug generate   (This will test the config for syntax errors)
+#      sudo netplan try           (This will apply the config for 60 seconds and revert back, so you can see if it all works. if it fails it resets)
+#   
+#    ** if it all works, then continue **
 #
-#	6) ping 1.1.1.1
-#	7) ping t.co
+#	6) Apply Settings
+#		   sudo netplan apply
+#
+#	7) ping 1.1.1.1
+#	8) ping t.co
 #
 # -------------------------------------------------------
 #   NextDNS, Cloudflare Family Sheild (backups), OpenDNS Family - (Servers dont need to access porn!)
