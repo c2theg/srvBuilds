@@ -1,8 +1,8 @@
 #  Christopher Gray - 5/25/2026
-#	 Version 0.0.10
+#	 Version 0.0.11
 #	 For: Ubuntu 26.04 Server (LTS)
 #	 Quick Download: 
-#		  wget -O "netplan-2604-vlans.yaml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-2604-vlans.yaml
+#		  wget -O "netplan-2604-vlans.yaml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-2604-vlans.yaml && sudo chmod 600 netplan-2604-vlans.yaml
 #	    mv netplan-2604-vlans.yaml /etc/netplan/netplan-2604-vlans.yaml
 #     cd /etc/netplan/
 # -------------------------------------------------------
