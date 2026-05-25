@@ -1,10 +1,10 @@
-#  By: Christopher Gray  |  Updated: 5/25/2026  |  Version 0.0.11  | https://github.com/c2theg
+#  By: Christopher Gray  |  Updated: 5/25/2026  |  Version 0.0.12  | https://github.com/c2theg
 #	 Purpose: To staticly assign an ipv4 address to an interface with vlans
 #	 For: Ubuntu 26.04 Server (LTS)
 #
-#	 Quick Download: 
-#		  wget -O "netplan-2604-vlans.yaml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-2604-vlans.yaml && sudo chmod 600 netplan-2604-vlans.yaml
-#	    mv netplan-2604-vlans.yaml /etc/netplan/netplan-2604-vlans.yaml
+#  Quick Download: 
+#     curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-2604-vlans.yaml -o netplan-2604-vlans.yaml && sudo chmod 600 netplan-2604-vlans.yaml
+#     mv netplan-2604-vlans.yaml /etc/netplan/netplan-2604-vlans.yaml
 #     cd /etc/netplan/
 # -------------------------------------------------------
 #	1) First identify the interface name (like ens33, eth0, enp0s3,  eno4 (Dell Servers), ens160 (VMWare), enp0s3, etc.).
@@ -43,7 +43,7 @@
 #    sudo netplan try
 #
 #  if you get error: ' Permissions for /etc/netplan/netplan-2604-vlans.yaml are too open. Netplan configuration should NOT be accessible by others.' 
-#	    sudo chmod 600 /etc/netplan/netplan-2604-vlans.yaml
+#     sudo chmod 600 /etc/netplan/netplan-2604-vlans.yaml
 #
 #	 If you get the error "inconsistant indentation"
 #		  sed 's/ /./g' 50-cloud-init.yaml
