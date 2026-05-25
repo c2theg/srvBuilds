@@ -16,30 +16,18 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.1.26
-Last Updated:  4/21/2026
-
+Version:  0.1.27
+Last Updated:  5/25/2026
 
 "
 echo "Downloading required dependencies...
 
 "
 wget -O "install_tailscale.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_tailscale.sh && chmod u+x install_tailscale.sh
-
-
 #--------------------------------------------------------------------------------------------
 curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
 curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
-
-#sudo -E apt-get update
-#sudo -E apt-get install -y tailscale
 #-------------------------------------
-
-
-
-# Interactive Tailscale subnet-router / jump-box installer
-# Ubuntu 22.04+
-#
 # What it does:
 # - installs/updates Tailscale
 # - enables IPv4/IPv6 forwarding
@@ -309,8 +297,6 @@ Useful checks:
     tailscale netcheck
 EOF
 
-
-
 #--- Exit Node ---- https://tailscale.com/kb/1103/exit-nodes/?tab=linux
 # echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
 # echo 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
@@ -320,51 +306,25 @@ EOF
 # printf '#!/bin/sh\n\nethtool -K %s rx-udp-gro-forwarding on rx-gro-list off \n' "$(ip -o route get 8.8.8.8 | cut -f 5 -d " ")" | sudo tee /etc/networkd-dispatcher/routable.d/50-tailscale
 # sudo chmod 755 /etc/networkd-dispatcher/routable.d/50-tailscale
 
-
-
-
 echo "
 
 Version $(tailscale version)
 
+
+Run this command to get SSH Acces, and access your network remotely (advertise exit-node):
+    tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=10.1.1.0/24 --ssh --accept-risk=lose-ssh
+
+  Multiple Vlans: 
+    tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=10.1.1.0/24,10.15.1.0/24 --ssh --accept-risk=lose-ssh
+
 "
 #-------------------------------------
-#tailscale set --auto-update
-
-#tailscale up --reset
-
-#sudo tailscale up --ssh
-#sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=192.168.1.0/24 --ssh --accept-risk=lose-ssh
-#sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=10.1.1.0/24 --ssh --accept-risk=lose-ssh
-#sudo tailscale up --stateful-filtering=false --accept-routes --advertise-exit-node --ssh --accept-risk=lose-ssh
-
-#tailscale up --netfilter-mode=off --stateful-filtering=false --accept-routes --advertise-exit-node --advertise-routes=10.13.1.0/24,10.11.1.0/24 --ssh --accept-risk=lose-ssh --exit-node-allow-lan-access
-
-tailscale status
-
-
 echo "
 
 Your TailScale IP is: 
-
 
 "
 tailscale ip -4
 tailscale ip -6
 tailscale netcheck
 tailscale status
-
-
-echo " 
-
-Run this again to advertise exit-node
-
-
-sudo tailscale set \
-  --advertise-routes=10.1.1.0/24,192.168.1.0/24 \
-  --advertise-exit-node \
-  --ssh
-
-
- "
-
