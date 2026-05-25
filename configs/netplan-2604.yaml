@@ -1,10 +1,10 @@
 #  By: Christopher Gray  |  Updated: 5/25/2026  |  Version 0.0.12  | https://github.com/c2theg
-#	 Purpose: To staticly assign an ipv4 address to an interface with vlans
+#	 Purpose: To staticly assign an ipv4 address to an interface
 #	 For: Ubuntu 26.04 Server (LTS)
 #
 #  Quick Download: 
-#     curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-2604-vlans.yaml -o netplan-2604-vlans.yaml && sudo chmod 600 netplan-2604-vlans.yaml
-#     mv netplan-2604-vlans.yaml /etc/netplan/netplan-2604-vlans.yaml
+#     curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-2604.yaml -o netplan-2604.yaml && sudo chmod 600 netplan-2604.yaml
+#     mv netplan-2604.yaml /etc/netplan/netplan-2604.yaml
 #     cd /etc/netplan/
 # -------------------------------------------------------
 #	1) First identify the interface name (like ens33, eth0, enp0s3,  eno4 (Dell Servers), ens160 (VMWare), enp0s3, etc.).
@@ -66,16 +66,6 @@ network:
         macaddress: 78:55:36:08:f2:d6
     #enp197s0:
     #  accept-ra: true
-  vlans:
-      vlan200:
-        id: 200
-        link: enp193s0
-        addresses:
-          - 10.50.1.10/24
-        routes:
-          - to: default
-            via: 10.50.1.1
-
 
 #------ stock settings ------------------------------
 # This is the network config written by 'subiquity'
