@@ -3,8 +3,8 @@
 #  For: Ubuntu 26.04 Server (LTS)
 #
 #  Quick Download: 
-#     curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-2604.yaml -o netplan-2604.yaml && sudo chmod 600 netplan-2604.yaml
-#     mv netplan-2604.yaml /etc/netplan/netplan-2604.yaml
+#     curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-2604-vlans.yaml -o netplan-2604-vlans.yaml && sudo chmod 600 netplan-2604-vlans.yaml
+#     mv netplan-2604-vlans.yaml /etc/netplan/netplan-2604-vlans.yaml
 #     cd /etc/netplan/
 #
 # -------------------------------------------------------
