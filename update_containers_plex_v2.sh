@@ -2,7 +2,7 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.6.1
+# Version:      0.6.3
 # Last Updated: 5/26/2026
 # Author:       Christopher Gray
 #
@@ -21,10 +21,10 @@
 #
 #   Container   Image                              Port
 #   ---------   --------------------------------   ----
-#   plex        lscr.io/linuxserver/plex:latest    32400 (host net)
-#   radarr      lscr.io/linuxserver/radarr:latest  7878
-#   sonarr      lscr.io/linuxserver/sonarr:latest  8989
-#   sabnzbd     lscr.io/linuxserver/sabnzbd:latest 8080
+#   plex        linuxserver/plex:latest    32400 (host net)
+#   radarr      linuxserver/radarr:latest  7878
+#   sonarr      linuxserver/sonarr:latest  8989
+#   sabnzbd     linuxserver/sabnzbd:latest 8080
 #
 #=======================================================================
 # WHAT NEEDS TO BE CHANGED BEFORE FIRST USE
@@ -109,6 +109,19 @@
 #=======================================================================
 # CHANGELOG
 #=======================================================================
+#
+#   0.6.3 — 5/26/2026
+#     - Switched all images from lscr.io/linuxserver/* to linuxserver/*
+#       (Docker Hub) per hub.docker.com/r/linuxserver/* official paths
+#     - Updated pre-flight DNS and HTTPS checks to use hub.docker.com
+#       instead of lscr.io (matches the new pull source)
+#
+#   0.6.2 — 5/26/2026
+#     - Fixed internet check: replaced ping with DNS + HTTPS checks.
+#       lscr.io (and most container registries) block ICMP ping, so ping
+#       always failed even when the network was healthy. Now uses:
+#         1) getent hosts lscr.io  — DNS resolution via system resolver
+#         2) curl (or wget fallback) HTTPS request — real connectivity test
 #
 #   0.6.1 — 5/26/2026
 #     - Fixed tar --exclude "has no effect" error: --exclude flags now
@@ -213,10 +226,10 @@ LOCKFILE="/tmp/plex_stack_update.lock"
 ALL_CONTAINERS=("plex" "radarr" "sonarr" "sabnzbd")
 
 declare -A IMAGES
-IMAGES["plex"]="lscr.io/linuxserver/plex:latest"
-IMAGES["radarr"]="lscr.io/linuxserver/radarr:latest"
-IMAGES["sonarr"]="lscr.io/linuxserver/sonarr:latest"
-IMAGES["sabnzbd"]="lscr.io/linuxserver/sabnzbd:latest"
+IMAGES["plex"]="linuxserver/plex:latest"
+IMAGES["radarr"]="linuxserver/radarr:latest"
+IMAGES["sonarr"]="linuxserver/sonarr:latest"
+IMAGES["sabnzbd"]="linuxserver/sabnzbd:latest"
 
 AUTO_MODE=false
 [[ "${1:-}" == "--auto" ]] && AUTO_MODE=true
@@ -395,7 +408,19 @@ log ""
 log "===== PRE-FLIGHT CHECKS ====="
 docker info >/dev/null 2>&1 || { log "ERROR: Docker is not running."; exit 1; }
 log "Docker:    OK"
-ping -c 1 -W 5 lscr.io >/dev/null 2>&1 || { log "ERROR: Cannot reach lscr.io. Check internet."; exit 1; }
+
+# DNS check — resolves hostname using system resolver
+getent hosts hub.docker.com >/dev/null 2>&1 || { log "ERROR: DNS cannot resolve hub.docker.com. Check /etc/resolv.conf."; exit 1; }
+log "DNS:       OK"
+
+# HTTPS connectivity — registries block ICMP ping so we use curl/wget instead
+if command -v curl >/dev/null 2>&1; then
+  curl -s --max-time 10 -o /dev/null https://hub.docker.com 2>/dev/null \
+    || { log "ERROR: Cannot reach hub.docker.com via HTTPS (curl). Check internet."; exit 1; }
+else
+  wget -q --timeout=10 --spider https://hub.docker.com 2>/dev/null \
+    || { log "ERROR: Cannot reach hub.docker.com via HTTPS (wget). Check internet."; exit 1; }
+fi
 log "Internet:  OK"
 log ""
 
@@ -519,7 +544,7 @@ for c in "${UPDATE_LIST[@]}"; do
         -v "$Media_OtherVideos":/videos \
         -v "$Media_Photos":/photos \
         --restart unless-stopped \
-        lscr.io/linuxserver/plex:latest
+        linuxserver/plex:latest
       ;;
 
     radarr)
@@ -536,7 +561,7 @@ for c in "${UPDATE_LIST[@]}"; do
         -v /mnt/remote_share_02:/remote_share_02 \
         -v /mnt/remote_share_unas:/remote_share_unas \
         --restart unless-stopped \
-        lscr.io/linuxserver/radarr:latest
+        linuxserver/radarr:latest
       ;;
 
     sonarr)
@@ -553,7 +578,7 @@ for c in "${UPDATE_LIST[@]}"; do
         -v /mnt/remote_share_02:/remote_share_02 \
         -v /mnt/remote_share_unas:/remote_share_unas \
         --restart unless-stopped \
-        lscr.io/linuxserver/sonarr:latest
+        linuxserver/sonarr:latest
       ;;
 
     sabnzbd)
@@ -570,7 +595,7 @@ for c in "${UPDATE_LIST[@]}"; do
         -v /mnt/remote_share_02:/remote_share_02 \
         -v /mnt/remote_share_unas:/remote_share_unas \
         --restart unless-stopped \
-        lscr.io/linuxserver/sabnzbd:latest
+        linuxserver/sabnzbd:latest
       ;;
 
   esac
