@@ -253,7 +253,7 @@ fi
 
 log "Scanning $App_Data — top 10 largest files:"
 log ""
-find "$App_Data" -type f -exec du -h {} + 2>/dev/null | sort -rh | head -n 10
+find "$App_Data" -type f -exec du -h {} + 2>/dev/null | sort -rh | head -n 10 || true
 log ""
 
 # --- Backup 1: Critical config & databases (timestamped, keep last BACKUP_KEEP) ---
