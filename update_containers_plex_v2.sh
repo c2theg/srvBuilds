@@ -2,8 +2,8 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.6.4
-# Last Updated: 5/25/2026
+# Version:      0.6.5
+# Last Updated: 5/26/2026
 # Author:       Christopher Gray
 #
 # Install:  wget --no-cache -O 'update_containers_plex_v2.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_containers_plex_v2.sh' && chmod u+x update_containers_plex_v2.sh
@@ -115,6 +115,14 @@
 #=======================================================================
 # CHANGELOG
 #=======================================================================
+#
+#   0.6.5 — 5/26/2026
+#     - Fixed skip logic in Phase 4: was skipping container restarts whenever
+#       docker pull returned "Image is up to date", even if the running container
+#       was using an old image (e.g. from lscr.io pulled 5 months ago).
+#       Now compares the running container's actual image ID (docker inspect)
+#       against the locally-tagged image ID after pulling. Only skips if they
+#       truly match — otherwise always recreates the container.
 #
 #   0.6.4 — 5/25/2026
 #     - Added --skip-backup flag: skips Phase 1 entirely (useful when
@@ -563,8 +571,13 @@ log ""
 
 for c in "${UPDATE_LIST[@]}"; do
 
-  if [ "${PULL_NEW[$c]}" -eq 0 ]; then
-    log "$c: Image unchanged — skipping restart."
+  # Compare the image ID the running container is using vs the ID of the local tag
+  # we just pulled. If they match the container is already current; if not (including
+  # containers started from a different registry like lscr.io), always recreate.
+  RUNNING_IMG=$(docker inspect --format='{{.Image}}' "$c" 2>/dev/null || echo "")
+  PULLED_IMG=$(docker inspect --format='{{.Id}}' "${IMAGES[$c]}" 2>/dev/null || echo "new")
+  if [ -n "$RUNNING_IMG" ] && [ "$RUNNING_IMG" = "$PULLED_IMG" ]; then
+    log "$c: Already running the latest image — skipping restart."
     SKIPPED_CONTAINERS+=("$c")
     continue
   fi
