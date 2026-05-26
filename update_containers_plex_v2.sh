@@ -6,6 +6,8 @@
 # Last Updated: 5/25/2026
 # Author:       Christopher Gray
 #
+# Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_containers_plex_v2.sh && chmod u+x update_containers_plex_v2.sh
+#
 # Description:
 #   Updates the Plex media stack Docker containers (Plex, Radarr,
 #   Sonarr, SABnzbd) by pulling the latest images, backing up all
