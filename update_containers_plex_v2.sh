@@ -2,7 +2,7 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.6.5
+# Version:      0.6.6
 # Last Updated: 5/26/2026
 # Author:       Christopher Gray
 #
@@ -17,7 +17,6 @@
 #
 #=======================================================================
 # MANAGED CONTAINERS
-#=======================================================================
 #
 #   Container   Image                              Port
 #   ---------   --------------------------------   ----
@@ -46,7 +45,17 @@
 #   5. BACKUP_KEEP   — how many rolling backups to keep in $HOME
 #                      Default: 10
 #
-#   6. Crontab path  — update the path in the crontab line below to
+#   6. ENABLE_HW_TRANSCODING — set true to pass Intel iGPU (/dev/dri) into
+#                      the Plex container for Quick Sync hardware transcoding.
+#                      Requires: Plex Pass subscription + Intel NUC iGPU
+#                      The host ubuntu user (PUID=1000) must be in the render
+#                      and video groups:
+#                        sudo usermod -aG render,video ubuntu
+#                      Then in Plex: Settings → Transcoder →
+#                        "Use hardware acceleration when available" ✓
+#                      Default: true
+#
+#   7. Crontab path  — update the path in the crontab line below to
 #                      match where this script is stored on your server
 #
 #   NOTE: Keep these values in sync with create_containers_plex_v2.sh
@@ -115,6 +124,16 @@
 #=======================================================================
 # CHANGELOG
 #=======================================================================
+#
+#   0.6.6 — 5/26/2026
+#     - Added Intel Quick Sync hardware transcoding support for Intel NUC
+#       Controlled by ENABLE_HW_TRANSCODING=true (default) in config.
+#       At runtime: checks for /dev/dri on the host — if present, passes
+#       --device /dev/dri:/dev/dri into the Plex container. If missing,
+#       logs a warning and starts Plex without it (no crash).
+#       Requires: Plex Pass subscription + host user in render/video groups
+#         sudo usermod -aG render,video ubuntu
+#       Enable in Plex UI: Settings → Transcoder → Use hardware acceleration
 #
 #   0.6.5 — 5/26/2026
 #     - Fixed skip logic in Phase 4: was skipping container restarts whenever
@@ -239,6 +258,10 @@ Media_Downloads="/media/media_downloads"
 temp_downloads="/media/temp_downloads"
 
 BACKUP_KEEP=10    # Number of backups to retain (sliding window)
+
+# Hardware transcoding via Intel Quick Sync (Intel NUC iGPU)
+# Requires Plex Pass + /dev/dri on the host. Set false to disable.
+ENABLE_HW_TRANSCODING=true
 
 #--------------------------------------
 # Runtime vars
@@ -567,6 +590,19 @@ if [ "${#REMOTE_VOLS[@]}" -gt 0 ]; then
 else
   log "  No remote shares mounted — containers will start without them"
 fi
+
+# Intel Quick Sync hardware transcoding — only for Plex, only if /dev/dri exists
+HW_ARGS=()
+if $ENABLE_HW_TRANSCODING; then
+  if [ -d /dev/dri ]; then
+    HW_ARGS=(--device /dev/dri:/dev/dri)
+    log "Hardware transcoding: enabled (Intel Quick Sync via /dev/dri)"
+  else
+    log "WARNING: ENABLE_HW_TRANSCODING=true but /dev/dri not found — hardware transcoding disabled"
+  fi
+else
+  log "Hardware transcoding: disabled (ENABLE_HW_TRANSCODING=false)"
+fi
 log ""
 
 for c in "${UPDATE_LIST[@]}"; do
@@ -615,6 +651,7 @@ for c in "${UPDATE_LIST[@]}"; do
         -v "$Media_OtherVideos":/videos \
         -v "$Media_Photos":/photos \
         ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
+        ${HW_ARGS[@]+"${HW_ARGS[@]}"} \
         --restart unless-stopped \
         linuxserver/plex:latest
       ;;
