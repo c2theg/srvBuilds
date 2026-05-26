@@ -2,8 +2,8 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.6.3
-# Last Updated: 5/26/2026
+# Version:      0.6.4
+# Last Updated: 5/25/2026
 # Author:       Christopher Gray
 #
 # Install:  wget --no-cache -O 'update_containers_plex_v2.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_containers_plex_v2.sh' && chmod u+x update_containers_plex_v2.sh
@@ -86,6 +86,12 @@
 #   Automated / cron (no prompts, updates all, skips unchanged):
 #     sudo bash update_containers_plex_v2.sh --auto
 #
+#   Skip backup (useful when drives are known-good but you just want a fast update):
+#     sudo bash update_containers_plex_v2.sh --skip-backup
+#
+#   Both flags can be combined:
+#     sudo bash update_containers_plex_v2.sh --auto --skip-backup
+#
 #=======================================================================
 # CRONTAB — Run first Monday of every month at 4:00 AM
 #=======================================================================
@@ -109,6 +115,17 @@
 #=======================================================================
 # CHANGELOG
 #=======================================================================
+#
+#   0.6.4 — 5/25/2026
+#     - Added --skip-backup flag: skips Phase 1 entirely (useful when
+#       drives are unmounted or a fast update is needed without backup)
+#     - Added check_remote_mounts(): uses mountpoint -q to detect which
+#       remote shares (/mnt/remote_share_01/02/unas) are actually mounted.
+#       Only mounted shares are passed as -v flags to docker run.
+#       Unmounted/missing shares are logged and silently skipped — prevents
+#       "mkdir: file exists" Docker daemon errors on failed NFS/SMB mounts.
+#     - Both --auto and --skip-backup flags now parsed via a loop so they
+#       can be combined in any order on the command line
 #
 #   0.6.3 — 5/26/2026
 #     - Switched all images from lscr.io/linuxserver/* to linuxserver/*
@@ -232,7 +249,13 @@ IMAGES["sonarr"]="linuxserver/sonarr:latest"
 IMAGES["sabnzbd"]="linuxserver/sabnzbd:latest"
 
 AUTO_MODE=false
-[[ "${1:-}" == "--auto" ]] && AUTO_MODE=true
+SKIP_BACKUP=false
+for arg in "$@"; do
+  case "$arg" in
+    --auto)        AUTO_MODE=true ;;
+    --skip-backup) SKIP_BACKUP=true ;;
+  esac
+done
 
 RUN_START=$(date "+%Y-%m-%d %H:%M:%S")
 UPDATED_CONTAINERS=()
@@ -253,6 +276,29 @@ ask() {
   fi
 }
 
+REMOTE_VOLS=()   # populated by check_remote_mounts before each docker run batch
+
+# Populates REMOTE_VOLS with -v flags for any remote share that is actually mounted.
+# Uses mountpoint -q so a directory that exists but isn't mounted is silently skipped,
+# preventing "mkdir: file exists" errors from the Docker daemon.
+check_remote_mounts() {
+  REMOTE_VOLS=()
+  local -a pairs=(
+    "/mnt/remote_share_01:/remote_share_01"
+    "/mnt/remote_share_02:/remote_share_02"
+    "/mnt/remote_share_unas:/remote_share_unas"
+  )
+  for pair in "${pairs[@]}"; do
+    local src="${pair%%:*}"
+    local dst="${pair##*:}"
+    if mountpoint -q "$src" 2>/dev/null; then
+      REMOTE_VOLS+=(-v "${src}:${dst}")
+    else
+      log "  NOTE: $src is not mounted — skipping volume"
+    fi
+  done
+}
+
 #--------------------------------------
 # Traps
 #--------------------------------------
@@ -267,7 +313,7 @@ flock -n 200 || { log "Another instance is already running. Exiting."; exit 1; }
 #--------------------------------------
 log ""
 log "===== PLEX STACK UPDATE STARTED: $RUN_START ====="
-log "Mode: $(if $AUTO_MODE; then echo 'Automated (--auto)'; else echo 'Interactive'; fi)"
+log "Mode: $(if $AUTO_MODE; then echo 'Automated (--auto)'; else echo 'Interactive'; fi)$(if $SKIP_BACKUP; then echo ' | backup: SKIPPED (--skip-backup)'; fi)"
 log ""
 
 # Root check first — needed before any file or docker operations
@@ -279,6 +325,10 @@ fi
 #--------------------------------------
 # Phase 1: Backup  (runs first — before any other changes)
 #--------------------------------------
+if $SKIP_BACKUP; then
+  log "===== PHASE 1: Backup SKIPPED (--skip-backup) ====="
+  BACKUP_DIR="skipped"
+else
 log "===== PHASE 1: Backup ====="
 
 if [ -d "$App_Data" ]; then
@@ -402,6 +452,8 @@ log ""
 log "Backup 2/2 complete: $BACKUP_AUTODATA"
 log ""
 
+fi  # end: if ! $SKIP_BACKUP
+
 #--------------------------------------
 # Pre-flight: Docker & internet checks
 #--------------------------------------
@@ -500,6 +552,15 @@ log ""
 #--------------------------------------
 log "===== PHASE 4: Recreate Containers ====="
 
+log "Checking remote mount points..."
+check_remote_mounts
+if [ "${#REMOTE_VOLS[@]}" -gt 0 ]; then
+  log "  Mounted remote shares: $(printf '%s ' "${REMOTE_VOLS[@]}" | tr -s ' ')"
+else
+  log "  No remote shares mounted — containers will start without them"
+fi
+log ""
+
 for c in "${UPDATE_LIST[@]}"; do
 
   if [ "${PULL_NEW[$c]}" -eq 0 ]; then
@@ -536,13 +597,11 @@ for c in "${UPDATE_LIST[@]}"; do
         -e VERSION=docker \
         -v "$App_Data/plex/library":/config \
         -v "$Media_Movies":/movies \
-        -v /mnt/remote_share_01:/remote_share_01 \
-        -v /mnt/remote_share_02:/remote_share_02 \
-        -v /mnt/remote_share_unas:/remote_share_unas \
         -v "$Media_TV":/tv \
         -v "$Media_Music":/music \
         -v "$Media_OtherVideos":/videos \
         -v "$Media_Photos":/photos \
+        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
         --restart unless-stopped \
         linuxserver/plex:latest
       ;;
@@ -557,9 +616,7 @@ for c in "${UPDATE_LIST[@]}"; do
         -v "$App_Data/radarr/data":/config \
         -v "$Media_Movies":/movies \
         -v "$Media_Downloads":/downloads \
-        -v /mnt/remote_share_01:/remote_share_01 \
-        -v /mnt/remote_share_02:/remote_share_02 \
-        -v /mnt/remote_share_unas:/remote_share_unas \
+        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
         --restart unless-stopped \
         linuxserver/radarr:latest
       ;;
@@ -574,9 +631,7 @@ for c in "${UPDATE_LIST[@]}"; do
         -v "$App_Data/sonarr/data":/config \
         -v "$Media_TV":/tv \
         -v "$Media_Downloads":/downloads \
-        -v /mnt/remote_share_01:/remote_share_01 \
-        -v /mnt/remote_share_02:/remote_share_02 \
-        -v /mnt/remote_share_unas:/remote_share_unas \
+        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
         --restart unless-stopped \
         linuxserver/sonarr:latest
       ;;
@@ -591,9 +646,7 @@ for c in "${UPDATE_LIST[@]}"; do
         -v "$App_Data/sabnzbd/config":/config \
         -v "$temp_downloads":/incomplete-downloads \
         -v "$Media_Downloads":/downloads \
-        -v /mnt/remote_share_01:/remote_share_01 \
-        -v /mnt/remote_share_02:/remote_share_02 \
-        -v /mnt/remote_share_unas:/remote_share_unas \
+        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
         --restart unless-stopped \
         linuxserver/sabnzbd:latest
       ;;
@@ -635,7 +688,7 @@ SKIPPED_STR="none"
 log "===== UPDATE COMPLETE ====="
 log "  Started:   $RUN_START"
 log "  Finished:  $RUN_END"
-log "  Backup:    $BACKUP_DIR"
+log "  Backup:    $(if $SKIP_BACKUP; then echo 'skipped (--skip-backup)'; else echo "$BACKUP_DIR"; fi)"
 log "  Updated:   $UPDATED_STR"
 log "  Skipped:   $SKIPPED_STR"
 log ""
