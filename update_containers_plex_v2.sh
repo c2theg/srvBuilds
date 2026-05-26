@@ -2,7 +2,7 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.3.0
+# Version:      0.4.0
 # Last Updated: 5/25/2026
 # Author:       Christopher Gray
 #
@@ -110,10 +110,17 @@
 # CHANGELOG
 #=======================================================================
 #
+#   0.4.0 — 5/25/2026
+#     - Backup (Phase 1) now runs immediately after root check, before
+#       any Docker or network operations — data is safe before anything else runs
+#     - Disk space check moved into Phase 1 (where it belongs, pre-backup)
+#     - Docker and internet checks moved to a post-backup pre-flight block
+#       so they only gate container operations, not the backup itself
+#
 #   0.3.0 — 5/25/2026
 #     - Added comprehensive header: description, managed containers,
 #       what to change, how to get started, usage, crontab, changelog
-#     - Incremented version to 0.3.0
+#     - Added Install wget line to header
 #
 #   0.2.0 — 5/25/2026
 #     - Added set -euo pipefail for strict error handling
@@ -212,19 +219,16 @@ log "===== PLEX STACK UPDATE STARTED: $RUN_START ====="
 log "Mode: $(if $AUTO_MODE; then echo 'Automated (--auto)'; else echo 'Interactive'; fi)"
 log ""
 
-#--------------------------------------
-# Pre-flight checks
-#--------------------------------------
-log "===== PRE-FLIGHT CHECKS ====="
-
+# Root check first — needed before any file or docker operations
 if [ "$EUID" -ne 0 ]; then
   log "ERROR: Must be run as root. Use: sudo bash $0"
   exit 1
 fi
-log "Root:      OK"
 
-docker info >/dev/null 2>&1 || { log "ERROR: Docker is not running."; exit 1; }
-log "Docker:    OK"
+#--------------------------------------
+# Phase 1: Backup  (runs first — before any other changes)
+#--------------------------------------
+log "===== PHASE 1: Backup ====="
 
 if [ -d "$App_Data" ]; then
   NEEDED_KB=$(du -sk "$App_Data" | awk '{print $1}')
@@ -234,19 +238,9 @@ if [ -d "$App_Data" ]; then
     log "       Need $(( NEEDED_KB / 1024 )) MB, have $(( AVAIL_KB / 1024 )) MB."
     exit 1
   fi
-  log "Disk:      OK ($(( AVAIL_KB / 1024 )) MB free, $(( NEEDED_KB / 1024 )) MB needed)"
 fi
 
-ping -c 1 -W 5 lscr.io >/dev/null 2>&1 || { log "ERROR: Cannot reach lscr.io. Check internet."; exit 1; }
-log "Internet:  OK"
-log ""
-
-#--------------------------------------
-# Phase 1: Backup
-#--------------------------------------
-log "===== PHASE 1: Backup ====="
 log "Backing up $App_Data => $BACKUP_ARCHIVE"
-
 tar -czf "$BACKUP_ARCHIVE" "$App_Data" 2>/dev/null || true
 
 if tar -tzf "$BACKUP_ARCHIVE" >/dev/null 2>&1; then
@@ -271,6 +265,16 @@ if [ "$BACKUP_COUNT" -gt "$BACKUP_KEEP" ]; then
     | xargs -r rm -f
   log "Retention: kept last $BACKUP_KEEP backups, removed $(( BACKUP_COUNT - BACKUP_KEEP )) old."
 fi
+log ""
+
+#--------------------------------------
+# Pre-flight: Docker & internet checks
+#--------------------------------------
+log "===== PRE-FLIGHT CHECKS ====="
+docker info >/dev/null 2>&1 || { log "ERROR: Docker is not running."; exit 1; }
+log "Docker:    OK"
+ping -c 1 -W 5 lscr.io >/dev/null 2>&1 || { log "ERROR: Cannot reach lscr.io. Check internet."; exit 1; }
+log "Internet:  OK"
 log ""
 
 #--------------------------------------
