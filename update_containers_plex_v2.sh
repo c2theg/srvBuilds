@@ -2,7 +2,7 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.6.10
+# Version:      0.6.12
 # Last Updated: 5/27/2026
 # Author:       Christopher Gray
 #
