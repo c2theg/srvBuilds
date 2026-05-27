@@ -2,8 +2,8 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.6.6
-# Last Updated: 5/26/2026
+# Version:      0.6.8
+# Last Updated: 5/27/2026
 # Author:       Christopher Gray
 #
 # Install:  wget --no-cache -O 'update_containers_plex_v2.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_containers_plex_v2.sh' && chmod u+x update_containers_plex_v2.sh
