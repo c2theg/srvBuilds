@@ -2,7 +2,7 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.6.9
+# Version:      0.6.10
 # Last Updated: 5/27/2026
 # Author:       Christopher Gray
 #
@@ -273,13 +273,13 @@ BACKUP_KEEP=10    # Number of backups to retain (sliding window)
 
 # Hardware transcoding via Intel Quick Sync (Intel NUC iGPU)
 # Requires Plex Pass + /dev/dri on the host. Set false to disable.
-ENABLE_HW_TRANSCODING=true
+ENABLE_HW_TRANSCODING=false   # TEMP: disabled to diagnose 1.43.2 crash
 
 # Plex version pin — set to "latest" to always track the newest release,
 # or pin to a specific linuxserver tag to hold at a known-good version.
 # Find tags at: https://hub.docker.com/r/linuxserver/plex/tags
 # Example stable pin: PLEX_VERSION="1.42.2.10156-f737b826c-ls272"
-PLEX_VERSION="latest"
+PLEX_VERSION="1.42.2.10156-f737b826c-ls292"   # pinned: 1.43.2 crashes on this NUC (db fixup bug)
 
 #--------------------------------------
 # Runtime vars
@@ -658,7 +658,6 @@ for c in "${UPDATE_LIST[@]}"; do
       docker run -d \
         --name=plex \
         --net=host \
-        --device=/dev/dri:/dev/dri \
         -e PUID=1000 \
         -e PGID=1000 \
         -e TZ="$TimeZone" \
@@ -672,7 +671,7 @@ for c in "${UPDATE_LIST[@]}"; do
         ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
         ${HW_ARGS[@]+"${HW_ARGS[@]}"} \
         --restart unless-stopped \
-        linuxserver/plex:latest
+        "${IMAGES[$c]}"
       ;;
 
     radarr)
@@ -687,7 +686,7 @@ for c in "${UPDATE_LIST[@]}"; do
         -v "$Media_Downloads":/downloads \
         ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
         --restart unless-stopped \
-        linuxserver/radarr:latest
+        "${IMAGES[$c]}"
       ;;
 
     sonarr)
@@ -702,7 +701,7 @@ for c in "${UPDATE_LIST[@]}"; do
         -v "$Media_Downloads":/downloads \
         ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
         --restart unless-stopped \
-        linuxserver/sonarr:latest
+        "${IMAGES[$c]}"
       ;;
 
     sabnzbd)
@@ -717,7 +716,7 @@ for c in "${UPDATE_LIST[@]}"; do
         -v "$Media_Downloads":/downloads \
         ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
         --restart unless-stopped \
-        linuxserver/sabnzbd:latest
+        "${IMAGES[$c]}"
       ;;
 
   esac
