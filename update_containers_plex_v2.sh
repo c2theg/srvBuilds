@@ -2,7 +2,7 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.6.8
+# Version:      0.6.9
 # Last Updated: 5/27/2026
 # Author:       Christopher Gray
 #
@@ -124,6 +124,18 @@
 #=======================================================================
 # CHANGELOG
 #=======================================================================
+#
+#   0.6.8 — 5/27/2026
+#     - Added HARDWARE TRANSCODING status block to summary:
+#         - Shows enabled/disabled state
+#         - Lists each /dev/dri/* device with permissions and owner
+#         - Reads Intel iGPU current and max frequency from sysfs
+#           (/sys/class/drm/card*/gt_cur_freq_mhz — no extra tools needed)
+#         - Optional intel_gpu_top 1-second load sample if intel-gpu-tools
+#           is installed; otherwise prints the apt install command
+#     - Added CONTAINER RESOURCES block to summary:
+#         - docker stats --no-stream for all containers showing
+#           CPU%, memory usage/limit/%, and network I/O
 #
 #   0.6.6 — 5/26/2026
 #     - Added Intel Quick Sync hardware transcoding support for Intel NUC
@@ -263,6 +275,12 @@ BACKUP_KEEP=10    # Number of backups to retain (sliding window)
 # Requires Plex Pass + /dev/dri on the host. Set false to disable.
 ENABLE_HW_TRANSCODING=true
 
+# Plex version pin — set to "latest" to always track the newest release,
+# or pin to a specific linuxserver tag to hold at a known-good version.
+# Find tags at: https://hub.docker.com/r/linuxserver/plex/tags
+# Example stable pin: PLEX_VERSION="1.42.2.10156-f737b826c-ls272"
+PLEX_VERSION="latest"
+
 #--------------------------------------
 # Runtime vars
 #--------------------------------------
@@ -274,7 +292,7 @@ LOCKFILE="/tmp/plex_stack_update.lock"
 ALL_CONTAINERS=("plex" "radarr" "sonarr" "sabnzbd")
 
 declare -A IMAGES
-IMAGES["plex"]="linuxserver/plex:latest"
+IMAGES["plex"]="linuxserver/plex:${PLEX_VERSION}"
 IMAGES["radarr"]="linuxserver/radarr:latest"
 IMAGES["sonarr"]="linuxserver/sonarr:latest"
 IMAGES["sabnzbd"]="linuxserver/sabnzbd:latest"
@@ -743,6 +761,53 @@ log "  Backup:    $(if $SKIP_BACKUP; then echo 'skipped (--skip-backup)'; else e
 log "  Updated:   $UPDATED_STR"
 log "  Skipped:   $SKIPPED_STR"
 log ""
+
+#--------------------------------------
+# Hardware transcoding status
+#--------------------------------------
+log "===== HARDWARE TRANSCODING ====="
+if $ENABLE_HW_TRANSCODING; then
+  if [ -d /dev/dri ]; then
+    log "  Config:   Enabled (ENABLE_HW_TRANSCODING=true)"
+    log "  Devices:"
+    for dev in /dev/dri/*; do
+      log "    $dev  $(stat -c 'perms=%A owner=%U:%G' "$dev" 2>/dev/null)"
+    done
+    # Intel iGPU frequency from sysfs (no extra tools needed)
+    for freq_file in /sys/class/drm/card*/gt_cur_freq_mhz; do
+      [ -f "$freq_file" ] || continue
+      card=$(echo "$freq_file" | grep -o 'card[0-9]*')
+      cur=$(cat "$freq_file" 2>/dev/null)
+      max=$(cat "/sys/class/drm/${card}/gt_max_freq_mhz" 2>/dev/null || echo "?")
+      log "  GPU freq: ${cur} MHz / ${max} MHz max  ($card)"
+    done
+    # intel_gpu_top 1-second snapshot (requires intel-gpu-tools — optional)
+    if command -v intel_gpu_top >/dev/null 2>&1; then
+      log "  GPU load (1s sample via intel_gpu_top):"
+      intel_gpu_top -J -s 1 2>/dev/null \
+        | grep -E '"busy"|"freq"' \
+        | while IFS= read -r line; do log "    $line"; done || true
+    else
+      log "  GPU load: install intel-gpu-tools for live utilisation"
+      log "            sudo apt install -y intel-gpu-tools"
+    fi
+  else
+    log "  Config:   Enabled but /dev/dri not found — HW transcoding inactive"
+  fi
+else
+  log "  Config:   Disabled (ENABLE_HW_TRANSCODING=false)"
+fi
+log ""
+
+#--------------------------------------
+# Container resource usage
+#--------------------------------------
+log "===== CONTAINER RESOURCES ====="
+docker stats --no-stream \
+  --format "  {{printf \"%-10s\" .Name}}  CPU={{printf \"%6s\" .CPUPerc}}  MEM={{.MemUsage}} ({{printf \"%6s\" .MemPerc}})  NET={{.NetIO}}" \
+  2>/dev/null || log "  (docker stats unavailable)"
+log ""
+
 docker ps -a
 log ""
 log "Access your services:"
