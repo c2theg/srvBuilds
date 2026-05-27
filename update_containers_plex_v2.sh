@@ -640,6 +640,7 @@ for c in "${UPDATE_LIST[@]}"; do
       docker run -d \
         --name=plex \
         --net=host \
+        --device=/dev/dri:/dev/dri \
         -e PUID=1000 \
         -e PGID=1000 \
         -e TZ="$TimeZone" \
