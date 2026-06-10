@@ -17,17 +17,18 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.0
-Last Updated:  6/9/2026
+Version:  0.2.4
+Last Updated:  6/10/2026
 
 # https://ollama.com/search
 
 "
 
 #-- Update yourself! --
-# SECURITY NOTE: This overwrites the running script. Re-run the updated copy
-# rather than continuing execution to avoid mixing old and new code.
-wget -O "install_ai.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
+# TODO: Re-enable once v0.2.2 changes are pushed to GitHub.
+#       These wget lines overwrite this script with the GitHub version on every run,
+#       which reverts all local changes before they can execute.
+#wget -O "install_ai.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
 wget -O "install_ai_containers.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_containers.sh && chmod u+x install_ai_containers.sh
 wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
 
@@ -86,6 +87,24 @@ detect_arch() {
         *)       OLLAMA_ARCH="amd64" ; echo "Warning: Unknown arch $(uname -m), defaulting to amd64" ;;
     esac
     echo "Architecture: $(uname -m) → Ollama arch: $OLLAMA_ARCH"
+}
+
+cleanup_broken_amdgpu() {
+    # If amdgpu-dkms is in any installed/half-installed state, dpkg will try to
+    # configure it on EVERY apt-get call, triggering the DKMS build that fails
+    # against kernel 7.x. Must run before the first apt-get install.
+    if ! dpkg -l amdgpu-dkms 2>/dev/null | grep -qE '^[ih]'; then
+        return 0
+    fi
+    echo "Removing broken amdgpu-dkms before apt operations..."
+    # Pull it out of the DKMS tree first so the postinst script has nothing to build
+    sudo dkms remove --all amdgpu 2>/dev/null || true
+    sudo rm -rf /var/lib/dkms/amdgpu 2>/dev/null || true
+    # Force-purge even if postinst would fail
+    sudo dpkg --force-remove-reinstreq --purge amdgpu-dkms amdgpu amdgpu-pro 2>/dev/null || true
+    sudo apt-get autoremove -y 2>/dev/null || true
+    sudo apt-get install -f -y 2>/dev/null || true
+    echo "amdgpu-dkms removed. Kernel 7.x ships amdgpu in-tree — DKMS not needed."
 }
 
 install_oem_kernel() {
@@ -166,28 +185,44 @@ install_nvidia() {
 
 install_amd() {
     echo ""
-    echo "==== Installing AMD ROCm Drivers for Ubuntu $OS_VERSION ($OS_CODENAME) ===="
+    echo "==== Installing AMD ROCm for Ubuntu $OS_VERSION ($OS_CODENAME) ===="
 
-    ROCM_VERSION="6.4.1"
-    ROCM_PKG_VER="6.4.60401-1"
-    AMD_DEB="amdgpu-install_${ROCM_PKG_VER}_all.deb"
-    AMD_URL="https://repo.radeon.com/amdgpu-install/${ROCM_VERSION}/ubuntu/${OS_CODENAME}/${AMD_DEB}"
+    if [ "$OS_VERSION" = "26.04" ]; then
+        # Ubuntu 26.04: kernel 7.x ships amdgpu in-tree; amdgpu-install has no
+        # resolute packages and its DKMS module cannot compile against kernel 7.x.
+        # Add the ROCm apt repo directly and install user-space only — no DKMS.
+        echo "Using direct ROCm apt repo for Ubuntu 26.04 (no amdgpu-install/DKMS)..."
+        sudo mkdir -p /etc/apt/keyrings
+        curl -sSf https://repo.radeon.com/rocm/rocm.gpg.key \
+            | sudo gpg --dearmor -o /etc/apt/keyrings/rocm.gpg
+        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/6.4.1 noble main" \
+            | sudo tee /etc/apt/sources.list.d/rocm.list
+        printf 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600\n' \
+            | sudo tee /etc/apt/preferences.d/rocm-pin-600
+        sudo apt-get update
+        sudo apt-get install -y rocm-hip-runtime rocminfo rocm-smi-lib libdrm-amdgpu1
+    else
+        # Ubuntu 22.04 / 24.04: use amdgpu-install (handles DKMS + ROCm user-space)
+        ROCM_VERSION="6.4.1"
+        ROCM_PKG_VER="6.4.60401-1"
+        AMD_DEB="amdgpu-install_${ROCM_PKG_VER}_all.deb"
+        AMD_URL="https://repo.radeon.com/amdgpu-install/${ROCM_VERSION}/ubuntu/${OS_CODENAME}/${AMD_DEB}"
 
-    echo "Downloading $AMD_DEB for $OS_CODENAME..."
-    local _amd_tmp
-    _amd_tmp=$(mktemp --suffix=.deb)
-    wget -q -O "$_amd_tmp" "$AMD_URL" || {
+        echo "Downloading $AMD_DEB for $OS_CODENAME..."
+        local _amd_tmp
+        _amd_tmp=$(mktemp --suffix=.deb)
+        wget -q -O "$_amd_tmp" "$AMD_URL" || {
+            rm -f "$_amd_tmp"
+            echo "ERROR: Could not download AMD GPU installer from: $AMD_URL"
+            echo "Check https://repo.radeon.com/amdgpu-install/ for the correct version/codename."
+            exit 1
+        }
+        sudo apt install -y "$_amd_tmp"
         rm -f "$_amd_tmp"
-        echo "ERROR: Could not download AMD GPU installer from: $AMD_URL"
-        echo "Check https://repo.radeon.com/amdgpu-install/ for the correct version/codename."
-        exit 1
-    }
-    sudo apt install -y "$_amd_tmp"
-    rm -f "$_amd_tmp"
-
-    sudo apt-get update
-    sudo amdgpu-install -y --usecase=workstation,rocm
-    sudo apt install -y libdrm-amdgpu1 libhsa-runtime64-1 libhsakmt1 rocminfo
+        sudo apt-get update
+        sudo amdgpu-install -y --usecase=workstation,rocm
+        sudo apt install -y libdrm-amdgpu1 libhsa-runtime64-1 libhsakmt1 rocminfo
+    fi
 
     echo ""
     echo "AMD ROCm setup complete. Run 'rocminfo' to verify."
@@ -259,6 +294,11 @@ install_ollama() {
 detect_os
 detect_arch
 
+# On Ubuntu 26.04, amdgpu-dkms from ROCm 6.4.x cannot build against kernel 7.x.
+# If stuck in a half-installed state it will fail on EVERY apt-get call.
+# Purge it before any apt operation.
+[ "$OS_VERSION" = "26.04" ] && cleanup_broken_amdgpu
+
 # Base dependencies (pciutils required before GPU detection)
 echo "Installing base dependencies..."
 sudo apt-get update
@@ -305,7 +345,23 @@ Download & Install Containers (Ollama, Open-WebUI, etc.)
 
 "
 sleep 5
-sudo ./install_ai_containers.sh
+
+echo "
+
+Update Ollama
+
+
+"
+curl -fsSL https://ollama.com/install.sh | sh
+
+
+echo "
+
+Install Containers (Ollama, Open-WebUI, etc.)
+
+
+"
+#sudo ./install_ai_containers.sh
 
 
 #---- AI MODELS ----
