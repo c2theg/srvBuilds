@@ -1,5 +1,5 @@
 #!/bin/bash
-#  By: Christpher Gray | Version 5.0.0 | Updated: 6/10/2026
+#  By: Christpher Gray | Version 5.0.1 | Updated: 6/10/2026
 #  Install:  wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_pihole.sh && chmod u+x install_pihole.sh
 # 
 # Pi-hole v6 Docker installer — Ubuntu 22.04 / 24.04 / 26.04
@@ -97,7 +97,10 @@ SECRETS_FILE="${PIHOLE_BASE}/secrets/pihole_password.txt"
 if [[ -n "${PIHOLE_PASSWORD:-}" ]]; then
   printf '%s' "${PIHOLE_PASSWORD}" > "${SECRETS_FILE}"
 else
-  PIHOLE_PASSWORD=$(tr -dc 'A-Za-z0-9!#%&*+,.:;<=>?@^_{|}~' </dev/urandom | head -c 24)
+  # set +o pipefail: head closes the pipe after 24 bytes, causing tr to receive
+  # SIGPIPE (exit 141); with pipefail that kills the script. Scope the fix to
+  # this subshell only.
+  PIHOLE_PASSWORD=$(set +o pipefail; tr -dc 'A-Za-z0-9!#%&*+,.:;<=>?@^_{|}~' </dev/urandom | head -c 24)
   printf '%s' "${PIHOLE_PASSWORD}" > "${SECRETS_FILE}"
   echo ""
   echo "=============================================="
