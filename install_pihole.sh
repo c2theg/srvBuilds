@@ -1,6 +1,6 @@
 #!/bin/bash
 #  By: Christpher Gray | Version 5.0.0 | Updated: 6/10/2026
-#  Install:  wget 
+#  Install:  wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_pihole.sh && chmod u+x install_pihole.sh
 # 
 # Pi-hole v6 Docker installer — Ubuntu 22.04 / 24.04 / 26.04
 # Optimized for network security and stability.
