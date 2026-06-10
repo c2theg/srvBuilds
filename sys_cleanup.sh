@@ -14,11 +14,12 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
-\r\n \r\n
+
+Updated: 6/10/2026
 
 "
 
-VERSION="2.1.0"
+VERSION="2.2.1"
 
 SCRIPT_PATH="$(readlink -f -- "$0" 2>/dev/null || realpath "$0")"
 SCRIPT_DIR="$(cd -- "$(dirname -- "$SCRIPT_PATH")" && pwd -P)"
@@ -748,25 +749,19 @@ run_cleanup() {
     echo ""
 
     echo "Files larger than 500MB:"
-    find / -type f -size +500M 2>/dev/null || true
+    find / -xdev -type f -size +500M 2>/dev/null || true
     echo ""
 
     echo " APT cache "
     _B=$(free_space)
     apt-get clean -q
-    rm -f /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock
+    if fuser /var/lib/dpkg/lock /var/cache/apt/archives/lock /var/lib/apt/lists/lock >/dev/null 2>&1; then
+        log_warn "dpkg/apt lock is held by a live process; not removing lock files"
+    else
+        rm -f /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock
+    fi
     _A=$(free_space)
     report_freed "APT cache" "$_B" "$_A"
-
-    echo " Old kernels (keep running kernel) "
-    _B=$(free_space)
-    dpkg --list | grep linux-image | awk '{ print $2 }' | sort -V \
-        | sed -n '/'$(uname -r)'/q;p' | xargs -r apt-get -y purge -q 2>/dev/null || true
-    dpkg --list | grep linux-image-extra | awk '{ print $2 }' | sort -V \
-        | sed -n '/'$(uname -r)'/q;p' | xargs -r apt-get -y purge -q 2>/dev/null || true
-    update-grub2 > /dev/null 2>&1 || update-grub > /dev/null 2>&1 || true
-    _A=$(free_space)
-    report_freed "Old kernels" "$_B" "$_A"
 
     echo " /var/log - all service log sections in one measurement "
     _B=$(free_space)
@@ -895,7 +890,6 @@ run_cleanup() {
         rm -f /var/log/mail.log.* /var/log/mail.err.*
         delete_live_logs_over_limit /var/log/mail.log /var/log/mail.err
         [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && _rsyslog_reopen=true
-        postsuper -d ALL 2>/dev/null || true
         systemctl restart postfix 2>/dev/null || true
     fi
     trim_mailbox_to_limit /var/mail/root
@@ -985,10 +979,10 @@ run_cleanup() {
         rm -f /var/lib/resilio-sync/sync.log /var/lib/resilio-sync/sync.log.*
         rm -rf /var/lib/resilio-sync/torrents/ /var/lib/resilio-sync/storage/
     fi
-    local RESILIO_SYNC_ROOTS="/home /mnt /data /srv"
-    for sync_root in $RESILIO_SYNC_ROOTS; do
+    local -a RESILIO_SYNC_ROOTS=("/home" "/mnt" "/data" "/srv")
+    for sync_root in "${RESILIO_SYNC_ROOTS[@]}"; do
         [ -d "$sync_root" ] && find "$sync_root" -type d -name "Archive" \
-            -path "*/.sync/Archive" -exec rm -rf {} + 2>/dev/null
+            -path "*/.sync/Archive" -exec rm -rf {} + 2>/dev/null || true
     done
     _A=$(free_space)
     report_freed "Resilio Sync archives" "$_B" "$_A"
@@ -1010,7 +1004,7 @@ run_cleanup() {
     echo " -- Docker "
     if [ -d "/var/lib/docker/" ]; then
         _B=$(free_space)
-        docker system prune -a --volumes -f 2>/dev/null || true
+        docker system prune -f 2>/dev/null || true
         find /var/lib/docker/containers -name "*.log" -exec truncate -s 0 {} \; 2>/dev/null || true
         _A=$(free_space)
         report_freed "Docker" "$_B" "$_A"
@@ -1019,15 +1013,17 @@ run_cleanup() {
     echo " -- Ollama - model blobs older than 90 days "
     if [ -d "/usr/share/ollama/.ollama/models/blobs/" ]; then
         _B=$(free_space)
-        find "/usr/share/ollama/.ollama/models/blobs" -type f -mtime +90 -exec rm -f {} \;
+        find "/usr/share/ollama/.ollama/models/blobs" -type f -mtime +90 -exec rm -f {} \; 2>/dev/null || true
         _A=$(free_space)
         report_freed "Ollama model blobs (>90 days)" "$_B" "$_A"
     fi
 
     echo " -- Python cache "
     _B=$(free_space)
-    rm -rf ~/.cache/pip
-    rm -rf /home/ubuntu/.cache/pip/ /root/.cache/pip/ /root/.local/lib/
+    rm -rf /root/.cache/pip/ /root/.local/lib/
+    for _pip_home in /home/*/; do
+        rm -rf "${_pip_home}.cache/pip/"
+    done
     _A=$(free_space)
     report_freed "Python pip cache" "$_B" "$_A"
 
@@ -1044,11 +1040,12 @@ run_cleanup() {
 
     echo " -- Snap - remove old disabled revisions "
     _B=$(free_space)
-    snap list --all | awk '/disabled/{print $1, $3}' | \
-        while read -r snapname revision; do
-            snap remove "$snapname" --revision="$revision" 2>/dev/null || true
-            sleep 1
-        done
+    if have_cmd snap; then
+        snap list --all 2>/dev/null | awk '/disabled/{print $1, $3}' | \
+            while read -r snapname revision; do
+                snap remove "$snapname" --revision="$revision" 2>/dev/null || true
+            done
+    fi
     _A=$(free_space)
     report_freed "Snap old revisions" "$_B" "$_A"
 
@@ -1064,6 +1061,10 @@ run_cleanup() {
             fd_num="${fd//[^0-9]/}"
             [ -n "$fd_num" ] || continue
             proc_fd="/proc/$pid/fd/$fd_num"
+            _proc_comm=$(cat "/proc/$pid/comm" 2>/dev/null || true)
+            case "${_proc_comm:-}" in
+                auditd|syslogd|rsyslogd|syslog-ng|fail2ban*|systemd-journald) continue ;;
+            esac
             if [ -e "$proc_fd" ] && truncate -s 0 "$proc_fd" 2>/dev/null; then
                 _truncated=$(( _truncated + 1 ))
             fi
@@ -1090,8 +1091,10 @@ run_cleanup() {
     SWAP_USED=$(free -b | awk '/Swap/ {print $3}')
     RAM_FREE=$(free -b | awk '/Mem/ {print $4}')
     if [ "${SWAP_USED:-0}" -gt 0 ] && [ "${RAM_FREE:-0}" -gt "${SWAP_USED:-0}" ]; then
-        swapoff -a && swapon -a
-        _swap_cleared=true
+        if swapoff -a 2>/dev/null; then
+            swapon -a 2>/dev/null || true
+            _swap_cleared=true
+        fi
     fi
 
     _RAM_A=$(ram_used)
@@ -1121,27 +1124,29 @@ run_cleanup() {
 
     echo "--- Removing all but the current and latest kernel --- "
     current=$(uname -r)
-    latest=$(dpkg -l 'linux-image-[0-9]*-generic' \
-        | awk '/^ii/ {print $2}' \
-        | sort -V \
-        | tail -1 \
-        | sed 's/linux-image-//')
-    echo "  Keeping: $current (running)"
-    [ "$latest" != "$current" ] && echo "  Keeping: $latest (latest)"
+    _kernel_list=$(dpkg -l 'linux-image-[0-9]*-generic' 2>/dev/null \
+        | awk '/^ii/ {print $2}') || true
 
-    dpkg -l 'linux-image-[0-9]*-generic' \
-        | awk '/^ii/ {print $2}' \
-        | grep -vF -- "$current" \
-        | grep -vF -- "$latest" \
-        | xargs -r apt-get -y purge || true
+    if [ -z "$_kernel_list" ]; then
+        echo "  No versioned generic kernels found; skipping kernel cleanup."
+    else
+        latest=$(echo "$_kernel_list" | sort -V | tail -1 | sed 's/linux-image-//')
+        echo "  Keeping: $current (running)"
+        [ "$latest" != "$current" ] && echo "  Keeping: $latest (latest)"
 
-    dpkg -l \
-        | awk '/^(ii|rc)/ && $2 ~ /^linux-(image|modules|headers)-[0-9]/ { print $2 }' \
-        | grep -vF -- "$current" \
-        | grep -vF -- "$latest" \
-        | xargs -r dpkg --purge || true
+        echo "$_kernel_list" \
+            | grep -vF -- "$current" \
+            | grep -vF -- "$latest" \
+            | xargs -r apt-get -y purge || true
 
-    apt-get -y autoremove --purge 2>/dev/null || true
+        dpkg -l \
+            | awk '/^(ii|rc)/ && $2 ~ /^linux-(image|modules|headers)-[0-9]/ { print $2 }' \
+            | grep -vF -- "$current" \
+            | grep -vF -- "$latest" \
+            | xargs -r dpkg --purge || true
+
+        apt-get -y autoremove --purge 2>/dev/null || true
+    fi
 
     echo " -- SUMMARY REPORT "
     end_free_space=$(free_space)
@@ -1193,15 +1198,15 @@ run_cleanup() {
 
     echo " -- Diagnostics "
     echo "Top 10 largest items in /var/log:"
-    du -ah /var/log 2>/dev/null | sort -nr | awk 'NR <= 10 { print }' || true
+    du -ah /var/log 2>/dev/null | sort -rh | head -10 || true
 
     echo ""
     echo "Top 10 largest items on /:"
-    du -ah / 2>/dev/null | sort -nr | awk 'NR <= 10 { print }' || true
+    du -ah / --exclude=/proc --exclude=/sys --exclude=/dev 2>/dev/null | sort -rh | head -10 || true
 
     echo ""
     echo "Files still larger than 500MB:"
-    find / -type f -size +500M 2>/dev/null || true
+    find / -xdev -type f -size +500M 2>/dev/null || true
 
     echo ""
     echo "Installed kernel images (running: $(uname -r)):"
