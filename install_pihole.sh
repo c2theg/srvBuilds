@@ -1,9 +1,10 @@
 #!/bin/bash
-#  By: Christpher Gray | Version 5.0.1 | Updated: 6/10/2026
+#  By: Christpher Gray | Version 5.1.1 | Updated: 6/10/2026
 #  Install:  wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_pihole.sh && chmod u+x install_pihole.sh
-# 
+#
 # Pi-hole v6 Docker installer — Ubuntu 22.04 / 24.04 / 26.04
-# Optimized for network security and stability.
+# Single-pass: installs Docker if needed, configures OS, deploys Pi-hole.
+# Safe to re-run — preserves existing password and config on subsequent runs.
 #
 # References:
 #   https://docs.pi-hole.net/docker/
@@ -31,12 +32,12 @@ PIHOLE_HTTPS_PORT="${PIHOLE_HTTPS_PORT:-443}"
 
 # Upstream DNS servers (Pi-hole forwards non-blocked queries here).
 # Defaults: Cloudflare for Families (malware filter) + Quad9 (DNSSEC + threat intel).
-# For maximum privacy/control, replace with a local Unbound container: 127.0.0.1#5335
+# For maximum privacy/control, replace with a local Unbound recursive resolver: 127.0.0.1#5335
 UPSTREAM_DNS_1="${UPSTREAM_DNS_1:-1.1.1.2}"      # Cloudflare for Families — blocks malware
 UPSTREAM_DNS_2="${UPSTREAM_DNS_2:-9.9.9.9}"      # Quad9 — DNSSEC validation + threat intel
 
 # =============================================================
-# Preflight checks
+# Root check
 # =============================================================
 
 if [[ $EUID -ne 0 ]]; then
@@ -44,29 +45,44 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 fi
 
+# =============================================================
+# Install Docker if missing
+# =============================================================
+
 if ! command -v docker &>/dev/null; then
-  echo "Error: Docker is not installed." >&2
-  echo "  Install guide: https://docs.docker.com/engine/install/ubuntu/" >&2
-  exit 1
+  echo "Docker not found — installing via get.docker.com..."
+  curl -fsSL https://get.docker.com | sh
+  # Add the invoking non-root user to the docker group so they can run docker
+  # without sudo after re-logging in.
+  if [[ -n "${SUDO_USER:-}" ]]; then
+    usermod -aG docker "${SUDO_USER}"
+    echo "Added ${SUDO_USER} to the docker group (takes effect on next login)."
+  fi
+  echo "Docker installed."
 fi
 
-if ! docker compose version &>/dev/null; then
-  echo "Error: Docker Compose plugin not found." >&2
-  echo "  Fix: sudo apt install docker-compose-plugin" >&2
-  exit 1
+# =============================================================
+# Install Docker Compose plugin if missing
+# =============================================================
+
+if ! docker compose version &>/dev/null 2>&1; then
+  echo "Docker Compose plugin not found — installing..."
+  apt-get update -qq
+  apt-get install -y docker-compose-plugin
+  echo "Docker Compose plugin installed."
 fi
+
+echo "Docker $(docker --version | awk '{print $3}' | tr -d ',')  |  Compose $(docker compose version --short)"
 
 # =============================================================
 # systemd-resolved — free port 53 without killing the service.
 #
 # Ubuntu 17.10+ runs systemd-resolved with a DNS stub listener on
 # 127.0.0.53:53, which blocks Pi-hole from binding. The safe fix is
-# to disable the stub listener via a drop-in config and update the
-# resolv.conf symlink — this keeps systemd-resolved alive for network
-# management (NetworkManager, netplan, etc.) while freeing port 53.
-#
-# The old approach of fully stopping/disabling systemd-resolved causes
-# DNS failures during system updates and breaks some cloud-init flows.
+# to disable only the stub listener via a drop-in config and update
+# the resolv.conf symlink — this keeps systemd-resolved alive for
+# network management (NetworkManager, netplan, cloud-init, etc.)
+# while freeing port 53.
 # =============================================================
 
 if systemctl is-active --quiet systemd-resolved 2>/dev/null; then
@@ -78,7 +94,7 @@ if systemctl is-active --quiet systemd-resolved 2>/dev/null; then
 DNSStubListener=no
 RESOLVED_CONF
 
-  # Use the full resolved socket instead of the now-disabled stub.
+  # Point /etc/resolv.conf at the full resolved socket, not the stub.
   ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
   systemctl restart systemd-resolved
@@ -94,12 +110,18 @@ mkdir -p "${PIHOLE_BASE}/secrets"
 
 SECRETS_FILE="${PIHOLE_BASE}/secrets/pihole_password.txt"
 
-if [[ -n "${PIHOLE_PASSWORD:-}" ]]; then
+if [[ -f "${SECRETS_FILE}" && -s "${SECRETS_FILE}" ]]; then
+  # Re-run: reuse the existing password so login credentials don't change.
+  PIHOLE_PASSWORD=$(cat "${SECRETS_FILE}")
+  echo "Existing password found — reusing credentials from ${SECRETS_FILE}"
+elif [[ -n "${PIHOLE_PASSWORD:-}" ]]; then
+  # Caller supplied a password via environment variable.
   printf '%s' "${PIHOLE_PASSWORD}" > "${SECRETS_FILE}"
 else
-  # set +o pipefail: head closes the pipe after 24 bytes, causing tr to receive
-  # SIGPIPE (exit 141); with pipefail that kills the script. Scope the fix to
-  # this subshell only.
+  # First run: generate a strong random password.
+  # set +o pipefail: head closes the pipe after 24 bytes, sending SIGPIPE
+  # (exit 141) to tr. With pipefail enabled that would abort the script.
+  # Scoping the disable to this subshell keeps the rest of the script strict.
   PIHOLE_PASSWORD=$(set +o pipefail; tr -dc 'A-Za-z0-9!#%&*+,.:;<=>?@^_{|}~' </dev/urandom | head -c 24)
   printf '%s' "${PIHOLE_PASSWORD}" > "${SECRETS_FILE}"
   echo ""
@@ -113,7 +135,7 @@ chmod 600 "${SECRETS_FILE}"
 
 # =============================================================
 # Write docker-compose.yml
-# Note: variables expanded here at install time (intentional).
+# Variables are intentionally expanded here at install time.
 # =============================================================
 
 cat > "${PIHOLE_BASE}/docker-compose.yml" <<COMPOSE
@@ -135,15 +157,16 @@ services:
     environment:
       TZ: "${TZ}"
 
-      # Password loaded from Docker secret file — never inline in compose.
-      WEBPASSWORD_FILE: /run/secrets/pihole_password
+      # v6 canonical env var for Docker secrets-based password.
+      # WEBPASSWORD_FILE is a deprecated v5 alias that v6 may not honour.
+      FTLCONF_webserver_api_password_FILE: /run/secrets/pihole_password
 
-      # Upstream DNS — semicolon-separated list (v6 format).
+      # Upstream DNS — semicolon-separated (v6 format).
       FTLCONF_dns_upstreams: "${UPSTREAM_DNS_1};${UPSTREAM_DNS_2}"
 
       # Security hardening
       FTLCONF_dns_dnssec: "true"         # Validate DNSSEC signatures
-      FTLCONF_dns_bogusPriv: "true"      # Block reverse lookups for private IPs leaking upstream
+      FTLCONF_dns_bogusPriv: "true"      # Block private-IP reverse lookups from leaking upstream
       FTLCONF_dns_domainNeeded: "true"   # Never forward bare single-label names (e.g. "myserver")
 
       # Uncomment and set to this host's LAN IP so Pi-hole answers its own name correctly:
@@ -155,8 +178,8 @@ services:
     secrets:
       - pihole_password
 
-    # NET_ADMIN is required for DHCP. If you are not using Pi-hole as
-    # a DHCP server you can remove this capability.
+    # NET_ADMIN is required for DHCP. Remove this capability if you are
+    # not using Pi-hole as a DHCP server.
     cap_add:
       - NET_ADMIN
 
