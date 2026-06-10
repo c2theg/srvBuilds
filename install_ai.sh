@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 clear
 echo "
@@ -12,222 +12,291 @@ echo "
 
  _____ _       _     _           _              _____    __    _____
 |     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _
-|   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
+|   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |    _| .'| | |   |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 
 
-Version:  0.1.15
-Last Updated:  4/14/2026
+Version:  0.2.0
+Last Updated:  6/9/2026
 
 # https://ollama.com/search
 
 "
 
 #-- Update yourself! --
+# SECURITY NOTE: This overwrites the running script. Re-run the updated copy
+# rather than continuing execution to avoid mixing old and new code.
 wget -O "install_ai.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai.sh && chmod u+x install_ai.sh
-#wget -O "docker-compose.yml" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_compose.txt
 wget -O "install_ai_containers.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_containers.sh && chmod u+x install_ai_containers.sh
 wget -O "update_ai_models.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_ai_models.sh && chmod u+x update_ai_models.sh
 
-#--------------------------
-sudo apt update
-sudo apt install -y --no-install-recommends wget curl gnupg2 git libgl1 libglib2.0-0
-sudo apt install -y jq
-sudo apt install -y linux-oem-24.04b
+#==============================================================================
 
-# Check if docker is in the system's PATH
-if command -v docker >/dev/null 2>&1; then
-    echo "✅ Docker is installed. Version: $(docker --version)"
-else
-    echo "❌ Docker is not installed."
-     echo " You need docker first before running this. This will download a docker installer and run it for you. "
-     wget -O "install_docker.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh
-     chmod u+x install_docker.sh
-     ./install_docker.sh
-fi
-#----------------------------------------------------------------------------------------------------------------------------------
+detect_os() {
+    if [ ! -f /etc/os-release ]; then
+        echo "ERROR: Cannot detect OS; /etc/os-release not found." >&2
+        exit 1
+    fi
+    . /etc/os-release
+    OS_ID="${ID:-linux}"
+    OS_VERSION="${VERSION_ID:-unknown}"
+    OS_CODENAME="${VERSION_CODENAME:-unknown}"
 
-# Create the directory
-sudo mkdir -p /usr/share/ollama/models
+    # Validate values from /etc/os-release before using in URLs
+    if ! echo "$OS_VERSION" | grep -qE '^[0-9]+\.[0-9]+$'; then
+        echo "ERROR: Unexpected OS_VERSION '$OS_VERSION' from /etc/os-release" >&2; exit 1
+    fi
+    if ! echo "$OS_CODENAME" | grep -qE '^[a-z]+$'; then
+        echo "ERROR: Unexpected OS_CODENAME '$OS_CODENAME' from /etc/os-release" >&2; exit 1
+    fi
 
-# Give the directory appropriate permissions for the Docker container
-sudo chmod -R 777 /usr/share/ollama/models
+    case "$OS_VERSION" in
+        22.04) CUDA_DISTRO="ubuntu2204" ;;
+        24.04) CUDA_DISTRO="ubuntu2404" ;;
+        26.04) CUDA_DISTRO="ubuntu2604" ;;
+        *)
+            CUDA_DISTRO="ubuntu$(echo "$OS_VERSION" | tr -d '.')"
+            echo "Warning: Ubuntu $OS_VERSION is not an officially tested version."
+            ;;
+    esac
 
+    echo "OS: $OS_ID $OS_VERSION ($OS_CODENAME) — CUDA target: $CUDA_DISTRO"
+}
 
-echo "
+detect_gpu() {
+    echo "Scanning PCI devices for GPU..."
+    GPU_INFO=$(lspci -k 2>/dev/null | grep -EA3 'VGA|3D|Display' || true)
+    echo "$GPU_INFO"
 
-grep MemTotal /proc/meminfo
+    if echo "$GPU_INFO" | grep -qi "nvidia"; then
+        GPU_TYPE="nvidia"
+    elif echo "$GPU_INFO" | grep -qi "amd\|radeon"; then
+        GPU_TYPE="amd"
+    else
+        GPU_TYPE="cpu"
+    fi
+    echo "GPU type detected: $GPU_TYPE"
+}
 
-Downloading and Installing AMD GPU / AMD Ryzen AI 9 HX PRO 370 - Drivers...
+detect_arch() {
+    case "$(uname -m)" in
+        x86_64)  OLLAMA_ARCH="amd64" ;;
+        aarch64) OLLAMA_ARCH="arm64" ;;
+        *)       OLLAMA_ARCH="amd64" ; echo "Warning: Unknown arch $(uname -m), defaulting to amd64" ;;
+    esac
+    echo "Architecture: $(uname -m) → Ollama arch: $OLLAMA_ARCH"
+}
 
-dmesg | grep -e IOMMU -e AMD-Vi
+install_oem_kernel() {
+    case "$OS_VERSION" in
+        22.04) OEM_PKG="linux-oem-22.04d" ;;
+        24.04) OEM_PKG="linux-oem-24.04b"  ;;
+        26.04) OEM_PKG="linux-oem-26.04"   ;;
+        *)     OEM_PKG=""                   ;;
+    esac
+    if [ -n "$OEM_PKG" ] && apt-cache show "$OEM_PKG" &>/dev/null; then
+        echo "Installing OEM kernel: $OEM_PKG"
+        sudo apt-get install -y "$OEM_PKG"
+    else
+        echo "OEM kernel package not available for Ubuntu $OS_VERSION, skipping."
+    fi
+}
 
+install_nvidia() {
+    echo ""
+    echo "==== Installing NVIDIA CUDA + Container Toolkit for Ubuntu $OS_VERSION ===="
+    echo "    lspci | grep -i nvidia"
+    echo "    https://developer.nvidia.com/cuda-downloads"
+    echo ""
 
-"
-lspci -k | grep -EA3 'VGA|3D|Display'
-lspci | grep VGA
+    # Blacklist nouveau if loaded to prevent driver conflicts
+    if lsmod | grep -q nouveau 2>/dev/null; then
+        echo "Blacklisting nouveau driver..."
+        echo "blacklist nouveau" | sudo tee /etc/modprobe.d/blacklist-nouveau.conf
+        echo "options nouveau modeset=0" | sudo tee -a /etc/modprobe.d/blacklist-nouveau.conf
+        sudo update-initramfs -u
+        echo "NOTE: A reboot may be required after this script completes."
+    fi
 
-GPU_INFO=$(lspci -k | grep -EA3 'VGA|3D|Display')
-
-if echo "$GPU_INFO" | grep -qi "nvidia"; then
-    echo "NVIDIA GPU detected."    
-    echo "
- 
-     ---- Installing Nvidia CUDA Drivers ----
-    
-    find nvidia devices:
-    
-        lspci | grep -i nvidia
-        lspci -nn | grep -i nvidia
-
-        
-    https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=24.04&target_type=deb_local
-
-
-    "
-
-    #--- Ubuntu 22.04 ---
-    #Nvidia CUDA - https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local
-    #wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
-    #sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
-    #wget https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/cuda-repo-ubuntu2204-12-6-local_12.6.3-560.35.05-1_amd64.deb
-    #sudo dpkg -i cuda-repo-ubuntu2204-12-6-local_12.6.3-560.35.05-1_amd64.deb
-    #sudo cp /var/cuda-repo-ubuntu2204-12-6-local/cuda-*-keyring.gpg /usr/share/keyrings/
-    
-    #--- Ubuntu 24.04 ---
-    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
-    sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
-    wget -O "cuda-repo-ubuntu2404-13-1.deb" https://developer.download.nvidia.com/compute/cuda/13.1.0/local_installers/cuda-repo-ubuntu2404-13-1-local_13.1.0-590.44.01-1_amd64.deb
-    #sudo dpkg -i cuda-repo-ubuntu2404-13-1-local_13.1.0-590.44.01-1_amd64.deb
-    sudo dpkg -i cuda-repo-ubuntu2404-13-1.deb
-    sudo cp /var/cuda-repo-ubuntu2404-13-1-local/cuda-*-keyring.gpg /usr/share/keyrings/
+    # CUDA network repository keyring (avoids the 3.9 GB local installer download)
+    echo "Adding CUDA repository for $CUDA_DISTRO..."
+    local _kring
+    _kring=$(mktemp --suffix=.deb)
+    wget -q -O "$_kring" \
+        "https://developer.download.nvidia.com/compute/cuda/repos/${CUDA_DISTRO}/x86_64/cuda-keyring_1.1-1_all.deb"
+    sudo dpkg -i "$_kring"
+    rm -f "$_kring"
     sudo apt-get update
 
-    rm cuda-repo-ubuntu2404-13-1.deb # clean up the 3.9Gb file!!!
-    #----- You need - nvidia-container-toolkit -------------------------
-    sudo apt-get -y install cuda-toolkit-13-1
-    #sudo apt-get -y install cuda-toolkit-12-6
-    sudo apt-get install -y nvidia-open nvidia-driver-pinning-590
-    
-    #sudo apt-get install -y linux-modules-nvidia-580-open-generic-hwe-24.04
-    #  https://github.com/NVIDIA/nvidia-container-toolkit
-    #  https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+    # Auto-install the best driver for this GPU + OS version
+    sudo apt-get install -y ubuntu-drivers-common
+    sudo ubuntu-drivers autoinstall
 
-    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
-      && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
-        sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
-        sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+    # CUDA toolkit (latest available in repo for this OS)
+    sudo apt-get install -y cuda-toolkit
 
-
-    export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.18.0-1
-      sudo apt-get install -y \
-          nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
-          nvidia-container-toolkit-base=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
-          libnvidia-container-tools=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
-          libnvidia-container1=${NVIDIA_CONTAINER_TOOLKIT_VERSION}
+    # NVIDIA Container Toolkit for Docker GPU passthrough
+    echo "Adding nvidia-container-toolkit repository..."
+    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey \
+        | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+    curl -sL https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list \
+        | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' \
+        | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+    sudo apt-get update
+    sudo apt-get install -y \
+        nvidia-container-toolkit \
+        nvidia-container-toolkit-base \
+        libnvidia-container-tools \
+        libnvidia-container1
 
     sudo nvidia-ctk runtime configure --runtime=docker
     sudo systemctl restart docker
 
+    echo ""
+    echo "NVIDIA setup complete. Run 'nvidia-smi' to verify."
+    echo "If nvidia-smi fails, reboot then re-run 'nvidia-smi'."
+    echo ""
+    echo "Proxmox / IOMMU notes:"
+    echo "  Add to /etc/default/grub for Intel: intel_iommu=on"
+    echo "  Add to /etc/default/grub for AMD:   amd_iommu=on"
+    echo "  Then: update-grub && reboot"
+    echo "  Verify: lspci -nnk | grep -A3 -i nvidia"
+}
 
+install_amd() {
+    echo ""
+    echo "==== Installing AMD ROCm Drivers for Ubuntu $OS_VERSION ($OS_CODENAME) ===="
 
-#--- updated 4/14/2026 ---
-#--- These steps are for a Ubuntu 24.04 VM inside of Proxmox, with a nVidia eGPU (via opulink)  ---
- 
-   # -- FIRST THING, Blacklist existing drivers from taking over Nvidia Drivers, if present! ---
-   # lsmod | grep nouveau
-   #
-   # -- If present, disable it: 
-   # echo "blacklist nouveau" | sudo tee /etc/modprobe.d/blacklist-nouveau.conf
-   # echo "options nouveau modeset=0" | sudo tee -a /etc/modprobe.d/blacklist-nouveau.conf
-   # sudo update-initramfs -u
+    ROCM_VERSION="6.4.1"
+    ROCM_PKG_VER="6.4.60401-1"
+    AMD_DEB="amdgpu-install_${ROCM_PKG_VER}_all.deb"
+    AMD_URL="https://repo.radeon.com/amdgpu-install/${ROCM_VERSION}/ubuntu/${OS_CODENAME}/${AMD_DEB}"
 
-   #--- uninstall all previous nvidia drivers ---
-   # sudo apt purge '^nvidia-.*'
-   # sudo apt autoremove
+    echo "Downloading $AMD_DEB for $OS_CODENAME..."
+    local _amd_tmp
+    _amd_tmp=$(mktemp --suffix=.deb)
+    wget -q -O "$_amd_tmp" "$AMD_URL" || {
+        rm -f "$_amd_tmp"
+        echo "ERROR: Could not download AMD GPU installer from: $AMD_URL"
+        echo "Check https://repo.radeon.com/amdgpu-install/ for the correct version/codename."
+        exit 1
+    }
+    sudo apt install -y "$_amd_tmp"
+    rm -f "$_amd_tmp"
 
-   #--- install new nvidia drivers ---
-   # sudo apt update
-   # sudo ubuntu-drivers devices
-   
-   # -- auto install --
-   #   sudo ubuntu-drivers autoinstall
-   # -- or (specify a version) --
-   #   sudo apt install nvidia-driver-580
-   # --- REBOOT ---
-
-   
-   # lspci | grep -i nvidia
-   # dmesg | grep -e DMAR -e IOMMU
-
-   # update Grub
-   # nano /etc/default/grub
-   # Add for AMD:    amd_iommu=on
-   # Add for Intel: intel_iommu=on
-   # update-grub
-   # reboot
-
-   # lspci -nnk | grep -A 3 -i nvidia
-   # nvidia-smi
-   # --- you should see:  "Kernel driver in use: vfio-pci" OR "Kernel driver in use: nvidia"
-   
-
-
-elif echo "$GPU_INFO" | grep -qi "amd"; then
-    echo "AMD GPU detected.
-        
-    Downloading ROCm drivers...
-
-    "
- 
-    curl -L https://ollama.com/download/ollama-linux-amd64-rocm.tgz -o ollama-linux-amd64-rocm.tgz
-    sudo tar -C /usr -xzf ollama-linux-amd64-rocm.tgz
-    sudo apt install -y libdrm-amdgpu1 libhsa-runtime64-1 libhsakmt1 rocminfo
-    rm ollama-linux-amd64-rocm.tgz
-
-
-    sudo apt update
-
-    echo "
-    
-    Install AMD GPU drivers with ROCm support
-    Example using version 6.4.1 (check amdgpu-install for latest)
-    
-    "
-    
-    wget https://repo.radeon.com/amdgpu-install/6.4.1/ubuntu/noble/amdgpu-install_6.4.60401-1_all.deb
-    sudo apt install ./amdgpu-install_6.4.60401-1_all.deb
+    sudo apt-get update
     sudo amdgpu-install -y --usecase=workstation,rocm
+    sudo apt install -y libdrm-amdgpu1 libhsa-runtime64-1 libhsakmt1 rocminfo
 
-    
-    echo "
-    
-    Add to grup:
-      nano /etc/default/grub  (remove back slashes)
-          GRUB_CMDLINE_LINUX_DEFAULT=\"amd_iommu=on iommu=pt\"
-    
-      save and close
-      update-grub
-    
-    
-    On HOST (Proxmox) 
-    issue:
-        lspci -nn | grep -i amd
-    look for:
-       00:00.2 IOMMU [0806]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo IOMMU [1022:1508]
-       
-    Verify correct function with:  rocminfo
-    
-    "
+    echo ""
+    echo "AMD ROCm setup complete. Run 'rocminfo' to verify."
+    echo ""
+    echo "Proxmox / IOMMU notes:"
+    echo "  Add to /etc/default/grub: amd_iommu=on iommu=pt"
+    echo "  Then: update-grub && reboot"
+    echo "  Verify: lspci -nn | grep -i amd"
+}
 
+_setup_ollama_service() {
+    id -u ollama &>/dev/null || sudo useradd -r -s /bin/false -U -m -d /usr/share/ollama ollama
+    sudo usermod -a -G ollama "$(whoami)" 2>/dev/null || true
 
+    sudo tee /etc/systemd/system/ollama.service > /dev/null << 'EOF'
+[Unit]
+Description=Ollama Service
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/ollama serve
+User=ollama
+Group=ollama
+Restart=always
+RestartSec=3
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+[Install]
+WantedBy=default.target
+EOF
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable ollama
+    sudo systemctl start ollama || true
+}
+
+install_ollama() {
+    local gpu_type="$1"
+    echo ""
+    echo "==== Installing Ollama ($gpu_type / $OLLAMA_ARCH) ===="
+
+    if [ "$gpu_type" = "amd" ] && [ "$OLLAMA_ARCH" = "amd64" ]; then
+        # AMD ROCm requires a specific binary; only available for x86_64
+        local tgz="ollama-linux-amd64-rocm.tgz"
+        local _tmp_tgz
+        _tmp_tgz=$(mktemp --suffix=.tgz)
+        echo "Downloading ROCm-enabled Ollama binary..."
+        curl -fL "https://ollama.com/download/${tgz}" -o "$_tmp_tgz"
+        sudo tar -C /usr -xzf "$_tmp_tgz"
+        rm -f "$_tmp_tgz"
+        _setup_ollama_service
+    else
+        # Download install.sh first so it can be inspected before execution
+        local _tmp_install
+        _tmp_install=$(mktemp --suffix=.sh)
+        curl -fsSL https://ollama.com/install.sh -o "$_tmp_install"
+        sh "$_tmp_install"
+        rm -f "$_tmp_install"
+    fi
+
+    echo "Ollama installed. Service status:"
+    sudo systemctl status ollama --no-pager -l || true
+}
+
+#==============================================================================
+# MAIN
+#==============================================================================
+
+detect_os
+detect_arch
+
+# Base dependencies (pciutils required before GPU detection)
+echo "Installing base dependencies..."
+sudo apt-get update
+sudo apt-get install -y --no-install-recommends \
+    wget curl gnupg2 git \
+    libgl1 libglib2.0-0 \
+    pciutils jq
+
+install_oem_kernel
+
+# Docker check / install
+if command -v docker >/dev/null 2>&1; then
+    echo "Docker installed: $(docker --version)"
 else
-    echo "No NVIDIA or AMD GPU found in relevant PCI-X slots."
-    # echo "Installing ARM64 (Apple Mac, Pi, etc.)... \r\n "
-    # curl -L https://ollama.com/download/ollama-linux-arm64.tgz -o ollama-linux-arm64.tgz
-    # sudo tar -C /usr -xzf ollama-linux-arm64.tgz
+    echo "Docker not found. Installing Docker..."
+    _tmp_docker=$(mktemp --suffix=.sh)
+    wget -O "$_tmp_docker" \
+        https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_docker.sh
+    chmod u+x "$_tmp_docker"
+    "$_tmp_docker"
+    rm -f "$_tmp_docker"
 fi
+
+# Ollama model storage — 755 not 777; ollama service owns it
+sudo mkdir -p /usr/share/ollama/models
+id -u ollama &>/dev/null && sudo chown -R ollama:ollama /usr/share/ollama/models 2>/dev/null || true
+sudo chmod -R 755 /usr/share/ollama/models
+
+detect_gpu
+
+# GPU driver installation (Ollama installed after so NVIDIA CUDA is already present)
+case "$GPU_TYPE" in
+    nvidia) install_nvidia ;;
+    amd)    install_amd    ;;
+esac
+
+# Ollama install — must run after GPU drivers so CUDA/ROCm is already present
+install_ollama "$GPU_TYPE"
 
 
 echo "
@@ -265,7 +334,7 @@ curl http://localhost:11434/api/tags | jq .
 echo "
 
 ------------------------------
-Hello World - Ollama! 
+Hello World - Ollama!
 ------------------------------
 
 "
@@ -284,20 +353,20 @@ curl http://localhost:11434/api/generate -d '{
 
 
 #---- Python 3 ----
-echo "
+# echo "
 
-Installing Python 3 for AI Developmemt...
+# Installing Python 3 for AI Developmemt...
 
 
-"
-if [ ! -f "install_python3.sh" ]; then
-    wget -O "install_python3.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh
-fi
+# "
+# if [ ! -f "install_python3.sh" ]; then
+#     wget -O "install_python3.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_python3.sh && chmod u+x install_python3.sh
+# fi
 
-if [ ! -f "install_ai_python3_venv.sh" ]; then
-    wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
-    ./install_ai_python3_venv.sh
-fi
+# if [ ! -f "install_ai_python3_venv.sh" ]; then
+#     wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
+#     ./install_ai_python3_venv.sh
+# fi
 
 #--- end Python 3 ----
 
@@ -311,7 +380,7 @@ echo "
 
 If you want to run models in ollama cloud you must setup an account and sign in. Use the following command to generate an API token with ollama.com and a account
 
-Command: 
+Command:
     ollama signin
 
 
