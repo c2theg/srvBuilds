@@ -1,58 +1,203 @@
 #!/bin/bash
+#  By: Christpher Gray | Version 5.0.0 | Updated: 6/10/2026
+#  Install:  wget 
+# 
+# Pi-hole v6 Docker installer — Ubuntu 22.04 / 24.04 / 26.04
+# Optimized for network security and stability.
 #
+# References:
+#   https://docs.pi-hole.net/docker/
+#   https://docs.pi-hole.net/docker/upgrading/v5-v6/
+#   https://github.com/pi-hole/docker-pi-hole
 #
+# Usage:
+#   sudo bash install_pihole.sh
 #
-# https://github.com/pi-hole/docker-pi-hole/blob/master/README.md
-# https://github.com/pi-hole/docker-pi-hole/#running-pi-hole-docker
-#
-# --- Modified DNS Servers - Chris Gray - 11/8/2022 - version 0.04
-#       -> Cloudflare: https://blog.cloudflare.com/introducing-1-1-1-1-for-families/
-#       -> OpenDNS: https://support.opendns.com/hc/en-us/community/posts/360035396952-Family-Shield-IPv6-DNS-address-
-# --dns=127.0.0.1
+# Override defaults via environment:
+#   PIHOLE_BASE=/opt/pihole TZ="US/Pacific" sudo bash install_pihole.sh
 
-#--- On Ubuntu, disable caching DNS stub resolver
-sudo sed -r -i.orig 's/#?DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
-sudo sh -c 'rm /etc/resolv.conf && ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf'
-#systemctl restart systemd-resolved
+set -euo pipefail
 
-sudo systemctl stop systemd-resolved.service
-sudo systemctl disable systemd-resolved.service
-
-
-#----- Normal install below ----------
+# =============================================================
+# Configuration — override with environment variables
+# =============================================================
 
 PIHOLE_BASE="${PIHOLE_BASE:-$(pwd)}"
-[[ -d "$PIHOLE_BASE" ]] || mkdir -p "$PIHOLE_BASE" || { echo "Couldn't create storage directory: $PIHOLE_BASE"; exit 1; }
+TZ="${TZ:-America/New_York}"
 
-# Note: FTLCONF_LOCAL_IPV4 should be replaced with your external ip.
-docker run -d \
-    --name pihole \
-    -p 53:53/tcp -p 53:53/udp \
-    -p 8080:80 \
-    -e TZ="America/New_York" \
-    -v "${PIHOLE_BASE}/etc-pihole:/etc/pihole" \
-    -v "${PIHOLE_BASE}/etc-dnsmasq.d:/etc/dnsmasq.d" \
-    --dns=1.1.1.2 --dns=208.67.222.222 --dns=2606:4700:4700::1113 --dns=::ffff:d043:dc7b \
-    --restart=unless-stopped \
-    --hostname pi.hole \
-    -e VIRTUAL_HOST="pi.hole" \
-    -e PROXY_LOCATION="pi.hole" \
-    -e FTLCONF_LOCAL_IPV4="127.0.0.1" \
-    pihole/pihole:latest
+# Web interface ports. Change if 80/443 are in use by another service.
+PIHOLE_HTTP_PORT="${PIHOLE_HTTP_PORT:-80}"
+PIHOLE_HTTPS_PORT="${PIHOLE_HTTPS_PORT:-443}"
 
-printf 'Starting up pihole container '
+# Upstream DNS servers (Pi-hole forwards non-blocked queries here).
+# Defaults: Cloudflare for Families (malware filter) + Quad9 (DNSSEC + threat intel).
+# For maximum privacy/control, replace with a local Unbound container: 127.0.0.1#5335
+UPSTREAM_DNS_1="${UPSTREAM_DNS_1:-1.1.1.2}"      # Cloudflare for Families — blocks malware
+UPSTREAM_DNS_2="${UPSTREAM_DNS_2:-9.9.9.9}"      # Quad9 — DNSSEC validation + threat intel
+
+# =============================================================
+# Preflight checks
+# =============================================================
+
+if [[ $EUID -ne 0 ]]; then
+  echo "Error: Run this script with sudo or as root." >&2
+  exit 1
+fi
+
+if ! command -v docker &>/dev/null; then
+  echo "Error: Docker is not installed." >&2
+  echo "  Install guide: https://docs.docker.com/engine/install/ubuntu/" >&2
+  exit 1
+fi
+
+if ! docker compose version &>/dev/null; then
+  echo "Error: Docker Compose plugin not found." >&2
+  echo "  Fix: sudo apt install docker-compose-plugin" >&2
+  exit 1
+fi
+
+# =============================================================
+# systemd-resolved — free port 53 without killing the service.
+#
+# Ubuntu 17.10+ runs systemd-resolved with a DNS stub listener on
+# 127.0.0.53:53, which blocks Pi-hole from binding. The safe fix is
+# to disable the stub listener via a drop-in config and update the
+# resolv.conf symlink — this keeps systemd-resolved alive for network
+# management (NetworkManager, netplan, etc.) while freeing port 53.
+#
+# The old approach of fully stopping/disabling systemd-resolved causes
+# DNS failures during system updates and breaks some cloud-init flows.
+# =============================================================
+
+if systemctl is-active --quiet systemd-resolved 2>/dev/null; then
+  echo "Configuring systemd-resolved to release port 53..."
+
+  mkdir -p /etc/systemd/resolved.conf.d
+  cat > /etc/systemd/resolved.conf.d/pihole.conf <<'RESOLVED_CONF'
+[Resolve]
+DNSStubListener=no
+RESOLVED_CONF
+
+  # Use the full resolved socket instead of the now-disabled stub.
+  ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+
+  systemctl restart systemd-resolved
+  echo "systemd-resolved reconfigured (stub listener disabled, service kept running)."
+fi
+
+# =============================================================
+# Storage and secrets
+# =============================================================
+
+mkdir -p "${PIHOLE_BASE}/etc-pihole"
+mkdir -p "${PIHOLE_BASE}/secrets"
+
+SECRETS_FILE="${PIHOLE_BASE}/secrets/pihole_password.txt"
+
+if [[ -n "${PIHOLE_PASSWORD:-}" ]]; then
+  printf '%s' "${PIHOLE_PASSWORD}" > "${SECRETS_FILE}"
+else
+  PIHOLE_PASSWORD=$(tr -dc 'A-Za-z0-9!#%&*+,.:;<=>?@^_{|}~' </dev/urandom | head -c 24)
+  printf '%s' "${PIHOLE_PASSWORD}" > "${SECRETS_FILE}"
+  echo ""
+  echo "=============================================="
+  echo " Pi-hole admin password: ${PIHOLE_PASSWORD}"
+  echo " Saved to: ${SECRETS_FILE}"
+  echo "=============================================="
+  echo ""
+fi
+chmod 600 "${SECRETS_FILE}"
+
+# =============================================================
+# Write docker-compose.yml
+# Note: variables expanded here at install time (intentional).
+# =============================================================
+
+cat > "${PIHOLE_BASE}/docker-compose.yml" <<COMPOSE
+services:
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    hostname: pi.hole
+    restart: unless-stopped
+
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "${PIHOLE_HTTP_PORT}:80/tcp"
+      - "${PIHOLE_HTTPS_PORT}:443/tcp"
+      # Uncomment to enable Pi-hole as your network DHCP server:
+      # - "67:67/udp"
+
+    environment:
+      TZ: "${TZ}"
+
+      # Password loaded from Docker secret file — never inline in compose.
+      WEBPASSWORD_FILE: /run/secrets/pihole_password
+
+      # Upstream DNS — semicolon-separated list (v6 format).
+      FTLCONF_dns_upstreams: "${UPSTREAM_DNS_1};${UPSTREAM_DNS_2}"
+
+      # Security hardening
+      FTLCONF_dns_dnssec: "true"         # Validate DNSSEC signatures
+      FTLCONF_dns_bogusPriv: "true"      # Block reverse lookups for private IPs leaking upstream
+      FTLCONF_dns_domainNeeded: "true"   # Never forward bare single-label names (e.g. "myserver")
+
+      # Uncomment and set to this host's LAN IP so Pi-hole answers its own name correctly:
+      # FTLCONF_dns_reply_addr4: "192.168.1.x"
+
+    volumes:
+      - "${PIHOLE_BASE}/etc-pihole:/etc/pihole"
+
+    secrets:
+      - pihole_password
+
+    # NET_ADMIN is required for DHCP. If you are not using Pi-hole as
+    # a DHCP server you can remove this capability.
+    cap_add:
+      - NET_ADMIN
+
+    security_opt:
+      - no-new-privileges:true
+
+    healthcheck:
+      test: ["CMD", "dig", "+norecurse", "+retry=0", "@127.0.0.1", "pi.hole"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+secrets:
+  pihole_password:
+    file: ${SECRETS_FILE}
+COMPOSE
+
+# =============================================================
+# Launch
+# =============================================================
+
+echo "Starting Pi-hole..."
+cd "${PIHOLE_BASE}"
+docker compose up -d
+
+echo "Waiting for Pi-hole to become healthy..."
 for i in $(seq 1 20); do
-    if [ "$(docker inspect -f "{{.State.Health.Status}}" pihole)" == "healthy" ] ; then
-        printf ' OK'
-        echo -e "\n$(docker logs pihole 2> /dev/null | grep 'password:') for your pi-hole: http://${IP}/admin/"
-        exit 0
-    else
-        sleep 3
-        printf '.'
-    fi
+  STATUS=$(docker inspect -f "{{.State.Health.Status}}" pihole 2>/dev/null || echo "starting")
+  if [[ "${STATUS}" == "healthy" ]]; then
+    HOST_IP=$(hostname -I | awk '{print $1}')
+    echo ""
+    echo "Pi-hole is up and healthy."
+    echo "  Admin URL : http://${HOST_IP}:${PIHOLE_HTTP_PORT}/admin"
+    echo "  Password  : ${PIHOLE_PASSWORD}"
+    echo ""
+    echo "Point your router's DHCP DNS setting to: ${HOST_IP}"
+    exit 0
+  fi
+  sleep 3
+  printf '.'
+done
 
-    if [ $i -eq 20 ] ; then
-        echo -e "\nTimed out waiting for Pi-hole start, consult your container logs for more info (\`docker logs pihole\`)"
-        exit 1
-    fi
-done;
+echo ""
+echo "Timed out waiting for Pi-hole to become healthy."
+echo "Check the logs: docker logs pihole"
+exit 1
