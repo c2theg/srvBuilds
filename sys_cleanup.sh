@@ -17,6 +17,8 @@ echo "
 
 Updated: 6/10/2026
 
+install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
+
 "
 
 VERSION="2.2.1"
