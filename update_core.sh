@@ -28,7 +28,7 @@ Current working dir: $SCRIPTPATH
                             |_|                                             |___|
 
 
-Version:  1.8.0
+Version:  1.8.1
 Last Updated:  05/19/2026
 "
 
@@ -88,6 +88,7 @@ done
 
 # Sync subset to /home/ubuntu if the user exists
 if [ -d "/home/ubuntu" ]; then
+    log "Updating update_core.sh... "
   #  cp /root/update_core.sh        /home/ubuntu/update_core.sh
     cp /root/sys_cleanup.sh        /home/ubuntu/sys_cleanup.sh
     cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
