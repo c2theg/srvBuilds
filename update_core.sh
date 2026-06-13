@@ -88,7 +88,7 @@ done
 
 # Sync subset to /home/ubuntu if the user exists
 if [ -d "/home/ubuntu" ]; then
-    cp /root/update_core.sh        /home/ubuntu/update_core.sh
+  #  cp /root/update_core.sh        /home/ubuntu/update_core.sh
     cp /root/sys_cleanup.sh        /home/ubuntu/sys_cleanup.sh
     cp /root/update_ubuntu14.04.sh /home/ubuntu/update_ubuntu14.04.sh
 fi
