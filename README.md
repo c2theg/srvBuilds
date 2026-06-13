@@ -7,7 +7,7 @@ wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && chmod u+x update_core
 
 or direct...
 
-wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh && ./update_core.sh && ./install_common.sh
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_core.sh && chmod u+x update_core.sh && ./update_core.sh
 
 ```
 
