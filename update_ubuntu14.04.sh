@@ -22,6 +22,8 @@ Last Updated:  5/19/2026
 
 for Debian 8 / Ubuntu versions 20.04 - 24.04+ ( ignore the file name :/ )
 
+
+UPDATE: if you have a DGX Spark - GB10 - use this to update firmware: fwupdmgr get-upgrades
 "
 
 # --- Require root ---
