@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.1.3
+Version:  2.1.4
 Last Updated:  6/21/2026
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
@@ -135,7 +135,7 @@ if command -v maldet >/dev/null 2>&1; then
     maldet -u
 else
     echo "maldet not found. Skipping."
-    echo "  To install: curl -fsSL https://www.rfxn.com/downloads/maldetect-current.tar.gz -o /tmp/maldetect-current.tar.gz && tar -xzf /tmp/maldetect-current.tar.gz -C /tmp && /tmp/maldetect-*/install.sh"
+    echo "  To install: curl -fsSL https://www.rfxn.com/downloads/maldetect-current.tar.gz -o /tmp/maldetect-current.tar.gz && tar -xzf /tmp/maldetect-current.tar.gz -C /tmp && cd /tmp/maldetect-*/ && ./install.sh"
 fi
 
 # --- NVIDIA DGX Spark (GB10) firmware check ---
