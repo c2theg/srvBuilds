@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.1.2
+Version:  2.1.3
 Last Updated:  6/21/2026
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
@@ -87,9 +87,13 @@ fi
 # --- npm (only upgrade if already installed) ---
 if command -v npm >/dev/null 2>&1; then
     echo "npm detected: $(npm -v)"
+    npm_globalconfig="$(npm config get globalconfig 2>/dev/null)"
+    if [ -f "$npm_globalconfig" ] && grep -q "globalignorefile" "$npm_globalconfig"; then
+        sed -i '/globalignorefile/d' "$npm_globalconfig"
+        echo "Removed deprecated 'globalignorefile' setting from $npm_globalconfig"
+    fi
     apt install --only-upgrade -y npm
     npm install -g npm
-    npm audit fix || true
 else
     echo "npm not installed. Skipping."
 fi
