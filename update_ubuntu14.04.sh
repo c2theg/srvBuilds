@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.1.1
+Version:  2.1.2
 Last Updated:  6/21/2026
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
