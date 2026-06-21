@@ -17,17 +17,16 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.9.0
+Version:  2.0.0
 Last Updated:  6/21/2026
 
-for Debian 8 / Ubuntu versions 20.04 - 24.04+ ( ignore the file name :/ )
-
+For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
 
 
 UPDATE: if you have a DGX Spark - GB10 - use this to update firmware: fwupdmgr get-upgrades
 
-"
 
+"
 # --- Require root ---
 if [ "$(id -u)" -ne 0 ]; then
     echo "Error: This script must be run as root." >&2
@@ -172,8 +171,17 @@ fi
 
 # --- Ollama (only update binary + models if already installed) ---
 if command -v ollama >/dev/null 2>&1; then
-    echo "Ollama detected: $(ollama --version 2>/dev/null)"
-    curl -fsSL https://ollama.com/install.sh | sh
+    ollama_current="$(ollama --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
+    echo "Ollama detected: $ollama_current"
+    ollama_latest="$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest 2>/dev/null | grep -m1 '"tag_name"' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+    if [ -z "$ollama_latest" ]; then
+        echo "Could not check latest Ollama version (GitHub API unreachable). Skipping binary update."
+    elif [ "$ollama_current" = "$ollama_latest" ]; then
+        echo "Ollama already up to date ($ollama_current)."
+    else
+        echo "Updating Ollama: $ollama_current -> $ollama_latest"
+        curl -fsSL https://ollama.com/install.sh | sh
+    fi
     echo "Updating installed Ollama models..."
     ollama list 2>/dev/null | tail -n +2 | awk '{print $1}' | while read -r model; do
         [ -n "$model" ] && ollama pull "$model"
