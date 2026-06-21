@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.0.0
+Version:  2.1.0
 Last Updated:  6/21/2026
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
@@ -212,7 +212,12 @@ echo ""
 
 # --- Ubuntu Pro / ESM reminder ---
 if command -v pro >/dev/null 2>&1; then
-    if ! pro status 2>/dev/null | grep -q "This machine is attached"; then
+    if pro status 2>/dev/null | grep -q "This machine is attached"; then
+        echo "-----------------------------------------------------------------------"
+        echo "Ubuntu Pro status:"
+        pro status
+        echo "-----------------------------------------------------------------------"
+    else
         echo "-----------------------------------------------------------------------"
         echo "Tip: This system is not attached to an Ubuntu Pro subscription."
         echo "Ubuntu Pro gives you Expanded Security Maintenance (ESM) - extra years"
