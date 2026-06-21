@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.1.0
+Version:  2.1.1
 Last Updated:  6/21/2026
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
@@ -212,10 +212,11 @@ echo ""
 
 # --- Ubuntu Pro / ESM reminder ---
 if command -v pro >/dev/null 2>&1; then
-    if pro status 2>/dev/null | grep -q "This machine is attached"; then
+    pro_status_output="$(pro status 2>/dev/null)"
+    if ! echo "$pro_status_output" | grep -qi "is not attached"; then
         echo "-----------------------------------------------------------------------"
         echo "Ubuntu Pro status:"
-        pro status
+        echo "$pro_status_output"
         echo "-----------------------------------------------------------------------"
     else
         echo "-----------------------------------------------------------------------"
