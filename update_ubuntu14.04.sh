@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.1.4
+Version:  2.1.5
 Last Updated:  6/21/2026
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
@@ -102,7 +102,14 @@ fi
 if command -v rustup >/dev/null 2>&1; then
     echo "Rust detected: $(rustc --version)"
     rustup check
-    rustup update
+    if ! rustup update; then
+        echo "rustup update failed (stale component files from a prior interrupted update)."
+        echo "Reinstalling toolchain to clear the conflict..."
+        active_toolchain="$(rustup show active-toolchain 2>/dev/null | awk '{print $1}')"
+        [ -z "$active_toolchain" ] && active_toolchain="stable"
+        rustup toolchain uninstall "$active_toolchain"
+        rustup toolchain install "$active_toolchain"
+    fi
     echo "Rust toolchain updated."
 else
     echo "Rust not found. Skipping."
@@ -122,6 +129,12 @@ fi
 # --- rkhunter (only update if already installed) ---
 if command -v rkhunter >/dev/null 2>&1; then
     echo "rkhunter detected: $(rkhunter --version | head -n1)"
+    # Ubuntu ships WEB_CMD="/bin/false" by default, which rkhunter 1.4.6 mis-flags
+    # as "Invalid WEB_CMD configuration option: Relative pathname" despite being absolute.
+    if [ -f /etc/rkhunter.conf ] && grep -qE '^WEB_CMD=' /etc/rkhunter.conf; then
+        sed -i 's|^WEB_CMD=.*|WEB_CMD=""|' /etc/rkhunter.conf
+        echo "Fixed rkhunter WEB_CMD config option."
+    fi
     rkhunter --update --nocolors || true
     rkhunter --propupd
 else
