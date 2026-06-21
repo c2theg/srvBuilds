@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.1.5
+Version:  2.1.6
 Last Updated:  6/21/2026
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
@@ -41,6 +41,17 @@ curl -fsSL -o "update_ubuntu14.04.sh.tmp" \
     "https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh" \
     && chmod u+x update_ubuntu14.04.sh.tmp \
     && mv update_ubuntu14.04.sh.tmp update_ubuntu14.04.sh
+
+# --- Fix duplicate Docker apt sources (archive_uri-*.list duplicates docker.list
+# --- after Docker's install script is re-run or add-apt-repository was used) ---
+if [ -f /etc/apt/sources.list.d/docker.list ]; then
+    for legacy in /etc/apt/sources.list.d/archive_uri-*docker*.list; do
+        if [ -f "$legacy" ]; then
+            echo "Removing duplicate Docker apt source: $legacy (superseded by docker.list)"
+            rm -f "$legacy"
+        fi
+    done
+fi
 
 # --- System update (IPv4; IPv6 skipped where unavailable) ---
 apt -o Acquire::ForceIPv4=true update
@@ -96,6 +107,16 @@ if command -v npm >/dev/null 2>&1; then
     npm install -g npm
 else
     echo "npm not installed. Skipping."
+fi
+
+# --- Docker (only fetch image-update helper if already installed) ---
+if command -v docker >/dev/null 2>&1; then
+    echo "Docker detected: $(docker --version)"
+    curl -fsSL -o "update_docker_image.sh" \
+        "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_docker_image.sh" \
+        && chmod u+x update_docker_image.sh
+else
+    echo "Docker not found. Skipping."
 fi
 
 # --- Rust (only update if already installed) ---
