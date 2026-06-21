@@ -17,13 +17,15 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  1.8.0
-Last Updated:  5/19/2026
+Version:  1.9.0
+Last Updated:  6/21/2026
 
 for Debian 8 / Ubuntu versions 20.04 - 24.04+ ( ignore the file name :/ )
 
 
+
 UPDATE: if you have a DGX Spark - GB10 - use this to update firmware: fwupdmgr get-upgrades
+
 "
 
 # --- Require root ---
@@ -33,10 +35,13 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-# --- Self-update ---
-curl -fsSL -o "update_ubuntu14.04.sh" \
+# --- Self-update (download to a temp file, then atomically replace; ---
+# --- never overwrite the running script's file in place, or bash   ---
+# --- will read corrupted/misaligned content mid-execution)         ---
+curl -fsSL -o "update_ubuntu14.04.sh.tmp" \
     "https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh" \
-    && chmod u+x update_ubuntu14.04.sh
+    && chmod u+x update_ubuntu14.04.sh.tmp \
+    && mv update_ubuntu14.04.sh.tmp update_ubuntu14.04.sh
 
 # --- System update (IPv4; IPv6 skipped where unavailable) ---
 apt -o Acquire::ForceIPv4=true update
@@ -100,6 +105,84 @@ else
     echo "Rust not found. Skipping."
 fi
 
+# --- ClamAV (only update definitions if already installed) ---
+if command -v freshclam >/dev/null 2>&1; then
+    echo "ClamAV detected: $(clamscan --version 2>/dev/null | head -n1)"
+    service clamav-freshclam stop >/dev/null 2>&1 || true
+    freshclam
+    service clamav-freshclam start >/dev/null 2>&1 || true
+else
+    echo "ClamAV not found. Skipping."
+    echo "  To install: apt install -y clamav clamav-freshclam"
+fi
+
+# --- rkhunter (only update if already installed) ---
+if command -v rkhunter >/dev/null 2>&1; then
+    echo "rkhunter detected: $(rkhunter --version | head -n1)"
+    rkhunter --update --nocolors || true
+    rkhunter --propupd
+else
+    echo "rkhunter not found. Skipping."
+    echo "  To install: apt install -y rkhunter"
+fi
+
+# --- Linux Malware Detect / maldet (only update signatures if already installed) ---
+if command -v maldet >/dev/null 2>&1; then
+    echo "maldet detected: $(maldet --version 2>/dev/null | head -n1)"
+    maldet -u
+else
+    echo "maldet not found. Skipping."
+    echo "  To install: curl -fsSL https://www.rfxn.com/downloads/maldetect-current.tar.gz -o /tmp/maldetect-current.tar.gz && tar -xzf /tmp/maldetect-current.tar.gz -C /tmp && /tmp/maldetect-*/install.sh"
+fi
+
+# --- NVIDIA DGX Spark (GB10) firmware check ---
+product_name="$(cat /sys/class/dmi/id/product_name 2>/dev/null || true)"
+if echo "$product_name" | grep -qi "DGX Spark"; then
+    echo "NVIDIA DGX Spark detected: $product_name"
+    if command -v fwupdmgr >/dev/null 2>&1; then
+        fwupdmgr get-upgrades
+    else
+        echo "fwupdmgr not found. Skipping firmware check."
+        echo "  To install: apt install -y fwupd"
+    fi
+fi
+
+# --- AMD Strix Halo (Ryzen AI Max) firmware check ---
+cpu_model="$(grep -m1 '^model name' /proc/cpuinfo 2>/dev/null | cut -d: -f2-)"
+if echo "$cpu_model" | grep -qiE "Strix Halo|Ryzen AI Max"; then
+    echo "AMD Strix Halo detected:$cpu_model"
+    if command -v fwupdmgr >/dev/null 2>&1; then
+        fwupdmgr get-upgrades
+    else
+        echo "fwupdmgr not found. Skipping firmware check."
+        echo "  To install: apt install -y fwupd"
+    fi
+fi
+
+# --- AMD ROCm (only report version if already installed) ---
+if command -v rocminfo >/dev/null 2>&1; then
+    rocm_version="$(cat /opt/rocm/.info/version 2>/dev/null)"
+    if [ -z "$rocm_version" ]; then
+        rocm_version="$(dpkg -l 2>/dev/null | awk '/rocm-core/{print $3}')"
+    fi
+    echo "ROCm detected: ${rocm_version:-unknown version}"
+else
+    echo "ROCm not found. Skipping."
+fi
+
+# --- Ollama (only update binary + models if already installed) ---
+if command -v ollama >/dev/null 2>&1; then
+    echo "Ollama detected: $(ollama --version 2>/dev/null)"
+    curl -fsSL https://ollama.com/install.sh | sh
+    echo "Updating installed Ollama models..."
+    ollama list 2>/dev/null | tail -n +2 | awk '{print $1}' | while read -r model; do
+        [ -n "$model" ] && ollama pull "$model"
+    done
+else
+    echo "Ollama not found. Skipping."
+    echo "  To install: curl -fsSL https://ollama.com/install.sh | sh"
+fi
+
 # --- Crontab setup ---
 if ! crontab -l 2>/dev/null | grep -q "update_core.sh"; then
     echo "Adding crontab entries."
@@ -118,6 +201,40 @@ fi
 echo ""
 echo "Done"
 echo ""
+
+# --- Ubuntu Pro / ESM reminder ---
+if command -v pro >/dev/null 2>&1; then
+    if ! pro status 2>/dev/null | grep -q "This machine is attached"; then
+        echo "-----------------------------------------------------------------------"
+        echo "Tip: This system is not attached to an Ubuntu Pro subscription."
+        echo "Ubuntu Pro gives you Expanded Security Maintenance (ESM) - extra years"
+        echo "of security patches for both main and universe repo packages."
+        echo ""
+        echo "Free for up to 5 machines (personal use). Get a token at:"
+        echo "  https://ubuntu.com/pro"
+        echo ""
+        echo "To enable it:"
+        echo "  sudo pro attach <YOUR_TOKEN>"
+        echo "  sudo pro enable esm-infra esm-apps"
+        echo "  sudo pro status"
+        echo "-----------------------------------------------------------------------"
+    fi
+else
+    echo "-----------------------------------------------------------------------"
+    echo "Tip: 'pro' (ubuntu-advantage-tools) not found. Ubuntu Pro gives you"
+    echo "Expanded Security Maintenance (ESM) - extra years of security patches"
+    echo "for both main and universe repo packages."
+    echo ""
+    echo "Free for up to 5 machines (personal use). Get a token at:"
+    echo "  https://ubuntu.com/pro"
+    echo ""
+    echo "To enable it:"
+    echo "  sudo apt install ubuntu-advantage-tools"
+    echo "  sudo pro attach <YOUR_TOKEN>"
+    echo "  sudo pro enable esm-infra esm-apps"
+    echo "  sudo pro status"
+    echo "-----------------------------------------------------------------------"
+fi
 
 # NOTE: If packages are held back, force-install them with:
 #   for i in $(apt list --upgradable | cut -d'/' -f1); do apt install "$i" -y; done
