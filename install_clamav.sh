@@ -17,6 +17,10 @@ echo "
 This really is meant to be run under Ubuntu 20.04 LTS +
 Version:  0.0.35
 Last Updated:  6/21/2026
+
+download:
+wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_clamav.sh && chmod u+x install_clamav.sh
+
 "
 
 # Set this to receive scan alerts via the system 'mail' command (leave blank to disable email alerts)
