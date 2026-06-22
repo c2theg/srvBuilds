@@ -15,11 +15,12 @@ echo "
 
 
 This really is meant to be run under Ubuntu 20.04 LTS +
-Version:  0.0.35
-Last Updated:  6/21/2026
+Version:  0.0.36
+Last Updated:  6/22/2026
 
 download:
 wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_clamav.sh && chmod u+x install_clamav.sh
+
 
 "
 
@@ -50,18 +51,8 @@ fi
 #---- update system -----
 run_step sudo apt-get update -y
 run_step sudo apt-get install clamav clamav-daemon -y
-sudo systemctl stop clamav-freshclam
 run_step sudo apt install -y rkhunter
 run_step sudo apt install -y chkrootkit
-
-#--- Update ClamAV Signatures ---
-printf 'Update ClamAV Database...\n'
-run_step sudo freshclam
-sudo systemctl start clamav-freshclam
-sudo systemctl enable clamav-freshclam
-
-printf 'Update Rootkit Hunter Database...\n'
-run_step sudo rkhunter --propupd
 
 #--- schedule weekly scan: every Friday at 11:00 PM ---
 # Replace any pre-existing entry (including stale schedules from older
@@ -72,6 +63,13 @@ sudo systemctl restart cron > /dev/null 2>&1
 
 printf '\n\nCheck Rootkit Scanning...\n\n'
 sudo chkrootkit || true
+
+# --update refreshes rkhunter's own data files (distinct from --propupd, which
+# only rebaselines file properties against whatever data files are already
+# installed) - both must run before --check to avoid scanning with stale data.
+printf '\n\nUpdating Rootkit Hunter database...\n\n'
+run_step sudo rkhunter --update
+run_step sudo rkhunter --propupd
 
 printf '\n\nRootkit Hunter Scanning...\n\n'
 sudo rkhunter --check --skip-keypress || true
@@ -94,6 +92,25 @@ rm -rf "$MALDET_TMP"
 #------- CLAM AV ------------
 sudo mkdir -p "$QUARANTINE_DIR"
 sudo chmod 700 "$QUARANTINE_DIR"
+
+# Stop the freshclam daemon so the manual update below doesn't fight it for
+# the database lock, then update right before the scan that uses it - not
+# back at the top of the script, which is how stale-database scans slip
+# through silently. If freshclam fails outright, retry once before giving up,
+# and make the failure loud (not just a swallowed warning) since scanning
+# against a stale database is exactly the problem this is meant to prevent.
+printf '\n\nUpdating ClamAV virus database...\n\n'
+sudo systemctl stop clamav-freshclam
+if ! sudo freshclam; then
+    printf 'WARNING: freshclam failed, retrying once...\n' >&2
+    sleep 5
+    if ! sudo freshclam; then
+        printf 'ERROR: freshclam failed twice - scan below will run against a STALE database\n' >&2
+        logger -t install_clamav "ERROR: freshclam update failed - clamscan ran with a stale signature database"
+    fi
+fi
+sudo systemctl start clamav-freshclam
+sudo systemctl enable clamav-freshclam
 
 # A single clamscan invocation across all real (non-virtual) filesystem roots
 # loads the signature DB once instead of once per directory, and moves
