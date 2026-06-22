@@ -1,10 +1,4 @@
 #!/bin/sh
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
-#
-
 clear
 echo "
  _____             _         _    _          _
@@ -18,14 +12,12 @@ echo "
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
-\r\n \r\n
 
 
 This really is meant to be run under Ubuntu 20.04 LTS +
-\r\n \r\n
-Version:  0.0.30                             \r\n
-Last Updated:  10/27/2025
-\r\n \r\n"
+Version:  0.0.32
+Last Updated:  6/21/2026
+"
 
 #-- update yourself! (for the next load) --
 rm install_clamav.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_clamav.sh && chmod u+x install_clamav.sh
@@ -62,6 +54,8 @@ sudo chkrootkit
 echo "\r\n \r\n Rootkit Hunter Scanning... \r\n \r\n"
 sudo rkhunter --check --skip-keypress
 
+echo "\r\n \r\n Linux Malware Detect \r\n \r\n"
+curl -fsSL https://www.rfxn.com/downloads/maldetect-current.tar.gz -o /tmp/maldetect-current.tar.gz && tar -xzf /tmp/maldetect-current.tar.gz -C /tmp && cd /tmp/maldetect-*/ && ./install.sh
 #------- CLAM AV ------------
 #---- File system -----
 # Do a full scan!
