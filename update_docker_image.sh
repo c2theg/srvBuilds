@@ -2,7 +2,7 @@
 #------------------------------------------------------------
 #  * Copyright (c) 2001-2026 Christopher Gray
 #  * All rights reserved.  Proprietary and Confidential.
-# Version: 0.1.0
+# Version: 0.1.1
 # Updated: 6/21/2026
 #------------------------------------------------------------
 #
@@ -193,12 +193,11 @@ for cid in "${MATCH_IDS[@]}"; do
             result="healthy"
         else
             echo "  Health check failed for $name - rolling back to previous image..."
-            repo="$(strip_tag "$img")"
             override_file="$workdir/docker-compose.override.ROLLBACK-PINNED.yml"
             {
                 echo "services:"
                 echo "  ${service}:"
-                echo "    image: ${repo}@${old_digest}"
+                echo "    image: ${old_digest}"
             } > "$override_file"
             ( cd "$workdir" && docker compose -f docker-compose.yml -f "$override_file" up -d --no-deps "$service" )
             if wait_for_healthy "$name" 30; then
@@ -225,8 +224,7 @@ for cid in "${MATCH_IDS[@]}"; do
             result="healthy"
         else
             echo "  Health check failed for $name - rolling back to previous image..."
-            rollback_image_ref="$(strip_tag "$img")@${old_digest}"
-            rollback_cmd="${runlike_cmd/$img/$rollback_image_ref}"
+            rollback_cmd="${runlike_cmd/$img/$old_digest}"
             docker stop "$name" >/dev/null 2>&1
             docker rm "$name" >/dev/null 2>&1
             eval "$rollback_cmd"
