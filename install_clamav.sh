@@ -15,103 +15,101 @@ echo "
 
 
 This really is meant to be run under Ubuntu 20.04 LTS +
-Version:  0.0.32
+Version:  0.0.35
 Last Updated:  6/21/2026
 "
 
+# Set this to receive scan alerts via the system 'mail' command (leave blank to disable email alerts)
+ALERT_EMAIL=""
+QUARANTINE_DIR=/var/quarantine/clamav
+SCRIPT_PATH=$(readlink -f "$0")
+
+run_step() {
+    if ! "$@"; then
+        printf 'WARNING: command failed: %s\n' "$*" >&2
+    fi
+}
+
 #-- update yourself! (for the next load) --
-rm install_clamav.sh && wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_clamav.sh && chmod u+x install_clamav.sh
+# Download to a temp file first so a failed/interrupted update can't leave the
+# host without a script at all.
+SELF_URL="https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_clamav.sh"
+TMP_SELF=$(mktemp)
+if wget -q -O "$TMP_SELF" "$SELF_URL" && [ -s "$TMP_SELF" ]; then
+    chmod u+x "$TMP_SELF"
+    mv "$TMP_SELF" "$SCRIPT_PATH"
+else
+    printf 'WARNING: self-update download failed, continuing with current script version\n' >&2
+    rm -f "$TMP_SELF"
+fi
 
 #---- update system -----
-sudo apt-get update -y
-sudo apt-get install clamav clamav-daemon -y
+run_step sudo apt-get update -y
+run_step sudo apt-get install clamav clamav-daemon -y
 sudo systemctl stop clamav-freshclam
-sudo apt install -y rkhunter
-sudo apt install -y chkrootkit
+run_step sudo apt install -y rkhunter
+run_step sudo apt install -y chkrootkit
 
 #--- Update ClamAV Signatures ---
-echo "Update ClamAV Database... \r\n"
-sudo freshclam
+printf 'Update ClamAV Database...\n'
+run_step sudo freshclam
 sudo systemctl start clamav-freshclam
 sudo systemctl enable clamav-freshclam
 
-echo "Update Rootkit Hunter Database... \r\n"
-sudo rkhunter --propupd
+printf 'Update Rootkit Hunter Database...\n'
+run_step sudo rkhunter --propupd
 
-Cron_output=$(crontab -l | grep "install_clamav.sh")
-if [ -z "$Cron_output" ]
-then
-    line="5 3 * * 7 /home/ubuntu/install_clamav.sh >> /var/log/install_clamav.log 2>&1"
-    (crontab -u root -l; echo "$line" ) | crontab -u root -
-    /etc/init.d/cron restart  > /dev/null
+#--- schedule weekly scan: every Friday at 11:00 PM ---
+# Replace any pre-existing entry (including stale schedules from older
+# versions of this script) rather than skipping if one is already present.
+CRON_LINE="0 23 * * 5 $SCRIPT_PATH >> /var/log/install_clamav.log 2>&1"
+(sudo crontab -u root -l 2>/dev/null | grep -v "install_clamav.sh"; echo "$CRON_LINE") | sudo crontab -u root -
+sudo systemctl restart cron > /dev/null 2>&1
+
+printf '\n\nCheck Rootkit Scanning...\n\n'
+sudo chkrootkit || true
+
+printf '\n\nRootkit Hunter Scanning...\n\n'
+sudo rkhunter --check --skip-keypress || true
+
+printf '\n\nLinux Malware Detect\n\n'
+MALDET_TMP=$(mktemp -d)
+if curl -fsSL https://www.rfxn.com/downloads/maldetect-current.tar.gz -o "$MALDET_TMP/maldetect-current.tar.gz" && [ -s "$MALDET_TMP/maldetect-current.tar.gz" ]; then
+    tar -xzf "$MALDET_TMP/maldetect-current.tar.gz" -C "$MALDET_TMP"
+    MALDET_DIR=$(find "$MALDET_TMP" -maxdepth 1 -type d -name "maldetect-*" | head -n1)
+    if [ -n "$MALDET_DIR" ]; then
+        (cd "$MALDET_DIR" && sudo ./install.sh)
+    else
+        printf 'WARNING: maldetect archive extraction failed\n' >&2
+    fi
+else
+    printf 'WARNING: maldetect download failed, skipping installation\n' >&2
 fi
+rm -rf "$MALDET_TMP"
 
-#echo "\r\n \r\n Scanning: RAM (Doesn't work on linux, only windows) \r\n \r\n"
-#sudo clamscan --memory
-echo "\r\n \r\n Check Rootkit Scanning... \r\n \r\n"
-sudo chkrootkit
-
-echo "\r\n \r\n Rootkit Hunter Scanning... \r\n \r\n"
-sudo rkhunter --check --skip-keypress
-
-echo "\r\n \r\n Linux Malware Detect \r\n \r\n"
-curl -fsSL https://www.rfxn.com/downloads/maldetect-current.tar.gz -o /tmp/maldetect-current.tar.gz && tar -xzf /tmp/maldetect-current.tar.gz -C /tmp && cd /tmp/maldetect-*/ && ./install.sh
 #------- CLAM AV ------------
-#---- File system -----
-# Do a full scan!
-#sudo clamscan --infected --remove --recursive /
-# clamscan --remove=yes -i -r ~/
+sudo mkdir -p "$QUARANTINE_DIR"
+sudo chmod 700 "$QUARANTINE_DIR"
 
-#--- public dirs ---
-echo "\r\n \r\n Scanning: /tmp/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /tmp/
+# A single clamscan invocation across all real (non-virtual) filesystem roots
+# loads the signature DB once instead of once per directory, and moves
+# infected files to quarantine instead of deleting them outright.
+printf '\n\nScanning filesystem (excluding /proc, /sys, /dev)...\n\n'
+SCAN_LOG=$(mktemp)
+sudo clamscan --infected --move="$QUARANTINE_DIR" --recursive \
+    --exclude-dir="^/(proc|sys|dev)" \
+    /tmp /var /bin /sbin /usr /lib /etc /home /root /media /opt /snap /mnt \
+    | tee "$SCAN_LOG"
 
-#/var/tmp
-echo "\r\n \r\n Scanning: /var/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /var/
+INFECTED_COUNT=$(grep -c "FOUND$" "$SCAN_LOG")
+if [ "$INFECTED_COUNT" -gt 0 ]; then
+    logger -t install_clamav "WARNING: $INFECTED_COUNT infected file(s) found and moved to $QUARANTINE_DIR"
+    if command -v mail >/dev/null 2>&1 && [ -n "$ALERT_EMAIL" ]; then
+        mail -s "ClamAV: $INFECTED_COUNT infected file(s) found on $(hostname)" "$ALERT_EMAIL" < "$SCAN_LOG"
+    fi
+else
+    logger -t install_clamav "ClamAV scan completed, no infections found"
+fi
+rm -f "$SCAN_LOG"
 
-# /dev/shm
-echo "\r\n \r\n Scanning: /dev \r\n \r\n"
-sudo clamscan --infected --remove --recursive /dev/
-
-
-#--- private dirs ---
-# /bin, /sbin, /usr/bin
-echo "\r\n \r\n Scanning: /bin \r\n \r\n"
-sudo clamscan --infected --remove --recursive /bin/
-
-echo "\r\n \r\n Scanning: /sbin/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /sbin/
-
-echo "\r\n \r\n Scanning: /usr/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /usr/
-
-echo "\r\n \r\n Scanning: /lib/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /lib/
-
-echo "\r\n \r\n Scanning: /etc/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /etc/
-
-#------- 
-echo "\r\n \r\n Scanning: /home/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /home/
-
-echo "\r\n \r\n Scanning: /root/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /root/
-
-echo "\r\n \r\n Scanning: /media/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /media/
-
-echo "\r\n \r\n Scanning: /sys/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /sys/
-
-echo "\r\n \r\n Scanning: /opt/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /opt/
-
-echo "\r\n \r\n Scanning: /snap/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /snap/
-
-echo "\r\n \r\n Scanning: /mnt/ \r\n \r\n"
-sudo clamscan --infected --remove --recursive /mnt/
-
-echo "DONE! \r\n \r\n"
+printf 'DONE!\n\n'
