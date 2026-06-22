@@ -16,6 +16,11 @@
 #   ./update_docker_image.sh nginx          # any tag of nginx
 #   ./update_docker_image.sh nginx:alpine   # only that exact tag
 #
+# Install:
+#   curl -fsSL -o "update_docker_image.sh" \
+#       "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_docker_image.sh" \
+#       && chmod u+x update_docker_image.sh
+#
 #------------------------------------------------------------
 
 set -u
