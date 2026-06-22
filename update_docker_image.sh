@@ -2,7 +2,7 @@
 #------------------------------------------------------------
 #  * Copyright (c) 2001-2026 Christopher Gray
 #  * All rights reserved.  Proprietary and Confidential.
-# Version: 0.1.1
+# Version: 0.1.2
 # Updated: 6/21/2026
 #------------------------------------------------------------
 #
@@ -17,9 +17,7 @@
 #   ./update_docker_image.sh nginx:alpine   # only that exact tag
 #
 # Install:
-#   curl -fsSL -o "update_docker_image.sh" \
-#       "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_docker_image.sh" \
-#       && chmod u+x update_docker_image.sh
+#   curl -fsSL -o "update_docker_image.sh" "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_docker_image.sh" && chmod u+x update_docker_image.sh
 #
 #------------------------------------------------------------
 
