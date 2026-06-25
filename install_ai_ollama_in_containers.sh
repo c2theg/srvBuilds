@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
-VERSION="0.2.3"
-LAST_UPDATED="2026-04-16"
+VERSION="0.2.4"
+LAST_UPDATED="2026-06-25"
 
 # Great use-case is running this in a Proxmox VM with a Nvidia GPU connected via PCIx or Opulink
+# Update all containers:
+#     docker exec ollama ollama list | awk 'NR>1 {print $1}' | xargs -r -n1 sh -c 'echo "Updating $0"; docker exec ollama ollama pull "$0"'
 
 
 curl -O "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_ollama_in_containers.sh" # update yourself with each run
@@ -354,6 +356,8 @@ Add models to Ollama:
 - ${DOCKER_CMD[*]} exec -it ollama ollama pull llama3.2:latest
 - ${DOCKER_CMD[*]} exec -it ollama ollama pull qwen3.5:latest
 - ${DOCKER_CMD[*]} exec -it ollama ollama list
+- Update all containers:
+-     docker exec ollama ollama list | awk 'NR>1 {print $1}' | xargs -r -n1 sh -c 'echo "Updating $0"; docker exec ollama ollama pull "$0"'
 
 API example (host):
 - curl http://127.0.0.1:${PORT_OLLAMA}/api/tags
