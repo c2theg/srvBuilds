@@ -17,15 +17,14 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.1.11
+Version:  2.2.4
 Last Updated:  7/15/2026
-Updated by:  Claude (Fable 5) - full-upgrade fallback with --allow-downgrades, held-package report, skip :cloud ollama models, generalized microcode+fwupd firmware updates for all physical AMD/Intel machines (mini PCs, Dell servers, DGX Spark, Strix Halo)
+Updated by:  Claude (Fable 5) - cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection for Intel mini PCs
 
-For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
+For Debian 8 / Ubuntu versions 20.04 - 26.04+, and Raspberry Pi OS on Pi 3 or newer ( ignore the file name :/ )
 
 
 UPDATE: if you have a DGX Spark - GB10 - use this to update firmware: fwupdmgr get-upgrades
-
 
 "
 # --- Require root ---
@@ -35,13 +34,29 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
+# --- Non-interactive, cron-safe apt wrapper: never prompt for conffile   ---
+# --- decisions (keep the local file), wait up to 10 min for another      ---
+# --- apt/dpkg process (e.g. unattended-upgrades) to release the lock,    ---
+# --- force IPv4. apt-get, not apt: apt has no stable CLI for scripts.    ---
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
+aptg() {
+    apt-get -o Acquire::ForceIPv4=true \
+            -o DPkg::Lock::Timeout=600 \
+            -o Dpkg::Options::=--force-confdef \
+            -o Dpkg::Options::=--force-confold \
+            "$@"
+}
+
 # --- Self-update (download to a temp file, then atomically replace; ---
 # --- never overwrite the running script's file in place, or bash   ---
 # --- will read corrupted/misaligned content mid-execution)         ---
 curl -fsSL -o "update_ubuntu14.04.sh.tmp" \
     "https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh" \
+    && bash -n "update_ubuntu14.04.sh.tmp" \
     && chmod u+x update_ubuntu14.04.sh.tmp \
-    && mv update_ubuntu14.04.sh.tmp update_ubuntu14.04.sh
+    && mv update_ubuntu14.04.sh.tmp update_ubuntu14.04.sh \
+    || { echo "WARNING: self-update failed download or syntax validation. Keeping current version."; rm -f update_ubuntu14.04.sh.tmp; }
 
 # --- Fix duplicate Docker apt sources (archive_uri-*.list duplicates docker.list
 # --- after Docker's install script is re-run or add-apt-repository was used) ---
@@ -62,14 +77,14 @@ if [ -n "$held_pkgs" ]; then
     echo "  To release: apt-mark unhold <package>"
 fi
 
-# --- System update (IPv4; IPv6 skipped where unavailable) ---
-apt -o Acquire::ForceIPv4=true update
+# --- System update ---
+aptg update
 # Driver-series transitions (e.g. NVIDIA 590 -> 595) declare Breaks:/Replaces:
 # on the old packages, which plain 'upgrade' cannot satisfy because it is never
 # allowed to remove a package. It then exits with an error and ALL pending
 # upgrades are skipped. 'full-upgrade' may remove/replace packages, so fall
-# back to it when 'upgrade' fails.
-if ! apt -o Acquire::ForceIPv4=true upgrade -y; then
+# back to it when 'upgrade' fails. (--with-new-pkgs matches 'apt upgrade' behavior.)
+if ! aptg upgrade --with-new-pkgs -y; then
     echo "-----------------------------------------------------------------------"
     echo "'apt upgrade' failed (likely a package conflict that requires removals,"
     echo "e.g. an NVIDIA driver series transition). Retrying with 'full-upgrade'."
@@ -77,11 +92,11 @@ if ! apt -o Acquire::ForceIPv4=true upgrade -y; then
     # --allow-downgrades: a partially-published driver set (e.g. NVIDIA 595 from
     # a PPA) can leave installed versions newer than any complete set the repos
     # can supply; the only consistent solution is to downgrade back to it.
-    apt -o Acquire::ForceIPv4=true full-upgrade -y --allow-downgrades
+    aptg full-upgrade -y --allow-downgrades
 fi
 
 # --- Fix broken package installs ---
-apt install -f -y
+aptg install -f -y
 
 # --- Reconfigure partially installed packages ---
 dpkg --configure -a
@@ -89,13 +104,13 @@ dpkg --configure -a
 echo "Downloading required dependencies..."
 
 # --- Core dependencies ---
-apt install -y ca-certificates unattended-upgrades
+aptg install -y ca-certificates unattended-upgrades
 update-ca-certificates
 
 # --- Cleanup ---
 echo "-----------------------------------------------------------------------"
-apt autoclean
-apt autoremove -y
+aptg autoclean
+aptg autoremove -y
 
 # --- Python PIP (only if already installed) ---
 if command -v pip >/dev/null 2>&1; then
@@ -113,7 +128,7 @@ fi
 # --- Node.js (only upgrade if already installed) ---
 if command -v node >/dev/null 2>&1; then
     echo "Node.js detected: $(node -v)"
-    apt install --only-upgrade -y nodejs
+    aptg install --only-upgrade -y nodejs
 else
     echo "Node.js not installed. Skipping."
 fi
@@ -126,18 +141,49 @@ if command -v npm >/dev/null 2>&1; then
         sed -i '/globalignorefile/d' "$npm_globalconfig"
         echo "Removed deprecated 'globalignorefile' setting from $npm_globalconfig"
     fi
-    apt install --only-upgrade -y npm
+    aptg install --only-upgrade -y npm
     npm install -g npm
 else
     echo "npm not installed. Skipping."
 fi
 
-# --- Docker (only fetch image-update helper if already installed) ---
+# --- Docker (one-shot: update images and recreate running containers) ---
 if command -v docker >/dev/null 2>&1; then
     echo "Docker detected: $(docker --version)"
     curl -fsSL -o "update_docker_image.sh" \
         "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_docker_image.sh" \
         && chmod u+x update_docker_image.sh
+    # Remove the background Watchtower daemon if an earlier script version
+    # deployed one (replaced by the one-shot pass below)
+    if docker ps -a --format '{{.Names}}' 2>/dev/null | grep -q '^watchtower$'; then
+        echo "Removing background Watchtower daemon (replaced by one-shot updates)."
+        docker rm -f watchtower >/dev/null 2>&1 || true
+    fi
+
+    # One-shot container image update: pulls the latest image for every
+    # running container (Plex, Jellyfin, nginx, Apache, Ollama, ...) and
+    # recreates any container whose image changed, preserving its exact
+    # config (ports, volumes, env, restart policy) via the Docker API.
+    # Works for both compose- and 'docker run'-managed containers, removes
+    # superseded images, then exits - nothing stays running in the background.
+    # Exclude a container with label: com.centurylinklabs.watchtower.enable=false
+    # NOTE: containers on pinned version tags (e.g. nginx:1.25.3) never receive
+    # updates; run internet-exposed services on :latest or a rolling major tag.
+    echo "Checking for container image updates (one-shot)..."
+    docker run --rm \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        containrrr/watchtower --run-once --cleanup \
+        || echo "WARNING: container image update pass failed."
+
+    # Run the same one-shot pass hourly via cron so internet-exposed
+    # containers (Plex, Jellyfin, nginx, ...) pick up new images within an
+    # hour of release instead of waiting for the nightly script run.
+    if ! crontab -u root -l 2>/dev/null | grep -q "containrrr/watchtower"; then
+        echo "Adding hourly container-update entry to root crontab."
+        (crontab -u root -l 2>/dev/null; echo "15 * * * * docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --run-once --cleanup >> /var/log/container_updates.log 2>&1") | crontab -u root -
+    else
+        echo "Hourly container-update cron entry already present."
+    fi
 else
     echo "Docker not found. Skipping."
 fi
@@ -205,11 +251,14 @@ if [ "$(systemd-detect-virt 2>/dev/null || echo none)" = "none" ]; then
     case "$cpu_vendor" in
         AuthenticAMD)
             echo "AMD CPU detected:$cpu_model"
-            apt install -y amd64-microcode linux-firmware
+            aptg install -y amd64-microcode linux-firmware
             ;;
         GenuineIntel)
             echo "Intel CPU detected:$cpu_model"
-            apt install -y intel-microcode linux-firmware
+            # thermald: Intel thermal management; reduces throttling on
+            # small-form-factor boxes (NUCs, mini PCs); idle elsewhere
+            aptg install -y intel-microcode linux-firmware thermald
+            systemctl enable --now thermald >/dev/null 2>&1 || true
             ;;
     esac
 
@@ -220,11 +269,29 @@ if [ "$(systemd-detect-virt 2>/dev/null || echo none)" = "none" ]; then
     if echo "$cpu_model" | grep -qiE "Strix Halo|Ryzen AI Max"; then
         echo "AMD Strix Halo detected:$cpu_model"
     fi
+    if echo "$product_name $sys_vendor" | grep -qi "NUC"; then
+        echo "Intel/ASUS NUC detected: $sys_vendor $product_name"
+        echo "  BIOS/ME/Thunderbolt firmware is fully covered via LVFS below."
+    fi
     if echo "$sys_vendor" | grep -qi "Dell"; then
         echo "Dell system detected: $sys_vendor $product_name"
         echo "  BIOS/iDRAC/NIC firmware is checked via LVFS below. For complete"
         echo "  PowerEdge coverage (PERC, backplane, PSU) also consider Dell"
         echo "  System Update (dsu) from linux.dell.com/repo/hardware/dsu/"
+    fi
+
+    # Raspberry Pi: GPU/WiFi/BT firmware ships via a distro-specific package;
+    # bootloader EEPROM updates exist on Pi 4/5 only (Pi 3 boot firmware is
+    # part of the packages below, covered by the normal apt upgrade)
+    pi_model="$(tr -d '\0' < /proc/device-tree/model 2>/dev/null || true)"
+    if echo "$pi_model" | grep -qi "Raspberry Pi"; then
+        echo "Raspberry Pi detected: $pi_model"
+        aptg install -y raspi-firmware 2>/dev/null \
+            || aptg install -y linux-firmware-raspi 2>/dev/null \
+            || echo "No Raspberry Pi firmware package found in the configured repos."
+        if command -v rpi-eeprom-update >/dev/null 2>&1; then
+            rpi-eeprom-update -a || true
+        fi
     fi
 
     # Platform firmware (BIOS/UEFI, EC, SSD, docks, etc.) via fwupd + LVFS
@@ -269,12 +336,23 @@ if command -v ollama >/dev/null 2>&1; then
         curl -fsSL https://ollama.com/install.sh | sh
     fi
     echo "Updating installed Ollama models..."
-    ollama list 2>/dev/null | tail -n +2 | awk '{print $1}' | while read -r model; do
+    # Compare each model's digest (ID column) before/after the pull so the log
+    # states explicitly whether the model was updated or already current.
+    ollama list 2>/dev/null | tail -n +2 | awk '{print $1, $2}' | while read -r model old_digest; do
         [ -z "$model" ] && continue
         case "$model" in
             *:cloud) echo "Skipping cloud-hosted model (not pullable): $model"; continue ;;
         esac
-        ollama pull "$model"
+        if ollama pull "$model"; then
+            new_digest="$(ollama list 2>/dev/null | awk -v m="$model" '$1 == m {print $2}')"
+            if [ -n "$new_digest" ] && [ "$old_digest" != "$new_digest" ]; then
+                echo "UPDATED: $model ($old_digest -> $new_digest)"
+            else
+                echo "Already current: $model ($old_digest)"
+            fi
+        else
+            echo "WARNING: failed to pull $model"
+        fi
     done
 else
     echo "Ollama not found. Skipping."
@@ -296,12 +374,23 @@ if ! crontab -l 2>/dev/null | grep -q "sys_restart.sh"; then
     (crontab -u root -l 2>/dev/null; echo "13 3 7 * * /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1") | crontab -u root -
 fi
 
+# --- Reboot-required notice (kernel, glibc, GPU driver, firmware) ---
+if [ -f /var/run/reboot-required ]; then
+    echo "***********************************************************************"
+    echo "***  REBOOT REQUIRED to finish applying these updates:              ***"
+    [ -f /var/run/reboot-required.pkgs ] && sort -u /var/run/reboot-required.pkgs | sed 's/^/     /'
+    echo "***********************************************************************"
+fi
+
 echo ""
 echo "Done"
 echo ""
 
-# --- Ubuntu Pro / ESM reminder ---
-if command -v pro >/dev/null 2>&1; then
+# --- Ubuntu Pro / ESM reminder (Ubuntu only; skipped on Debian / Raspberry Pi OS) ---
+os_id="$(. /etc/os-release 2>/dev/null; echo "${ID:-}")"
+if [ "$os_id" != "ubuntu" ]; then
+    echo "Non-Ubuntu system (${os_id:-unknown}). Skipping Ubuntu Pro check."
+elif command -v pro >/dev/null 2>&1; then
     pro_status_output="$(pro status 2>/dev/null)"
     if ! echo "$pro_status_output" | grep -qi "is not attached"; then
         echo "-----------------------------------------------------------------------"
