@@ -17,9 +17,9 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.2.5
+Version:  2.3.1
 Last Updated:  7/15/2026
-Updated by:  Claude (Fable 5) - cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection for Intel mini PCs
+Updated by:  Claude (Fable 5) - cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades, optional interactive OS release upgrade for EOL releases
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+, and Raspberry Pi OS on Pi 3 or newer ( ignore the file name :/ )
 
@@ -209,11 +209,31 @@ else
     echo "Rust not found. Skipping."
 fi
 
-# --- ClamAV (only update definitions if already installed) ---
+# --- ClamAV (upgrade engine, then update definitions, if installed) ---
 if command -v freshclam >/dev/null 2>&1; then
     echo "ClamAV detected: $(clamscan --version 2>/dev/null | head -n1)"
+    # The ClamAV CDN 403-blocks EOL engine versions (e.g. 0.103.x), so the
+    # engine must be current before definitions can download at all.
+    clam_before="$(clamscan --version 2>/dev/null | head -n1)"
+    aptg install --only-upgrade -y clamav clamav-freshclam clamav-daemon >/dev/null 2>&1 || true
+    clam_after="$(clamscan --version 2>/dev/null | head -n1)"
+    if [ "$clam_before" != "$clam_after" ]; then
+        echo "ClamAV engine upgraded: $clam_after"
+        # Clear the CDN cool-down state accumulated by the old blocked engine,
+        # otherwise freshclam refuses to retry for up to 24h
+        rm -f /var/lib/clamav/freshclam.dat
+    fi
     service clamav-freshclam stop >/dev/null 2>&1 || true
-    freshclam
+    if ! freshclam; then
+        echo "WARNING: ClamAV definition update FAILED - malware signatures are stale."
+        if clamscan --version 2>/dev/null | grep -qE '^ClamAV 0\.'; then
+            echo "  This engine is end-of-life and the ClamAV CDN refuses it (HTTP 403),"
+            echo "  and this OS release's repos carry no newer build. Options:"
+            echo "   - Enable Ubuntu Pro esm-apps (free for 5 machines): pro enable esm-apps"
+            echo "   - Install the current build: https://www.clamav.net/downloads"
+            echo "   - Or upgrade the OS release: do-release-upgrade"
+        fi
+    fi
     service clamav-freshclam start >/dev/null 2>&1 || true
 else
     echo "ClamAV not found. Skipping."
@@ -430,6 +450,89 @@ else
     echo "  sudo pro attach <YOUR_TOKEN>"
     echo "  sudo pro enable esm-infra esm-apps"
     echo "  sudo pro status"
+    echo "-----------------------------------------------------------------------"
+fi
+
+# --- Offer OS release upgrade on releases past/near end of standard support ---
+# Prompts only in an interactive terminal (never from cron); default is No.
+os_ver="$(. /etc/os-release 2>/dev/null; echo "${VERSION_ID:-}")"
+os_codename="$(. /etc/os-release 2>/dev/null; echo "${VERSION_CODENAME:-}")"
+offer_upgrade=""
+if [ "$os_id" = "ubuntu" ] && dpkg --compare-versions "${os_ver:-99}" lt 24.04; then
+    offer_upgrade="yes"
+elif [ "$os_id" = "debian" ] && dpkg --compare-versions "${os_ver:-99}" lt 12; then
+    offer_upgrade="yes"
+fi
+if [ -n "$offer_upgrade" ]; then
+    echo "-----------------------------------------------------------------------"
+    echo "This system runs $os_id $os_ver ($os_codename), which is past or near"
+    echo "the end of standard security support."
+    if [ -t 0 ]; then
+        echo ""
+        echo "BEFORE SAYING YES - two precautions:"
+        echo ""
+        echo "1. BACKUP FIRST: snapshot this machine if it is a VM, or verify your"
+        echo "   backups are current if bare metal. A failed release upgrade can"
+        echo "   leave the system unbootable."
+        echo ""
+        echo "2. RUN INSIDE tmux: an upgrade over plain SSH dies if the connection"
+        echo "   drops, leaving the OS half-upgraded (the most common failure mode)."
+        if [ -n "${TMUX:-}" ] || [ -n "${STY:-}" ]; then
+            echo "   -> You ARE inside tmux/screen already. Safe to proceed."
+        else
+            echo "   -> You are NOT inside tmux. Answer 'n' below, then run:"
+            echo ""
+            echo "        apt install -y tmux        # install it"
+            echo "        tmux new -s upgrade        # open a persistent session"
+            echo "        bash $0                    # re-run this script inside it"
+            echo ""
+            echo "      Then answer 'y' to this prompt. If your SSH connection drops,"
+            echo "      the upgrade keeps running on the server. Reconnect with:"
+            echo ""
+            echo "        tmux attach -t upgrade     # picks up right where it was"
+            echo ""
+            echo "      (To detach on purpose: press Ctrl+b, release, then press d)"
+        fi
+        echo ""
+        printf "Upgrade to the next LTS/stable release now? Takes 30-90 min and ends in a reboot. [y/N] "
+        read -r -t 120 release_answer || release_answer=""
+        case "$release_answer" in
+            [Yy]*)
+                if [ "$os_id" = "ubuntu" ]; then
+                    aptg install -y ubuntu-release-upgrader-core
+                    # Only offer LTS-to-LTS hops
+                    sed -i 's/^Prompt=.*/Prompt=lts/' /etc/update-manager/release-upgrades 2>/dev/null
+                    echo "Starting non-interactive release upgrade..."
+                    do-release-upgrade -f DistUpgradeViewNonInteractive
+                    echo "NOTE: releases upgrade one hop at a time (e.g. 20.04 -> 22.04 -> 24.04)."
+                    echo "      After the post-upgrade reboot, re-run this script for the next hop."
+                else
+                    case "$os_codename" in
+                        buster)   debian_next="bullseye" ;;
+                        bullseye) debian_next="bookworm" ;;
+                        bookworm) debian_next="trixie" ;;
+                        *)        debian_next="" ;;
+                    esac
+                    if [ -n "$debian_next" ]; then
+                        echo "Rewriting apt sources: $os_codename -> $debian_next"
+                        sed -i "s/$os_codename/$debian_next/g" /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null
+                        # Security suite naming changed from 'X/updates' to 'X-security' in bullseye
+                        sed -i "s|$debian_next/updates|$debian_next-security|g" /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null
+                        aptg update && aptg full-upgrade -y
+                        echo "Debian release upgrade complete. Reboot, then re-run this script."
+                    else
+                        echo "Unrecognized Debian codename '$os_codename'. Upgrade manually."
+                    fi
+                fi
+                ;;
+            *)
+                echo "Skipping release upgrade (answered no or timed out)."
+                ;;
+        esac
+    else
+        echo "(Non-interactive run: release-upgrade prompt skipped. Run this script"
+        echo " from a terminal to be offered the upgrade, or run 'do-release-upgrade')"
+    fi
     echo "-----------------------------------------------------------------------"
 fi
 
