@@ -17,9 +17,9 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.1.7
+Version:  2.1.9
 Last Updated:  7/15/2026
-Updated by:  Claude Haiku 4.5 (nvidia driver conflict & ollama version parser fixes)
+Updated by:  Claude (Fable 5) - fall back to apt full-upgrade on conflict, report held packages, skip :cloud ollama models, Strix Halo firmware refresh+apply
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
 
@@ -54,18 +54,28 @@ if [ -f /etc/apt/sources.list.d/docker.list ]; then
     done
 fi
 
-# --- Handle NVIDIA driver conflicts on Ubuntu 24.04+ ---
-if dpkg -l 2>/dev/null | grep -q "nvidia-driver"; then
-    nvidia_version="$(dpkg -l 2>/dev/null | grep 'nvidia-driver' | awk '{print $3}' | head -n1)"
-    if apt list --upgradable 2>/dev/null | grep -qi nvidia; then
-        echo "Removing conflicting NVIDIA packages to allow clean reinstall..."
-        apt remove -y libnvidia-compute libnvidia-gl libnvidia-extra nvidia-kernel-common xserver-xorg-video-nvidia 2>/dev/null || true
-    fi
+# --- Report held packages (a common cause of "held broken packages" errors) ---
+held_pkgs="$(apt-mark showhold 2>/dev/null)"
+if [ -n "$held_pkgs" ]; then
+    echo "WARNING: The following packages are on hold and may block upgrades:"
+    echo "$held_pkgs"
+    echo "  To release: apt-mark unhold <package>"
 fi
 
 # --- System update (IPv4; IPv6 skipped where unavailable) ---
 apt -o Acquire::ForceIPv4=true update
-apt -o Acquire::ForceIPv4=true upgrade -y
+# Driver-series transitions (e.g. NVIDIA 590 -> 595) declare Breaks:/Replaces:
+# on the old packages, which plain 'upgrade' cannot satisfy because it is never
+# allowed to remove a package. It then exits with an error and ALL pending
+# upgrades are skipped. 'full-upgrade' may remove/replace packages, so fall
+# back to it when 'upgrade' fails.
+if ! apt -o Acquire::ForceIPv4=true upgrade -y; then
+    echo "-----------------------------------------------------------------------"
+    echo "'apt upgrade' failed (likely a package conflict that requires removals,"
+    echo "e.g. an NVIDIA driver series transition). Retrying with 'full-upgrade'."
+    echo "-----------------------------------------------------------------------"
+    apt -o Acquire::ForceIPv4=true full-upgrade -y
+fi
 
 # --- Fix broken package installs ---
 apt install -f -y
@@ -194,12 +204,22 @@ if echo "$product_name" | grep -qi "DGX Spark"; then
     fi
 fi
 
-# --- AMD Strix Halo (Ryzen AI Max) firmware check ---
+# --- AMD Strix Halo (Ryzen AI Max) firmware + microcode updates ---
 cpu_model="$(grep -m1 '^model name' /proc/cpuinfo 2>/dev/null | cut -d: -f2-)"
 if echo "$cpu_model" | grep -qiE "Strix Halo|Ryzen AI Max"; then
     echo "AMD Strix Halo detected:$cpu_model"
+    # CPU microcode + GPU/NPU firmware ship via these apt packages
+    apt install -y amd64-microcode linux-firmware
     if command -v fwupdmgr >/dev/null 2>&1; then
-        fwupdmgr get-upgrades
+        # Refresh LVFS metadata first or get-upgrades compares against a stale catalog
+        fwupdmgr refresh --force >/dev/null 2>&1 || true
+        if fwupdmgr get-upgrades 2>/dev/null | grep -q .; then
+            echo "Firmware updates available. Applying via fwupdmgr..."
+            fwupdmgr update -y --no-reboot-check || true
+            echo "NOTE: firmware updates may require a reboot to take effect."
+        else
+            echo "No firmware updates available via fwupdmgr."
+        fi
     else
         echo "fwupdmgr not found. Skipping firmware check."
         echo "  To install: apt install -y fwupd"
@@ -232,7 +252,11 @@ if command -v ollama >/dev/null 2>&1; then
     fi
     echo "Updating installed Ollama models..."
     ollama list 2>/dev/null | tail -n +2 | awk '{print $1}' | while read -r model; do
-        [ -n "$model" ] && ollama pull "$model"
+        [ -z "$model" ] && continue
+        case "$model" in
+            *:cloud) echo "Skipping cloud-hosted model (not pullable): $model"; continue ;;
+        esac
+        ollama pull "$model"
     done
 else
     echo "Ollama not found. Skipping."
