@@ -17,9 +17,9 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.1.10
+Version:  2.1.11
 Last Updated:  7/15/2026
-Updated by:  Claude (Fable 5) - full-upgrade fallback now uses --allow-downgrades (recovers from partially-published driver sets), report held packages, skip :cloud ollama models, Strix Halo firmware refresh+apply
+Updated by:  Claude (Fable 5) - full-upgrade fallback with --allow-downgrades, held-package report, skip :cloud ollama models, generalized microcode+fwupd firmware updates for all physical AMD/Intel machines (mini PCs, Dell servers, DGX Spark, Strix Halo)
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
 
@@ -195,24 +195,39 @@ else
     echo "  To install: curl -fsSL https://www.rfxn.com/downloads/maldetect-current.tar.gz -o /tmp/maldetect-current.tar.gz && tar -xzf /tmp/maldetect-current.tar.gz -C /tmp && cd /tmp/maldetect-*/ && ./install.sh"
 fi
 
-# --- NVIDIA DGX Spark (GB10) firmware check ---
+# --- Microcode + platform firmware (any physical machine; skipped in VMs) ---
 product_name="$(cat /sys/class/dmi/id/product_name 2>/dev/null || true)"
-if echo "$product_name" | grep -qi "DGX Spark"; then
-    echo "NVIDIA DGX Spark detected: $product_name"
-    if command -v fwupdmgr >/dev/null 2>&1; then
-        fwupdmgr get-upgrades
-    else
-        echo "fwupdmgr not found. Skipping firmware check."
-        echo "  To install: apt install -y fwupd"
-    fi
-fi
-
-# --- AMD Strix Halo (Ryzen AI Max) firmware + microcode updates ---
+sys_vendor="$(cat /sys/class/dmi/id/sys_vendor 2>/dev/null || true)"
 cpu_model="$(grep -m1 '^model name' /proc/cpuinfo 2>/dev/null | cut -d: -f2-)"
-if echo "$cpu_model" | grep -qiE "Strix Halo|Ryzen AI Max"; then
-    echo "AMD Strix Halo detected:$cpu_model"
-    # CPU microcode + GPU/NPU firmware ship via these apt packages
-    apt install -y amd64-microcode linux-firmware
+cpu_vendor="$(grep -m1 '^vendor_id' /proc/cpuinfo 2>/dev/null | cut -d: -f2- | tr -d ' ')"
+if [ "$(systemd-detect-virt 2>/dev/null || echo none)" = "none" ]; then
+    # CPU microcode + GPU/NPU/NIC device firmware ship via these apt packages
+    case "$cpu_vendor" in
+        AuthenticAMD)
+            echo "AMD CPU detected:$cpu_model"
+            apt install -y amd64-microcode linux-firmware
+            ;;
+        GenuineIntel)
+            echo "Intel CPU detected:$cpu_model"
+            apt install -y intel-microcode linux-firmware
+            ;;
+    esac
+
+    # Model-specific notes
+    if echo "$product_name" | grep -qi "DGX Spark"; then
+        echo "NVIDIA DGX Spark (GB10) detected: $product_name"
+    fi
+    if echo "$cpu_model" | grep -qiE "Strix Halo|Ryzen AI Max"; then
+        echo "AMD Strix Halo detected:$cpu_model"
+    fi
+    if echo "$sys_vendor" | grep -qi "Dell"; then
+        echo "Dell system detected: $sys_vendor $product_name"
+        echo "  BIOS/iDRAC/NIC firmware is checked via LVFS below. For complete"
+        echo "  PowerEdge coverage (PERC, backplane, PSU) also consider Dell"
+        echo "  System Update (dsu) from linux.dell.com/repo/hardware/dsu/"
+    fi
+
+    # Platform firmware (BIOS/UEFI, EC, SSD, docks, etc.) via fwupd + LVFS
     if command -v fwupdmgr >/dev/null 2>&1; then
         # Refresh LVFS metadata first or get-upgrades compares against a stale catalog
         fwupdmgr refresh --force >/dev/null 2>&1 || true
@@ -224,7 +239,7 @@ if echo "$cpu_model" | grep -qiE "Strix Halo|Ryzen AI Max"; then
             echo "No firmware updates available via fwupdmgr."
         fi
     else
-        echo "fwupdmgr not found. Skipping firmware check."
+        echo "fwupdmgr not found. Skipping firmware checks."
         echo "  To install: apt install -y fwupd"
     fi
 fi
