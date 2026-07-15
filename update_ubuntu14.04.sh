@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.3.1
+Version:  2.3.2
 Last Updated:  7/15/2026
 Updated by:  Claude (Fable 5) - cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades, optional interactive OS release upgrade for EOL releases
 
@@ -33,6 +33,13 @@ if [ "$(id -u)" -ne 0 ]; then
     echo "Usage: sudo bash $0" >&2
     exit 1
 fi
+
+# --- OS version report (lsb_release is absent on minimal installs; fall ---
+# --- back to os-release, which every systemd distro ships)              ---
+echo "-----------------------------------------------------------------------"
+lsb_release -a 2>/dev/null || grep -E '^(NAME|VERSION)=' /etc/os-release
+echo "Kernel: $(uname -r) ($(uname -m))"
+echo "-----------------------------------------------------------------------"
 
 # --- Non-interactive, cron-safe apt wrapper: never prompt for conffile   ---
 # --- decisions (keep the local file), wait up to 10 min for another      ---
