@@ -1186,8 +1186,8 @@ run_cleanup() {
 
         # Purge every kernel package whose version is not in the keep set;
         # the running kernel's full name is excluded again as a backstop.
-        _purge_pkgs=$(printf '%s\n' "$_kernel_pkgs" | awk -v keep="$_keep_versions" '
-            BEGIN { n = split(keep, k, "\n"); for (i = 1; i <= n; i++) keepset[k[i]] = 1 }
+        _purge_pkgs=$(printf '%s\n' "$_kernel_pkgs" | awk -v keep="${_keep_versions//$'\n'/ }" '
+            BEGIN { n = split(keep, k, " "); for (i = 1; i <= n; i++) keepset[k[i]] = 1 }
             match($0, /[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/) {
                 if (!(substr($0, RSTART, RLENGTH) in keepset)) print $0
             }' | grep -vF -- "$current" || true)
