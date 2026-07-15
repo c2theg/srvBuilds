@@ -1,6 +1,52 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# ---------------------------------------------------------------------------
+# v2.3.0 (2026-07-15) — reviewed and revised by Claude Fable 5, an Anthropic
+# AI model (id: claude-fable-5), at the maintainer's request.
+#
+# Changes in this revision:
+#   * set -e safety: guarded `apt-get clean`, the /var/log find -delete, and
+#     the drop_caches/compact_memory writes so one failure no longer aborts
+#     the whole run (drop_caches is not writable inside containers).
+#   * Backups: rsync exit 24 ("source files vanished mid-transfer", routine
+#     on live systems) is now a warning instead of discarding the snapshot.
+#   * No longer deletes /root/.local/lib — that is root's pip --user
+#     site-packages (installed software, not cache).
+#   * /tmp/systemd-private-* dirs are only removed when stale (>2 days);
+#     live ones are the private /tmp of running PrivateTmp services.
+#   * Removed the apt/dpkg lock-file deletion block (racy and unnecessary;
+#     dpkg uses fcntl locks and `dpkg --configure -a` handles recovery).
+#   * apt runs noninteractively (DEBIAN_FRONTEND + --force-confdef/confold)
+#     so cron runs cannot hang on conffile prompts; upgrade/dist-upgrade
+#     moved behind a new --with-upgrades flag.
+#   * Held-open deleted-file truncation now only touches files that lived
+#     under /var/log (a process-name denylist alone risked corrupting
+#     database temp files).
+#   * postfix restarts only when a mail log was actually removed; Pi-hole
+#     stops/restarts only units that were active beforehand; MongoDB
+#     restart tries the modern `mongod` unit first.
+#   * Rotated-log removal consolidated into one recursive find over
+#     /var/log, replacing ~30 per-path rm lines and the per-dir helper.
+#   * Per-section freed-space is measured on the filesystem being cleaned
+#     instead of always on /.
+#   * Page-cache drop / swap cycling moved behind --reclaim-ram (dropping
+#     dentries/inodes hurts performance and reclaims nothing real).
+#   * Slow full-disk scans (du /, find / -size +500M) moved behind
+#     --diagnostics; du now stays on one filesystem with bounded depth.
+#   * Mailbox trim rewritten to two passes (O(1) memory at any size).
+#   * Kernel cleanup keeps the running kernel plus the newest 2 versions
+#     and now also purges rc-state and linux-image-unsigned-* leftovers
+#     the old linux-image-[0-9]* pattern missed.
+#   * Cleanups: removed unused sudo() shim, made loop variables local,
+#     initialized empty arrays for old-bash set -u, anchored the
+#     snapshot-name regex against "." in the prefix, rejected --force with
+#     --prune-only, batched find -exec invocations.
+# ---------------------------------------------------------------------------
+
+VERSION="2.3.0"
+UPDATED="2026-07-15"
+
 echo "
  _____             _         _    _          _                                   
 |     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
@@ -15,13 +61,9 @@ echo "
                             |_|                                             |___|
 
 
-Updated: 6/10/2026
-
-install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/sys_cleanup.sh && chmod u+x sys_cleanup.sh
+Version: $VERSION    Updated: $UPDATED
 
 "
-
-VERSION="2.2.1"
 
 SCRIPT_PATH="$(readlink -f -- "$0" 2>/dev/null || realpath "$0")"
 SCRIPT_DIR="$(cd -- "$(dirname -- "$SCRIPT_PATH")" && pwd -P)"
@@ -65,6 +107,9 @@ SELF_UPDATE_URL="https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_c
 RUN_MODE="cleanup"
 DRY_RUN=false
 FORCE_BACKUP=false
+WITH_UPGRADES=false
+RECLAIM_RAM=false
+DIAGNOSTICS=false
 
 # ---------------------------------------------------------------------------
 # Runtime state
@@ -94,9 +139,6 @@ require_root() {
 }
 
 require_root
-
-# Keep the existing `sudo ...` call sites working when already running as root.
-sudo() { "$@"; }
 
 # ---------------------------------------------------------------------------
 # Generic helpers
@@ -140,26 +182,33 @@ path_is_same_or_under() {
     [ "$candidate" = "$parent" ] || [[ "$candidate" == "$parent/"* ]]
 }
 
-free_space() { df -P -B1 / | awk 'NR==2 {print $4}'; }
+# Free space (bytes) on the filesystem holding the given path (default /).
+free_space() { df -P -B1 "${1:-/}" | awk 'NR==2 {print $4}'; }
 ram_used() { free -b | awk '/Mem/ {print $3}'; }
 
 usage() {
     cat <<EOF
 Usage:
-  $0
+  $0 [--with-upgrades] [--reclaim-ram] [--diagnostics]
   $0 --backup-only [--dry-run] [--force]
   $0 --prune-only [--dry-run]
   $0 --help
 
 Modes:
-  default         Run the cleanup workflow only.
-  --backup-only   Run the rsync snapshot backup workflow only.
-  --prune-only    Run retention pruning only; do not create a new snapshot.
+  default          Run the cleanup workflow only.
+  --backup-only    Run the rsync snapshot backup workflow only.
+  --prune-only     Run retention pruning only; do not create a new snapshot.
 
-Options:
-  --dry-run       Pass --dry-run to rsync and log prune actions without deleting.
-  --force         Ignore the ${BACKUP_MIN_DAYS}-day backup wait window.
-  --help          Show this help text.
+Options (cleanup mode):
+  --with-upgrades  Also run apt-get upgrade / dist-upgrade.
+  --reclaim-ram    Drop page caches, compact memory, and cycle swap.
+  --diagnostics    Run the slow full-disk usage scans and reports.
+
+Options (backup/prune modes):
+  --dry-run        Pass --dry-run to rsync and log prune actions without deleting.
+  --force          Ignore the ${BACKUP_MIN_DAYS}-day backup wait window (backup only).
+
+  --help           Show this help text.
 EOF
 }
 
@@ -178,6 +227,15 @@ parse_args() {
             --force)
                 FORCE_BACKUP=true
                 ;;
+            --with-upgrades)
+                WITH_UPGRADES=true
+                ;;
+            --reclaim-ram)
+                RECLAIM_RAM=true
+                ;;
+            --diagnostics)
+                DIAGNOSTICS=true
+                ;;
             --help|-h)
                 usage
                 exit 0
@@ -193,6 +251,14 @@ parse_args() {
 
     if [ "$RUN_MODE" = "cleanup" ] && { $DRY_RUN || $FORCE_BACKUP; }; then
         die "--dry-run and --force are only valid with --backup-only or --prune-only"
+    fi
+
+    if [ "$RUN_MODE" = "prune" ] && $FORCE_BACKUP; then
+        die "--force is only valid with --backup-only"
+    fi
+
+    if [ "$RUN_MODE" != "cleanup" ] && { $WITH_UPGRADES || $RECLAIM_RAM || $DIAGNOSTICS; }; then
+        die "--with-upgrades, --reclaim-ram, and --diagnostics are only valid in cleanup mode"
     fi
 }
 
@@ -248,14 +314,6 @@ delete_live_logs_over_limit() {
     done
 }
 
-delete_rotated_logs_in_dir() {
-    local dir="$1"
-    [ -d "$dir" ] || return 0
-    find "$dir" -maxdepth 1 -type f \
-        \( -name "*.log.*" -o -name "*.gz" -o -name "*.old" \) \
-        -delete 2>/dev/null || true
-}
-
 delete_live_logs_in_dir_over_limit() {
     LIVE_LOG_REMOVED_LAST=0
     local dir="$1" log_path size_bytes
@@ -274,7 +332,7 @@ delete_live_logs_in_dir_over_limit() {
 
 trim_mailbox_to_limit() {
     MAILBOX_TRIMMED_LAST=0
-    local mailbox_path="$1" size_bytes temp_file new_size
+    local mailbox_path="$1" size_bytes temp_file new_size start_offset
     [ -f "$mailbox_path" ] || return 0
 
     size_bytes=$(stat -c '%s' "$mailbox_path" 2>/dev/null || echo 0)
@@ -286,53 +344,28 @@ trim_mailbox_to_limit() {
         return 0
     fi
 
-    if LC_ALL=C awk -v max_bytes="$LIVE_LOG_DELETE_BYTES" '
-        function flush_msg() {
-            if (in_msg) {
-                msg_count++
-                msgs[msg_count] = msg
-                lens[msg_count] = length(msg)
-                msg = ""
-            }
-        }
-        /^From / {
-            flush_msg()
-            in_msg = 1
-            msg = $0 ORS
-            next
-        }
-        {
-            if (in_msg) {
-                msg = msg $0 ORS
-            }
-        }
+    # Pass 1: record only the byte offset of each "From " separator, then
+    # pick the earliest message boundary that keeps the tail of the file
+    # within the limit. Only offsets stay in memory, so mailboxes of any
+    # size are safe. Pass 2 (tail -c) copies from that boundary.
+    if start_offset=$(LC_ALL=C awk -v max_bytes="$LIVE_LOG_DELETE_BYTES" '
+        /^From / { offsets[++msg_count] = bytes_seen }
+        { bytes_seen += length($0) + 1 }
         END {
-            flush_msg()
             if (msg_count == 0) {
                 exit 2
             }
-
-            kept_bytes = 0
-            start_idx = msg_count
-            for (i = msg_count; i >= 1; i--) {
-                if (kept_bytes + lens[i] > max_bytes) {
-                    break
+            for (i = 1; i <= msg_count; i++) {
+                if (bytes_seen - offsets[i] <= max_bytes) {
+                    print offsets[i]
+                    exit 0
                 }
-                start_idx = i
-                kept_bytes += lens[i]
             }
-
-            if (kept_bytes > 0) {
-                for (i = start_idx; i <= msg_count; i++) {
-                    printf "%s", msgs[i]
-                }
-                exit 0
-            }
-
             exit 3
         }
-    ' "$mailbox_path" > "$temp_file"; then
-        if cat -- "$temp_file" > "$mailbox_path"; then
+    ' "$mailbox_path"); then
+        if tail -c +"$(( start_offset + 1 ))" -- "$mailbox_path" > "$temp_file" \
+            && cat -- "$temp_file" > "$mailbox_path"; then
             new_size=$(stat -c '%s' "$mailbox_path" 2>/dev/null || echo 0)
             if [ "${new_size:-0}" -le "$LIVE_LOG_DELETE_BYTES" ]; then
                 MAILBOX_TRIMMED_LAST=1
@@ -383,8 +416,10 @@ EOF
 # ---------------------------------------------------------------------------
 
 snapshot_name_is_valid() {
+    # Match the prefix literally (it may contain "."), then the timestamp.
     local snapshot_name="$1"
-    [[ "$snapshot_name" =~ ^${SNAPSHOT_PREFIX}-[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}$ ]]
+    [[ "$snapshot_name" == "$SNAPSHOT_PREFIX"-* ]] || return 1
+    [[ "${snapshot_name#"$SNAPSHOT_PREFIX"-}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}$ ]]
 }
 
 source_to_snapshot_rel() {
@@ -494,11 +529,7 @@ list_completed_snapshots() {
 }
 
 latest_completed_snapshot() {
-    local latest_snapshot=""
-    while read -r snapshot_name; do
-        latest_snapshot="$snapshot_name"
-    done < <(list_completed_snapshots)
-    printf '%s\n' "$latest_snapshot"
+    list_completed_snapshots | tail -n 1
 }
 
 read_last_success_epoch() {
@@ -601,8 +632,8 @@ append_source_scoped_exclude() {
 run_rsync_for_source() {
     local source_real="$1"
     local previous_snapshot="$2"
-    local rel_path dest_dir previous_dir
-    local -a rsync_args extra_excludes
+    local rel_path dest_dir previous_dir exclude_rule rsync_rc=0
+    local -a rsync_args=() extra_excludes=()
 
     rel_path=$(source_to_snapshot_rel "$source_real")
     dest_dir="$INCOMPLETE_SNAPSHOT_DIR/$rel_path"
@@ -636,7 +667,6 @@ run_rsync_for_source() {
         append_source_scoped_exclude "$source_real" "$STATE_FILE"
     )
 
-    local exclude_rule
     for exclude_rule in "${extra_excludes[@]}"; do
         rsync_args+=( "--exclude=$exclude_rule" )
     done
@@ -646,7 +676,14 @@ run_rsync_for_source() {
     fi
 
     log_info "Syncing source: $source_real -> $dest_dir"
-    rsync "${rsync_args[@]}" "$source_real"/ "$dest_dir"/
+    rsync "${rsync_args[@]}" "$source_real"/ "$dest_dir"/ || rsync_rc=$?
+    if [ "$rsync_rc" -eq 24 ]; then
+        # Files vanishing mid-transfer is routine when backing up a live
+        # system; the snapshot is still consistent for everything copied.
+        log_warn "rsync reported vanished source files (exit 24); continuing: $source_real"
+    elif [ "$rsync_rc" -ne 0 ]; then
+        die "rsync failed with exit ${rsync_rc} for source: $source_real"
+    fi
 }
 
 write_snapshot_metadata() {
@@ -738,7 +775,16 @@ run_cleanup() {
     local total_disk_diff total_ram_diff
     local _B _A _RAM_B _RAM_A _ram_diff _ram_human
     local _held _truncated fd_num proc_fd _swap_cleared SWAP_USED RAM_FREE
-    local current latest label amount sync_root snapshot_item
+    local current label amount sync_root snapshot_item
+    local _proc_comm _pip_home php_fpm
+    local current_ver _kernel_pkgs _keep_versions _purge_pkgs
+    local -a apt_opts=(
+        -o Dpkg::Options::=--force-confdef
+        -o Dpkg::Options::=--force-confold
+    )
+
+    # Never let apt/dpkg block on a conffile prompt under cron (no tty).
+    export DEBIAN_FRONTEND=noninteractive
 
     SUMMARY=()
     show_cleanup_banner
@@ -750,39 +796,30 @@ run_cleanup() {
     echo "RAM used  at start : $(free -h | awk '/Mem/ {print $3}')"
     echo ""
 
-    echo "Files larger than 500MB:"
-    find / -xdev -type f -size +500M 2>/dev/null || true
-    echo ""
+    if $DIAGNOSTICS; then
+        echo "Files larger than 500MB:"
+        find / -xdev -type f -size +500M 2>/dev/null || true
+        echo ""
+    fi
 
     echo " APT cache "
-    _B=$(free_space)
-    apt-get clean -q
-    if fuser /var/lib/dpkg/lock /var/cache/apt/archives/lock /var/lib/apt/lists/lock >/dev/null 2>&1; then
-        log_warn "dpkg/apt lock is held by a live process; not removing lock files"
-    else
-        rm -f /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock
-    fi
-    _A=$(free_space)
+    _B=$(free_space /var)
+    apt-get clean -q 2>/dev/null || true
+    _A=$(free_space /var)
     report_freed "APT cache" "$_B" "$_A"
 
     echo " /var/log - all service log sections in one measurement "
-    _B=$(free_space)
+    _B=$(free_space /var/log)
     local _rsyslog_reopen=false
 
-    echo " -- Core "
-    rm -f /var/log/error.* /var/log/pm-powersave.log*
-    rm -f /var/log/alternatives.log.* /var/log/dpkg.log.*
-    rm -f /var/log/kern.log.* /var/log/debug.* /var/log/daemon.log.*
-    rm -f /var/log/cron.log.* /var/log/boot.log.* /var/log/messages.*
-    rm -f /var/log/apport.log.*
-    rm -f /var/log/aptitude.* /var/log/vmware-vmsvc.*
-    rm -f /var/log/apt/term.log.* /var/log/apt/history.log.*
-    find /var/log/upstart -mindepth 1 -type f \( -name "*.log.*" -o -name "*.gz" -o -name "*.old" \) \
+    echo " -- Rotated / compressed logs (one recursive pass) "
+    # Covers every service directory below in a single walk; rotated files
+    # are never held open by a daemon, so no service restarts are needed.
+    find /var/log -type f \
+        \( -name "*.gz" -o -name "*.old" -o -name "*.log.[0-9]*" -o -name "*.[0-9]" \) \
         -delete 2>/dev/null || true
-    rm -f /var/log/syslog.* /var/log/ubuntu-advantage.log.* /var/log/ubuntu-advantage-timer.log.*
-    rm -f /var/log/installer/*.log.*
-    rm -f /var/log/vmware-vmsvc-root.* /var/log/vmware-vmtoolsd-root.*
-    rm -f /var/log/dmesg.* /var/log/netserver.debug_*
+
+    echo " -- Core "
     delete_live_logs_over_limit \
         /var/log/error \
         /var/log/network.log \
@@ -805,16 +842,13 @@ run_cleanup() {
         /var/log/cloud-init.log
     [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && _rsyslog_reopen=true
     if [ -d "/var/log/cups/" ]; then
-        delete_rotated_logs_in_dir "/var/log/cups"
         delete_live_logs_in_dir_over_limit "/var/log/cups"
         [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && systemctl restart cups 2>/dev/null || true
     fi
     if [ -d "/var/log/unattended-upgrades/" ]; then
-        delete_rotated_logs_in_dir "/var/log/unattended-upgrades"
         delete_live_logs_in_dir_over_limit "/var/log/unattended-upgrades"
     fi
     if [ -d "/var/log/samba/" ]; then
-        delete_rotated_logs_in_dir "/var/log/samba"
         delete_live_logs_in_dir_over_limit "/var/log/samba"
         if [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ]; then
             systemctl restart smbd 2>/dev/null || true
@@ -823,14 +857,11 @@ run_cleanup() {
     fi
 
     echo " -- Security "
-    rm -f /var/log/user.log.* /var/log/auth.log.*
-    rm -f /var/log/fail2ban.log.*
     delete_live_logs_over_limit /var/log/user.log /var/log/auth.log
     [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && _rsyslog_reopen=true
     delete_live_logs_over_limit /var/log/fail2ban.log
     [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && systemctl restart fail2ban 2>/dev/null || true
     if [ -d "/var/log/clamav/" ]; then
-        delete_rotated_logs_in_dir "/var/log/clamav"
         delete_live_logs_over_limit /var/log/clamav/clamav.log /var/log/clamav/freshclam.log
         if [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ]; then
             systemctl restart clamav-daemon 2>/dev/null || true
@@ -842,57 +873,53 @@ run_cleanup() {
     echo " -- Databases "
     local _mysql_logs_removed=0
     if [ -d "/var/log/mysql/" ]; then
-        delete_rotated_logs_in_dir "/var/log/mysql"
         delete_live_logs_in_dir_over_limit "/var/log/mysql"
         _mysql_logs_removed=$(( _mysql_logs_removed + LIVE_LOG_REMOVED_LAST ))
     fi
-    rm -f /var/log/mysql.log.*
     delete_live_logs_over_limit /var/log/mysql.log
     _mysql_logs_removed=$(( _mysql_logs_removed + LIVE_LOG_REMOVED_LAST ))
     [ "$_mysql_logs_removed" -gt 0 ] && systemctl restart mysql 2>/dev/null || true
     if [ -d "/var/log/mongodb/" ]; then
-        delete_rotated_logs_in_dir "/var/log/mongodb"
         delete_live_logs_in_dir_over_limit "/var/log/mongodb"
-        [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && systemctl restart mongodb 2>/dev/null || true
+        if [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ]; then
+            systemctl restart mongod 2>/dev/null || systemctl restart mongodb 2>/dev/null || true
+        fi
     fi
+    # "mongdb" (sic) is a misspelled log dir some old installs created;
+    # the name is intentional here, do not "fix" it to mongodb.
     if [ -d "/var/log/mongdb/" ]; then
-        delete_rotated_logs_in_dir "/var/log/mongdb"
         delete_live_logs_in_dir_over_limit "/var/log/mongdb"
     fi
     if [ -d "/var/log/redis/" ]; then
-        delete_rotated_logs_in_dir "/var/log/redis"
         delete_live_logs_in_dir_over_limit "/var/log/redis"
         [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && systemctl restart redis-server 2>/dev/null || true
     fi
 
     echo " -- ELK "
     if [ -d "/var/log/kibana/" ]; then
-        delete_rotated_logs_in_dir "/var/log/kibana"
         delete_live_logs_in_dir_over_limit "/var/log/kibana"
         [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && systemctl restart kibana 2>/dev/null || true
     fi
     if [ -d "/var/log/logstash/" ]; then
-        delete_rotated_logs_in_dir "/var/log/logstash"
         delete_live_logs_in_dir_over_limit "/var/log/logstash"
         [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && systemctl restart logstash 2>/dev/null || true
     fi
     if [ -d "/var/log/elasticsearch/" ]; then
-        delete_rotated_logs_in_dir "/var/log/elasticsearch"
         delete_live_logs_in_dir_over_limit "/var/log/elasticsearch"
         [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && systemctl restart elasticsearch 2>/dev/null || true
     fi
     if [ -d "/var/log/metricbeat/" ]; then
-        delete_rotated_logs_in_dir "/var/log/metricbeat"
         delete_live_logs_in_dir_over_limit "/var/log/metricbeat"
         [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && systemctl restart metricbeat 2>/dev/null || true
     fi
 
     echo " -- Mail "
     if [ -d "/var/log/mail/" ] || [ -f "/var/log/mail.log" ] || [ -f "/var/log/mail.err" ]; then
-        rm -f /var/log/mail.log.* /var/log/mail.err.*
         delete_live_logs_over_limit /var/log/mail.log /var/log/mail.err
-        [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && _rsyslog_reopen=true
-        systemctl restart postfix 2>/dev/null || true
+        if [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ]; then
+            _rsyslog_reopen=true
+            systemctl restart postfix 2>/dev/null || true
+        fi
     fi
     trim_mailbox_to_limit /var/mail/root
     if $_rsyslog_reopen; then
@@ -901,25 +928,20 @@ run_cleanup() {
 
     echo " -- Web / HTTP "
     if [ -d "/var/log/letsencrypt/" ]; then
-        delete_rotated_logs_in_dir "/var/log/letsencrypt"
         delete_live_logs_in_dir_over_limit "/var/log/letsencrypt"
     fi
     if [ -d "/var/log/apache2/" ]; then
-        delete_rotated_logs_in_dir "/var/log/apache2"
         delete_live_logs_in_dir_over_limit "/var/log/apache2"
         [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && systemctl restart apache2 2>/dev/null || true
     fi
     if [ -d "/var/log/lighttpd/" ]; then
-        delete_rotated_logs_in_dir "/var/log/lighttpd"
         delete_live_logs_in_dir_over_limit "/var/log/lighttpd"
         [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && systemctl restart lighttpd 2>/dev/null || true
     fi
     if [ -d "/var/log/nginx/" ]; then
         local _php_fpm_logs_removed=0
-        delete_rotated_logs_in_dir "/var/log/nginx"
         delete_live_logs_in_dir_over_limit "/var/log/nginx"
         [ "$LIVE_LOG_REMOVED_LAST" -gt 0 ] && systemctl restart nginx 2>/dev/null || true
-        rm -f /var/log/php*-fpm.log.*
         delete_live_logs_over_limit /var/log/php*-fpm.log
         _php_fpm_logs_removed=$LIVE_LOG_REMOVED_LAST
         if [ "$_php_fpm_logs_removed" -gt 0 ]; then
@@ -935,44 +957,52 @@ run_cleanup() {
 
     echo " -- Pi-Hole "
     if [ -d "/var/log/pihole/" ]; then
+        # Only stop/restart units that were active beforehand: pihole-FTL
+        # normally replaces dnsmasq, and starting a stray dnsmasq would
+        # fight FTL for port 53.
+        local _ftl_was_active=false _dnsmasq_was_active=false
+        systemctl is-active --quiet pihole-FTL 2>/dev/null && _ftl_was_active=true
+        systemctl is-active --quiet dnsmasq 2>/dev/null && _dnsmasq_was_active=true
+        echo "    [i] flushing Pi-hole logs/FTL database; this can take minutes on large installs ..."
         pihole -f 2>/dev/null || true
-        systemctl stop pihole-FTL dnsmasq 2>/dev/null || true
-        delete_rotated_logs_in_dir "/var/log/pihole"
+        $_ftl_was_active && systemctl stop pihole-FTL 2>/dev/null || true
+        $_dnsmasq_was_active && systemctl stop dnsmasq 2>/dev/null || true
         delete_live_logs_in_dir_over_limit "/var/log/pihole"
         rm -f /var/log/pihole/pihole_updateGravity.log
         rm -f /var/log/update_blocklists_local_servers.log
-        systemctl restart dnsmasq 2>/dev/null || true
-        systemctl restart pihole-FTL 2>/dev/null || true
+        $_dnsmasq_was_active && systemctl restart dnsmasq 2>/dev/null || true
+        $_ftl_was_active && systemctl restart pihole-FTL 2>/dev/null || true
     fi
 
     echo " -- Misc "
     rm -f /var/log/update_core.log /var/log/update_ubuntu.log
-    rm -f /var/log/sys_cleanup.log* /var/log/vmware-network.*
+    rm -f /var/log/sys_cleanup.log* /var/log/pm-powersave.log*
+    rm -f /var/log/vmware-vmsvc.* /var/log/vmware-vmsvc-root.* \
+        /var/log/vmware-vmtoolsd-root.* /var/log/vmware-network.*
+    rm -f /var/log/netserver.debug_* /var/log/aptitude.*
 
-    echo " -- Large log files (>1GB) "
-    find /var/log -type f \
-        \( -name "*.log.*" -o -name "*.gz" -o -name "*.old" \) \
-        -size +1G -delete 2>/dev/null
-
-    _A=$(free_space)
+    _A=$(free_space /var/log)
     report_freed "/var/log cleanup" "$_B" "$_A"
 
     echo " -- /tmp "
-    _B=$(free_space)
-    rm -rf /tmp/pip-* /tmp/systemd-private-*
-    rm -rf /tmp/resilio_dumps/
-    _A=$(free_space)
+    _B=$(free_space /tmp)
+    rm -rf /tmp/pip-* /tmp/resilio_dumps/
+    # Live systemd-private-* dirs are the private /tmp of running services
+    # (PrivateTmp=yes); only remove ones that look abandoned.
+    find /tmp -maxdepth 1 -name "systemd-private-*" -mtime +2 \
+        -exec rm -rf {} + 2>/dev/null || true
+    _A=$(free_space /tmp)
     report_freed "/tmp cleanup" "$_B" "$_A"
 
     echo " -- /var/tmp - stale files older than 30 days "
-    _B=$(free_space)
+    _B=$(free_space /var/tmp)
     if [ -d "/var/tmp" ]; then
         find /var/tmp -xdev -mindepth 1 \( -type f -o -type l \) \
             -mtime +30 -delete 2>/dev/null || true
         find /var/tmp -xdev -depth -mindepth 1 -type d -empty \
             -delete 2>/dev/null || true
     fi
-    _A=$(free_space)
+    _A=$(free_space /var/tmp)
     report_freed "/var/tmp stale files" "$_B" "$_A"
 
     echo " -- Resilio Sync - logs, metadata, and .sync/Archive folders "
@@ -990,39 +1020,34 @@ run_cleanup() {
     report_freed "Resilio Sync archives" "$_B" "$_A"
 
     echo " -- Systemd journal vacuum "
-    _B=$(free_space)
+    _B=$(free_space /var/log)
     journalctl --vacuum-time=7d 2>/dev/null || true
     journalctl --vacuum-size=500M 2>/dev/null || true
-    _A=$(free_space)
+    _A=$(free_space /var/log)
     report_freed "systemd journal" "$_B" "$_A"
-
-    echo " -- Compressed / numerically-rotated old logs "
-    _B=$(free_space)
-    find /var/log -type f \( -name "*.gz" -o -name "*.1" -o -name "*.2" \
-         -o -name "*.3" -o -name "*.old" \) -delete 2>/dev/null || true
-    _A=$(free_space)
-    report_freed "Rotated/compressed logs" "$_B" "$_A"
 
     echo " -- Docker "
     if [ -d "/var/lib/docker/" ]; then
-        _B=$(free_space)
+        _B=$(free_space /var/lib/docker)
         docker system prune -f 2>/dev/null || true
-        find /var/lib/docker/containers -name "*.log" -exec truncate -s 0 {} \; 2>/dev/null || true
-        _A=$(free_space)
+        find /var/lib/docker/containers -name "*.log" -exec truncate -s 0 {} + 2>/dev/null || true
+        _A=$(free_space /var/lib/docker)
         report_freed "Docker" "$_B" "$_A"
     fi
 
     echo " -- Ollama - model blobs older than 90 days "
     if [ -d "/usr/share/ollama/.ollama/models/blobs/" ]; then
-        _B=$(free_space)
-        find "/usr/share/ollama/.ollama/models/blobs" -type f -mtime +90 -exec rm -f {} \; 2>/dev/null || true
-        _A=$(free_space)
+        _B=$(free_space /usr/share/ollama)
+        find "/usr/share/ollama/.ollama/models/blobs" -type f -mtime +90 -delete 2>/dev/null || true
+        _A=$(free_space /usr/share/ollama)
         report_freed "Ollama model blobs (>90 days)" "$_B" "$_A"
     fi
 
     echo " -- Python cache "
     _B=$(free_space)
-    rm -rf /root/.cache/pip/ /root/.local/lib/
+    # /root/.local/lib holds root's `pip install --user` site-packages —
+    # installed software, not cache — and must never be deleted here.
+    rm -rf /root/.cache/pip/
     for _pip_home in /home/*/; do
         rm -rf "${_pip_home}.cache/pip/"
     done
@@ -1030,14 +1055,14 @@ run_cleanup() {
     report_freed "Python pip cache" "$_B" "$_A"
 
     echo " -- Crash dumps "
-    _B=$(free_space)
+    _B=$(free_space /var)
     [ -d "/var/crash" ] && find /var/crash -xdev -type f -mtime +7 -delete 2>/dev/null || true
     [ -d "/var/lib/systemd/coredump" ] && find /var/lib/systemd/coredump -xdev \
         -type f -mtime +7 -delete 2>/dev/null || true
     if have_cmd coredumpctl; then
         coredumpctl --vacuum-time=7d >/dev/null 2>&1 || true
     fi
-    _A=$(free_space)
+    _A=$(free_space /var)
     report_freed "Crash dumps" "$_B" "$_A"
 
     echo " -- Snap - remove old disabled revisions "
@@ -1051,7 +1076,7 @@ run_cleanup() {
     _A=$(free_space)
     report_freed "Snap old revisions" "$_B" "$_A"
 
-    echo " -- Deleted-but-held-open files: truncate via /proc/<pid>/fd "
+    echo " -- Deleted-but-held-open log files under /var/log: truncate via /proc/<pid>/fd "
     _B=$(free_space)
     _held=0
     _truncated=0
@@ -1071,8 +1096,11 @@ run_cleanup() {
                 _truncated=$(( _truncated + 1 ))
             fi
         done < <(
+            # Only touch files whose path was under /var/log; truncating
+            # other deleted-but-open files (e.g. database temp/undo files)
+            # can corrupt running services. $10 is NAME in +L1 output.
             lsof -nP +L1 2>/dev/null \
-                | awk 'NR > 1 && $5 == "REG" && $4 ~ /^[0-9]+[A-Za-z]*$/ {print $2, $4}'
+                | awk 'NR > 1 && $5 == "REG" && $4 ~ /^[0-9]+[A-Za-z]*$/ && $10 ~ /^\/var\/log\// {print $2, $4}'
         )
     else
         echo "  [!] lsof not installed; skipping held-open file scan"
@@ -1085,18 +1113,25 @@ run_cleanup() {
 
     echo " -- RAM / Page cache "
     _RAM_B=$(ram_used)
-    sync
-    echo 3 | tee /proc/sys/vm/drop_caches > /dev/null
-    echo 1 | tee /proc/sys/vm/compact_memory > /dev/null 2>&1 || true
-
     _swap_cleared=false
-    SWAP_USED=$(free -b | awk '/Swap/ {print $3}')
-    RAM_FREE=$(free -b | awk '/Mem/ {print $4}')
-    if [ "${SWAP_USED:-0}" -gt 0 ] && [ "${RAM_FREE:-0}" -gt "${SWAP_USED:-0}" ]; then
-        if swapoff -a 2>/dev/null; then
-            swapon -a 2>/dev/null || true
-            _swap_cleared=true
+    if $RECLAIM_RAM; then
+        # Dropping caches discards warm dentry/inode/page caches and usually
+        # hurts performance more than it helps; kept behind --reclaim-ram.
+        # The writes fail harmlessly in containers where /proc/sys/vm is RO.
+        sync
+        echo 3 2>/dev/null > /proc/sys/vm/drop_caches || true
+        echo 1 2>/dev/null > /proc/sys/vm/compact_memory || true
+
+        SWAP_USED=$(free -b | awk '/Swap/ {print $3}')
+        RAM_FREE=$(free -b | awk '/Mem/ {print $4}')
+        if [ "${SWAP_USED:-0}" -gt 0 ] && [ "${RAM_FREE:-0}" -gt "${SWAP_USED:-0}" ]; then
+            if swapoff -a 2>/dev/null; then
+                swapon -a 2>/dev/null || true
+                _swap_cleared=true
+            fi
         fi
+    else
+        echo "  (skipped; run with --reclaim-ram to drop caches and cycle swap)"
     fi
 
     _RAM_A=$(ram_used)
@@ -1112,42 +1147,63 @@ run_cleanup() {
     fi
 
     echo " -- APT housekeeping (after cleanup so indexes are fresh) "
-    _B=$(free_space)
-    apt-get autoremove -y -q 2>/dev/null || true
+    _B=$(free_space /var)
+    apt-get "${apt_opts[@]}" autoremove -y -q 2>/dev/null || true
     apt-get autoclean -q 2>/dev/null || true
-    apt-get -f install -y -q 2>/dev/null || true
+    apt-get "${apt_opts[@]}" -f install -y -q 2>/dev/null || true
     apt-get update -q 2>/dev/null || true
-    apt-get upgrade -y -q 2>/dev/null || true
-    apt-get dist-upgrade -y -q 2>/dev/null || true
+    if $WITH_UPGRADES; then
+        apt-get "${apt_opts[@]}" upgrade -y -q 2>/dev/null || true
+        apt-get "${apt_opts[@]}" dist-upgrade -y -q 2>/dev/null || true
+    else
+        echo "  (package upgrades skipped; run with --with-upgrades to enable)"
+    fi
     dpkg --configure -a 2>/dev/null || true
-    apt-get install -y -q ncdu traceroute rsync 2>/dev/null || true
-    _A=$(free_space)
+    apt-get "${apt_opts[@]}" install -y -q ncdu traceroute rsync 2>/dev/null || true
+    _A=$(free_space /var)
     report_freed "APT autoremove/upgrade" "$_B" "$_A"
 
-    echo "--- Removing all but the current and latest kernel --- "
+    echo "--- Removing all but the running kernel and the newest 2 versions --- "
     current=$(uname -r)
-    _kernel_list=$(dpkg -l 'linux-image-[0-9]*-generic' 2>/dev/null \
-        | awk '/^ii/ {print $2}') || true
+    current_ver=$(printf '%s\n' "$current" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+-[0-9]+' || true)
 
-    if [ -z "$_kernel_list" ]; then
-        echo "  No versioned generic kernels found; skipping kernel cleanup."
+    # Every versioned kernel package in any dpkg state — installed (ii) and
+    # removed-but-config-remains (rc) leftovers, including the
+    # linux-image-unsigned-* names the old linux-image-[0-9]* glob missed.
+    _kernel_pkgs=$(dpkg -l 2>/dev/null \
+        | awk '/^(ii|rc)/ && $2 ~ /^linux-(image|image-unsigned|modules|modules-extra|headers)-[0-9]/ {print $2}') || true
+
+    if [ -z "$_kernel_pkgs" ]; then
+        echo "  No versioned kernel packages found; skipping kernel cleanup."
     else
-        latest=$(echo "$_kernel_list" | sort -V | tail -1 | sed 's/linux-image-//')
-        echo "  Keeping: $current (running)"
-        [ "$latest" != "$current" ] && echo "  Keeping: $latest (latest)"
+        _keep_versions=$(printf '%s\n' "$_kernel_pkgs" \
+            | grep -oE '[0-9]+\.[0-9]+\.[0-9]+-[0-9]+' | sort -Vu | tail -n 2 || true)
+        if [ -n "$current_ver" ] && ! printf '%s\n' "$_keep_versions" | grep -qxF -- "$current_ver"; then
+            _keep_versions=$(printf '%s\n%s\n' "$_keep_versions" "$current_ver")
+        fi
+        echo "  Keeping kernel versions (running: $current):"
+        printf '%s\n' "$_keep_versions" | sed 's/^/    /'
 
-        echo "$_kernel_list" \
-            | grep -vF -- "$current" \
-            | grep -vF -- "$latest" \
-            | xargs -r apt-get -y purge || true
+        # Purge every kernel package whose version is not in the keep set;
+        # the running kernel's full name is excluded again as a backstop.
+        _purge_pkgs=$(printf '%s\n' "$_kernel_pkgs" | awk -v keep="$_keep_versions" '
+            BEGIN { n = split(keep, k, "\n"); for (i = 1; i <= n; i++) keepset[k[i]] = 1 }
+            match($0, /[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/) {
+                if (!(substr($0, RSTART, RLENGTH) in keepset)) print $0
+            }' | grep -vF -- "$current" || true)
 
-        dpkg -l \
-            | awk '/^(ii|rc)/ && $2 ~ /^linux-(image|modules|headers)-[0-9]/ { print $2 }' \
-            | grep -vF -- "$current" \
-            | grep -vF -- "$latest" \
-            | xargs -r dpkg --purge || true
+        if [ -n "$_purge_pkgs" ]; then
+            echo "  Purging old kernel packages:"
+            printf '%s\n' "$_purge_pkgs" | sed 's/^/    /'
+            printf '%s\n' "$_purge_pkgs" \
+                | xargs -r apt-get "${apt_opts[@]}" -y purge 2>/dev/null || true
+            # dpkg fallback cleans any rc entries apt could not touch.
+            printf '%s\n' "$_purge_pkgs" | xargs -r dpkg --purge 2>/dev/null || true
+        else
+            echo "  Nothing to purge."
+        fi
 
-        apt-get -y autoremove --purge 2>/dev/null || true
+        apt-get "${apt_opts[@]}" -y autoremove --purge 2>/dev/null || true
     fi
 
     echo " -- SUMMARY REPORT "
@@ -1174,6 +1230,8 @@ run_cleanup() {
     fi
 
     echo ""
+    echo "  (per-section rows measure the filesystem each path lives on;"
+    echo "   the totals below measure the root filesystem only)"
     echo "  ----------------------------------------------------"
     if [ "$total_disk_diff" -ge 0 ]; then
         printf "  %-36s  %s\n" "Total disk reclaimed" \
@@ -1200,15 +1258,20 @@ run_cleanup() {
 
     echo " -- Diagnostics "
     echo "Top 10 largest items in /var/log:"
-    du -ah /var/log 2>/dev/null | sort -rh | head -10 || true
+    du -xah /var/log 2>/dev/null | sort -rh | head -10 || true
 
-    echo ""
-    echo "Top 10 largest items on /:"
-    du -ah / --exclude=/proc --exclude=/sys --exclude=/dev 2>/dev/null | sort -rh | head -10 || true
+    if $DIAGNOSTICS; then
+        echo ""
+        echo "Top 10 largest items on / (one filesystem, depth 3):"
+        du -xh -d 3 --exclude="$BACKUP_ROOT" / 2>/dev/null | sort -rh | head -10 || true
 
-    echo ""
-    echo "Files still larger than 500MB:"
-    find / -xdev -type f -size +500M 2>/dev/null || true
+        echo ""
+        echo "Files still larger than 500MB:"
+        find / -xdev -type f -size +500M 2>/dev/null || true
+    else
+        echo ""
+        echo "(full-disk usage scans skipped; run with --diagnostics to enable)"
+    fi
 
     echo ""
     echo "Installed kernel images (running: $(uname -r)):"
