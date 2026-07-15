@@ -17,8 +17,9 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.1.6
-Last Updated:  6/21/2026
+Version:  2.1.7
+Last Updated:  7/15/2026
+Updated by:  Claude Haiku 4.5 (nvidia driver conflict & ollama version parser fixes)
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
 
@@ -51,6 +52,15 @@ if [ -f /etc/apt/sources.list.d/docker.list ]; then
             rm -f "$legacy"
         fi
     done
+fi
+
+# --- Handle NVIDIA driver conflicts on Ubuntu 24.04+ ---
+if dpkg -l 2>/dev/null | grep -q "nvidia-driver"; then
+    nvidia_version="$(dpkg -l 2>/dev/null | grep 'nvidia-driver' | awk '{print $3}' | head -n1)"
+    if apt list --upgradable 2>/dev/null | grep -qi nvidia; then
+        echo "Removing conflicting NVIDIA packages to allow clean reinstall..."
+        apt remove -y libnvidia-compute libnvidia-gl libnvidia-extra nvidia-kernel-common xserver-xorg-video-nvidia 2>/dev/null || true
+    fi
 fi
 
 # --- System update (IPv4; IPv6 skipped where unavailable) ---
@@ -211,7 +221,7 @@ fi
 if command -v ollama >/dev/null 2>&1; then
     ollama_current="$(ollama --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
     echo "Ollama detected: $ollama_current"
-    ollama_latest="$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest 2>/dev/null | grep -m1 '"tag_name"' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+    ollama_latest="$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest 2>/dev/null | grep -m1 '"tag_name"' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
     if [ -z "$ollama_latest" ]; then
         echo "Could not check latest Ollama version (GitHub API unreachable). Skipping binary update."
     elif [ "$ollama_current" = "$ollama_latest" ]; then
