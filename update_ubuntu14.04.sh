@@ -17,9 +17,9 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.1.9
+Version:  2.1.10
 Last Updated:  7/15/2026
-Updated by:  Claude (Fable 5) - fall back to apt full-upgrade on conflict, report held packages, skip :cloud ollama models, Strix Halo firmware refresh+apply
+Updated by:  Claude (Fable 5) - full-upgrade fallback now uses --allow-downgrades (recovers from partially-published driver sets), report held packages, skip :cloud ollama models, Strix Halo firmware refresh+apply
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+ ( ignore the file name :/ )
 
@@ -74,7 +74,10 @@ if ! apt -o Acquire::ForceIPv4=true upgrade -y; then
     echo "'apt upgrade' failed (likely a package conflict that requires removals,"
     echo "e.g. an NVIDIA driver series transition). Retrying with 'full-upgrade'."
     echo "-----------------------------------------------------------------------"
-    apt -o Acquire::ForceIPv4=true full-upgrade -y
+    # --allow-downgrades: a partially-published driver set (e.g. NVIDIA 595 from
+    # a PPA) can leave installed versions newer than any complete set the repos
+    # can supply; the only consistent solution is to downgrade back to it.
+    apt -o Acquire::ForceIPv4=true full-upgrade -y --allow-downgrades
 fi
 
 # --- Fix broken package installs ---
