@@ -2,9 +2,10 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.6.12
-# Last Updated: 5/27/2026
+# Version:      0.7.0
+# Last Updated: 7/15/2026
 # Author:       Christopher Gray
+# Updated by:   Claude Fable 5 (model: claude-fable-5) — see 0.7.0 changelog
 #
 # Install:  wget --no-cache -O 'update_containers_plex_v2.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_containers_plex_v2.sh' && chmod u+x update_containers_plex_v2.sh
 #
@@ -55,9 +56,6 @@
 #                        "Use hardware acceleration when available" ✓
 #                      Default: true
 #
-#   7. Crontab path  — update the path in the crontab line below to
-#                      match where this script is stored on your server
-#
 #   NOTE: Keep these values in sync with create_containers_plex_v2.sh
 #
 #=======================================================================
@@ -81,9 +79,8 @@
 #
 #     sudo bash update_containers_plex_v2.sh
 #
-#   Step 5 — Schedule it with cron (optional, see Crontab section below)
-#
-#     sudo crontab -e
+#   Step 5 — Scheduling: handled externally (Watchtower + separate script)
+#            Nothing to configure in this file.
 #
 #=======================================================================
 # USAGE
@@ -92,7 +89,7 @@
 #   Interactive (prompts for confirmation):
 #     sudo bash update_containers_plex_v2.sh
 #
-#   Automated / cron (no prompts, updates all, skips unchanged):
+#   Automated (no prompts, updates all, skips unchanged):
 #     sudo bash update_containers_plex_v2.sh --auto
 #
 #   Skip backup (useful when drives are known-good but you just want a fast update):
@@ -102,28 +99,48 @@
 #     sudo bash update_containers_plex_v2.sh --auto --skip-backup
 #
 #=======================================================================
-# CRONTAB — Run first Monday of every month at 4:00 AM
+# SCHEDULING — cron REMOVED (0.7.0)
 #=======================================================================
 #
-#   To install:  sudo crontab -e
-#   Then paste this line (update the path first):
+#   Scheduled updates are no longer driven by cron from this script.
+#   Updates are handled externally by Watchtower + a separate script.
+#   To run this script manually:
+#     sudo bash update_containers_plex_v2.sh --auto
 #
-#   0 4 1-7 * 1 /bin/bash /path/to/update_containers_plex_v2.sh --auto >> /var/log/plex_stack_update.log 2>&1
+#   -- OLD CRON LINE (deprecated — kept for reference only) --
+#   NOTE: this line also had a bug: cron ORs day-of-month and day-of-week
+#   when both are restricted, so it fired on days 1-7 AND every Monday
+#   (~8-9 runs/month), not just the first Monday as intended.
 #
-#   How it works:
-#     0 4    = 4:00 AM
-#     1-7    = day of month must be in the first 7 days
-#     *      = every month
-#     1      = only on Monday  (0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat)
-#   Combined: only fires when the day is both in week 1 AND a Monday
-#             = first Monday of the month.
-#
-#   View the log anytime:
-#     sudo tail -f /var/log/plex_stack_update.log
+#   # 0 4 1-7 * 1 /bin/bash /path/to/update_containers_plex_v2.sh --auto >> /var/log/plex_stack_update.log 2>&1
 #
 #=======================================================================
 # CHANGELOG
 #=======================================================================
+#
+#   0.7.0 — 7/15/2026  (updated by Claude Fable 5, model: claude-fable-5)
+#     - Plex back on :latest. The 1.43.x "db fixup" startup crash was
+#       traced to docker stop's default 10s grace period: Plex was being
+#       SIGKILLed mid-write, leaving a dirty SQLite database that the
+#       1.43 schema migration then crashed on.
+#     - All container stops now use "docker stop -t 300" (5-min grace)
+#       so Plex can close its database cleanly before an upgrade.
+#     - Containers are now gracefully stopped BEFORE the backup runs, so
+#       archives hold a consistent DB snapshot instead of a fuzzy live
+#       copy. Anything stopped for backup but not recreated in Phase 4
+#       (skipped or not selected) is automatically restarted afterwards,
+#       including on early exit / error.
+#     - Post-start verification for Plex now polls
+#       http://localhost:32400/identity (up to 2 min) instead of trusting
+#       the container state — s6 keeps the container "running" even when
+#       the Plex binary inside is crash-looping.
+#     - Re-enabled Intel Quick Sync hardware transcoding (was TEMP-
+#       disabled while diagnosing the 1.43.2 crash).
+#     - Removed cron scheduling docs/recommendation — updates are now
+#       scheduled externally via Watchtower + a separate script. (The old
+#       cron line was also buggy: DOM+DOW are OR'd by cron, so it fired
+#       ~8-9x/month, not first-Monday-only.)
+#     - Removed dead code: unused ask() helper and PULL_NEW tracking.
 #
 #   0.6.8 — 5/27/2026
 #     - Added HARDWARE TRANSCODING status block to summary:
@@ -273,13 +290,15 @@ BACKUP_KEEP=10    # Number of backups to retain (sliding window)
 
 # Hardware transcoding via Intel Quick Sync (Intel NUC iGPU)
 # Requires Plex Pass + /dev/dri on the host. Set false to disable.
-ENABLE_HW_TRANSCODING=false   # TEMP: disabled to diagnose 1.43.2 crash
+ENABLE_HW_TRANSCODING=true
 
 # Plex version pin — set to "latest" to always track the newest release,
 # or pin to a specific linuxserver tag to hold at a known-good version.
 # Find tags at: https://hub.docker.com/r/linuxserver/plex/tags
 # Example stable pin: PLEX_VERSION="1.42.2.10156-f737b826c-ls272"
-PLEX_VERSION="1.42.2.10156-f737b826c-ls292"   # pinned: 1.43.2 crashes on this NUC (db fixup bug)
+# (The old 1.43.x "db fixup" crash was caused by ungraceful stops corrupting
+#  the DB — fixed in 0.7.0 via docker stop -t 300, so latest is safe again.)
+PLEX_VERSION="latest"
 
 #--------------------------------------
 # Runtime vars
@@ -309,20 +328,33 @@ done
 RUN_START=$(date "+%Y-%m-%d %H:%M:%S")
 UPDATED_CONTAINERS=()
 SKIPPED_CONTAINERS=()
+STOPPED_FOR_BACKUP=()   # containers we stopped before backup — restarted if not recreated
 
 #--------------------------------------
 # Helpers
 #--------------------------------------
 log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
-# ask VAR_NAME "prompt" — sets VAR_NAME=y in auto mode, otherwise reads from user
-ask() {
-  local -n _ref=$1
-  if $AUTO_MODE; then
-    _ref="y"
+# http_check URL — returns 0 if the URL answers over HTTP(S)
+http_check() {
+  if command -v curl >/dev/null 2>&1; then
+    curl -sf --max-time 5 -o /dev/null "$1" 2>/dev/null
   else
-    read -rp "$2" _ref
+    wget -q --timeout=5 -O /dev/null "$1" 2>/dev/null
   fi
+}
+
+# Restart anything we stopped for the backup that wasn't recreated afterwards
+# (skipped containers, containers not selected, or an early exit/error).
+restart_stopped_containers() {
+  local c status
+  for c in ${STOPPED_FOR_BACKUP[@]+"${STOPPED_FOR_BACKUP[@]}"}; do
+    status=$(docker inspect --format='{{.State.Status}}' "$c" 2>/dev/null || echo "missing")
+    if [ "$status" != "running" ] && [ "$status" != "missing" ]; then
+      docker start "$c" >/dev/null 2>&1 && log "Restarted $c (was stopped for backup)" \
+        || log "WARNING: could not restart $c — start it manually: docker start $c"
+    fi
+  done
 }
 
 REMOTE_VOLS=()   # populated by check_remote_mounts before each docker run batch
@@ -352,6 +384,9 @@ check_remote_mounts() {
 # Traps
 #--------------------------------------
 trap 'log "ERROR: Unexpected failure on line $LINENO. Exiting."' ERR
+# Safety net: no matter how the script exits, never leave containers that were
+# stopped for the backup sitting stopped. Idempotent — running containers are skipped.
+trap 'restart_stopped_containers' EXIT
 
 #--------------------------------------
 # Lock: prevent concurrent runs
@@ -435,6 +470,24 @@ run_backup() {
 
 # Relative paths for plex excludes (relative to $App_Data, matching what tar sees after -C)
 PLEX_SRV_REL="plex/library/Library/Application Support/Plex Media Server"
+
+# Gracefully stop running containers before archiving so the SQLite databases
+# are backed up in a consistent state (not a fuzzy live copy). 5-min grace so
+# Plex can flush and close its DB cleanly — a 10s SIGKILL here is what corrupted
+# the DB and caused the 1.43.x "db fixup" startup crash. Anything stopped here
+# that Phase 4 doesn't recreate gets restarted by restart_stopped_containers.
+log "Stopping running containers for a consistent backup (up to 300s grace each)..."
+for c in "${ALL_CONTAINERS[@]}"; do
+  if [ "$(docker inspect --format='{{.State.Status}}' "$c" 2>/dev/null || echo missing)" = "running" ]; then
+    if docker stop -t 300 "$c" >/dev/null 2>&1; then
+      STOPPED_FOR_BACKUP+=("$c")
+      log "  Stopped $c"
+    else
+      log "  WARNING: could not stop $c cleanly — its backup may be fuzzy"
+    fi
+  fi
+done
+log ""
 
 # Create timestamped backup folder — one folder per run, 4 archives inside
 mkdir -p "$BACKUP_DIR"
@@ -569,7 +622,6 @@ log ""
 log "===== PHASE 3: Pull Latest Images (parallel) ====="
 
 declare -A PULL_PIDS
-declare -A PULL_NEW
 
 for c in "${UPDATE_LIST[@]}"; do
   log "Pulling ${IMAGES[$c]}..."
@@ -580,10 +632,8 @@ done
 for c in "${UPDATE_LIST[@]}"; do
   if wait "${PULL_PIDS[$c]}"; then
     if grep -q "Status: Downloaded newer image" "/tmp/plex_pull_${c}.log"; then
-      PULL_NEW[$c]=1
       log "$c: New image pulled."
     else
-      PULL_NEW[$c]=0
       log "$c: Already up to date."
     fi
   else
@@ -631,14 +681,16 @@ for c in "${UPDATE_LIST[@]}"; do
   RUNNING_IMG=$(docker inspect --format='{{.Image}}' "$c" 2>/dev/null || echo "")
   PULLED_IMG=$(docker inspect --format='{{.Id}}' "${IMAGES[$c]}" 2>/dev/null || echo "new")
   if [ -n "$RUNNING_IMG" ] && [ "$RUNNING_IMG" = "$PULLED_IMG" ]; then
-    log "$c: Already running the latest image — skipping restart."
+    log "$c: Already on the latest image — no recreate needed."
     SKIPPED_CONTAINERS+=("$c")
     continue
   fi
 
   log ""
   log "--- Updating: $c ---"
-  docker stop "$c" 2>/dev/null && log "Stopped $c"  || log "$c was not running"
+  # -t 300: give the app up to 5 min to shut down cleanly. The 10s default
+  # SIGKILLed Plex mid-write and corrupted its DB (the 1.43.x crash cause).
+  docker stop -t 300 "$c" 2>/dev/null && log "Stopped $c"  || log "$c was not running"
   docker rm   "$c" 2>/dev/null && log "Removed $c"  || log "$c container not found"
 
   case "$c" in
@@ -724,15 +776,36 @@ for c in "${UPDATE_LIST[@]}"; do
   # Verify the container actually came up
   sleep 3
   CONTAINER_STATUS=$(docker inspect --format='{{.State.Status}}' "$c" 2>/dev/null || echo "unknown")
-  if [ "$CONTAINER_STATUS" = "running" ]; then
-    log "$c: Running OK"
-    UPDATED_CONTAINERS+=("$c")
-  else
+  if [ "$CONTAINER_STATUS" != "running" ]; then
     log "WARNING: $c may not have started correctly (status: $CONTAINER_STATUS)"
     UPDATED_CONTAINERS+=("$c [status: $CONTAINER_STATUS]")
+  elif [ "$c" = "plex" ]; then
+    # "running" only means s6 is up — the Plex binary can crash-loop inside a
+    # "running" container. Poll the API to confirm the server itself started.
+    # First start after an upgrade may run a DB migration, so allow up to 2 min.
+    PLEX_UP=false
+    for _ in $(seq 1 24); do
+      if http_check "http://localhost:32400/identity"; then PLEX_UP=true; break; fi
+      sleep 5
+    done
+    if $PLEX_UP; then
+      log "plex: Running OK (API responding on :32400)"
+      UPDATED_CONTAINERS+=("plex")
+    else
+      log "WARNING: plex container is up but the server API is not responding yet."
+      log "         A longer DB migration may still be running — check: docker logs -f plex"
+      UPDATED_CONTAINERS+=("plex [API not responding yet]")
+    fi
+  else
+    log "$c: Running OK"
+    UPDATED_CONTAINERS+=("$c")
   fi
 
 done
+
+# Bring back anything stopped for the backup that Phase 4 didn't recreate
+# (skipped as already-latest, or not selected interactively)
+restart_stopped_containers
 log ""
 
 #--------------------------------------
