@@ -2,13 +2,13 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.7.0
-# Last Updated: 7/15/2026
+# Version:      0.7.1
+# Last Updated: 7/16/2026
 # Author:       Christopher Gray
-# Updated by:   Claude Fable 5 (model: claude-fable-5) — see 0.7.0 changelog
+# Updated by:   Claude Fable 5 (model: claude-fable-5) — see 0.7.x changelog
 #
 # Install:  wget --no-cache -O 'update_containers_plex_v2.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/update_containers_plex_v2.sh' && chmod u+x update_containers_plex_v2.sh
-#
+#   
 # Description:
 #   Updates the Plex media stack Docker containers (Plex, Radarr,
 #   Sonarr, SABnzbd) by pulling the latest images, backing up all
@@ -46,7 +46,12 @@
 #   5. BACKUP_KEEP   — how many rolling backups to keep in $HOME
 #                      Default: 10
 #
-#   6. ENABLE_HW_TRANSCODING — set true to pass Intel iGPU (/dev/dri) into
+#   6. BACKUP_EVERY_DAYS — minimum days between full backups. Runs inside
+#                      that window skip Phase 1 entirely (the full backup
+#                      takes ~20 min). Override anytime with --force-backup.
+#                      Default: 3
+#
+#   7. ENABLE_HW_TRANSCODING — set true to pass Intel iGPU (/dev/dri) into
 #                      the Plex container for Quick Sync hardware transcoding.
 #                      Requires: Plex Pass subscription + Intel NUC iGPU
 #                      The host ubuntu user (PUID=1000) must be in the render
@@ -95,8 +100,14 @@
 #   Skip backup (useful when drives are known-good but you just want a fast update):
 #     sudo bash update_containers_plex_v2.sh --skip-backup
 #
-#   Both flags can be combined:
+#   Force a backup even if the newest one is younger than BACKUP_EVERY_DAYS:
+#     sudo bash update_containers_plex_v2.sh --force-backup
+#
+#   Flags can be combined in any order:
 #     sudo bash update_containers_plex_v2.sh --auto --skip-backup
+#
+#   NOTE: backups are throttled automatically — Phase 1 only runs if the
+#   newest backup folder in $HOME is older than BACKUP_EVERY_DAYS (default 3).
 #
 #=======================================================================
 # SCHEDULING — cron REMOVED (0.7.0)
@@ -117,6 +128,18 @@
 #=======================================================================
 # CHANGELOG
 #=======================================================================
+#
+#   0.7.1 — 7/16/2026  (updated by Claude Fable 5, model: claude-fable-5)
+#     - Backups are now throttled by age instead of running on every
+#       invocation (the full backup takes ~20 min): Phase 1 is skipped
+#       when the newest plex_stack_backup_* folder in $HOME is younger
+#       than BACKUP_EVERY_DAYS (new config var, default 3 days).
+#     - Added --force-backup flag to override the throttle and back up
+#       immediately regardless of the newest backup's age.
+#     - When the backup is skipped (flag or throttle), containers are NOT
+#       pre-stopped — they get their graceful -t 300 stop in Phase 4 as
+#       part of the normal recreate, so throttled runs are much faster.
+#     - Summary "Backup:" line now shows the skip reason when skipped.
 #
 #   0.7.0 — 7/15/2026  (updated by Claude Fable 5, model: claude-fable-5)
 #     - Plex back on :latest. The 1.43.x "db fixup" startup crash was
@@ -286,7 +309,9 @@ Media_Photos="/media/media_photos"
 Media_Downloads="/media/media_downloads"
 temp_downloads="/media/temp_downloads"
 
-BACKUP_KEEP=10    # Number of backups to retain (sliding window)
+BACKUP_KEEP=10        # Number of backups to retain (sliding window)
+BACKUP_EVERY_DAYS=3   # Minimum days between full backups — runs inside that
+                      # window skip Phase 1 (~20 min). Override: --force-backup
 
 # Hardware transcoding via Intel Quick Sync (Intel NUC iGPU)
 # Requires Plex Pass + /dev/dri on the host. Set false to disable.
@@ -318,10 +343,12 @@ IMAGES["sabnzbd"]="linuxserver/sabnzbd:latest"
 
 AUTO_MODE=false
 SKIP_BACKUP=false
+FORCE_BACKUP=false
 for arg in "$@"; do
   case "$arg" in
-    --auto)        AUTO_MODE=true ;;
-    --skip-backup) SKIP_BACKUP=true ;;
+    --auto)         AUTO_MODE=true ;;
+    --skip-backup)  SKIP_BACKUP=true ;;
+    --force-backup) FORCE_BACKUP=true ;;
   esac
 done
 
@@ -409,9 +436,24 @@ fi
 #--------------------------------------
 # Phase 1: Backup  (runs first — before any other changes)
 #--------------------------------------
+# Throttled: the full backup takes ~20 min, so it only runs if the newest
+# backup folder is older than BACKUP_EVERY_DAYS. --force-backup overrides.
+BACKUP_SKIP_REASON=""
 if $SKIP_BACKUP; then
-  log "===== PHASE 1: Backup SKIPPED (--skip-backup) ====="
-  BACKUP_DIR="skipped"
+  BACKUP_SKIP_REASON="--skip-backup"
+elif ! $FORCE_BACKUP; then
+  LAST_BACKUP=$(ls -dt "$HOME"/plex_stack_backup_* 2>/dev/null | head -n 1) || true
+  if [ -n "$LAST_BACKUP" ]; then
+    LAST_AGE_SECS=$(( $(date +%s) - $(stat -c %Y "$LAST_BACKUP") ))
+    if [ "$LAST_AGE_SECS" -lt $(( BACKUP_EVERY_DAYS * 86400 )) ]; then
+      BACKUP_SKIP_REASON="newest backup is only $(( LAST_AGE_SECS / 3600 ))h old — next backup after ${BACKUP_EVERY_DAYS}d, or use --force-backup"
+    fi
+  fi
+fi
+
+if [ -n "$BACKUP_SKIP_REASON" ]; then
+  log "===== PHASE 1: Backup SKIPPED ($BACKUP_SKIP_REASON) ====="
+  BACKUP_DIR="skipped — $BACKUP_SKIP_REASON"
 else
 log "===== PHASE 1: Backup ====="
 
@@ -554,7 +596,7 @@ log ""
 log "Backup 2/2 complete: $BACKUP_AUTODATA"
 log ""
 
-fi  # end: if ! $SKIP_BACKUP
+fi  # end: backup (ran, or skipped by flag / age throttle)
 
 #--------------------------------------
 # Pre-flight: Docker & internet checks
@@ -829,7 +871,7 @@ SKIPPED_STR="none"
 log "===== UPDATE COMPLETE ====="
 log "  Started:   $RUN_START"
 log "  Finished:  $RUN_END"
-log "  Backup:    $(if $SKIP_BACKUP; then echo 'skipped (--skip-backup)'; else echo "$BACKUP_DIR"; fi)"
+log "  Backup:    $BACKUP_DIR"
 log "  Updated:   $UPDATED_STR"
 log "  Skipped:   $SKIPPED_STR"
 log ""
