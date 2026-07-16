@@ -2,7 +2,7 @@
 #  Copyright © 2025 - 2026 - Christopher Gray
 #=======================================================================
 # Script:       update_containers_plex_v2.sh
-# Version:      0.7.1
+# Version:      0.8.0
 # Last Updated: 7/16/2026
 # Author:       Christopher Gray
 # Updated by:   Claude Fable 5 (model: claude-fable-5) — see 0.7.x changelog
@@ -60,6 +60,11 @@
 #                      Then in Plex: Settings → Transcoder →
 #                        "Use hardware acceleration when available" ✓
 #                      Default: true
+#
+#   8. PUID / PGID   — uid/gid the containers run as. MUST own everything
+#                      under App_Data (Plex's Preferences.xml is mode 600,
+#                      so a mismatch = "Failed to load preferences" and an
+#                      unclaimed server). Default: 1000 / 1000
 #
 #   NOTE: Keep these values in sync with create_containers_plex_v2.sh
 #
@@ -128,6 +133,69 @@
 #=======================================================================
 # CHANGELOG
 #=======================================================================
+#
+#   0.8.0 — 7/16/2026  (updated by Claude Fable 5, model: claude-fable-5)
+#     Prevention hardening — automated defenses for every failure mode hit
+#     in the 7/16 debugging session (see 0.7.3 for the causes):
+#     - Pre-update Preferences.xml validation (validate_plex_prefs):
+#       ownership auto-fixed to PUID:PGID; XML well-formedness checked via
+#       python3/xmllint. Invalid file => plex update is SKIPPED and the
+#       existing container is left running untouched.
+#     - Pre-update DB integrity check (plex_db_check_repair): after plex
+#       stops, PRAGMA integrity_check runs via Plex's own SQLite in a
+#       throwaway container (integrity_check, NOT quick_check — quick_check
+#       misses index/table mismatches like the one that crashed 1.43.x).
+#       On failure: automatic REINDEX (keeps a .pre-reindex safety copy)
+#       and re-check. Still bad => update skipped, old container restarted.
+#     - GPU driver cache rotation (rotate_plex_drivers): Drivers/ moves to
+#       Drivers.old before every plex upgrade so stale cached drivers can
+#       never crash a new version; Plex re-downloads matching drivers.
+#     - Automatic ROLLBACK: if the new plex crash-loops (2+ crash banners
+#       in docker logs) during the 2-min verify window, the container is
+#       recreated from the previous image ID and re-verified. (Caveat: if
+#       the new version already migrated the DB, the rollback may need the
+#       Databases folder restored from the newest backup.)
+#     - Smarter verify (verify_plex): API 503 "startup maintenance" now
+#       counts as healthy (housekeeping, not a hang); distinguishes
+#       crash-looping from a slow post-upgrade migration.
+#     - Pre-flight Watchtower guard: warns if a running Watchtower has no
+#       custom stop timeout (its 10s default can SIGKILL Plex mid-write —
+#       run it with --stop-timeout 300s / WATCHTOWER_TIMEOUT=300s).
+#     - PUID/PGID promoted to config variables (were hardcoded 1000 in
+#       four docker run blocks); PLEX_SRV_REL moved to runtime vars.
+#     - Backups now exclude Drivers.old and Crash Reports.
+#     - create_container(): docker-run blocks factored into one function
+#       shared by the update loop and the rollback path.
+#
+#   0.7.3 — 7/16/2026  (updated by Claude Fable 5, model: claude-fable-5)
+#     - Documentation only: corrected the root cause of the 1.43.x crash.
+#       It was NOT the docker stop SIGKILL theory from 0.7.0. Actual causes,
+#       confirmed by live debugging on nuc2 (7/16/2026):
+#         1) Preferences.xml had a duplicated XML attribute
+#            (HardwareAcceleratedCodecs twice) — invalid XML, so Plex
+#            started "unclaimed" with no settings. Fixed with sed dedupe.
+#         2) com.plexapp.plugins.library.db had index corruption ("row
+#            118827 missing from index index_tags_on_tag_type_and_tag") —
+#            1.42 tolerated it, 1.43's startup fixup crashed on it.
+#            Fixed with REINDEX via Plex SQLite (integrity_check now ok).
+#         3) Stale May-era cached GPU drivers in ".../Plex Media Server/
+#            Drivers" crashed 1.43.3 at startup driver load. Fixed by
+#            moving Drivers aside — Plex re-downloads matching drivers.
+#       Recovery runbook if a future version crash-loops:
+#         docker stop -t 60 plex
+#         "Plex SQLite" <library.db> "PRAGMA integrity_check(10);"  # + REINDEX if bad
+#         mv ".../Plex Media Server/Drivers" Drivers.old            # clear driver cache
+#         docker start plex   # then: curl http://localhost:32400/identity
+#       The -t 300 graceful stops from 0.7.0 stay — they prevent exactly
+#       this kind of SQLite damage from accumulating in the first place.
+#
+#   0.7.2 — 7/16/2026  (updated by Claude Fable 5, model: claude-fable-5)
+#     - FIXED HANG: the GPU load sample in the summary ran
+#       "intel_gpu_top -J -s 1" unbounded — intel_gpu_top streams forever
+#       (-s is the refresh period in milliseconds, not a sample count),
+#       so the script never finished, printing "busy" lines endlessly
+#       (bug introduced in 0.6.8). Now wrapped in "timeout -k 1 2" with
+#       a 500ms refresh and capped at 8 lines via head.
 #
 #   0.7.1 — 7/16/2026  (updated by Claude Fable 5, model: claude-fable-5)
 #     - Backups are now throttled by age instead of running on every
@@ -309,6 +377,10 @@ Media_Photos="/media/media_photos"
 Media_Downloads="/media/media_downloads"
 temp_downloads="/media/temp_downloads"
 
+# uid/gid the containers run as — MUST own everything under $App_Data
+PUID=1000
+PGID=1000
+
 BACKUP_KEEP=10        # Number of backups to retain (sliding window)
 BACKUP_EVERY_DAYS=3   # Minimum days between full backups — runs inside that
                       # window skip Phase 1 (~20 min). Override: --force-backup
@@ -321,8 +393,9 @@ ENABLE_HW_TRANSCODING=true
 # or pin to a specific linuxserver tag to hold at a known-good version.
 # Find tags at: https://hub.docker.com/r/linuxserver/plex/tags
 # Example stable pin: PLEX_VERSION="1.42.2.10156-f737b826c-ls272"
-# (The old 1.43.x "db fixup" crash was caused by ungraceful stops corrupting
-#  the DB — fixed in 0.7.0 via docker stop -t 300, so latest is safe again.)
+# (The old 1.43.x startup crash on this NUC was fixed 7/16/2026: stale cached
+#  GPU drivers in ".../Plex Media Server/Drivers" + index corruption in
+#  com.plexapp.plugins.library.db. See 0.7.3 changelog. Latest is safe again.)
 PLEX_VERSION="latest"
 
 #--------------------------------------
@@ -332,6 +405,10 @@ TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 BACKUP_DIR="$HOME/plex_stack_backup_$TIMESTAMP"      # Timestamped folder — one per run
 BACKUP_AUTODATA="$HOME/plex_stack_autodata.tar.gz"   # Fixed name — always overwrites (1 copy only)
 LOCKFILE="/tmp/plex_stack_update.lock"
+
+# Plex server dir relative to $App_Data — used by backups, prefs/DB checks,
+# and GPU driver cache rotation
+PLEX_SRV_REL="plex/library/Library/Application Support/Plex Media Server"
 
 ALL_CONTAINERS=("plex" "radarr" "sonarr" "sabnzbd")
 
@@ -362,15 +439,6 @@ STOPPED_FOR_BACKUP=()   # containers we stopped before backup — restarted if n
 #--------------------------------------
 log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
-# http_check URL — returns 0 if the URL answers over HTTP(S)
-http_check() {
-  if command -v curl >/dev/null 2>&1; then
-    curl -sf --max-time 5 -o /dev/null "$1" 2>/dev/null
-  else
-    wget -q --timeout=5 -O /dev/null "$1" 2>/dev/null
-  fi
-}
-
 # Restart anything we stopped for the backup that wasn't recreated afterwards
 # (skipped containers, containers not selected, or an early exit/error).
 restart_stopped_containers() {
@@ -382,6 +450,112 @@ restart_stopped_containers() {
         || log "WARNING: could not restart $c — start it manually: docker start $c"
     fi
   done
+}
+
+# plex_api_code — HTTP status from the local Plex API ("000" = no answer)
+plex_api_code() {
+  local code=""
+  if command -v curl >/dev/null 2>&1; then
+    code=$(curl -s -o /dev/null --max-time 5 -w '%{http_code}' http://localhost:32400/identity 2>/dev/null) || true
+  else
+    wget -q --timeout=5 -O /dev/null http://localhost:32400/identity 2>/dev/null && code="200"
+  fi
+  echo "${code:-000}"
+}
+
+# validate_plex_prefs — ownership + XML well-formedness of Preferences.xml.
+# A malformed file (e.g. a duplicated attribute) or wrong ownership (file is
+# mode 600) makes Plex boot as a blank UNCLAIMED server. Both bit us 7/16/2026.
+validate_plex_prefs() {
+  local prefs="$App_Data/$PLEX_SRV_REL/Preferences.xml"
+  [ -f "$prefs" ] || return 0   # missing file is handled at container creation
+  if [ "$(stat -c %u "$prefs")" != "$PUID" ]; then
+    log "  Preferences.xml owned by uid $(stat -c %u "$prefs") — fixing to $PUID:$PGID"
+    chown "$PUID:$PGID" "$prefs"
+  fi
+  if command -v python3 >/dev/null 2>&1; then
+    python3 -c 'import sys,xml.dom.minidom; xml.dom.minidom.parse(sys.argv[1])' "$prefs" 2>/dev/null \
+      || { log "  ERROR: Preferences.xml is not valid XML"; return 1; }
+    log "  Preferences.xml: valid XML, ownership OK"
+  elif command -v xmllint >/dev/null 2>&1; then
+    xmllint --noout "$prefs" 2>/dev/null \
+      || { log "  ERROR: Preferences.xml is not valid XML"; return 1; }
+    log "  Preferences.xml: valid XML, ownership OK"
+  else
+    log "  NOTE: python3/xmllint not found — XML validation skipped"
+  fi
+}
+
+# plex_sqlite SQL — run a statement against the plex library DB using Plex's
+# OWN SQLite build (stock sqlite3 lacks Plex's extensions), via a throwaway
+# container. Only call while the plex container is STOPPED.
+plex_sqlite() {
+  docker run --rm --entrypoint /bin/bash \
+    -v "$App_Data/plex/library":/config \
+    "${IMAGES[plex]}" -c \
+    "\"/usr/lib/plexmediaserver/Plex SQLite\" '/config/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db' \"$1\""
+}
+
+# plex_db_check_repair — integrity-check the library DB; REINDEX once if bad.
+# integrity_check, NOT quick_check: quick_check skips exactly the index/table
+# mismatch ("row missing from index") that crashed 1.43.x on 7/16/2026.
+# Returns 1 if the DB is still bad after REINDEX. Call while plex is stopped.
+plex_db_check_repair() {
+  local db="$App_Data/$PLEX_SRV_REL/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+  [ -f "$db" ] || { log "  No library DB yet — check skipped"; return 0; }
+  local result
+  result=$(plex_sqlite "PRAGMA integrity_check(5);" 2>/dev/null) || result="(check failed to run)"
+  if [ "$result" = "ok" ]; then
+    log "  Library DB integrity: ok"
+    return 0
+  fi
+  log "  WARNING: library DB failed integrity_check: $result"
+  log "  Attempting REINDEX (safety copy: com.plexapp.plugins.library.db.pre-reindex)..."
+  cp -a "$db" "$db.pre-reindex"
+  plex_sqlite "REINDEX;" >/dev/null 2>&1 || true
+  result=$(plex_sqlite "PRAGMA integrity_check(5);" 2>/dev/null) || result="(check failed to run)"
+  chown "$PUID:$PGID" "$db" 2>/dev/null || true
+  if [ "$result" = "ok" ]; then
+    log "  Library DB integrity: repaired by REINDEX — ok"
+    return 0
+  fi
+  log "  ERROR: library DB still failing after REINDEX: $result"
+  return 1
+}
+
+# rotate_plex_drivers — clear Plex's cached GPU driver downloads before an
+# upgrade. Stale cached drivers crash-looped 1.43.3 on 7/16/2026; Plex simply
+# re-downloads drivers matched to its own version on next start.
+rotate_plex_drivers() {
+  local drv="$App_Data/$PLEX_SRV_REL/Drivers"
+  if [ -d "$drv" ]; then
+    rm -rf "$drv.old"
+    mv "$drv" "$drv.old"
+    log "  GPU driver cache rotated to Drivers.old — fresh drivers download on start"
+  fi
+}
+
+# verify_plex — watch a freshly-started plex container for up to 2 minutes.
+# Returns: 0 = healthy (API 200) or startup maintenance (API 503 — still fine)
+#          1 = crash-looping (2+ crash banners in the container log)
+#          2 = no API answer and no crashes — probably just a slow migration
+verify_plex() {
+  local waited=0 code crashes
+  while [ "$waited" -lt 120 ]; do
+    code=$(plex_api_code)
+    case "$code" in
+      200) log "plex: Running OK (API 200 on :32400)"; return 0 ;;
+      503) log "plex: Up — running startup maintenance (API 503). Normal after an upgrade."; return 0 ;;
+    esac
+    crashes=$(docker logs plex 2>&1 | grep -c "PLEX MEDIA SERVER CRASHED" || true)
+    if [ "${crashes:-0}" -ge 2 ]; then
+      log "plex: CRASH-LOOPING — $crashes crashes since container start"
+      return 1
+    fi
+    sleep 5
+    waited=$(( waited + 5 ))
+  done
+  return 2
 }
 
 REMOTE_VOLS=()   # populated by check_remote_mounts before each docker run batch
@@ -510,9 +684,6 @@ run_backup() {
   log "  Done — ${arch_mb} MB compressed, ${elapsed}s elapsed"
 }
 
-# Relative paths for plex excludes (relative to $App_Data, matching what tar sees after -C)
-PLEX_SRV_REL="plex/library/Library/Application Support/Plex Media Server"
-
 # Gracefully stop running containers before archiving so the SQLite databases
 # are backed up in a consistent state (not a fuzzy live copy). 5-min grace so
 # Plex can flush and close its DB cleanly — a 10s SIGKILL here is what corrupted
@@ -540,6 +711,8 @@ log ""
 
 run_backup "plex" "$BACKUP_DIR/plex.tar.gz" \
   --exclude="$PLEX_SRV_REL/Drivers" \
+  --exclude="$PLEX_SRV_REL/Drivers.old" \
+  --exclude="$PLEX_SRV_REL/Crash Reports" \
   --exclude="$PLEX_SRV_REL/Scanners/Credits Detection" \
   --exclude="$PLEX_SRV_REL/Media"
 
@@ -618,6 +791,19 @@ else
     || { log "ERROR: Cannot reach hub.docker.com via HTTPS (wget). Check internet."; exit 1; }
 fi
 log "Internet:  OK"
+
+# Watchtower guard — its DEFAULT 10s stop timeout can SIGKILL Plex mid-write
+# and corrupt the SQLite DB (likely how the 7/16/2026 corruption started).
+WT_NAME=$(docker ps --format '{{.Names}} {{.Image}}' 2>/dev/null | awk 'tolower($0) ~ /watchtower/ {print $1; exit}') || true
+if [ -n "${WT_NAME:-}" ]; then
+  if docker inspect "$WT_NAME" 2>/dev/null | grep -qiE 'stop-timeout|WATCHTOWER_TIMEOUT'; then
+    log "Watchtower: OK ($WT_NAME has a custom stop timeout)"
+  else
+    log "WARNING: Watchtower ($WT_NAME) is running WITHOUT a custom stop timeout."
+    log "         Its 10s default can SIGKILL Plex mid-write and corrupt the database."
+    log "         Recreate it with: --stop-timeout 300s  (or env WATCHTOWER_TIMEOUT=300s)"
+  fi
+fi
 log ""
 
 #--------------------------------------
@@ -715,6 +901,94 @@ else
 fi
 log ""
 
+# create_container NAME IMAGE — docker-run one container from the given image.
+# Factored out of the update loop so the plex rollback path can reuse it.
+create_container() {
+  local name="$1"
+  local image="$2"
+
+  case "$name" in
+
+    plex)
+      PLEX_PREFS="$App_Data/$PLEX_SRV_REL/Preferences.xml"
+      if [ ! -f "$PLEX_PREFS" ]; then
+        log "Preferences.xml missing — downloading default from internet..."
+        mkdir -p "$App_Data/$PLEX_SRV_REL/"
+        wget -q --timeout=30 --tries=3 -O "$PLEX_PREFS" \
+          https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/Preferences.xml
+        chown "$PUID:$PGID" "$PLEX_PREFS"
+        log "Downloaded default Preferences.xml."
+      else
+        log "Preferences.xml exists locally (validated pre-update). Keeping local version."
+      fi
+
+      docker run -d \
+        --name=plex \
+        --net=host \
+        -e PUID="$PUID" \
+        -e PGID="$PGID" \
+        -e TZ="$TimeZone" \
+        -e VERSION=docker \
+        -v "$App_Data/plex/library":/config \
+        -v "$Media_Movies":/movies \
+        -v "$Media_TV":/tv \
+        -v "$Media_Music":/music \
+        -v "$Media_OtherVideos":/videos \
+        -v "$Media_Photos":/photos \
+        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
+        ${HW_ARGS[@]+"${HW_ARGS[@]}"} \
+        --restart unless-stopped \
+        "$image"
+      ;;
+
+    radarr)
+      docker run -d \
+        --name=radarr \
+        -e PUID="$PUID" \
+        -e PGID="$PGID" \
+        -e TZ="$TimeZone" \
+        -p 7878:7878 \
+        -v "$App_Data/radarr/data":/config \
+        -v "$Media_Movies":/movies \
+        -v "$Media_Downloads":/downloads \
+        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
+        --restart unless-stopped \
+        "$image"
+      ;;
+
+    sonarr)
+      docker run -d \
+        --name=sonarr \
+        -e PUID="$PUID" \
+        -e PGID="$PGID" \
+        -e TZ="$TimeZone" \
+        -p 8989:8989 \
+        -v "$App_Data/sonarr/data":/config \
+        -v "$Media_TV":/tv \
+        -v "$Media_Downloads":/downloads \
+        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
+        --restart unless-stopped \
+        "$image"
+      ;;
+
+    sabnzbd)
+      docker run -d \
+        --name=sabnzbd \
+        -e PUID="$PUID" \
+        -e PGID="$PGID" \
+        -e TZ="$TimeZone" \
+        -p 8080:8080 \
+        -v "$App_Data/sabnzbd/config":/config \
+        -v "$temp_downloads":/incomplete-downloads \
+        -v "$Media_Downloads":/downloads \
+        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
+        --restart unless-stopped \
+        "$image"
+      ;;
+
+  esac
+}
+
 for c in "${UPDATE_LIST[@]}"; do
 
   # Compare the image ID the running container is using vs the ID of the local tag
@@ -727,93 +1001,39 @@ for c in "${UPDATE_LIST[@]}"; do
     SKIPPED_CONTAINERS+=("$c")
     continue
   fi
+  PREV_IMG="$RUNNING_IMG"   # kept for automatic rollback if the new plex crash-loops
 
   log ""
   log "--- Updating: $c ---"
-  # -t 300: give the app up to 5 min to shut down cleanly. The 10s default
-  # SIGKILLed Plex mid-write and corrupted its DB (the 1.43.x crash cause).
+
+  # Plex pre-update check that doesn't need the container stopped: a broken
+  # Preferences.xml makes the new server boot UNCLAIMED — catch it while the
+  # old container is still safely running.
+  if [ "$c" = "plex" ]; then
+    if ! validate_plex_prefs; then
+      log "plex: SKIPPING update — fix Preferences.xml first (old container untouched)."
+      SKIPPED_CONTAINERS+=("plex [invalid Preferences.xml]")
+      continue
+    fi
+  fi
+
+  # -t 300: up to 5 min to shut down cleanly — Plex needs time to close its DB
   docker stop -t 300 "$c" 2>/dev/null && log "Stopped $c"  || log "$c was not running"
-  docker rm   "$c" 2>/dev/null && log "Removed $c"  || log "$c container not found"
 
-  case "$c" in
+  # Plex pre-update checks that need the container stopped
+  if [ "$c" = "plex" ]; then
+    log "Checking library DB integrity (can take ~1 min on large libraries)..."
+    if ! plex_db_check_repair; then
+      log "plex: SKIPPING update — DB needs manual repair. Restarting existing container."
+      docker start plex >/dev/null 2>&1 || true
+      SKIPPED_CONTAINERS+=("plex [corrupt DB — manual repair needed]")
+      continue
+    fi
+    rotate_plex_drivers
+  fi
 
-    plex)
-      PLEX_PREFS="$App_Data/plex/library/Library/Application Support/Plex Media Server/Preferences.xml"
-      if [ ! -f "$PLEX_PREFS" ]; then
-        log "Preferences.xml missing — downloading default from internet..."
-        mkdir -p "$App_Data/plex/library/Library/Application Support/Plex Media Server/"
-        wget -q --timeout=30 --tries=3 -O "$PLEX_PREFS" \
-          https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/Preferences.xml
-        log "Downloaded default Preferences.xml."
-      else
-        log "Preferences.xml exists locally (included in backup). Keeping local version."
-      fi
-
-      docker run -d \
-        --name=plex \
-        --net=host \
-        -e PUID=1000 \
-        -e PGID=1000 \
-        -e TZ="$TimeZone" \
-        -e VERSION=docker \
-        -v "$App_Data/plex/library":/config \
-        -v "$Media_Movies":/movies \
-        -v "$Media_TV":/tv \
-        -v "$Media_Music":/music \
-        -v "$Media_OtherVideos":/videos \
-        -v "$Media_Photos":/photos \
-        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
-        ${HW_ARGS[@]+"${HW_ARGS[@]}"} \
-        --restart unless-stopped \
-        "${IMAGES[$c]}"
-      ;;
-
-    radarr)
-      docker run -d \
-        --name=radarr \
-        -e PUID=1000 \
-        -e PGID=1000 \
-        -e TZ="$TimeZone" \
-        -p 7878:7878 \
-        -v "$App_Data/radarr/data":/config \
-        -v "$Media_Movies":/movies \
-        -v "$Media_Downloads":/downloads \
-        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
-        --restart unless-stopped \
-        "${IMAGES[$c]}"
-      ;;
-
-    sonarr)
-      docker run -d \
-        --name=sonarr \
-        -e PUID=1000 \
-        -e PGID=1000 \
-        -e TZ="$TimeZone" \
-        -p 8989:8989 \
-        -v "$App_Data/sonarr/data":/config \
-        -v "$Media_TV":/tv \
-        -v "$Media_Downloads":/downloads \
-        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
-        --restart unless-stopped \
-        "${IMAGES[$c]}"
-      ;;
-
-    sabnzbd)
-      docker run -d \
-        --name=sabnzbd \
-        -e PUID=1000 \
-        -e PGID=1000 \
-        -e TZ="$TimeZone" \
-        -p 8080:8080 \
-        -v "$App_Data/sabnzbd/config":/config \
-        -v "$temp_downloads":/incomplete-downloads \
-        -v "$Media_Downloads":/downloads \
-        ${REMOTE_VOLS[@]+"${REMOTE_VOLS[@]}"} \
-        --restart unless-stopped \
-        "${IMAGES[$c]}"
-      ;;
-
-  esac
+  docker rm "$c" 2>/dev/null && log "Removed $c"  || log "$c container not found"
+  create_container "$c" "${IMAGES[$c]}"
 
   # Verify the container actually came up
   sleep 3
@@ -822,21 +1042,31 @@ for c in "${UPDATE_LIST[@]}"; do
     log "WARNING: $c may not have started correctly (status: $CONTAINER_STATUS)"
     UPDATED_CONTAINERS+=("$c [status: $CONTAINER_STATUS]")
   elif [ "$c" = "plex" ]; then
-    # "running" only means s6 is up — the Plex binary can crash-loop inside a
-    # "running" container. Poll the API to confirm the server itself started.
-    # First start after an upgrade may run a DB migration, so allow up to 2 min.
-    PLEX_UP=false
-    for _ in $(seq 1 24); do
-      if http_check "http://localhost:32400/identity"; then PLEX_UP=true; break; fi
-      sleep 5
-    done
-    if $PLEX_UP; then
-      log "plex: Running OK (API responding on :32400)"
+    # "running" only means s6 is up — verify the Plex server itself via its API,
+    # and roll back to the previous image if the new one is crash-looping.
+    VERIFY_RC=0; verify_plex || VERIFY_RC=$?
+    if [ "$VERIFY_RC" -eq 0 ]; then
       UPDATED_CONTAINERS+=("plex")
+    elif [ "$VERIFY_RC" -eq 1 ] && [ -n "$PREV_IMG" ]; then
+      log "plex: new image is crash-looping — ROLLING BACK to previous image..."
+      docker stop -t 60 plex >/dev/null 2>&1 || true
+      docker rm plex >/dev/null 2>&1 || true
+      create_container plex "$PREV_IMG"
+      VERIFY_RC=0; verify_plex || VERIFY_RC=$?
+      if [ "$VERIFY_RC" -eq 0 ]; then
+        log "plex: rollback OK. Pin PLEX_VERSION to a known-good tag before the next"
+        log "      run, and investigate: ls '$App_Data/$PLEX_SRV_REL/Crash Reports'"
+        UPDATED_CONTAINERS+=("plex [ROLLED BACK — new image crash-loops]")
+      else
+        log "ERROR: rollback is also unhealthy. If the new version already migrated the"
+        log "       DB, restore the Databases folder from the newest backup, then:"
+        log "       docker restart plex"
+        UPDATED_CONTAINERS+=("plex [rollback unhealthy — check docker logs plex]")
+      fi
     else
-      log "WARNING: plex container is up but the server API is not responding yet."
-      log "         A longer DB migration may still be running — check: docker logs -f plex"
-      UPDATED_CONTAINERS+=("plex [API not responding yet]")
+      log "WARNING: plex API not answering yet (no crashes seen) — likely a slow"
+      log "         post-upgrade migration. Watch: docker logs -f plex"
+      UPDATED_CONTAINERS+=("plex [slow start — verify manually]")
     fi
   else
     log "$c: Running OK"
@@ -846,7 +1076,7 @@ for c in "${UPDATE_LIST[@]}"; do
 done
 
 # Bring back anything stopped for the backup that Phase 4 didn't recreate
-# (skipped as already-latest, or not selected interactively)
+# (skipped as already-latest, invalid prefs, or not selected interactively)
 restart_stopped_containers
 log ""
 
@@ -895,11 +1125,14 @@ if $ENABLE_HW_TRANSCODING; then
       max=$(cat "/sys/class/drm/${card}/gt_max_freq_mhz" 2>/dev/null || echo "?")
       log "  GPU freq: ${cur} MHz / ${max} MHz max  ($card)"
     done
-    # intel_gpu_top 1-second snapshot (requires intel-gpu-tools — optional)
+    # intel_gpu_top snapshot (requires intel-gpu-tools — optional)
+    # NOTE: intel_gpu_top streams forever (-s is the refresh period in ms, not a
+    # sample count), so it MUST be bounded with timeout or the script hangs here.
     if command -v intel_gpu_top >/dev/null 2>&1; then
-      log "  GPU load (1s sample via intel_gpu_top):"
-      intel_gpu_top -J -s 1 2>/dev/null \
+      log "  GPU load (~2s sample via intel_gpu_top):"
+      timeout -k 1 2 intel_gpu_top -J -s 500 2>/dev/null \
         | grep -E '"busy"|"freq"' \
+        | head -n 8 \
         | while IFS= read -r line; do log "    $line"; done || true
     else
       log "  GPU load: install intel-gpu-tools for live utilisation"
