@@ -17,9 +17,9 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.3.2
+Version:  2.3.3
 Last Updated:  7/15/2026
-Updated by:  Claude (Fable 5) - cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades, optional interactive OS release upgrade for EOL releases
+Updated by:  Claude (Fable 5) - container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades, optional interactive OS release upgrade for EOL releases
 
 For Debian 8 / Ubuntu versions 20.04 - 26.04+, and Raspberry Pi OS on Pi 3 or newer ( ignore the file name :/ )
 
@@ -187,14 +187,15 @@ if command -v docker >/dev/null 2>&1; then
         containrrr/watchtower --run-once --cleanup \
         || echo "WARNING: container image update pass failed."
 
-    # Run the same one-shot pass hourly via cron so internet-exposed
-    # containers (Plex, Jellyfin, nginx, ...) pick up new images within an
-    # hour of release instead of waiting for the nightly script run.
+    # Run the same one-shot pass via cron, restricted to the 04:00-09:00
+    # maintenance window (04:15, 05:15, 06:15, 07:15, 08:15) so containers
+    # are never recreated during the day. Outside this window the only other
+    # trigger is running this script itself.
     # The entry is rewritten (old watchtower lines filtered out) each run so
     # fixes to the command line propagate to already-deployed machines.
-    wt_cron="15 * * * * docker run --rm -e DOCKER_API_VERSION=\$(docker version --format '{{.Server.APIVersion}}') -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --run-once --cleanup >> /var/log/container_updates.log 2>&1"
+    wt_cron="15 4-8 * * * docker run --rm -e DOCKER_API_VERSION=\$(docker version --format '{{.Server.APIVersion}}') -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --run-once --cleanup >> /var/log/container_updates.log 2>&1"
     (crontab -u root -l 2>/dev/null | grep -v "containrrr/watchtower"; echo "$wt_cron") | crontab -u root -
-    echo "Hourly container-update cron entry installed/refreshed."
+    echo "Container-update cron entry installed/refreshed (runs 04:15-08:15)."
 else
     echo "Docker not found. Skipping."
 fi
