@@ -17,14 +17,18 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.3.3
-Last Updated:  7/15/2026
-Updated by:  Claude (Fable 5) - container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades, optional interactive OS release upgrade for EOL releases
+Version:  2.5.0
+Last Updated:  7/21/2026
+Updated by:  Claude (Fable 5)
+    Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, interactive opt-in firmware install (default No) via fwupdmgr, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
 
-For Debian 8 / Ubuntu versions 20.04 - 26.04+, and Raspberry Pi OS on Pi 3 or newer ( ignore the file name :/ )
+This supports ( ignore the file name - it's a legacy name 🫤 ):
+    Ubuntu versions 20.04 - 26.04+, DGX Spark / GB10
+    Debian 12+
+    Raspberry Pi OS on Pi 3 or newer
+    Proxmox VE 9.2.4+
 
-
-UPDATE: if you have a DGX Spark - GB10 - use this to update firmware: fwupdmgr get-upgrades
+-----------------------------------------------------------------------
 
 "
 # --- Require root ---
@@ -39,6 +43,11 @@ fi
 echo "-----------------------------------------------------------------------"
 lsb_release -a 2>/dev/null || grep -E '^(NAME|VERSION)=' /etc/os-release
 echo "Kernel: $(uname -r) ($(uname -m))"
+is_pve="no"
+if command -v pveversion >/dev/null 2>&1; then
+    is_pve="yes"
+    echo "Proxmox VE: $(pveversion 2>/dev/null)"
+fi
 echo "-----------------------------------------------------------------------"
 
 # --- Non-interactive, cron-safe apt wrapper: never prompt for conffile   ---
@@ -76,6 +85,43 @@ if [ -f /etc/apt/sources.list.d/docker.list ]; then
     done
 fi
 
+# --- Proxmox VE: fix apt 401 errors from the enterprise repo when this ---
+# --- host has no active subscription (the #1 cause of a broken 'apt   ---
+# --- update' on a fresh or unlicensed PVE install)                    ---
+if [ "$is_pve" = "yes" ]; then
+    pve_codename="$(. /etc/os-release 2>/dev/null; echo "${VERSION_CODENAME:-bookworm}")"
+    pve_has_subscription="no"
+    if command -v pvesubscription >/dev/null 2>&1 && pvesubscription get 2>/dev/null | grep -qi '^status: *active'; then
+        pve_has_subscription="yes"
+    fi
+    if [ "$pve_has_subscription" = "no" ]; then
+        for ent in /etc/apt/sources.list.d/pve-enterprise.list /etc/apt/sources.list.d/pve-enterprise.sources; do
+            if [ -f "$ent" ] && grep -q '^[^#].*enterprise\.proxmox\.com' "$ent" 2>/dev/null; then
+                echo "No active Proxmox subscription: disabling $ent (would 401-block apt update)"
+                sed -i 's/^deb/#deb/' "$ent"
+            fi
+        done
+        if ! grep -rq 'pve-no-subscription' /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null; then
+            echo "deb http://download.proxmox.com/debian/pve $pve_codename pve-no-subscription" > /etc/apt/sources.list.d/pve-no-subscription.list
+            echo "Added pve-no-subscription repo ($pve_codename)."
+        fi
+        # Ceph enterprise repo: the no-subscription URL needs the Ceph release
+        # name (quincy/reef/...), not the Debian codename, so it can't be
+        # inferred safely here - disable it and let the admin add the correct
+        # 'pveceph repoinfo'-listed no-subscription line if Ceph is in use.
+        for ceph_ent in /etc/apt/sources.list.d/ceph.list /etc/apt/sources.list.d/*ceph*.list; do
+            if [ -f "$ceph_ent" ] && grep -q '^[^#].*enterprise\.proxmox\.com/debian/ceph' "$ceph_ent" 2>/dev/null; then
+                echo "No active Proxmox subscription: disabling $ceph_ent"
+                echo "  If this node uses Ceph, add the matching no-subscription repo:"
+                echo "  see 'pveceph repoinfo' or https://pve.proxmox.com/wiki/Package_Repositories"
+                sed -i 's/^deb/#deb/' "$ceph_ent"
+            fi
+        done
+    else
+        echo "Active Proxmox subscription found; keeping enterprise repo."
+    fi
+fi
+
 # --- Report held packages (a common cause of "held broken packages" errors) ---
 held_pkgs="$(apt-mark showhold 2>/dev/null)"
 if [ -n "$held_pkgs" ]; then
@@ -111,7 +157,9 @@ dpkg --configure -a
 echo "Downloading required dependencies..."
 
 # --- Core dependencies ---
-aptg install -y ca-certificates unattended-upgrades
+# tmux: lets long-running interactive tasks (e.g. the OS release upgrade
+# below) survive a dropped SSH connection.
+aptg install -y ca-certificates unattended-upgrades tmux
 update-ca-certificates
 
 # --- Cleanup ---
@@ -326,14 +374,36 @@ if [ "$(systemd-detect-virt 2>/dev/null || echo none)" = "none" ]; then
         fi
     fi
 
-    # Platform firmware (BIOS/UEFI, EC, SSD, docks, etc.) via fwupd + LVFS
+    # Platform firmware (BIOS/UEFI, EC, SSD, docks, etc.) via fwupd + LVFS.
+    # Firmware flashes are lower-level and riskier than a package upgrade
+    # (a failed/interrupted flash can brick the device), so this only lists
+    # what's available and asks before applying - default is No, and it
+    # never prompts from a non-interactive (cron) run.
     if command -v fwupdmgr >/dev/null 2>&1; then
-        # Refresh LVFS metadata first or get-upgrades compares against a stale catalog
-        fwupdmgr refresh --force >/dev/null 2>&1 || true
-        if fwupdmgr get-upgrades 2>/dev/null | grep -q .; then
-            echo "Firmware updates available. Applying via fwupdmgr..."
-            fwupdmgr update -y --no-reboot-check || true
-            echo "NOTE: firmware updates may require a reboot to take effect."
+        echo "Refreshing firmware metadata..."
+        fwupdmgr refresh || true
+        fw_upgrades="$(fwupdmgr get-upgrades 2>/dev/null)"
+        if echo "$fw_upgrades" | grep -q .; then
+            echo "$fw_upgrades"
+            if [ -t 0 ]; then
+                printf "Firmware updates are available above. Install them now? [y/N] "
+                read -r -t 120 fw_answer || fw_answer=""
+                case "$fw_answer" in
+                    [Yy]*)
+                        echo "Installing firmware updates..."
+                        fwupdmgr update
+                        echo "***********************************************************************"
+                        echo "***  REBOOT REQUIRED to apply the firmware update(s) just installed. ***"
+                        echo "***********************************************************************"
+                        ;;
+                    *)
+                        echo "Skipping firmware install (answered no or timed out)."
+                        ;;
+                esac
+            else
+                echo "(Non-interactive run: firmware install prompt skipped. Run this script"
+                echo " from a terminal to be offered the install, or run 'fwupdmgr update')"
+            fi
         else
             echo "No firmware updates available via fwupdmgr."
         fi
@@ -406,6 +476,20 @@ if ! crontab -l 2>/dev/null | grep -q "sys_restart.sh"; then
     (crontab -u root -l 2>/dev/null; echo "13 3 7 * * /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1") | crontab -u root -
 fi
 
+# --- Proxmox VE: detect a running kernel older than the newest installed
+# --- pve-kernel (Debian's /var/run/reboot-required hook comes from
+# --- update-notifier-common, which PVE hosts don't install by default,
+# --- so a pve-kernel upgrade would otherwise go unreported) ---
+if [ "$is_pve" = "yes" ]; then
+    pve_running_kernel="$(uname -r)"
+    pve_latest_kernel="$(dpkg -l 'pve-kernel-[0-9]*' 2>/dev/null | awk '/^ii/{print $2}' | sed 's/^pve-kernel-//' | sort -V | tail -n1)"
+    if [ -n "$pve_latest_kernel" ] && [ "$pve_running_kernel" != "$pve_latest_kernel" ]; then
+        echo "pve-kernel-$pve_latest_kernel" >> /var/run/reboot-required.pkgs
+        touch /var/run/reboot-required
+        echo "Newer Proxmox kernel installed (running: $pve_running_kernel, installed: $pve_latest_kernel)."
+    fi
+fi
+
 # --- Reboot-required notice (kernel, glibc, GPU driver, firmware) ---
 if [ -f /var/run/reboot-required ]; then
     echo "***********************************************************************"
@@ -463,10 +547,25 @@ fi
 
 # --- Offer OS release upgrade on releases past/near end of standard support ---
 # Prompts only in an interactive terminal (never from cron); default is No.
+# Proxmox VE is excluded: its repo lines embed the Debian codename too (e.g.
+# "bookworm pve-no-subscription"), so the generic sed rewrite below would
+# corrupt them, and a PVE major-version upgrade has its own prerequisites
+# (cluster quorum, storage/Ceph compatibility) that this script can't check -
+# it must go through Proxmox's own pveVERtoVER checklist tool.
 os_ver="$(. /etc/os-release 2>/dev/null; echo "${VERSION_ID:-}")"
 os_codename="$(. /etc/os-release 2>/dev/null; echo "${VERSION_CODENAME:-}")"
 offer_upgrade=""
-if [ "$os_id" = "ubuntu" ] && dpkg --compare-versions "${os_ver:-99}" lt 24.04; then
+if [ "$is_pve" = "yes" ]; then
+    pve_major="$(pveversion 2>/dev/null | grep -oE 'pve-manager/[0-9]+' | grep -oE '[0-9]+')"
+    echo "-----------------------------------------------------------------------"
+    echo "Proxmox VE $pve_major detected: skipping automated OS release upgrade."
+    echo "Major-version upgrades need Proxmox's own pre-upgrade checklist tool"
+    echo "(covers cluster quorum, storage, and Ceph compatibility), e.g.:"
+    echo "  apt install pve${pve_major}to$((pve_major + 1))"
+    echo "  pve${pve_major}to$((pve_major + 1)) checklist"
+    echo "See: https://pve.proxmox.com/wiki/Upgrade_from_${pve_major}.x_to_$((pve_major + 1)).x"
+    echo "-----------------------------------------------------------------------"
+elif [ "$os_id" = "ubuntu" ] && dpkg --compare-versions "${os_ver:-99}" lt 24.04; then
     offer_upgrade="yes"
 elif [ "$os_id" = "debian" ] && dpkg --compare-versions "${os_ver:-99}" lt 12; then
     offer_upgrade="yes"
@@ -488,9 +587,9 @@ if [ -n "$offer_upgrade" ]; then
         if [ -n "${TMUX:-}" ] || [ -n "${STY:-}" ]; then
             echo "   -> You ARE inside tmux/screen already. Safe to proceed."
         else
-            echo "   -> You are NOT inside tmux. Answer 'n' below, then run:"
+            echo "   -> You are NOT inside tmux (already installed by this script). Answer"
+            echo "      'n' below, then run:"
             echo ""
-            echo "        apt install -y tmux        # install it"
             echo "        tmux new -s upgrade        # open a persistent session"
             echo "        bash $0                    # re-run this script inside it"
             echo ""
