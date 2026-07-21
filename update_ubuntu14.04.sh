@@ -17,10 +17,10 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.5.0
+Version:  2.5.1
 Last Updated:  7/21/2026
 Updated by:  Claude (Fable 5)
-    Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, interactive opt-in firmware install (default No) via fwupdmgr, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
+    fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
 
 This supports ( ignore the file name - it's a legacy name 🫤 ):
     Ubuntu versions 20.04 - 26.04+, DGX Spark / GB10
@@ -379,18 +379,22 @@ if [ "$(systemd-detect-virt 2>/dev/null || echo none)" = "none" ]; then
     # (a failed/interrupted flash can brick the device), so this only lists
     # what's available and asks before applying - default is No, and it
     # never prompts from a non-interactive (cron) run.
+    command -v fwupdmgr >/dev/null 2>&1 || aptg install -y fwupd
     if command -v fwupdmgr >/dev/null 2>&1; then
-        echo "Refreshing firmware metadata..."
+        echo "Running: fwupdmgr refresh"
         fwupdmgr refresh || true
-        fw_upgrades="$(fwupdmgr get-upgrades 2>/dev/null)"
+        echo "Running: fwupdmgr get-updates"
+        fwupdmgr get-updates
+        # fwupdmgr prints its "nothing available" message to stderr, so stdout
+        # alone (already proven against a real device) is the reliable signal.
+        fw_upgrades="$(fwupdmgr get-updates 2>/dev/null)"
         if echo "$fw_upgrades" | grep -q .; then
-            echo "$fw_upgrades"
             if [ -t 0 ]; then
                 printf "Firmware updates are available above. Install them now? [y/N] "
                 read -r -t 120 fw_answer || fw_answer=""
                 case "$fw_answer" in
                     [Yy]*)
-                        echo "Installing firmware updates..."
+                        echo "Running: fwupdmgr update"
                         fwupdmgr update
                         echo "***********************************************************************"
                         echo "***  REBOOT REQUIRED to apply the firmware update(s) just installed. ***"
@@ -404,12 +408,9 @@ if [ "$(systemd-detect-virt 2>/dev/null || echo none)" = "none" ]; then
                 echo "(Non-interactive run: firmware install prompt skipped. Run this script"
                 echo " from a terminal to be offered the install, or run 'fwupdmgr update')"
             fi
-        else
-            echo "No firmware updates available via fwupdmgr."
         fi
     else
-        echo "fwupdmgr not found. Skipping firmware checks."
-        echo "  To install: apt install -y fwupd"
+        echo "fwupdmgr install failed. Skipping firmware checks."
     fi
 fi
 
