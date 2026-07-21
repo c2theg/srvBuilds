@@ -27,7 +27,7 @@ cat <<'BANNER'
   curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_common.sh \
     -o install_common.sh && chmod u+x install_common.sh
 
-  Ubuntu 20.04 – 24.04+ LTS  |  Version 2.0.0  |  Updated 2026-05-19
+  Ubuntu 20.04 – 26.04+ LTS  |  Version 2.0.1  |  Updated 2026-07-20
 
 BANNER
 
