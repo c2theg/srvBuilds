@@ -3,7 +3,7 @@ A set of shell scripts I use to deploy various ubuntu servers.
 <h1>TL:DR;  - Will do most of what you want</h1>
 
 ```
-wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && chmod u+x update_core.sh && ./update_core.sh && ./install_common.sh
+wget http://bit.ly/2wiGV4n && mv 2wiGV4n update_core.sh && chmod u+x update_core.sh && ./update_core.sh
 
 or direct...
 
