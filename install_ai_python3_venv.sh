@@ -634,8 +634,3 @@ echo "Add the following shebang to the top of your python scripts, to run them d
 echo "
   #!$VENV_DIR/bin/python3
 "
-
-
-#-- Install / Update yourself! --
-wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
-#----------------------
