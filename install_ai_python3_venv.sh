@@ -25,7 +25,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.44
+Version:  0.2.45
 Last Updated:  7/29/2026
 
 What this does:
@@ -38,9 +38,6 @@ Global Path:  $VENV_BASE/venv/bin/activate
 
 
 "
-#-- Install / Update yourself! --
-wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
-#----------------------
 
 # Print out current python3 and pip version
 echo "System Python: $(python3 --version 2>/dev/null || echo "Not found")"
@@ -206,6 +203,14 @@ fi
 if [[ ! -x "$VENV_PY" ]]; then
   echo "Venv Python not found at: $VENV_PY" >&2
   exit 1
+fi
+
+# Repair the venv if it's missing bin/activate (e.g. an earlier creation got interrupted).
+# Re-running venv creation without --clear only regenerates these core files; it does not
+# touch already-installed packages in lib/site-packages.
+if [[ ! -f "$VENV_DIR/bin/activate" ]]; then
+  echo "Venv at $VENV_DIR is missing bin/activate - repairing (existing packages are preserved)..." >&2
+  "$PYTHON_BIN" -m venv "$VENV_DIR"
 fi
 
 # Validate venv Python version (avoid silently using an old venv)
@@ -576,14 +581,24 @@ Persistent DB paths (exported by this script):
 
 "
 
-#alias myproject="source $VENV_BASE/venv/bin/activate"
-echo "alias activate_env=\"source $VENV_BASE/venv/bin/activate\"" >> ~/.bashrc
-#echo "alias activate_env=\"source /opt/python3_shared/venv/bin/activate\"" >> ~/.bashrc
+# Detect the user's actual login shell so the alias lands in an rc file that shell reads.
+# (Blindly writing to ~/.bashrc breaks silently for zsh users - zsh never sources ~/.bashrc.)
+case "$(basename "${SHELL:-bash}")" in
+  zsh)  SHELL_RC="$HOME/.zshrc" ;;
+  bash) SHELL_RC="$HOME/.bashrc" ;;
+  *)    SHELL_RC="$HOME/.bashrc" ;;
+esac
+
+ALIAS_LINE="alias activate_env=\"source $VENV_BASE/venv/bin/activate\""
+if ! grep -qF "$ALIAS_LINE" "$SHELL_RC" 2>/dev/null; then
+  echo "$ALIAS_LINE" >> "$SHELL_RC"
+fi
 
 echo "Added alias: activate_env -> source $VENV_BASE/venv/bin/activate"
+echo "Alias written to: $SHELL_RC"
 echo "Run 'activate_env' to activate the virtual environment"
 echo "You can also use: source $VENV_BASE/venv/bin/activate"
-echo "You must restart your shell or run 'source ~/.bashrc' to use the new alias
+echo "You must restart your shell or run 'source $SHELL_RC' to use the new alias
 
 "
 
@@ -591,3 +606,8 @@ echo "Add the following shebang to the top of your python scripts, to run them d
 echo "
   #!$VENV_DIR/bin/python3
 "
+
+
+#-- Install / Update yourself! --
+wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
+#----------------------
