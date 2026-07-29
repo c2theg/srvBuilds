@@ -25,8 +25,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.43
-Last Updated:  4/4/2026
+Version:  0.2.44
+Last Updated:  7/29/2026
 
 What this does:
     Creates a GLOBAL Python3 Virtual Environment (I know you think that defeats the entire reason for an venv... it does not.
@@ -154,16 +154,18 @@ pick_python() {
 if is_linux; then
   if command -v apt-get >/dev/null 2>&1; then
     sudo apt-get update
-    sudo apt-get install -y python3-dev build-essential tesseract-ocr
+    sudo apt-get install -y python3-dev build-essential
+    # [TRIMMED] tesseract-ocr not needed - OCR is handled via an LLM vision model, not a local OCR engine
   else
-    echo "Linux detected, but apt-get not found. Install build tools + tesseract manually." >&2
+    echo "Linux detected, but apt-get not found. Install build tools manually." >&2
   fi
-elif is_macos; then
-  if command -v brew >/dev/null 2>&1; then
-    brew install tesseract || true
-  else
-    echo "macOS detected; install tesseract via Homebrew: brew install tesseract" >&2
-  fi
+#elif is_macos; then
+#  # [TRIMMED] macOS/tesseract not needed for the native-Ubuntu Ollama workflow
+#  if command -v brew >/dev/null 2>&1; then
+#    brew install tesseract || true
+#  else
+#    echo "macOS detected; install tesseract via Homebrew: brew install tesseract" >&2
+#  fi
 fi
 
 #-------- Python3 - PIP -----------------
@@ -333,6 +335,9 @@ pip_install html2text
 #------- AI ----------------
 pip_install ollama
 
+#--- vLLM (local LLM serving engine, alternative/complement to Ollama) ---
+# Note: pulls in torch + CUDA deps on its own, unlike the rest of this trimmed script.
+pip_install vllm
 
 #--- Langchain ---
 pip_install "langchain-core>=1.2.5,<2.0.0" langchain-classic==1.0.1
@@ -348,19 +353,24 @@ To verify langchain install:
 
 "
 #--- Unstructured ---
-pip_install "unstructured[all-docs]"
+# [TRIMMED] heavy doc-parsing lib that pulls in its own OCR/NLP deps; PyMuPDF/pdfplumber below cover
+# extraction, and page images for LLM-based OCR. Uncomment if a LangChain loader needs it.
+#pip_install "unstructured[all-docs]"
 
 
 #--- FastEmbed ---
-pip_install fastembed
+# [TRIMMED] not needed - embeddings are being generated via Ollama models instead
+#pip_install fastembed
 
 
 #--- Sentence Transformers ---
-pip_install sentence-transformers
+# [TRIMMED] not needed - embeddings are being generated via Ollama models instead
+#pip_install sentence-transformers
 
 
 #--- ElevenLabs ---
-pip_install elevenlabs
+# [TRIMMED] TTS SaaS client, unrelated to the current workflow
+#pip_install elevenlabs
 
 
 #--- Vector Databases ---
@@ -370,6 +380,14 @@ pip_install milvus
 pip_install -U pymilvus
 #in memory vector database, single node
 pip_install chromadb
+# Qdrant client (talks to a Qdrant server you run/manage separately)
+pip_install qdrant-client
+#--- MongoDB client (talks to a MongoDB server you run/manage separately) ---
+pip_install pymongo
+#--- ClickHouse client (talks to a ClickHouse server you run/manage separately) ---
+pip_install clickhouse-connect
+#--- SQLite ---
+# sqlite3 ships in the Python standard library - nothing to pip install.
 #------- Install Data Science libs -------
 pip_install matplotlib
 pip_install numpy
@@ -382,18 +400,18 @@ pip_install bokeh # https://bokeh.org/
 pip_install seaborn # https://seaborn.pydata.org/installing.html
 pip_install plotly # https://plotly.com/python/getting-started/
 
-pip_install textblob wordcloud
-pip_install scikit-learn joblib
+# [TRIMMED] textblob is a classic NLP toy lib (sentiment/POS) - Ollama models cover this now
+#pip_install textblob
+pip_install wordcloud
 
+# [TRIMMED] no traditional ML libs needed - Ollama models are being used instead
+#pip_install scikit-learn joblib
+
+# [TRIMMED] no local model training/inference stack needed - inference goes through Ollama's API
 # https://pypi.org/project/transformers/
-# Install PyTorch & other libraries
-pip_install torch accelerate
-
-# Install the transformers library
-pip_install transformers
-
-# https://pypi.org/project/datasets/
-pip_install datasets
+#pip_install torch accelerate
+#pip_install transformers
+#pip_install datasets
 
 #--- PDF Processing ----
 pip_install pdfplumber
@@ -403,208 +421,130 @@ pip_install PyMuPDF
 pip_install pymupdf-fonts
 pip_install fonttools
 
-# https://github.com/ocrmypdf/OCRmyPDF
-#pip_install ocrmypdf
-
 pip_install -U pypdfium2
-pip_install -U ocrmypdf
+# [TRIMMED] ocrmypdf runs local OCR (via tesseract) - not needed, OCR is done via an LLM vision model
+#pip_install -U ocrmypdf
 
 
+# [TRIMMED] NLTK / spaCy classic NLP toolkits not needed - Ollama models are being used instead
+# of local NLP libs for tagging/tokenizing/stopwords/etc. Uncomment this whole block to re-enable.
+#
 #--- NLTK --- https://www.nltk.org/data.html
-echo "
-
-Installing NLTK...
-
-
-"
-
-export NLTK_DATA="$VENV_BASE/nltk_data"
-#python3 -m pip install nltk
-pip_install nltk
-if [ -z "${SKIP_NLTK_DATA:-}" ] && [ ! -d "$VENV_BASE/nltk_data" ]; then
-    echo "
-
-    NLTK Data not found, so downloading... ( $VENV_DIR/nltk_data/ )
-
-    "
-
-    mkdir -p "$VENV_BASE/nltk_data/"
-    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" all || true
-
-    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" averaged_perceptron_tagger_eng || true
-    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" punkt_eng || true
-    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" popular_eng || true
-    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" stopwords_eng || true
-    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" averaged_perceptron_tagger || true
-
-    #python3 -m nltk.downloader -d $VENV_BASE/nltk_data punkt
-    #python3 -m nltk.downloader -d $VENV_BASE/nltk_data popular
-    #python3 -m nltk.downloader -d $VENV_BASE/nltk_data stopwords
-    #python3 -m nltk.downloader -d $VENV_BASE/nltk_data averaged_perceptron_tagger
-else
-   echo "NLTK Data found, so not updating! "
-fi
-
-
-echo "
-
-To include nltk in your python code:
-
-import nltk
-# Append a new search path
-nltk.data.path.append('$VENV_BASE/nltk_data')
-
-# Download to a specific folder
-nltk.download('punkt', download_dir='$VENV_BASE/nltk_data')
-
-"
-
+#echo "
+#
+#Installing NLTK...
+#
+#
+#"
+#
+#export NLTK_DATA="$VENV_BASE/nltk_data"
+#pip_install nltk
+#if [ -z "${SKIP_NLTK_DATA:-}" ] && [ ! -d "$VENV_BASE/nltk_data" ]; then
+#    echo "
+#
+#    NLTK Data not found, so downloading... ( $VENV_DIR/nltk_data/ )
+#
+#    "
+#
+#    mkdir -p "$VENV_BASE/nltk_data/"
+#    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" all || true
+#
+#    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" averaged_perceptron_tagger_eng || true
+#    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" punkt_eng || true
+#    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" popular_eng || true
+#    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" stopwords_eng || true
+#    "$VENV_PY" -m nltk.downloader -d "$VENV_BASE/nltk_data" averaged_perceptron_tagger || true
+#else
+#   echo "NLTK Data found, so not updating! "
+#fi
+#
 #--- spaCy model - https://spacy.io/usage/models  |  https://spacy.io/models/en |  https://github.com/explosion/spacy-models/releases
-pip_install spacy
-if [ ! -d "$VENV_BASE/spacy" ]; then
-    mkdir -p $VENV_BASE/spacy
-    # Prefer wheel install (no custom extract paths).
-    pip_install "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
-    pip_install "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl"
-
-    #"$VENV_PY" -m spacy download en_core_web_sm
-    #"$VENV_PY" -m spacy download en_core_web_md
-
-else
-    echo "Spacy found, so not updating! "
-fi
+#pip_install spacy
+#if [ ! -d "$VENV_BASE/spacy" ]; then
+#    mkdir -p $VENV_BASE/spacy
+#    # Prefer wheel install (no custom extract paths).
+#    pip_install "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
+#    pip_install "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl"
+#else
+#    echo "Spacy found, so not updating! "
+#fi
+#
+#pip_install stopwordsiso stop-words
 
 
-echo "
-To include Spacy into your python:
-
-
-import spacy
-nlp = spacy.load('en_core_web_md')
-
-doc = nlp('This is a sentence.')
-
-
-"
-
-pip_install stopwordsiso stop-words
-
-
+# [TRIMMED] No local model training/inference stack needed - all LLM inference (including OCR
+# and generative tasks) goes through Ollama, so there's no local GPU model runtime, HF cache,
+# TensorFlow/Keras, or generative-AI research libs to provision here. Uncomment to re-enable.
+#
 #--- huggingface models ---
-if [ ! -d "$VENV_BASE/huggingface" ]; then
-    mkdir -p $VENV_BASE/huggingface
-fi
-
+#if [ ! -d "$VENV_BASE/huggingface" ]; then
+#    mkdir -p $VENV_BASE/huggingface
+#fi
+#
 #------- Install Machine Learning libs -------
 # - PyTorch - Customize the download - https://pytorch.org/get-started/locally/
-
-# POSIX sh GPU detection for macOS + Linux (Ubuntu/Rocky), with CUDA/ROCm version hints.
-# Outputs: GPU_TYPE (nvidia|amd|mac|cpu), and optionally CUDA_VERSION / ROCM_VERSION.
-
-echo "
-
-   --- PyTorch ---
-
-
-"
-if [ ! -d "$VENV_BASE/torch" ]; then
-    mkdir -p $VENV_BASE/torch
-fi
-
-
-if [ $GPU_TYPE = "nvidia"  ]; then
-    echo "Nvidia GPU - Detected! "
-    [ -n "$CUDA_VERSION" ] && echo "CUDA_VERSION=$CUDA_VERSION"
-    # for Nvidia CUDA - (Note: Replace cu126 with the specific CUDA version, such as cu128, if you are targeting a newer toolkit)
-    pip_install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu130 # Nvidia - CUDA - Latest 1/3/2026
-elif [ $GPU_TYPE = "amd"  ]; then
-    echo "AMD GPU - Detected"
-    [ -n "$ROCM_VERSION" ] && echo "ROCM_VERSION=$ROCM_VERSION"
-    pip_install torch torchvision --index-url https://download.pytorch.org/whl/rocm6.4
-elif [ $GPU_TYPE = "mac"  ]; then
-    echo "Mac OSX CPU/GPU Detected "
-    # OSX MAC CPU / GPU
-    pip_install torch torchvision
-else
-    echo "No GPU detected. falling back to CPU only! "
-    # CPU Only!
-    pip_install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-fi
-
+#if [ ! -d "$VENV_BASE/torch" ]; then
+#    mkdir -p $VENV_BASE/torch
+#fi
+#
+#if [ $GPU_TYPE = "nvidia"  ]; then
+#    echo "Nvidia GPU - Detected! "
+#    [ -n "$CUDA_VERSION" ] && echo "CUDA_VERSION=$CUDA_VERSION"
+#    pip_install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu130 # Nvidia - CUDA - Latest 1/3/2026
+#elif [ $GPU_TYPE = "amd"  ]; then
+#    echo "AMD GPU - Detected"
+#    [ -n "$ROCM_VERSION" ] && echo "ROCM_VERSION=$ROCM_VERSION"
+#    pip_install torch torchvision --index-url https://download.pytorch.org/whl/rocm6.4
+#elif [ $GPU_TYPE = "mac"  ]; then
+#    echo "Mac OSX CPU/GPU Detected "
+#    pip_install torch torchvision
+#else
+#    echo "No GPU detected. falling back to CPU only! "
+#    pip_install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+#fi
+#
+#pip_install tensorflow
+#pip_install scikit-learn
+#pip_install keras # Yolo3 requirement
+#pip_install tf-keras
+#
+#------- Generative AI -------
+#pip_install dalle2-pytorch # -> https://github.com/lucidrains/DALLE2-pytorch
+#pip_install pyro-ppl # -> https://pyro.ai/examples/intro_long.html
 
 echo "---  Exporting Environment Variables to .bashrc ---"
-echo "export HF_HOME='$VENV_BASE/huggingface'" >> ~/.bashrc
-echo "export NLTK_HOME='$VENV_BASE/nltk_data'" >> ~/.bashrc
-echo "export SPACY_HOME='$VENV_BASE/spacy'" >> ~/.bashrc
-echo "export TORCH_HOME='$VENV_BASE/torch'" >> ~/.bashrc
+# [TRIMMED] HF_HOME/NLTK_HOME/SPACY_HOME/TORCH_HOME dropped - the libs that used them are disabled above
 
-
-#----------------------------------------------
-pip_install tensorflow
-pip_install scikit-learn
-
-#pip3 install catboost
-# LightGBM -> https://lightgbm.readthedocs.io/en/stable/Installation-Guide.html
-pip_install keras # Yolo3 requirement
-#pip3 install gym  # -> https://github.com/openai/gym
-#pip3 install xgboost # -> https://xgboost.readthedocs.io/en/stable/install.html
-
-#--- Deep Learning ---
-pip_install tf-keras
-
-#------- Generative AI -------
-pip_install dalle2-pytorch # -> https://github.com/lucidrains/DALLE2-pytorch
-pip_install pyro-ppl # -> https://pyro.ai/examples/intro_long.html
-#pip3 install glm_saga # -> https://pytorch.org/blog/empowering-models-performance/
-# pip install imageai --upgrade   |  ImageAI #-> https://imageai.readthedocs.io/en/latest/#:~:text=ImageAI%20is%20a%20python%20library,and%20few%20lines%20of%20code.
-# StyleGen #-> https://github.com/NVlabs/stylegan2
-#pip3 install flax # -> https://flax.readthedocs.io/en/latest/
-#pip3 install -U jax # -> Many Install options depending on hardware -> https://github.com/jax-ml/jax
-# NeRF -> https://github.com/bmild/nerf
-
-#------- Computer Vision / Real-Time Object Detection -------
+#------- Computer Vision / Image Processing -------
 pip_install opencv-python # https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
-# Darknet # https://github.com/mdv3101/darknet-yolov3 |  https://pjreddie.com/darknet/
-# pip3 install YOLOv3 # -> https://pjreddie.com/darknet/yolo/ | https://viso.ai/deep-learning/yolov3-overview/
-# pip3 install yolo-v4 #-> https://github.com/philipperemy/python-darknet-yolo-v4
-
-#- https://huggingface.co/datasets?task_categories=task_categories%3Aimage-to-text
-# google/imageinwords  # https://huggingface.co/datasets/google/imageinwords
+pip_install pillow
 
 #--- OCR ---
-# Install EasyOCR
-pip_install easyocr
-pip_install pytesseract pillow
+# [TRIMMED] All OCR engines below disabled - OCR is done via an LLM vision model (e.g. qwen3-vl)
+# through Ollama instead of a local OCR engine. Uncomment any of these if you need a local fallback.
+# https://ollama.com/library/qwen3-vl
+#
+#pip_install easyocr
+#pip_install pytesseract
 
 #--- barcodes ---
-sudo apt-get install libzbar0
-pip_install pyzbar
+# [TRIMMED] not part of the current workflow; uncomment if barcode/QR reading is needed
+#sudo apt-get install libzbar0
+#pip_install pyzbar
 
 #---- PaddleOCR -----
-#--- CPU ---
-pip_install paddlepaddle
-#python -m pip install paddleocr
-pip_install "paddleocr[all]"
-
-#--- GPU - Nvidia ---
-# Example for CUDA 12.6 (2026 stable)
-#python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
+#pip_install paddlepaddle
+#pip_install "paddleocr[all]"
 
 #- DocTR (Document Text Recognition) is a high-performance Python OCR library --
-pip_install "python-doctr[viz,html,contrib]"
-pip_install "python-doctr[torch]"
-#pip_install "python-doctr[tf]"
+#pip_install "python-doctr[viz,html,contrib]"
+#pip_install "python-doctr[torch]"
 
 #--- Keras ---
-pip_install keras-ocr
-
-#----- LLM -----------------
-# https://ollama.com/library/qwen3-vl
-# ollama run qwen3-vl
-# qwen3-vl:8b
+#pip_install keras-ocr
 
 #--- https://reducto.ai/blog/introducing-rolmocr-open-source-ocr-model --
-pip_install reductoai
+#pip_install reductoai
 
 #------------------- End of Shared ---------------------
 if (( ${#pip_failures[@]} > 0 )); then
@@ -647,7 +587,7 @@ echo "You must restart your shell or run 'source ~/.bashrc' to use the new alias
 
 "
 
-echo "Add the following to the top of your python scripts, to activate the venv:"
+echo "Add the following shebang to the top of your python scripts, to run them directly with this venv's interpreter (no activation needed):"
 echo "
-  #!/opt/activate_env/bin/python3
+  #!$VENV_DIR/bin/python3
 "
