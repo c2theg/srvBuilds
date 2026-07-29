@@ -25,7 +25,7 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.2.45
+Version:  0.2.46
 Last Updated:  7/29/2026
 
 What this does:
@@ -36,6 +36,13 @@ What this does:
 
 Global Path:  $VENV_BASE/venv/bin/activate
 
+
+
+#-- Install / Update --
+
+    wget -O "install_ai_python3_venv.sh" https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_ai_python3_venv.sh && chmod u+x install_ai_python3_venv.sh
+
+#----------------------
 
 "
 
@@ -594,11 +601,32 @@ if ! grep -qF "$ALIAS_LINE" "$SHELL_RC" 2>/dev/null; then
   echo "$ALIAS_LINE" >> "$SHELL_RC"
 fi
 
+# Auto-activate this venv in every new shell session (not just when you remember to run
+# activate_env). Idempotent: re-running this installer replaces the block in place rather
+# than duplicating it, so a changed --venv-base is picked up correctly. Guarded on
+# $VIRTUAL_ENV so a nested shell (e.g. one spawned from an already-activated shell) doesn't
+# re-source and pile up duplicate PATH entries.
+AUTOACTIVATE_BEGIN="# --- BEGIN python3_shared venv auto-activate ---"
+AUTOACTIVATE_END="# --- END python3_shared venv auto-activate ---"
+
+if [ -f "$SHELL_RC" ] && grep -qF "$AUTOACTIVATE_BEGIN" "$SHELL_RC"; then
+  sed -i "/$AUTOACTIVATE_BEGIN/,/$AUTOACTIVATE_END/d" "$SHELL_RC"
+fi
+
+{
+  echo "$AUTOACTIVATE_BEGIN"
+  echo "if [ -z \"\${VIRTUAL_ENV:-}\" ] && [ -f \"$VENV_DIR/bin/activate\" ]; then"
+  echo "  source \"$VENV_DIR/bin/activate\""
+  echo "fi"
+  echo "$AUTOACTIVATE_END"
+} >> "$SHELL_RC"
+
 echo "Added alias: activate_env -> source $VENV_BASE/venv/bin/activate"
-echo "Alias written to: $SHELL_RC"
-echo "Run 'activate_env' to activate the virtual environment"
+echo "Added auto-activate block to $SHELL_RC - every new shell will activate this venv automatically"
+echo "Alias/auto-activate written to: $SHELL_RC"
+echo "Run 'activate_env' to activate it manually right now (e.g. after 'deactivate')"
 echo "You can also use: source $VENV_BASE/venv/bin/activate"
-echo "You must restart your shell or run 'source $SHELL_RC' to use the new alias
+echo "You must open a new shell (or run 'source $SHELL_RC') for auto-activation to take effect
 
 "
 
