@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 #---------------------------------------------------------------------------------------------------------
+# Author: Christopher Gray | updated: 8/18/2025 | version: 0.0.2
+#  Install: 
+#     curl -fsSL -o 'fix_nvidia_smi.sh' 'https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/fix_nvidia_smi.sh' && chmod u+x fix_nvidia_smi.sh
+#
+#
 # fix_nvidia_smi.sh — diagnose + repair "nvidia-smi couldn't communicate with the
 # NVIDIA driver" on a Proxmox VM with an NVIDIA GPU passed through (PCI passthrough).
 # Written for/tested on Ubuntu 24.04 (apt-based); the diagnostics work on most
