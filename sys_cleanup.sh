@@ -2,60 +2,56 @@
 set -Eeuo pipefail
 
 # ---------------------------------------------------------------------------
-# v2.3.0 (2026-07-15) — reviewed and revised by Claude Fable 5, an Anthropic
-# AI model (id: claude-fable-5), at the maintainer's request.
+# v2.5.1 (2026-08-29) — reviewed and revised by Claude Sonnet 5, an Anthropic
+# AI model (id: claude-sonnet-5), at the maintainer's request.
 #
 # Changes in this revision:
-#   * set -e safety: guarded `apt-get clean`, the /var/log find -delete, and
-#     the drop_caches/compact_memory writes so one failure no longer aborts
-#     the whole run (drop_caches is not writable inside containers).
-#   * Backups: rsync exit 24 ("source files vanished mid-transfer", routine
-#     on live systems) is now a warning instead of discarding the snapshot.
-#   * No longer deletes /root/.local/lib — that is root's pip --user
-#     site-packages (installed software, not cache).
-#   * /tmp/systemd-private-* dirs are only removed when stale (>2 days);
-#     live ones are the private /tmp of running PrivateTmp services.
-#   * Removed the apt/dpkg lock-file deletion block (racy and unnecessary;
-#     dpkg uses fcntl locks and `dpkg --configure -a` handles recovery).
-#   * apt runs noninteractively (DEBIAN_FRONTEND + --force-confdef/confold)
-#     so cron runs cannot hang on conffile prompts; upgrade/dist-upgrade
-#     moved behind a new --with-upgrades flag.
-#   * Held-open deleted-file truncation now only touches files that lived
-#     under /var/log (a process-name denylist alone risked corrupting
-#     database temp files).
-#   * postfix restarts only when a mail log was actually removed; Pi-hole
-#     stops/restarts only units that were active beforehand; MongoDB
-#     restart tries the modern `mongod` unit first.
-#   * Rotated-log removal consolidated into one recursive find over
-#     /var/log, replacing ~30 per-path rm lines and the per-dir helper.
-#   * Per-section freed-space is measured on the filesystem being cleaned
-#     instead of always on /.
-#   * Page-cache drop / swap cycling moved behind --reclaim-ram (dropping
-#     dentries/inodes hurts performance and reclaims nothing real).
-#   * Slow full-disk scans (du /, find / -size +500M) moved behind
-#     --diagnostics; du now stays on one filesystem with bounded depth.
-#   * Mailbox trim rewritten to two passes (O(1) memory at any size).
-#   * Kernel cleanup keeps the running kernel plus the newest 2 versions
-#     and now also purges rc-state and linux-image-unsigned-* leftovers
-#     the old linux-image-[0-9]* pattern missed.
-#   * Cleanups: removed unused sudo() shim, made loop variables local,
-#     initialized empty arrays for old-bash set -u, anchored the
-#     snapshot-name regex against "." in the prefix, rejected --force with
-#     --prune-only, batched find -exec invocations.
+#   * Resilio Sync archive-folder cleanup now matches ".sync/Archive",
+#     ".sync/archive", and a bare ".archive" (case-insensitive), instead of
+#     only the exact-case ".sync/Archive" path - naming has varied across
+#     Resilio versions/platforms.
+#   * RETENTION_COUNT (rsync snapshot backups, --backup-only/--prune-only)
+#     lowered from 4 to 2 at the maintainer's request, keeping one older
+#     fallback snapshot in case the newest one turns out bad.
+#
+# v2.5.0 (2026-08-29) — reviewed and revised by Claude Sonnet 5, an Anthropic
+# AI model (id: claude-sonnet-5), at the maintainer's request: this script
+# runs on many machines with different installed services and images, so
+# cleanup needs to be safe and effective without per-host tuning.
+#
+# Changes in this revision:
+#   * Docker image pruning is now automatic and needs no configuration:
+#     images referenced by any container (running or stopped) are always
+#     kept; among images nothing references, only the single newest tag
+#     per repository is kept (its one allowed "backup") and older tags of
+#     that repository are removed - this now runs unconditionally, not
+#     just behind --prune-docker-images. DOCKER_IMAGE_KEEP defaults to
+#     empty; it's an override for edge cases, not a required setup step.
+#   * --prune-docker-images is now purely an intensifier: it additionally
+#     removes a repository's last tag when zero containers reference it
+#     (e.g. no lingering `docker run` history), for hosts that want images
+#     they don't currently use gone entirely rather than kept as a backup.
+#   * LIVE_LOG_DELETE_MB raised from 10 to 50 - the size at which a known
+#     service's live log gets deleted / a mailbox gets trimmed.
+#   * Added a catch-all pass over all of /var/log (journal directory
+#     excluded) that removes any file over that same 50MB regardless of
+#     which service wrote it, so machines running software outside the
+#     curated per-service list above still get their oversized logs
+#     cleaned up.
 # ---------------------------------------------------------------------------
 
-VERSION="2.3.0"
-UPDATED="2026-07-15"
+VERSION="2.5.3"
+UPDATED="2026-08-29"
 
 echo "
- _____             _         _    _          _                                   
-|     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|                                  
-|   --|  _| -_| .'|  _| -_| . |  | . | | |   _                                   
-|_____|_| |___|__,|_| |___|___|  |___|_  |  |_|                                  
-                                     |___|                                       
-                                                                                 
- _____ _       _     _           _              _____    __    _____             
-|     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _ 
+ _____             _         _    _          _
+|     |___ ___ ___| |_ ___ _| |  | |_ _ _   |_|
+|   --|  _| -_| .'|  _| -_| . |  | . | | |   _
+|_____|_| |___|__,|_| |___|___|  |___|_  |  |_|
+                                     |___|
+
+ _____ _       _     _           _              _____    __    _____
+|     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _
 |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
@@ -87,7 +83,7 @@ LOG_FILE="/var/log/sys_cleanup_backup.log"
 LOCK_FILE="/var/lock/sys_cleanup_backup.lock"
 STATE_FILE="/var/lib/sys_cleanup_backup/last_successful_backup.state"
 EXCLUDES_FILE="/etc/sys_cleanup/backup-excludes.txt"
-RETENTION_COUNT=4
+RETENTION_COUNT=2
 BACKUP_MIN_DAYS=14
 BACKUP_ROOT_MARKER_NAME=".sys_cleanup_backup_root"
 
@@ -101,6 +97,18 @@ SELF_UPDATE_URL="https://raw.githubusercontent.com/c2theg/srvBuilds/master/sys_c
 #   rsync -aHAX /srv/backups/sys_cleanup_snapshots/snapshots/backup-2026-04-05_07-00-00/home/ubuntu/ /home/ubuntu/
 
 # ---------------------------------------------------------------------------
+# Docker image cleanup configuration
+# ---------------------------------------------------------------------------
+
+# Optional manual override, empty by default: entries here are always
+# protected from Docker image pruning, on top of the automatic rules in
+# prune_unused_docker_images() (see "Cleanup helpers" below). Use
+# "repository:tag" for an exact match, or a bare "repository" to protect
+# every tag of that repository. Only needed for edge cases the automatic
+# rules don't cover.
+DOCKER_IMAGE_KEEP=()
+
+# ---------------------------------------------------------------------------
 # Runtime flags
 # ---------------------------------------------------------------------------
 
@@ -110,6 +118,7 @@ FORCE_BACKUP=false
 WITH_UPGRADES=false
 RECLAIM_RAM=false
 DIAGNOSTICS=false
+PRUNE_DOCKER_IMAGES=false
 
 # ---------------------------------------------------------------------------
 # Runtime state
@@ -189,7 +198,7 @@ ram_used() { free -b | awk '/Mem/ {print $3}'; }
 usage() {
     cat <<EOF
 Usage:
-  $0 [--with-upgrades] [--reclaim-ram] [--diagnostics]
+  $0 [--with-upgrades] [--reclaim-ram] [--diagnostics] [--prune-docker-images]
   $0 --backup-only [--dry-run] [--force]
   $0 --prune-only [--dry-run]
   $0 --help
@@ -200,9 +209,16 @@ Modes:
   --prune-only     Run retention pruning only; do not create a new snapshot.
 
 Options (cleanup mode):
-  --with-upgrades  Also run apt-get upgrade / dist-upgrade.
-  --reclaim-ram    Drop page caches, compact memory, and cycle swap.
-  --diagnostics    Run the slow full-disk usage scans and reports.
+  --with-upgrades        Also run apt-get upgrade / dist-upgrade.
+  --reclaim-ram          Drop page caches, compact memory, and cycle swap.
+  --diagnostics          Run the slow full-disk usage scans and reports.
+  --prune-docker-images  Superseded image tags are always trimmed to one
+                         backup per repository. This additionally removes
+                         a repository entirely once it has zero containers
+                         (e.g. no lingering `docker run` history), except
+                         entries in DOCKER_IMAGE_KEEP. Off by default since
+                         an occasionally-run image may look unused between
+                         runs.
 
 Options (backup/prune modes):
   --dry-run        Pass --dry-run to rsync and log prune actions without deleting.
@@ -236,6 +252,9 @@ parse_args() {
             --diagnostics)
                 DIAGNOSTICS=true
                 ;;
+            --prune-docker-images)
+                PRUNE_DOCKER_IMAGES=true
+                ;;
             --help|-h)
                 usage
                 exit 0
@@ -257,8 +276,8 @@ parse_args() {
         die "--force is only valid with --backup-only"
     fi
 
-    if [ "$RUN_MODE" != "cleanup" ] && { $WITH_UPGRADES || $RECLAIM_RAM || $DIAGNOSTICS; }; then
-        die "--with-upgrades, --reclaim-ram, and --diagnostics are only valid in cleanup mode"
+    if [ "$RUN_MODE" != "cleanup" ] && { $WITH_UPGRADES || $RECLAIM_RAM || $DIAGNOSTICS || $PRUNE_DOCKER_IMAGES; }; then
+        die "--with-upgrades, --reclaim-ram, --diagnostics, and --prune-docker-images are only valid in cleanup mode"
     fi
 }
 
@@ -294,7 +313,8 @@ trap cleanup_on_exit EXIT
 # Cleanup helpers
 # ---------------------------------------------------------------------------
 
-LIVE_LOG_DELETE_BYTES=$((10 * 1024 * 1024))
+LIVE_LOG_DELETE_MB=50
+LIVE_LOG_DELETE_BYTES=$((LIVE_LOG_DELETE_MB * 1024 * 1024))
 LIVE_LOG_REMOVED_LAST=0
 MAILBOX_TRIMMED_LAST=0
 
@@ -379,6 +399,69 @@ trim_mailbox_to_limit() {
     fi
 
     rm -f -- "$temp_file"
+}
+
+docker_image_is_kept() {
+    local image_ref="$1" keep_entry
+    for keep_entry in "${DOCKER_IMAGE_KEEP[@]}"; do
+        if [[ "$keep_entry" == *:* ]]; then
+            [ "$image_ref" = "$keep_entry" ] && return 0
+        else
+            [[ "$image_ref" == "$keep_entry":* ]] && return 0
+        fi
+    done
+    return 1
+}
+
+# Image cleanup that needs no per-machine configuration:
+#   - Any image referenced by a container (running or stopped) is never
+#     touched, full stop.
+#   - Among images nothing references, `docker images` lists newest-created
+#     first, so the first unused tag seen per repository is that
+#     repository's most recent - it is kept as the one allowed "backup".
+#     Older unused tags of the same repository are superseded backups and
+#     are removed.
+#   - A repository's last remaining tag is kept even with zero containers,
+#     since some images (tools only ever launched with `docker run`, no
+#     lingering container) are still wanted - pass aggressive=true to also
+#     remove those entirely.
+#   - DOCKER_IMAGE_KEEP entries are always protected, on top of the above.
+prune_unused_docker_images() {
+    local aggressive="${1:-false}"
+    local image_ref repo
+    local -a in_use_images=() candidate_images=()
+    local -A repo_keeper_seen=()
+
+    while IFS= read -r image_ref; do
+        [ -n "$image_ref" ] && in_use_images+=("$image_ref")
+    done < <(docker ps -a --format '{{.Image}}' 2>/dev/null)
+
+    while IFS= read -r image_ref; do
+        [ -n "$image_ref" ] || continue
+        [[ "$image_ref" == *"<none>"* ]] && continue
+        printf '%s\n' "${in_use_images[@]}" | grep -qxF -- "$image_ref" && continue
+        if docker_image_is_kept "$image_ref"; then
+            echo "    [i] keeping unused image (protected by DOCKER_IMAGE_KEEP): $image_ref"
+            continue
+        fi
+
+        repo="${image_ref%:*}"
+        if [ -z "${repo_keeper_seen[$repo]:-}" ]; then
+            repo_keeper_seen["$repo"]=1
+            $aggressive || continue
+        fi
+        candidate_images+=("$image_ref")
+    done < <(docker images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null)
+
+    if [ "${#candidate_images[@]}" -gt 0 ]; then
+        echo "    [>] removing superseded/unused Docker images:"
+        printf '        %s\n' "${candidate_images[@]}"
+        printf '%s\n' "${candidate_images[@]}" | xargs -r docker rmi 2>/dev/null || true
+    fi
+
+    # Dangling (<none>:<none>) images have no name to match against the
+    # keep-list and are never one of the protected images by definition.
+    docker image prune -f 2>/dev/null || true
 }
 
 report_freed() {
@@ -974,6 +1057,17 @@ run_cleanup() {
         $_ftl_was_active && systemctl restart pihole-FTL 2>/dev/null || true
     fi
 
+    echo " -- Any other oversized log file under /var/log (catch-all, >${LIVE_LOG_DELETE_MB}MB) "
+    # Curated sections above cover known services; this catches large log
+    # files from anything else installed on a given machine. /var/log/journal
+    # is excluded - those binary files are managed by journalctl's own vacuum
+    # above and must not be touched directly.
+    while IFS= read -r -d '' log_path; do
+        rm -f -- "$log_path" 2>/dev/null || true
+        [ -e "$log_path" ] || echo "    [>] removed oversized log file: $log_path"
+    done < <(find /var/log -xdev -path '/var/log/journal' -prune -o \
+        -type f -size "+${LIVE_LOG_DELETE_MB}M" -print0 2>/dev/null)
+
     echo " -- Misc "
     rm -f /var/log/update_core.log /var/log/update_ubuntu.log
     rm -f /var/log/sys_cleanup.log* /var/log/pm-powersave.log*
@@ -1005,7 +1099,7 @@ run_cleanup() {
     _A=$(free_space /var/tmp)
     report_freed "/var/tmp stale files" "$_B" "$_A"
 
-    echo " -- Resilio Sync - logs, metadata, and .sync/Archive folders "
+    echo " -- Resilio Sync - logs, metadata, and Archive folders "
     _B=$(free_space)
     if [ -d "/var/lib/resilio-sync/" ]; then
         rm -f /var/lib/resilio-sync/sync.log /var/lib/resilio-sync/sync.log.*
@@ -1013,8 +1107,12 @@ run_cleanup() {
     fi
     local -a RESILIO_SYNC_ROOTS=("/home" "/mnt" "/data" "/srv")
     for sync_root in "${RESILIO_SYNC_ROOTS[@]}"; do
-        [ -d "$sync_root" ] && find "$sync_root" -type d -name "Archive" \
-            -path "*/.sync/Archive" -exec rm -rf {} + 2>/dev/null || true
+        # Resilio keeps a versioned-file backup per synced folder; naming
+        # has varied across versions/platforms (".sync/Archive",
+        # ".sync/archive", or a bare ".archive"), so match all of them.
+        [ -d "$sync_root" ] && find "$sync_root" -type d \
+            \( -ipath "*/.sync/archive" -o -iname ".archive" \) \
+            -exec rm -rf {} + 2>/dev/null || true
     done
     _A=$(free_space)
     report_freed "Resilio Sync archives" "$_B" "$_A"
@@ -1030,6 +1128,17 @@ run_cleanup() {
     if [ -d "/var/lib/docker/" ]; then
         _B=$(free_space /var/lib/docker)
         docker system prune -f 2>/dev/null || true
+        # `docker system prune` only clears dangling build-cache entries and
+        # leaves cache still linked to existing images in place, which can
+        # silently grow to tens of GB (it did: 36GB+ on one host, stored as
+        # containerd overlayfs snapshots). That cache only speeds up future
+        # `docker build` runs - it is never required to run an existing
+        # image or container - so clearing all of it is always safe.
+        docker builder prune -af 2>/dev/null || true
+        # Always trims superseded image tags down to one backup per
+        # repository; --prune-docker-images additionally drops repositories
+        # with zero containers entirely (see prune_unused_docker_images).
+        prune_unused_docker_images "$PRUNE_DOCKER_IMAGES"
         find /var/lib/docker/containers -name "*.log" -exec truncate -s 0 {} + 2>/dev/null || true
         _A=$(free_space /var/lib/docker)
         report_freed "Docker" "$_B" "$_A"
