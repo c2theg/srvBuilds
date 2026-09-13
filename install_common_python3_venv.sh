@@ -23,8 +23,8 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.1.19
-Last Updated:  8/6/2026
+Version:  0.1.20
+Last Updated:  9/13/2026
 
 What this does:
     Creates a GLOBAL Python3 Virtual Environment (I know you think that defeats the entire reason for an venv... it does not.
@@ -139,6 +139,10 @@ pip_install wheel
 pip_install setuptools
 pip_install asyncio
 pip_install aiohttp
+pip_install tld
+pip_install sympy
+pip_install beautifulsoup4
+pip_install bs4
 
 #--- Databases ----
 pip_install redis
