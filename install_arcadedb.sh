@@ -2,9 +2,12 @@
 #------------------------------------------------------------
 #  * Copyright (c) 2026 Christopher Gray
 #  * All rights reserved.
-# Version: 0.0.1
+# Version: 0.0.2
 # Updated: 9/21/2026
 # Usage: sudo ./install_arcadedb.sh
+#
+# Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_arcadedb.sh && chmod u+x install_arcadedb.sh
+#
 #
 # Installs the latest STABLE ArcadeDB (multi-model graph/document/KV/
 # time-series DB) in a Docker container on Ubuntu 24.04, with persistent
