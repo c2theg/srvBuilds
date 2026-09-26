@@ -15,6 +15,9 @@
 #     - Rewritten for idempotency: safe to rerun on a schedule (cron-friendly)
 #     - Fixed Cloudflare IPv6 addresses copy-pasted into google.sources
 #     - Fixed chrony service name (chronyd -> chrony)
+#     - DNS_SERVERS: added an IPv6 resolver (Google 2001:4860:4860::8888)
+#       alongside the two IPv4 entries; still capped at 3 since resolv.conf
+#       only reads that many
 #     - Dropped netselect-apt (targeted unstable "sid", slow mirror probing)
 #       in favor of a static deb.debian.org deb822 source for CODENAME
 #     - Disable pve-enterprise/ceph enterprise repos instead of erroring on them
@@ -39,6 +42,13 @@
 #     - Adds a daily uptime-check cron line that reboots after 60 days;
 #       disabled by default but always present in crontab (commented out)
 #       so enabling it later is a one-line edit
+#     - Dropped `systemctl restart pveproxy` after the nag patch - it's a
+#       static file (no restart needed) and restarting it hung the script
+#       when run from the web UI's own Shell, which pveproxy itself serves
+#     - Adds Pi-hole, Arcane, and OpenVAS/Greenbone as LXC containers, and
+#       T-Pot as a VM with its Debian installer ISO attached; all four are
+#       only created (and templates/images downloaded) - never started.
+#       App install and, for T-Pot, network review are manual follow-ups.
 #   0.0.35  2025-12-27
 #     - Prior version (manual/copy-paste oriented, non-idempotent)
 #--------------------------------------
@@ -85,6 +95,46 @@ LXC_TEMPLATE_PATTERNS=(alpine-3 debian-13 ubuntu-24.04)
 ISO_TRAINS=(
     "ubuntu-24.04|https://releases.ubuntu.com/24.04/|^ubuntu-24\.04\.[0-9]+-live-server-amd64\.iso$"
 )
+
+# --- New app containers/VMs -------------------------------------------
+# Each of these is *created* (and its template/ISO downloaded) but never
+# started here - finish the OS/app install yourself once you're ready,
+# especially for T-Pot (see its section below before ever booting it).
+ENABLE_PIHOLE_CT=true
+PIHOLE_VMID=210
+PIHOLE_HOSTNAME=pihole
+PIHOLE_BRIDGE="vmbr0"
+PIHOLE_STORAGE="local-lvm"
+PIHOLE_DISK_GB=4
+PIHOLE_MEMORY_MB=512
+PIHOLE_CORES=1
+
+ENABLE_ARCANE_CT=true
+ARCANE_VMID=211
+ARCANE_HOSTNAME=arcane
+ARCANE_BRIDGE="vmbr0"
+ARCANE_STORAGE="local-lvm"
+ARCANE_DISK_GB=8
+ARCANE_MEMORY_MB=1024
+ARCANE_CORES=2
+
+ENABLE_TPOT_VM=true
+TPOT_VMID=212
+TPOT_HOSTNAME=tpot
+TPOT_BRIDGE="vmbr0"                # honeypot traffic rides this bridge - confirm that's really what you want
+TPOT_STORAGE="local-lvm"
+TPOT_DISK_GB=128                   # T-Pot's own recommended minimum
+TPOT_MEMORY_MB=8192
+TPOT_CORES=4
+
+ENABLE_OPENVAS_CT=true
+OPENVAS_VMID=213
+OPENVAS_HOSTNAME=openvas
+OPENVAS_BRIDGE="vmbr0"
+OPENVAS_STORAGE="local-lvm"
+OPENVAS_DISK_GB=32                 # feed data grows over time; Greenbone suggests generous headroom
+OPENVAS_MEMORY_MB=4096
+OPENVAS_CORES=2
 
 # Meant to be rerun on a schedule to keep the host patched and templates
 # current. Everything below is idempotent - already-installed packages and
@@ -214,7 +264,10 @@ cat > /etc/apt/apt.conf.d/98-no-nag <<'EOF'
 DPkg::Post-Invoke { "dpkg -l pve-manager 2>/dev/null | grep -q ^ii && sed -i.bak \"s/data.status.toLowerCase() !== 'active'/false/g\" /usr/share/javascript/proxmox-widget-toolkit/proxmox-lib.js 2>/dev/null || true"; };
 EOF
 
-systemctl restart pveproxy
+# No service restart needed - proxmox-lib.js is served as a static file, so
+# a hard refresh (Ctrl+Shift+R) in the browser picks up the patch. Restarting
+# pveproxy here would drop the connection if this script is running inside
+# the web UI's Shell (which is itself proxied through pveproxy).
 
 #======================================================================
 # System update (single pass - fewer invocations = fewer dep re-resolves)
@@ -312,6 +365,8 @@ EOF
 # VM ISOs (opt-in; multi-connection download via aria2 for speed)
 #======================================================================
 sync_iso_train() {
+    # Status goes to stderr; the resolved filename (or nothing, on failure)
+    # is the only thing written to stdout, so callers can capture it.
     local prefix="$1" listing_url="$2" pattern="$3"
     local dest_dir="/var/lib/vz/template/iso"
     local latest
@@ -319,16 +374,17 @@ sync_iso_train() {
         | grep -oE 'href="[^"]+"' | sed -E 's/^href="//;s/"$//' \
         | grep -E "$pattern" | sort -V | tail -n1)"
     if [[ -z "$latest" ]]; then
-        echo "  could not determine latest ISO for ${prefix}"
-        return
+        echo "  could not determine latest ISO for ${prefix}" >&2
+        return 1
     fi
     if [[ -f "${dest_dir}/${latest}" ]]; then
-        echo "  already have latest: ${latest}"
-        return
+        echo "  already have latest: ${latest}" >&2
+    else
+        echo "  downloading ${latest}" >&2
+        aria2c -x4 -s4 -c -d "$dest_dir" "${listing_url}${latest}"
+        find "$dest_dir" -maxdepth 1 -type f -name "${prefix}*" ! -name "$latest" -print -delete
     fi
-    echo "  downloading ${latest}"
-    aria2c -x4 -s4 -c -d "$dest_dir" "${listing_url}${latest}"
-    find "$dest_dir" -maxdepth 1 -type f -name "${prefix}*" ! -name "$latest" -print -delete
+    echo "$latest"
 }
 
 if $DOWNLOAD_ISOS; then
@@ -339,6 +395,105 @@ if $DOWNLOAD_ISOS; then
         IFS='|' read -r prefix listing_url pattern <<< "$train"
         sync_iso_train "$prefix" "$listing_url" "$pattern"
     done
+fi
+
+#======================================================================
+# New app containers/VMs - created and their images/templates downloaded,
+# but never started. Each needs a manual step afterward (installing the
+# app inside it, and for T-Pot, a deliberate look at its networking)
+# before it's actually live.
+#======================================================================
+create_lxc_if_missing() {
+    local vmid="$1" hostname="$2" template_pattern="$3" bridge="$4" storage="$5"
+    local disk_gb="$6" mem_mb="$7" cores="$8" nesting="$9"
+    if pct status "$vmid" &>/dev/null; then
+        echo "  CT ${vmid} (${hostname}) already exists, skipping"
+        return
+    fi
+    local template
+    template="$(pveam list local 2>/dev/null | awk '{print $1}' | grep "$template_pattern" | sort -V | tail -n1)"
+    if [[ -z "$template" ]]; then
+        echo "  no local template matching '${template_pattern}' - check the LXC templates step above"
+        return
+    fi
+    echo "  creating CT ${vmid} (${hostname}) from ${template} - left stopped"
+    local features=()
+    [[ "$nesting" == "true" ]] && features=(--features "nesting=1,keyctl=1")
+    pct create "$vmid" "$template" \
+        --hostname "$hostname" \
+        --cores "$cores" \
+        --memory "$mem_mb" \
+        --net0 "name=eth0,bridge=${bridge},ip=dhcp" \
+        --rootfs "${storage}:${disk_gb}" \
+        --unprivileged 1 \
+        --onboot 0 \
+        "${features[@]}"
+}
+
+if $ENABLE_PIHOLE_CT; then
+    log "Creating Pi-hole LXC (${PIHOLE_VMID}) - not started"
+    create_lxc_if_missing "$PIHOLE_VMID" "$PIHOLE_HOSTNAME" "debian-13" \
+        "$PIHOLE_BRIDGE" "$PIHOLE_STORAGE" "$PIHOLE_DISK_GB" "$PIHOLE_MEMORY_MB" "$PIHOLE_CORES" false
+    cat <<EOF
+  Not installed yet. Start the CT, then inside it run:
+    curl -sSL https://install.pi-hole.net | bash
+EOF
+fi
+
+if $ENABLE_ARCANE_CT; then
+    log "Creating Arcane LXC (${ARCANE_VMID}) - not started"
+    create_lxc_if_missing "$ARCANE_VMID" "$ARCANE_HOSTNAME" "debian-13" \
+        "$ARCANE_BRIDGE" "$ARCANE_STORAGE" "$ARCANE_DISK_GB" "$ARCANE_MEMORY_MB" "$ARCANE_CORES" true
+    cat <<EOF
+  Not installed yet. Start the CT, install Docker, then follow:
+    https://github.com/getarcaneapp/arcane
+EOF
+fi
+
+if $ENABLE_OPENVAS_CT; then
+    log "Creating OpenVAS/Greenbone LXC (${OPENVAS_VMID}) - not started"
+    create_lxc_if_missing "$OPENVAS_VMID" "$OPENVAS_HOSTNAME" "debian-13" \
+        "$OPENVAS_BRIDGE" "$OPENVAS_STORAGE" "$OPENVAS_DISK_GB" "$OPENVAS_MEMORY_MB" "$OPENVAS_CORES" true
+    cat <<EOF
+  Not installed yet. Start the CT, install Docker + compose plugin, then:
+    git clone https://github.com/greenbone/greenbone-community-containers.git
+    cd greenbone-community-containers && docker compose up -d
+  First start pulls a large vulnerability feed (can take a long while) -
+  do this deliberately, not as part of unattended maintenance runs.
+EOF
+fi
+
+if $ENABLE_TPOT_VM; then
+    log "Preparing T-Pot VM (${TPOT_VMID}) - downloading installer media only, not started"
+    apt-get install -y --no-install-recommends curl aria2
+    mkdir -p /var/lib/vz/template/iso
+    tpot_iso="$(sync_iso_train "debian-13-netinst" "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/" \
+        '^debian-13\.[0-9]+\.[0-9]+-amd64-netinst\.iso$' || true)"
+    if [[ -n "${tpot_iso:-}" ]]; then
+        if qm status "$TPOT_VMID" &>/dev/null; then
+            echo "  VM ${TPOT_VMID} (${TPOT_HOSTNAME}) already exists, skipping"
+        else
+            echo "  creating VM ${TPOT_VMID} (${TPOT_HOSTNAME}) - left stopped"
+            qm create "$TPOT_VMID" \
+                --name "$TPOT_HOSTNAME" \
+                --memory "$TPOT_MEMORY_MB" \
+                --cores "$TPOT_CORES" \
+                --net0 "virtio,bridge=${TPOT_BRIDGE}" \
+                --scsihw virtio-scsi-pci \
+                --scsi0 "${TPOT_STORAGE}:${TPOT_DISK_GB}" \
+                --ide2 "local:iso/${tpot_iso},media=cdrom" \
+                --boot order=ide2 \
+                --ostype l26 \
+                --onboot 0
+        fi
+        cat <<EOF
+  Not installed yet - review T-Pot's networking requirements before you
+  ever start this VM (it's built to be attacked): https://github.com/telekom-security/tpotce
+  1) Start it and install Debian from the attached ISO (minimal, no desktop)
+  2) Inside that install: git clone https://github.com/telekom-security/tpotce
+  3) cd tpotce && ./install.sh
+EOF
+    fi
 fi
 
 #======================================================================
