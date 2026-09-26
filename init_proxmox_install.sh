@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray
 #--------------------------------------
-# Version:  0.2.2
+# Version:  0.2.3
 # Last Updated:  2026-09-26
 #--------------------------------------
 #
@@ -56,6 +56,15 @@
 #       inline sed command needed. Moved the patch logic to a real script
 #       (/usr/local/sbin/pve-nag-patch.sh) that the apt hook just calls by
 #       path instead.
+#     - Fixed 404s on the pve/ceph repos (Release file not found for suite
+#       "forky"): CODENAME was read live from /etc/os-release, which had
+#       drifted off "trixie" - traced to the pre-rewrite script's
+#       `netselect-apt sid` call leaving /etc/apt/sources.list pointed at
+#       unstable, which then upgraded base-files itself. CODENAME is now
+#       pinned to "trixie" (all Proxmox VE 9 repos only exist there
+#       anyway), the legacy sources.list gets neutralized like the other
+#       disabled repo files, and a startup check warns if the live
+#       codename still doesn't match trixie.
 #   0.0.35  2025-12-27
 #     - Prior version (manual/copy-paste oriented, non-idempotent)
 #--------------------------------------
@@ -68,6 +77,21 @@ export DEBIAN_FRONTEND=noninteractive
 if [[ $EUID -ne 0 ]]; then
     echo "Run this as root (or via sudo -i) on the Proxmox host." >&2
     exit 1
+fi
+
+OS_CODENAME_LIVE="$(. /etc/os-release; echo "${VERSION_CODENAME:-unknown}")"
+if [[ "$OS_CODENAME_LIVE" != "trixie" ]]; then
+    cat >&2 <<EOF
+
+WARNING: /etc/os-release reports '${OS_CODENAME_LIVE}', not 'trixie'.
+Proxmox VE 9.x is built on Debian trixie, so this usually means unstable
+packages already got pulled in at some point (including base-files itself,
+which is what sets that value) - often from an old apt sources.list
+pointed at sid/testing. This script pins its own apt sources to trixie
+regardless, but before trusting this host's package state, check:
+  dpkg -l base-files | tail -1
+  apt list --upgradable
+EOF
 fi
 
 log() { echo -e "\n==> $*"; }
@@ -216,11 +240,15 @@ log "Writing resolv.conf with ${DNS_SERVERS[*]}"
 #======================================================================
 log "Configuring apt repositories for pve-no-subscription"
 
-CODENAME="$(. /etc/os-release; echo "${VERSION_CODENAME}")"
+# Pinned rather than read from /etc/os-release: Proxmox VE 9.x's repos only
+# ever exist for "trixie", and VERSION_CODENAME can drift off that if
+# unstable packages ever get pulled in (see the startup check above) - a
+# stale/wrong value here 404s the pve/ceph repos below without warning.
+CODENAME="trixie"
 
 disable_repo_file() {
-    # Comment out an enterprise repo file in place instead of deleting it,
-    # so `apt-get update` stops erroring on the paywalled URL.
+    # Comment out a repo file in place instead of deleting it, so
+    # `apt-get update` stops erroring on it.
     local f="$1"
     [[ -f "$f" ]] || return 0
     sed -i 's/^\([^#]\)/#\1/' "$f"
@@ -229,6 +257,11 @@ disable_repo_file() {
 disable_repo_file /etc/apt/sources.list.d/pve-enterprise.list
 disable_repo_file /etc/apt/sources.list.d/pve-enterprise.sources
 disable_repo_file /etc/apt/sources.list.d/ceph.list
+
+# Neutralize the legacy flat sources.list too - on this host it was written
+# by an old version of this script's `netselect-apt sid` call, pointing apt
+# at Debian unstable. Everything needed now lives in sources.list.d/*.sources.
+disable_repo_file /etc/apt/sources.list
 
 cat > /etc/apt/sources.list.d/proxmox.sources <<EOF
 Types: deb
