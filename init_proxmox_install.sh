@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray
 #--------------------------------------
-# Version:  0.2.6
+# Version:  0.2.7
 # Last Updated:  2026-09-26
 #--------------------------------------
 #
@@ -90,6 +90,16 @@
 #       instead). Re-verifies connectivity immediately after applying and
 #       automatically rolls back (disables the unit, resets MTU) if that
 #       check fails.
+#     - The nag patch never actually worked on PVE 9.2.4: the target file
+#       is "proxmoxlib.js" (no hyphen), not "proxmox-lib.js" as assumed,
+#       and the real check there is `"active"===VAR.data.status.toLowerCase()`
+#       - inverted polarity from the older `!== 'active'` pattern this was
+#       built against. Now patches proxmox-lib.js, proxmoxlib.js, and
+#       proxmoxlib.min.js, trying both comparison directions, both quote
+#       styles, and any single-letter minifier variable name, so it keeps
+#       working across PVE versions this hasn't been tested against
+#       directly. Verified against the actual minified line from a live
+#       PVE 9.2.4 install.
 #   0.0.35  2025-12-27
 #     - Prior version (manual/copy-paste oriented, non-idempotent)
 #--------------------------------------
@@ -349,31 +359,51 @@ EOF
 #======================================================================
 log "Removing subscription nag from the web UI"
 
-WIDGET_JS="/usr/share/javascript/proxmox-widget-toolkit/proxmox-lib.js"
 NAG_PATCH_SCRIPT="/usr/local/sbin/pve-nag-patch.sh"
 
 # The patch logic lives in its own script rather than inline in the apt
 # hook below - apt.conf has its own quoting dialect that chokes on the
-# embedded double quotes a sed script like this needs (this is what threw
-# "Extra junk after value" the first time around).
-cat > "$NAG_PATCH_SCRIPT" <<EOF
+# embedded quotes a sed script like this needs. It checks every filename
+# and comparison style seen across Proxmox releases (the file itself is
+# "proxmoxlib.js" - no hyphen - not "proxmox-lib.js"; and the actual check
+# and its polarity, e.g. "===" vs "!==", quote style, and minified
+# variable name, have all varied by version). Every substitution is a
+# no-op if it doesn't match, so this stays safe across PVE versions this
+# script hasn't been tested against.
+cat > "$NAG_PATCH_SCRIPT" <<'PATCHEOF'
 #!/bin/sh
 dpkg -l pve-manager 2>/dev/null | grep -q '^ii' || exit 0
-sed -i.bak "s/data.status.toLowerCase() !== 'active'/false/g" "$WIDGET_JS" 2>/dev/null || true
-EOF
+for f in /usr/share/javascript/proxmox-widget-toolkit/proxmox-lib.js \
+         /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js \
+         /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.min.js; do
+    [ -f "$f" ] || continue
+    sed -i.bak -E \
+        -e "s/data\.status\.toLowerCase\(\) !== 'active'/false/g" \
+        -e 's/data\.status\.toLowerCase\(\) !== "active"/false/g' \
+        -e 's/"active"===[A-Za-z_$][A-Za-z0-9_$]*\.data\.status\.toLowerCase\(\)/true/g' \
+        -e "s/'active'===[A-Za-z_\$][A-Za-z0-9_\$]*\.data\.status\.toLowerCase\(\)/true/g" \
+        -e 's/"active"!==[A-Za-z_$][A-Za-z0-9_$]*\.data\.status\.toLowerCase\(\)/false/g' \
+        -e "s/'active'!==[A-Za-z_\$][A-Za-z0-9_\$]*\.data\.status\.toLowerCase\(\)/false/g" \
+        -e 's/[A-Za-z_$][A-Za-z0-9_$]*\.data\.status\.toLowerCase\(\)==="active"/true/g' \
+        -e "s/[A-Za-z_\$][A-Za-z0-9_\$]*\.data\.status\.toLowerCase\(\)==='active'/true/g" \
+        -e 's/[A-Za-z_$][A-Za-z0-9_$]*\.data\.status\.toLowerCase\(\)!=="active"/false/g' \
+        -e "s/[A-Za-z_\$][A-Za-z0-9_\$]*\.data\.status\.toLowerCase\(\)!=='active'/false/g" \
+        "$f" 2>/dev/null
+done
+PATCHEOF
 chmod +x "$NAG_PATCH_SCRIPT"
 "$NAG_PATCH_SCRIPT"
 
-# pve-manager overwrites proxmox-lib.js on every update, so re-patch it
+# pve-manager overwrites these files on every update, so re-patch
 # automatically via an apt hook instead of remembering to do it by hand.
 cat > /etc/apt/apt.conf.d/98-no-nag <<EOF
 DPkg::Post-Invoke { "${NAG_PATCH_SCRIPT}"; };
 EOF
 
-# No service restart needed - proxmox-lib.js is served as a static file, so
-# a hard refresh (Ctrl+Shift+R) in the browser picks up the patch. Restarting
-# pveproxy here would drop the connection if this script is running inside
-# the web UI's Shell (which is itself proxied through pveproxy).
+# No service restart needed - these are static files, so a hard refresh
+# (Ctrl+Shift+R) in the browser picks up the patch. Restarting pveproxy
+# here would drop the connection if this script is running inside the web
+# UI's own Shell (which is itself proxied through pveproxy).
 
 #======================================================================
 # System update (single pass - fewer invocations = fewer dep re-resolves)
