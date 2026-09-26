@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray
 #--------------------------------------
-# Version:  0.2.0
+# Version:  0.2.2
 # Last Updated:  2026-09-26
 #--------------------------------------
 #
@@ -45,10 +45,17 @@
 #     - Dropped `systemctl restart pveproxy` after the nag patch - it's a
 #       static file (no restart needed) and restarting it hung the script
 #       when run from the web UI's own Shell, which pveproxy itself serves
-#     - Adds Pi-hole, Arcane, and OpenVAS/Greenbone as LXC containers, and
-#       T-Pot as a VM with its Debian installer ISO attached; all four are
-#       only created (and templates/images downloaded) - never started.
-#       App install and, for T-Pot, network review are manual follow-ups.
+#     - Adds Pi-hole, Arcane, OpenVAS/Greenbone, and Plex as LXC containers,
+#       and T-Pot as a VM with its Debian installer ISO attached; all five
+#       are only created (and templates/images downloaded), never started,
+#       and off by default (ENABLE_*_CT/VM=false) - flip one on and rerun
+#       to provision it. App install and, for T-Pot, network review are
+#       manual follow-ups.
+#     - Fixed apt.conf.d/98-no-nag ("Extra junk after value" on `apt update`):
+#       apt.conf's own quoting rules choked on the escaped double-quotes the
+#       inline sed command needed. Moved the patch logic to a real script
+#       (/usr/local/sbin/pve-nag-patch.sh) that the apt hook just calls by
+#       path instead.
 #   0.0.35  2025-12-27
 #     - Prior version (manual/copy-paste oriented, non-idempotent)
 #--------------------------------------
@@ -97,10 +104,10 @@ ISO_TRAINS=(
 )
 
 # --- New app containers/VMs -------------------------------------------
-# Each of these is *created* (and its template/ISO downloaded) but never
-# started here - finish the OS/app install yourself once you're ready,
-# especially for T-Pot (see its section below before ever booting it).
-ENABLE_PIHOLE_CT=true
+# All off by default. Each is *created* (and its template/ISO downloaded)
+# but never started here - finish the OS/app install yourself once you're
+# ready, especially for T-Pot (see its section below before ever booting it).
+ENABLE_PIHOLE_CT=false
 PIHOLE_VMID=210
 PIHOLE_HOSTNAME=pihole
 PIHOLE_BRIDGE="vmbr0"
@@ -109,7 +116,7 @@ PIHOLE_DISK_GB=4
 PIHOLE_MEMORY_MB=512
 PIHOLE_CORES=1
 
-ENABLE_ARCANE_CT=true
+ENABLE_ARCANE_CT=false
 ARCANE_VMID=211
 ARCANE_HOSTNAME=arcane
 ARCANE_BRIDGE="vmbr0"
@@ -118,7 +125,7 @@ ARCANE_DISK_GB=8
 ARCANE_MEMORY_MB=1024
 ARCANE_CORES=2
 
-ENABLE_TPOT_VM=true
+ENABLE_TPOT_VM=false
 TPOT_VMID=212
 TPOT_HOSTNAME=tpot
 TPOT_BRIDGE="vmbr0"                # honeypot traffic rides this bridge - confirm that's really what you want
@@ -127,7 +134,7 @@ TPOT_DISK_GB=128                   # T-Pot's own recommended minimum
 TPOT_MEMORY_MB=8192
 TPOT_CORES=4
 
-ENABLE_OPENVAS_CT=true
+ENABLE_OPENVAS_CT=false
 OPENVAS_VMID=213
 OPENVAS_HOSTNAME=openvas
 OPENVAS_BRIDGE="vmbr0"
@@ -135,6 +142,15 @@ OPENVAS_STORAGE="local-lvm"
 OPENVAS_DISK_GB=32                 # feed data grows over time; Greenbone suggests generous headroom
 OPENVAS_MEMORY_MB=4096
 OPENVAS_CORES=2
+
+ENABLE_PLEX_CT=false
+PLEX_VMID=214
+PLEX_HOSTNAME=plex
+PLEX_BRIDGE="vmbr0"
+PLEX_STORAGE="local-lvm"
+PLEX_DISK_GB=8                     # OS + app only; bind-mount your media library separately
+PLEX_MEMORY_MB=2048
+PLEX_CORES=2
 
 # Meant to be rerun on a schedule to keep the host patched and templates
 # current. Everything below is idempotent - already-installed packages and
@@ -252,16 +268,24 @@ EOF
 log "Removing subscription nag from the web UI"
 
 WIDGET_JS="/usr/share/javascript/proxmox-widget-toolkit/proxmox-lib.js"
-patch_nag() {
-    [[ -f "$WIDGET_JS" ]] || return 0
-    sed -i.bak "s/data.status.toLowerCase() !== 'active'/false/g" "$WIDGET_JS"
-}
-patch_nag
+NAG_PATCH_SCRIPT="/usr/local/sbin/pve-nag-patch.sh"
+
+# The patch logic lives in its own script rather than inline in the apt
+# hook below - apt.conf has its own quoting dialect that chokes on the
+# embedded double quotes a sed script like this needs (this is what threw
+# "Extra junk after value" the first time around).
+cat > "$NAG_PATCH_SCRIPT" <<EOF
+#!/bin/sh
+dpkg -l pve-manager 2>/dev/null | grep -q '^ii' || exit 0
+sed -i.bak "s/data.status.toLowerCase() !== 'active'/false/g" "$WIDGET_JS" 2>/dev/null || true
+EOF
+chmod +x "$NAG_PATCH_SCRIPT"
+"$NAG_PATCH_SCRIPT"
 
 # pve-manager overwrites proxmox-lib.js on every update, so re-patch it
 # automatically via an apt hook instead of remembering to do it by hand.
-cat > /etc/apt/apt.conf.d/98-no-nag <<'EOF'
-DPkg::Post-Invoke { "dpkg -l pve-manager 2>/dev/null | grep -q ^ii && sed -i.bak \"s/data.status.toLowerCase() !== 'active'/false/g\" /usr/share/javascript/proxmox-widget-toolkit/proxmox-lib.js 2>/dev/null || true"; };
+cat > /etc/apt/apt.conf.d/98-no-nag <<EOF
+DPkg::Post-Invoke { "${NAG_PATCH_SCRIPT}"; };
 EOF
 
 # No service restart needed - proxmox-lib.js is served as a static file, so
@@ -460,6 +484,21 @@ if $ENABLE_OPENVAS_CT; then
     cd greenbone-community-containers && docker compose up -d
   First start pulls a large vulnerability feed (can take a long while) -
   do this deliberately, not as part of unattended maintenance runs.
+EOF
+fi
+
+if $ENABLE_PLEX_CT; then
+    log "Creating Plex LXC (${PLEX_VMID}) - not started"
+    create_lxc_if_missing "$PLEX_VMID" "$PLEX_HOSTNAME" "debian-13" \
+        "$PLEX_BRIDGE" "$PLEX_STORAGE" "$PLEX_DISK_GB" "$PLEX_MEMORY_MB" "$PLEX_CORES" false
+    cat <<EOF
+  Not installed yet. Start the CT, add a bind mount for your media library
+  (pct set ${PLEX_VMID} -mp0 /path/on/host,mp=/data), then inside the CT:
+    curl -fsSL https://downloads.plex.tv/plex-keys/PlexSign.key | gpg --dearmor -o /usr/share/keyrings/plex.gpg
+    echo "deb [signed-by=/usr/share/keyrings/plex.gpg] https://downloads.plex.tv/repo/deb public main" \\
+        > /etc/apt/sources.list.d/plexmediaserver.list
+    apt-get update && apt-get install -y plexmediaserver
+  Hardware transcoding needs GPU passthrough, which isn't set up here.
 EOF
 fi
 
