@@ -1,306 +1,362 @@
 #!/bin/bash
-#  Copyright © 2026 Christopher Gray 
+#  Copyright © 2026 Christopher Gray
 #--------------------------------------
-# Version:  0.0.35
-# Last Updated:  12/27/2025
+# Version:  0.2.0
+# Last Updated:  2026-09-26
 #--------------------------------------
 #
-#  Quick start script for initial setup of Proxmox VE 10+
+#  Baseline setup script for Proxmox VE 9.x (Debian trixie)
+#  Idempotent: safe to re-run on a schedule (weekly/monthly) to patch the
+#  host and refresh LXC templates / ISOs without redoing completed work.
 #
 #--------------------------------------
-# wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/init_proxmox_install.sh && chmod +x /root/init_proxmox_install.sh && /root/init_proxmox_install.sh
-
-#-- System Cleanup --
-# wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/sys_cleanup.sh && chmod +x /root/sys_cleanup.sh && /root/sys_cleanup.sh
-
-#-- Update Time (chronyd) --
-# https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/ntp.conf
-timedatectl set-timezone America/New_York
-#echo 'server 0.pool.ntp.org iburst' > /etc/chrony/sources.d/nist.sources
-
-#--------- US based NTP servers ---------------------------
-# https://gist.github.com/mutin-sa/eea1c396b1e610a2da1e5550d94b0453
-#-- Cloudflare --
-echo 'server time.cloudflare.com iburst' >> /etc/chrony/sources.d/cloudflare.sources
-echo 'server 162.159.200.1 iburst' >> /etc/chrony/sources.d/cloudflare.sources
-echo 'server 162.159.200.123 iburst' >> /etc/chrony/sources.d/cloudflare.sources
-echo 'server 2606:4700:f1::1 iburst' >> /etc/chrony/sources.d/cloudflare.sources
-echo 'server 2606:4700:f1::123 iburst' >> /etc/chrony/sources.d/cloudflare.sources
-
-#-- Google -- https://developers.google.com/time
-echo 'server time.google.com iburst' >> /etc/chrony/sources.d/google.sources
-echo 'server 216.239.35.4 iburst' >> /etc/chrony/sources.d/google.sources
-echo 'server 216.239.35.8 iburst' >> /etc/chrony/sources.d/google.sources
-echo 'server 2606:4700:f1::1 iburst' >> /etc/chrony/sources.d/google.sources
-echo 'server 2606:4700:f1::123 iburst' >> /etc/chrony/sources.d/google.sources
-
-#-- NIST -- https://tf.nist.gov/tf-cgi/servers.cgi
-echo 'server time-d-g.nist.gov iburst' >> /etc/chrony/sources.d/nist.sources
-echo 'server time-d-wwv.nist.gov iburst' >> /etc/chrony/sources.d/nist.sources
-echo 'server time-d-b.nist.gov iburst' >> /etc/chrony/sources.d/nist.sources
-echo 'server time.nist.gov iburst' >> /etc/chrony/sources.d/nist.sources
-
-echo 'server 132.163.96.1 iburst' >> /etc/chrony/sources.d/nist.sources
-echo 'server 129.6.15.25 iburst' >> /etc/chrony/sources.d/nist.sources
-echo 'server 129.6.15.29 iburst' >> /etc/chrony/sources.d/nist.sources
-echo 'server 2610:20:6f97:97::4 iburst' >> /etc/chrony/sources.d/nist.sources
-echo 'server 2610:20:6f15:15::27 iburst' >> /etc/chrony/sources.d/nist.sources
-
-
-#---- Cloud NTP Servers ----
-#-- AWS --
-#echo 'server 169.254.169.123 iburst' > /etc/chrony/sources.d/aws.sources
-#echo 'server fd00:ec2::123 iburst' > /etc/chrony/sources.d/aws.sources
-#-- GCP --
-#echo 'server time.google.com iburst' > /etc/chrony/sources.d/gcp.sources
-#echo 'server 216.239.32.15 iburst' > /etc/chrony/sources.d/gcp.sources
-#-- Azure --
-#echo 'server time.windows.com iburst' > /etc/chrony/sources.d/azure.sources
-
-
-systemctl restart chronyd
-# chronyc sources
-chronyc sources -v
-chronyc tracking
-chronyc activity
-
-#---- DNS ---- (3 DNS servers only allowed)
-# by default, Proxmox uses the local dns server found during setup 192.168.1.1
-
-#-- Cloudflare -- https://blog.cloudflare.com/introducing-1-1-1-1-for-families/
-#echo 'nameserver 1.1.1.3' >> /etc/resolv.conf
-echo 'nameserver 1.0.0.3' >> /etc/resolv.conf
-#echo 'nameserver 2606:4700:4700::1113' >> /etc/resolv.conf
-#echo 'nameserver 2606:4700:4700::1003' >> /etc/resolv.conf
-
-#-- OpenDNS - Family Shield --- https://www.opendns.com/family-shield/
-#echo 'nameserver 208.67.222.123' >> /etc/resolv.conf
-#echo 'nameserver 208.67.220.123' >> /etc/resolv.conf
-#echo 'nameserver 2620:0:ccc::2' >> /etc/resolv.conf
-echo 'nameserver 2620:0:ccd::2' >> /etc/resolv.conf
-
-
+# Changelog
+#   0.2.0  2026-09-26
+#     - Rewritten for idempotency: safe to rerun on a schedule (cron-friendly)
+#     - Fixed Cloudflare IPv6 addresses copy-pasted into google.sources
+#     - Fixed chrony service name (chronyd -> chrony)
+#     - Dropped netselect-apt (targeted unstable "sid", slow mirror probing)
+#       in favor of a static deb.debian.org deb822 source for CODENAME
+#     - Disable pve-enterprise/ceph enterprise repos instead of erroring on them
+#     - Fix "No valid subscription" nag: patch proxmox-lib.js + apt hook so
+#       it re-patches itself after every pve-manager upgrade
+#     - LXC templates: download the latest matching build instead of a
+#       pinned filename that 404s once upstream publishes a new one; skip
+#       download if already present locally
+#     - ISOs: opt-in, auto-detect latest point release per version train
+#       (e.g. 24.04.3 -> 24.04.4), skip if current, delete superseded files
+#     - Consolidated apt/package installs into single calls (fewer dependency
+#       re-resolves), added --no-install-recommends, aria2 for multi-
+#       connection ISO downloads
+#     - Config values (timezone, DNS, feature toggles) moved to one block
+#       at the top; destructive local-lvm merge now off by default and
+#       requires interactive confirmation
+#     - Added fail2ban jail for the Proxmox web UI (pvedaemon auth failures)
+#     - Self-installs a weekly cron entry (Sun 03:00) for this script,
+#       replacing any prior entry rather than duplicating it
+#   0.0.35  2025-12-27
+#     - Prior version (manual/copy-paste oriented, non-idempotent)
 #--------------------------------------
-# Username: root 
-# Password: The password you set during the Proxmox installation 
-# Access URL: https://<your-proxmox-ip>:8006 
+# wget -O /root/init_proxmox_install.sh https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/init_proxmox_install.sh
+# chmod +x /root/init_proxmox_install.sh && /root/init_proxmox_install.sh
 
+set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
-# https://pve.proxmox.com/wiki/Package_Repositories#sysadmin_no_subscription_repo
+if [[ $EUID -ne 0 ]]; then
+    echo "Run this as root (or via sudo -i) on the Proxmox host." >&2
+    exit 1
+fi
 
+log() { echo -e "\n==> $*"; }
 
-# sudo nano /etc/apt/sources.list.d/proxmox.sources
+#======================================================================
+# CONFIG - edit before running
+#======================================================================
+TIMEZONE="America/New_York"
+DNS_SERVERS=(1.0.0.1 208.67.222.222 2001:4860:4860::8888)     # resolv.conf only honors the first 3; last is Google IPv6
 
-# add the following to the file
-echo "Types: deb
+INSTALL_BASE_TOOLS=true                    # htop, tmux, curl, etc.
+INSTALL_FAIL2BAN=true                      # + a Proxmox-specific jail
+INSTALL_PYTHON_VENV=false                  # opt-in: pymongo/validators in a venv
+DOWNLOAD_ISOS=false                        # opt-in: large files, off by default
+REMOVE_LOCAL_LVM=false                     # DESTRUCTIVE: merges local-lvm into root, off by default
+
+INSTALL_CRON_JOB=true                      # self-install a weekly cron entry for this script
+CRON_SCHEDULE="0 3 * * 0"                  # Sunday 03:00
+
+LXC_TEMPLATE_PATTERNS=(alpine-3 debian-13 ubuntu-24.04)
+
+# "version-train prefix|directory listing to check|regex matching that train's filenames"
+# On each run, the newest file matching the regex is downloaded (skipped if
+# already present) and any other local file sharing the prefix is deleted -
+# so 24.04.3 gets replaced by 24.04.4 automatically instead of piling up.
+ISO_TRAINS=(
+    "ubuntu-24.04|https://releases.ubuntu.com/24.04/|^ubuntu-24\.04\.[0-9]+-live-server-amd64\.iso$"
+)
+
+# Meant to be rerun on a schedule to keep the host patched and templates
+# current. Everything below is idempotent - already-installed packages and
+# already-downloaded files are skipped. If INSTALL_CRON_JOB is true, the
+# script installs its own weekly cron entry the first time it runs (see
+# bottom of file).
+
+#======================================================================
+# Time sync
+#======================================================================
+log "Setting timezone to ${TIMEZONE}"
+timedatectl set-timezone "${TIMEZONE}"
+
+log "Writing chrony NTP sources (Cloudflare, Google, NIST)"
+mkdir -p /etc/chrony/sources.d
+
+cat > /etc/chrony/sources.d/cloudflare.sources <<'EOF'
+server time.cloudflare.com iburst
+server 162.159.200.1 iburst
+server 162.159.200.123 iburst
+server 2606:4700:f1::1 iburst
+server 2606:4700:f1::123 iburst
+EOF
+
+cat > /etc/chrony/sources.d/google.sources <<'EOF'
+server time.google.com iburst
+server 216.239.35.4 iburst
+server 216.239.35.8 iburst
+server 2001:4860:4806::4 iburst
+server 2001:4860:4806::8 iburst
+EOF
+
+cat > /etc/chrony/sources.d/nist.sources <<'EOF'
+server time-d-g.nist.gov iburst
+server time-d-wwv.nist.gov iburst
+server time-d-b.nist.gov iburst
+server time.nist.gov iburst
+server 132.163.96.1 iburst
+server 129.6.15.25 iburst
+server 129.6.15.29 iburst
+server 2610:20:6f97:97::4 iburst
+server 2610:20:6f15:15::27 iburst
+EOF
+
+systemctl restart chrony
+chronyc sources
+
+# Known Debian/Proxmox quirk: chrony's if-up hook uses `set -e` and can break
+# DHCP-triggered network restarts. If you hit that, comment out `set -e` in
+# /etc/network/if-up.d/chrony.
+
+#======================================================================
+# DNS (only takes effect if this NIC isn't DHCP-managed for DNS)
+#======================================================================
+log "Writing resolv.conf with ${DNS_SERVERS[*]}"
+[[ -f /etc/resolv.conf.orig ]] || cp /etc/resolv.conf /etc/resolv.conf.orig 2>/dev/null || true
+{
+    for ns in "${DNS_SERVERS[@]}"; do echo "nameserver ${ns}"; done
+} > /etc/resolv.conf
+
+#======================================================================
+# APT repositories - no-subscription repo + drop the enterprise nag source
+#======================================================================
+log "Configuring apt repositories for pve-no-subscription"
+
+CODENAME="$(. /etc/os-release; echo "${VERSION_CODENAME}")"
+
+disable_repo_file() {
+    # Comment out an enterprise repo file in place instead of deleting it,
+    # so `apt-get update` stops erroring on the paywalled URL.
+    local f="$1"
+    [[ -f "$f" ]] || return 0
+    sed -i 's/^\([^#]\)/#\1/' "$f"
+}
+
+disable_repo_file /etc/apt/sources.list.d/pve-enterprise.list
+disable_repo_file /etc/apt/sources.list.d/pve-enterprise.sources
+disable_repo_file /etc/apt/sources.list.d/ceph.list
+
+cat > /etc/apt/sources.list.d/proxmox.sources <<EOF
+Types: deb
 URIs: http://download.proxmox.com/debian/pve
-Suites: trixie
+Suites: ${CODENAME}
 Components: pve-no-subscription
-Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg" > /etc/apt/sources.list.d/proxmox.sources
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+EOF
 
-# cat > /etc/apt/sources.list.d/proxmox.sources <<EOF
-# Types: deb
-# URIs: http://download.proxmox.com/debian/pve
-# Suites: trixie
-# Components: pve-no-subscription
-# Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
-# EOF
-
-
-# add the following to the file
-# sudo nano /etc/apt/sources.list.d/ceph.sources 
-echo "Types: deb
+cat > /etc/apt/sources.list.d/ceph.sources <<EOF
+Types: deb
 URIs: http://download.proxmox.com/debian/ceph-squid
-Suites: trixie
+Suites: ${CODENAME}
 Components: no-subscription
-Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg" > /etc/apt/sources.list.d/ceph.sources
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+EOF
 
+# Standard Debian repos (security/updates) via the CDN-backed default mirror -
+# faster and more reliable than probing mirrors with netselect-apt.
+cat > /etc/apt/sources.list.d/debian.sources <<EOF
+Types: deb
+URIs: https://deb.debian.org/debian
+Suites: ${CODENAME} ${CODENAME}-updates
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-#-- find the fastest debian repo to download from ---
-# https://medium.com/@sm4rthink/proxmox-cheatsheet-b3e92da768bc
-apt install -y netselect-apt
-netselect-apt sid -nc ID -o /etc/apt/sources.list
+Types: deb
+URIs: https://security.debian.org/debian-security
+Suites: ${CODENAME}-security
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+EOF
 
-# https://blog.valqk.com/archives/Proxmox-cheat-sheet-97.html
-#--- update system ---
+#======================================================================
+# Remove the "No valid subscription" nag screen
+#======================================================================
+log "Removing subscription nag from the web UI"
 
-#-- if you cant update b/c you have invalid certs
-#sudo apt -o "Acquire::https::Verify-Peer=false" update
-#sudo apt -o "Acquire::https::Verify-Peer=false" install ca-certificates
+WIDGET_JS="/usr/share/javascript/proxmox-widget-toolkit/proxmox-lib.js"
+patch_nag() {
+    [[ -f "$WIDGET_JS" ]] || return 0
+    sed -i.bak "s/data.status.toLowerCase() !== 'active'/false/g" "$WIDGET_JS"
+}
+patch_nag
 
-apt update
-apt-get install -y apt-transport-https ca-certificates 
-apt-get upgrade -y
+# pve-manager overwrites proxmox-lib.js on every update, so re-patch it
+# automatically via an apt hook instead of remembering to do it by hand.
+cat > /etc/apt/apt.conf.d/98-no-nag <<'EOF'
+DPkg::Post-Invoke { "dpkg -l pve-manager 2>/dev/null | grep -q ^ii && sed -i.bak \"s/data.status.toLowerCase() !== 'active'/false/g\" /usr/share/javascript/proxmox-widget-toolkit/proxmox-lib.js 2>/dev/null || true"; };
+EOF
 
-#https://github.com/CarmineCodes/Proxmox-No-Subscription-No-Problem
+systemctl restart pveproxy
 
-apt-get -y install unattended-upgrades
-dpkg --configure -a
-sudo apt-get dist-upgrade -y
-
-
-#--- clean up ---
+#======================================================================
+# System update (single pass - fewer invocations = fewer dep re-resolves)
+#======================================================================
+log "Updating system"
+apt-get update
+apt-get install -y --no-install-recommends apt-transport-https ca-certificates unattended-upgrades
+apt-get full-upgrade -y
+apt-get autoremove --purge -y
 apt-get autoclean -y
-apt-get autoremove -y
-apt autoremove -y
 
-#---- Download popular / general debian packages ----
-apt install -y cmake
-apt install -y python3-pip
-apt install -y python3-venv
+# Let unattended-upgrades also apply pve-no-subscription security patches.
+sed -i 's#"origin=Debian,codename=${distro_codename}-security"#"origin=Debian,codename=${distro_codename}-security";\n\t"origin=Proxmox,codename=${distro_codename},label=Proxmox";#' \
+    /etc/apt/apt.conf.d/50unattended-upgrades 2>/dev/null || true
+systemctl enable -q --now unattended-upgrades
 
-#---- extensions -----
-apt install -y htop nload whois traceroute iotop iftop curl wget tmux unzip 
+#======================================================================
+# Base tools (installed in one shot - much faster than one apt call per pkg)
+#======================================================================
+if $INSTALL_BASE_TOOLS; then
+    log "Installing base tools"
+    # Note: Proxmox best practice is to keep the host minimal and run
+    # workloads in LXC/VMs instead - trim this list to taste.
+    apt-get install -y --no-install-recommends \
+        htop nload whois traceroute iotop iftop curl wget tmux unzip aria2
+fi
 
-#--- security ---
-apt install -y fail2ban
+if $INSTALL_FAIL2BAN; then
+    log "Installing fail2ban with a Proxmox web UI jail"
+    apt-get install -y --no-install-recommends fail2ban
 
-#--- python ---
-pip3 install pymongo
-pip3 install validators
+    cat > /etc/fail2ban/filter.d/proxmox.conf <<'EOF'
+[Definition]
+failregex = pvedaemon\[.*authentication failure; rhost=<HOST> user=.* msg=.*
+ignoreregex =
+EOF
 
-mkdir -p /opt/python3/venv/bin
-mkdir -p /opt/ml_data/nltk_data
+    cat > /etc/fail2ban/jail.d/proxmox.conf <<'EOF'
+[proxmox]
+enabled = true
+port = https,http,8006
+filter = proxmox
+logpath = /var/log/daemon.log
+maxretry = 3
+bantime = 3600
+EOF
+    systemctl restart fail2ban
+fi
 
-#python3 -m venv /tmp/python3/venv && source /tmp/python3/venv/bin/activate            # NEW WAY - Globally shared python env - for general projects
-#pip3 install --upgrade pip
-#exit
+if $INSTALL_PYTHON_VENV; then
+    log "Creating /opt/python3/venv (Debian trixie blocks system-wide pip installs)"
+    apt-get install -y --no-install-recommends python3-venv python3-pip
+    python3 -m venv /opt/python3/venv
+    /opt/python3/venv/bin/pip install --upgrade pip pymongo validators
+fi
 
-#--- Download LXC templates --- https://pve.proxmox.com/wiki/Linux_Container
+#======================================================================
+# LXC templates - always grab the newest matching build, not a pinned
+# filename that goes stale (and 404s) the moment upstream publishes one.
+#======================================================================
+log "Refreshing LXC template index"
 pveam update
-pveam available
 
-pveam download local alpine-3.22-default_20250617_amd64.tar.xz
+download_latest_template() {
+    local pattern="$1"
+    local latest
+    latest="$(pveam available -section system 2>/dev/null | awk '{print $2}' | grep "^${pattern}" | sort -V | tail -n1)"
+    if [[ -z "$latest" ]]; then
+        echo "  no template found matching '${pattern}'"
+        return
+    fi
+    if pveam list local 2>/dev/null | grep -q "$latest"; then
+        echo "  already have ${latest}"
+        return
+    fi
+    echo "  downloading ${latest}"
+    pveam download local "$latest"
+}
 
-#pveam download local debian-12-standard_12.12-1_amd64.tar.zst
-pveam download local debian-13-standard_13.1-2_amd64.tar.zst
-
-pveam download local ubuntu-22.04-standard_22.04-1_amd64.tar.zst
-#pveam download local ubuntu-24.04-standard_24.04-2_amd64.tar.zst
-
-#pveam download local rockylinux-9-default_20240912_amd64.tar.xz
-#pveam download local rockylinux-10-default_20251001_amd64.tar.xz
-
+for pattern in "${LXC_TEMPLATE_PATTERNS[@]}"; do
+    download_latest_template "$pattern"
+done
 pveam list local
 
-echo "
-#--- download OCI container images ----
-1) On left side, click the storage drive: 'local'
-2) Click 'CT Templates'
-3) Click 'Pull from OCI Registory'
+cat <<'EOF'
 
+--- OCI container images (Docker Hub) ---
+Storage 'local' -> CT Templates -> Pull from OCI Registry, e.g.:
+  portainer/portainer-ce:latest
+  linuxserver/plex:latest
+  nginx:latest / redis:latest / mongo:latest
+EOF
 
-# Example Containers
-#-- servers --
-# portainer/portainer-ce:latest
-# nginx:latest
-# redis:latest
-# mongo:latest
+#======================================================================
+# VM ISOs (opt-in; multi-connection download via aria2 for speed)
+#======================================================================
+sync_iso_train() {
+    local prefix="$1" listing_url="$2" pattern="$3"
+    local dest_dir="/var/lib/vz/template/iso"
+    local latest
+    latest="$(curl -fsSL "$listing_url" \
+        | grep -oE 'href="[^"]+"' | sed -E 's/^href="//;s/"$//' \
+        | grep -E "$pattern" | sort -V | tail -n1)"
+    if [[ -z "$latest" ]]; then
+        echo "  could not determine latest ISO for ${prefix}"
+        return
+    fi
+    if [[ -f "${dest_dir}/${latest}" ]]; then
+        echo "  already have latest: ${latest}"
+        return
+    fi
+    echo "  downloading ${latest}"
+    aria2c -x4 -s4 -c -d "$dest_dir" "${listing_url}${latest}"
+    find "$dest_dir" -maxdepth 1 -type f -name "${prefix}*" ! -name "$latest" -print -delete
+}
 
-#-- media --
-# linuxserver/plex:latest
+if $DOWNLOAD_ISOS; then
+    log "Syncing ISOs to latest point release per version train"
+    apt-get install -y --no-install-recommends curl aria2
+    mkdir -p /var/lib/vz/template/iso
+    for train in "${ISO_TRAINS[@]}"; do
+        IFS='|' read -r prefix listing_url pattern <<< "$train"
+        sync_iso_train "$prefix" "$listing_url" "$pattern"
+    done
+fi
 
+#======================================================================
+# DESTRUCTIVE (opt-in): merge local-lvm into the root volume
+#======================================================================
+if $REMOVE_LOCAL_LVM; then
+    if [[ -e /dev/pve/data ]]; then
+        log "About to permanently delete the local-lvm volume and grow root."
+        read -rp "Type YES to continue: " confirm
+        if [[ "$confirm" == "YES" ]]; then
+            lvremove -y /dev/pve/data
+            lvresize -l +100%FREE /dev/pve/root
+            resize2fs /dev/mapper/pve-root
+        else
+            echo "Skipped."
+        fi
+    else
+        echo "No /dev/pve/data found - already merged or using a different storage layout, skipping."
+    fi
+fi
 
-"
+#======================================================================
+# Self-install weekly cron job
+#======================================================================
+if $INSTALL_CRON_JOB; then
+    log "Ensuring cron entry exists (${CRON_SCHEDULE})"
+    SCRIPT_PATH="$(readlink -f "$0" 2>/dev/null || echo "/root/init_proxmox_install.sh")"
+    CRON_LINE="${CRON_SCHEDULE} ${SCRIPT_PATH} >> /var/log/pve-maintenance.log 2>&1"
+    ( crontab -l 2>/dev/null | grep -vF "$SCRIPT_PATH" ; echo "$CRON_LINE" ) | crontab -
+fi
 
-#--- automated downloads... tbd ---
-#cd /var/lib/vz/template/cache
-
-#pct pull <storage_id> <oci_image_url>
-
-# Plex - https://hub.docker.com/r/linuxserver/plex
-#pct pull local linuxserver/plex
-#pct pull local local:vztmpl/plex_latest.tar
-# lscr.io/linuxserver/plex:latest
-
-# pct create <vmid> local:vztmpl/<template_filename.tar.zst> --hostname plexserver --memory 2048 --cores 2 --net0 name=eth0,bridge=vmbr0,ip=dhcp --unprivileged 1 --password <your_password>
-
-
-#--- create LXC ---
-#pct create 999 local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst
-
-#---- Download ISO's for Virtual Machines ----
-cd /var/lib/vz/template/iso
-
-#--- ubuntu ---  https://releases.ubuntu.com/
-#wget https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso
-wget https://releases.ubuntu.com/24.04/ubuntu-24.04.3-live-server-amd64.iso
-# wget https://download.sys.truenas.net/TrueNAS-SCALE-Goldeye/25.10.0.1/TrueNAS-SCALE-25.10.0.1.iso
-
-#-- arch linux -- https://archlinux.org/releng/releases/
-# Downloads - https://archlinux.org/download/
-# wget https://fastly.mirror.pkgbuild.com/iso/2025.11.01/archlinux-x86_64.iso
-
-#-- debian -- https://www.debian.org/distrib/
-# wget https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.2.0-amd64-netinst.iso
-
-#--- rocky --- https://rockylinux.org/download
-# wget https://download.rockylinux.org/pub/rocky/9/isos/aarch64/Rocky-9.6-aarch64-minimal.iso
-# wget https://download.rockylinux.org/pub/rocky/10/isos/aarch64/Rocky-10.0-aarch64-minimal.iso
-
-#------
-ls -l
-
-echo "\r\n \r\n Done!, it is highly recommended to reboot the system.\r\n"
-
-# admin guide
-# https://pve.proxmox.com/pve-docs/chapter-sysadmin.html#system_software_updates
-
-echo "
-
-Fix partitions - Free up space
-https://youtu.be/_u8qTN3cCnQ?si=72xK2Vo3EiPyIVh8&t=885
-
-1) Login to Webui. ie:  192.168.1.1:8006
-
-2) Click 'Datacenter' 
-3) Click 'Storage'
-4) Click 'local-lvm'
-5) Click 'Remove' button above
-
-Once you delete this partition, press enter and this will resize the existing partition. 
-
-"
-
-# 6) Click the server (under 'Datacenter' on the left)
-# 7) Click 'Shell'
-# 8) Type the following: 
-#     a) lvremove /dev/pve/data
-#     b) lvresize -l +100%FREE /dev/pve/root
-#     c) resize2fs /dev/mapper/pve-root
-
-read -p "Press Enter to continue..."
-
-lvremove /dev/pve/data
-lvresize -l +100%FREE /dev/pve/root
-resize2fs /dev/mapper/pve-root
-
-
-echo " 
-
-DONE!  Your main partition should be the full size of the disk 
-
-
-#----- Notifications -------
-If using Gmail, create a Gmail Specific password
-https://myaccount.google.com/apppasswords
-
-------
-The Test email will be from:  'Proxmox VE'
-
-
-"
-
-
-apt-get update && apt-get dist-upgrade -y && apt-get autoremove && apt-get autoclean
-apt-get upgrade -y
-
-#----
-
-echo " If you have networking issues with Chrony.... "
-echo " remark out: 'set -e' in the file: /etc/network/if-up.d/chrony.  That will fix it"
-
-echo "
-
-
-"
+log "Done. A reboot is recommended to pick up the new kernel/timezone cleanly."
