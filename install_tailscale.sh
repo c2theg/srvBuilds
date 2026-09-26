@@ -16,8 +16,10 @@ echo "
                             |_|                                             |___|
 
 
-Version:  0.4.0
+Version:  0.4.1
 Last Updated:  9/26/2026
+Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_tailscale.sh && chmod u+x install_tailscale.sh
+
 Updated by: AI (Claude Sonnet 5)
 Notes: Ported fix_tailscale.sh fixes; fixed route capture bug; IPv6 RA, BBR, self-heal, explicit flags
 
