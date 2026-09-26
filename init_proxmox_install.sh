@@ -34,6 +34,11 @@
 #     - Added fail2ban jail for the Proxmox web UI (pvedaemon auth failures)
 #     - Self-installs a weekly cron entry (Sun 03:00) for this script,
 #       replacing any prior entry rather than duplicating it
+#     - Prunes systemd journal + rotated logs older than 30 days, and
+#       rotates its own maintenance log via logrotate
+#     - Adds a daily uptime-check cron line that reboots after 60 days;
+#       disabled by default but always present in crontab (commented out)
+#       so enabling it later is a one-line edit
 #   0.0.35  2025-12-27
 #     - Prior version (manual/copy-paste oriented, non-idempotent)
 #--------------------------------------
@@ -64,6 +69,12 @@ REMOVE_LOCAL_LVM=false                     # DESTRUCTIVE: merges local-lvm into 
 
 INSTALL_CRON_JOB=true                      # self-install a weekly cron entry for this script
 CRON_SCHEDULE="0 3 * * 0"                  # Sunday 03:00
+
+CLEAN_OLD_LOGS=true                        # journal + rotated logs older than LOG_RETENTION_DAYS
+LOG_RETENTION_DAYS=30
+
+REBOOT_AFTER_DAYS=60                       # reboot once uptime reaches this many days
+ENABLE_REBOOT_CRON=false                   # off by default; the cron line is still installed, just commented out
 
 LXC_TEMPLATE_PATTERNS=(alpine-3 debian-13 ubuntu-24.04)
 
@@ -350,13 +361,51 @@ if $REMOVE_LOCAL_LVM; then
 fi
 
 #======================================================================
-# Self-install weekly cron job
+# Log cleanup - cap the journal and prune old rotated logs
+#======================================================================
+if $CLEAN_OLD_LOGS; then
+    log "Pruning journal and rotated logs older than ${LOG_RETENTION_DAYS} days"
+    journalctl --vacuum-time="${LOG_RETENTION_DAYS}d" >/dev/null
+
+    # Only touches already-rotated/compressed logs (*.gz, *.1, *.old), never
+    # the live in-use log files.
+    find /var/log -type f \( -name "*.gz" -o -name "*.[0-9]" -o -name "*.old" \) \
+        -mtime "+${LOG_RETENTION_DAYS}" -delete
+
+    cat > /etc/logrotate.d/pve-maintenance <<EOF
+/var/log/pve-maintenance.log {
+    weekly
+    rotate 4
+    maxage ${LOG_RETENTION_DAYS}
+    compress
+    missingok
+    notifempty
+}
+EOF
+fi
+
+#======================================================================
+# Self-install cron jobs: weekly maintenance run + optional 60-day reboot
+#
+# The reboot check is a daily uptime test rather than a fixed calendar
+# interval, since cron has no native "every N days" field and month
+# lengths vary. It's harmless to leave enabled=false: the line is written
+# into crontab either way, just commented out, so it's one edit away.
 #======================================================================
 if $INSTALL_CRON_JOB; then
-    log "Ensuring cron entry exists (${CRON_SCHEDULE})"
+    log "Updating crontab (maintenance @ ${CRON_SCHEDULE}; reboot-after-${REBOOT_AFTER_DAYS}d ${ENABLE_REBOOT_CRON})"
     SCRIPT_PATH="$(readlink -f "$0" 2>/dev/null || echo "/root/init_proxmox_install.sh")"
-    CRON_LINE="${CRON_SCHEDULE} ${SCRIPT_PATH} >> /var/log/pve-maintenance.log 2>&1"
-    ( crontab -l 2>/dev/null | grep -vF "$SCRIPT_PATH" ; echo "$CRON_LINE" ) | crontab -
+    MAINT_LINE="${CRON_SCHEDULE} ${SCRIPT_PATH} >> /var/log/pve-maintenance.log 2>&1"
+
+    REBOOT_MARKER="# pve-reboot-after-${REBOOT_AFTER_DAYS}d"
+    REBOOT_LINE="0 4 * * * [ \$(awk '{print int(\$1/86400)}' /proc/uptime) -ge ${REBOOT_AFTER_DAYS} ] && /sbin/reboot ${REBOOT_MARKER}"
+    $ENABLE_REBOOT_CRON || REBOOT_LINE="#${REBOOT_LINE}"
+
+    (
+        crontab -l 2>/dev/null | grep -vF "$SCRIPT_PATH" | grep -vF "$REBOOT_MARKER"
+        echo "$MAINT_LINE"
+        echo "$REBOOT_LINE"
+    ) | crontab -
 fi
 
 log "Done. A reboot is recommended to pick up the new kernel/timezone cleanly."
