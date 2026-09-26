@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Copyright © 2026 Christopher Gray
 #--------------------------------------
-# Version:  0.2.3
+# Version:  0.2.6
 # Last Updated:  2026-09-26
 #--------------------------------------
 #
@@ -65,6 +65,31 @@
 #       anyway), the legacy sources.list gets neutralized like the other
 #       disabled repo files, and a startup check warns if the live
 #       codename still doesn't match trixie.
+#     - Proxmox fail2ban jail: maxretry raised from 3 to 10 failed logins
+#       before banning (bantime unchanged at 3600s / 1 hour)
+#     - Safe cleanup: `apt-get clean` added alongside autoclean; LXC
+#       template downloads now prune older local copies of the same
+#       pattern instead of leaving every version around forever
+#     - Interactive-only cleanup (gated on a real tty, so cron never sees
+#       it and nothing is ever auto-deleted): lists ad-hoc backups in
+#       /var/lib/vz/dump with an optional age-based delete, and prints a
+#       CT/VM inventory with an optional destroy-by-ID prompt (double
+#       confirmed per ID)
+#     - Performance tuning: TCP BBR (net.core.default_qdisc=fq +
+#       tcp_congestion_control=bbr) plus larger TCP buffer sysctls,
+#       vm.swappiness lowered to 10, weekly fstrim.timer, irqbalance, and
+#       an opt-in (off by default) CPU governor=performance switch. VMs
+#       this script creates (T-Pot) now get --cpu host, virtio-scsi-single
+#       with iothread=1, and multiqueue networking matched to core count
+#     - Jumbo frames (MTU 9000): detect-then-apply, never forced. Sends a
+#       don't-fragment ping at full jumbo size to the default gateway;
+#       only if that succeeds does it apply MTU 9000 to the bridge and its
+#       port(s), and it does so via a systemd oneshot unit rather than
+#       editing /etc/network/interfaces (a bad hand-edit there can break
+#       the box's only network path; the unit fails safe at 1500 MTU
+#       instead). Re-verifies connectivity immediately after applying and
+#       automatically rolls back (disables the unit, resets MTU) if that
+#       check fails.
 #   0.0.35  2025-12-27
 #     - Prior version (manual/copy-paste oriented, non-idempotent)
 #--------------------------------------
@@ -73,6 +98,15 @@
 
 set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
+
+# Cron runs this with no tty on stdin; a human at a terminal has one. Used
+# to gate the destructive-ish cleanup prompts near the end of the script so
+# they only ever show up on a manual run, never unattended.
+if [[ -t 0 ]]; then
+    IS_INTERACTIVE=true
+else
+    IS_INTERACTIVE=false
+fi
 
 if [[ $EUID -ne 0 ]]; then
     echo "Run this as root (or via sudo -i) on the Proxmox host." >&2
@@ -116,6 +150,21 @@ LOG_RETENTION_DAYS=30
 
 REBOOT_AFTER_DAYS=60                       # reboot once uptime reaches this many days
 ENABLE_REBOOT_CRON=false                   # off by default; the cron line is still installed, just commented out
+
+# --- Performance tuning -------------------------------------------------
+# Each is a widely-recommended, low-risk default; real tradeoffs are noted.
+ENABLE_BBR=true                            # TCP congestion control - helps WAN/VPN throughput, no real downside
+TUNE_SWAPPINESS=true                       # less eager to swap out VM/CT memory while RAM is available
+SWAPPINESS=10                              # kernel default is 60
+ENABLE_FSTRIM_TIMER=true                   # weekly SSD/thin-storage trim; harmless no-op on spinning disks
+INSTALL_IRQBALANCE=true                    # spread interrupt load across cores; no-op on single-core
+CPU_GOVERNOR_PERFORMANCE=false             # off by default: trades power draw/heat/fan noise for lower latency
+VM_CPU_TYPE="host"                         # near-native CPU perf for VMs this script creates - don't use "host"
+                                            # if you might live-migrate to different-model CPU hardware later
+
+DETECT_JUMBO_FRAMES=true                   # only applies MTU 9000 if a don't-fragment ping to the gateway at
+                                            # that size actually succeeds end-to-end; never forced
+PRIMARY_BRIDGE="vmbr0"                     # bridge (and its underlying port(s)) to test/apply jumbo frames on
 
 LXC_TEMPLATE_PATTERNS=(alpine-3 debian-13 ubuntu-24.04)
 
@@ -335,11 +384,131 @@ apt-get install -y --no-install-recommends apt-transport-https ca-certificates u
 apt-get full-upgrade -y
 apt-get autoremove --purge -y
 apt-get autoclean -y
+apt-get clean                              # wipes the whole .deb cache, not just superseded packages
 
 # Let unattended-upgrades also apply pve-no-subscription security patches.
 sed -i 's#"origin=Debian,codename=${distro_codename}-security"#"origin=Debian,codename=${distro_codename}-security";\n\t"origin=Proxmox,codename=${distro_codename},label=Proxmox";#' \
     /etc/apt/apt.conf.d/50unattended-upgrades 2>/dev/null || true
 systemctl enable -q --now unattended-upgrades
+
+#======================================================================
+# Performance tuning - host-level, and defaults applied to VMs/CTs this
+# script creates.
+#======================================================================
+if $ENABLE_BBR; then
+    log "Enabling TCP BBR congestion control"
+    cat > /etc/modules-load.d/bbr.conf <<'EOF'
+tcp_bbr
+EOF
+    modprobe tcp_bbr 2>/dev/null || true
+    cat > /etc/sysctl.d/99-bbr.conf <<'EOF'
+net.core.default_qdisc = fq
+net.ipv4.tcp_congestion_control = bbr
+# Larger TCP buffers - pairs with BBR, mainly helps high-bandwidth/high-
+# latency links (WAN, VPN) and costs negligible RAM on a hypervisor.
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.ipv4.tcp_rmem = 4096 87380 16777216
+net.ipv4.tcp_wmem = 4096 65536 16777216
+net.core.netdev_max_backlog = 16384
+net.ipv4.tcp_slow_start_after_idle = 0
+EOF
+    sysctl -p /etc/sysctl.d/99-bbr.conf >/dev/null
+fi
+
+if $TUNE_SWAPPINESS; then
+    log "Setting vm.swappiness to ${SWAPPINESS} (default is 60)"
+    cat > /etc/sysctl.d/99-swappiness.conf <<EOF
+vm.swappiness = ${SWAPPINESS}
+EOF
+    sysctl -p /etc/sysctl.d/99-swappiness.conf >/dev/null
+fi
+
+if $ENABLE_FSTRIM_TIMER; then
+    log "Enabling weekly fstrim"
+    systemctl enable -q --now fstrim.timer
+fi
+
+if $INSTALL_IRQBALANCE; then
+    log "Installing irqbalance to spread interrupt load across cores"
+    apt-get install -y --no-install-recommends irqbalance
+    systemctl enable -q --now irqbalance
+fi
+
+if $CPU_GOVERNOR_PERFORMANCE; then
+    log "Setting CPU governor to performance"
+    apt-get install -y --no-install-recommends cpufrequtils
+    cat > /etc/default/cpufrequtils <<'EOF'
+GOVERNOR="performance"
+EOF
+    systemctl restart cpufrequtils 2>/dev/null || true
+fi
+
+if $DETECT_JUMBO_FRAMES; then
+    log "Checking whether jumbo frames (MTU 9000) work end-to-end on ${PRIMARY_BRIDGE}"
+    # A don't-fragment ping at full jumbo size to the default gateway is the
+    # standard way to confirm the whole L2 path (this NIC + the switch)
+    # actually supports it. If it fails, NOTHING is touched - an MTU
+    # mismatch silently blackholes traffic on the box's own management NIC.
+    GATEWAY_IP="$(ip route show default 2>/dev/null | awk '/default/ {print $3; exit}')"
+    JUMBO_OK=false
+    if [[ -n "$GATEWAY_IP" ]]; then
+        # 8972-byte payload + 20 (IP) + 8 (ICMP) = 9000-byte frame; -M do = don't fragment
+        if ping -M do -s 8972 -c 3 -W 2 "$GATEWAY_IP" >/dev/null 2>&1; then
+            JUMBO_OK=true
+        fi
+    fi
+
+    if ! $JUMBO_OK; then
+        echo "  not confirmed via gateway ${GATEWAY_IP:-<none found>} - leaving MTU at default"
+    elif [[ ! -d "/sys/class/net/${PRIMARY_BRIDGE}" ]]; then
+        echo "  bridge ${PRIMARY_BRIDGE} not found - skipping"
+    else
+        echo "  confirmed to ${GATEWAY_IP} - applying MTU 9000"
+        JUMBO_PORTS=()
+        if [[ -d "/sys/class/net/${PRIMARY_BRIDGE}/brif" ]]; then
+            JUMBO_PORTS=($(ls "/sys/class/net/${PRIMARY_BRIDGE}/brif" 2>/dev/null))
+        fi
+
+        # Applied via a systemd unit rather than by hand-editing
+        # /etc/network/interfaces - a bad edit there can break the only
+        # network path back into this host, whereas a oneshot unit fails
+        # safe (the interface just stays at the default 1500 MTU).
+        {
+            echo "[Unit]"
+            echo "Description=Jumbo frame MTU for ${PRIMARY_BRIDGE} (verified via ping at install time)"
+            echo "After=network-online.target"
+            echo "Wants=network-online.target"
+            echo
+            echo "[Service]"
+            echo "Type=oneshot"
+            for p in "${JUMBO_PORTS[@]}"; do
+                echo "ExecStart=/sbin/ip link set dev ${p} mtu 9000"
+            done
+            echo "ExecStart=/sbin/ip link set dev ${PRIMARY_BRIDGE} mtu 9000"
+            echo "RemainAfterExit=yes"
+            echo
+            echo "[Install]"
+            echo "WantedBy=multi-user.target"
+        } > /etc/systemd/system/pve-jumbo-mtu.service
+        systemctl daemon-reload
+        systemctl enable -q --now pve-jumbo-mtu.service || true
+
+        # Re-verify immediately; roll back automatically if anything broke.
+        if ping -M do -s 8972 -c 3 -W 2 "$GATEWAY_IP" >/dev/null 2>&1; then
+            echo "  MTU 9000 applied and re-verified on ${PRIMARY_BRIDGE}"
+        else
+            echo "  WARNING: connectivity check failed after raising MTU - rolling back" >&2
+            systemctl disable -q --now pve-jumbo-mtu.service 2>/dev/null || true
+            rm -f /etc/systemd/system/pve-jumbo-mtu.service
+            systemctl daemon-reload
+            ip link set dev "$PRIMARY_BRIDGE" mtu 1500 2>/dev/null || true
+            for p in "${JUMBO_PORTS[@]}"; do
+                ip link set dev "$p" mtu 1500 2>/dev/null || true
+            done
+        fi
+    fi
+fi
 
 #======================================================================
 # Base tools (installed in one shot - much faster than one apt call per pkg)
@@ -368,7 +537,7 @@ enabled = true
 port = https,http,8006
 filter = proxmox
 logpath = /var/log/daemon.log
-maxretry = 3
+maxretry = 10
 bantime = 3600
 EOF
     systemctl restart fail2ban
@@ -398,10 +567,17 @@ download_latest_template() {
     fi
     if pveam list local 2>/dev/null | grep -q "$latest"; then
         echo "  already have ${latest}"
-        return
+    else
+        echo "  downloading ${latest}"
+        pveam download local "$latest"
     fi
-    echo "  downloading ${latest}"
-    pveam download local "$latest"
+
+    # Prune older local copies matching the same pattern (e.g. a previous
+    # alpine-3.21 once 3.22 is what's current) - same idea as the ISO trains.
+    pveam list local 2>/dev/null | awk '{print $1}' | grep "vztmpl/${pattern}" | grep -vF "$latest" | while read -r old; do
+        echo "  removing superseded template ${old}"
+        pveam remove "$old" || echo "    could not remove ${old}"
+    done
 }
 
 for pattern in "${LXC_TEMPLATE_PATTERNS[@]}"; do
@@ -550,9 +726,10 @@ if $ENABLE_TPOT_VM; then
                 --name "$TPOT_HOSTNAME" \
                 --memory "$TPOT_MEMORY_MB" \
                 --cores "$TPOT_CORES" \
-                --net0 "virtio,bridge=${TPOT_BRIDGE}" \
-                --scsihw virtio-scsi-pci \
-                --scsi0 "${TPOT_STORAGE}:${TPOT_DISK_GB}" \
+                --cpu "$VM_CPU_TYPE" \
+                --net0 "virtio,bridge=${TPOT_BRIDGE},queues=${TPOT_CORES}" \
+                --scsihw virtio-scsi-single \
+                --scsi0 "${TPOT_STORAGE}:${TPOT_DISK_GB},iothread=1" \
                 --ide2 "local:iso/${tpot_iso},media=cdrom" \
                 --boot order=ide2 \
                 --ostype l26 \
@@ -633,6 +810,56 @@ if $INSTALL_CRON_JOB; then
         echo "$MAINT_LINE"
         echo "$REBOOT_LINE"
     ) | crontab -
+fi
+
+#======================================================================
+# Interactive-only cleanup: ad-hoc backups and unused CTs/VMs. Deliberately
+# gated on IS_INTERACTIVE (a real tty on stdin) so cron never sees these
+# prompts and never deletes anything on its own - "unused" isn't something
+# a script should decide unattended.
+#======================================================================
+if $IS_INTERACTIVE; then
+    log "Checking for ad-hoc backups on local storage"
+    backups=()
+    if [[ -d /var/lib/vz/dump ]]; then
+        mapfile -t backups < <(find /var/lib/vz/dump -maxdepth 1 -type f \
+            \( -name "*.vma.zst" -o -name "*.vma.gz" -o -name "*.vma.lzo" -o -name "*.tar.zst" -o -name "*.tar.gz" \) \
+            2>/dev/null)
+    fi
+    if (( ${#backups[@]} > 0 )); then
+        echo "Found ${#backups[@]} backup(s) in /var/lib/vz/dump:"
+        du -h "${backups[@]}" 2>/dev/null || true
+        read -rp "Delete backups older than how many days? (blank to skip): " backup_days
+        if [[ "$backup_days" =~ ^[0-9]+$ ]]; then
+            find /var/lib/vz/dump -maxdepth 1 -type f \
+                \( -name "*.vma.zst" -o -name "*.vma.gz" -o -name "*.vma.lzo" -o -name "*.tar.zst" -o -name "*.tar.gz" -o -name "*.log" -o -name "*.notes" \) \
+                -mtime "+${backup_days}" -print -delete
+        fi
+    else
+        echo "  none found"
+    fi
+
+    log "Container/VM inventory - review before deleting anything"
+    pct list || true
+    echo
+    qm list || true
+    echo
+    read -rp "Enter CT/VM IDs to destroy (space-separated, blank to skip): " destroy_ids
+    for id in $destroy_ids; do
+        if pct status "$id" &>/dev/null; then
+            read -rp "  Really destroy CT ${id}? Type YES: " confirm
+            if [[ "$confirm" == "YES" ]]; then
+                pct destroy "$id" || echo "  failed (snapshots/protection/busy?)"
+            fi
+        elif qm status "$id" &>/dev/null; then
+            read -rp "  Really destroy VM ${id}? Type YES: " confirm
+            if [[ "$confirm" == "YES" ]]; then
+                qm destroy "$id" || echo "  failed (snapshots/protection/busy?)"
+            fi
+        else
+            echo "  ${id}: not found, skipping"
+        fi
+    done
 fi
 
 log "Done. A reboot is recommended to pick up the new kernel/timezone cleanly."
