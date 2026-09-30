@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #-------------------------------------------------------------
-#  Copyright © 2018-2027 - Chris Gray All Rights Reserved.  Proprietary and Confidential.  -  The reproduction, adaptation, distribution, display, or transmission of the content is strictly prohibited, unless authorized by MagnetoAI LLC. All other company & product names may be trademarks of the respective companies with which they are associated.
+#  Copyright © 2018-2027 - Chris Gray All Rights Reserved.  Proprietary and Confidential.  -  The reproduction, adaptation, distribution, display, or transmission of the content is strictly prohibited, unless authorized by Chris Gray. All other company & product names may be trademarks of the respective companies with which they are associated.
 #
 #  Updated: 9/30/2026
 #  Version: 4.0.0
