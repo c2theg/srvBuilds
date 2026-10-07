@@ -2,6 +2,10 @@
 ##############################################################################################
 #   install_gitea.sh — install Gitea (self-hosted GitHub-like server) in Docker
 #
+#   Author: Christopher Gray
+#   Updated: 10/7/2026
+#   Version: 0.2.1
+#
 #   Usage (as root, on a Debian/Ubuntu server):
 #     sudo ./install_gitea.sh                 primary server: installs AND starts Gitea
 #     sudo ./install_gitea.sh --standby       backup server: installs everything, does NOT start
@@ -11,6 +15,13 @@
 #   Options:
 #     --env FILE              settings file (default: gitea.env next to this script)
 #     --allow-placeholders    run even though example.com values are still in the settings
+#     --update                re-download the config files from GitHub, replacing local copies
+#                             (gitea.env is never overwritten)
+#
+#   Config files (gitea_docker-compose.yml, gitea.env.example, nginx_gitea.conf.template) are
+#   downloaded from GitHub next to this script when missing, so this one script is enough.
+#   gitea-backup.sh and gitea-restore.sh are downloaded into $GITEA_LOCAL_BASE/bin on every run.
+#   On the first run it also creates gitea.env from the example and stops so you can edit it.
 #
 #   Safe to re-run: every step checks what already exists and only does what's missing.
 #
@@ -27,8 +38,13 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_DIR="$(dirname "$SCRIPT_DIR")"
 ENV_FILE="$SCRIPT_DIR/gitea.env"
+DEFAULT_ENV=1
+CONFIG_BASE_URL="${CONFIG_BASE_URL:-https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs}"
+SCRIPTS_BASE_URL="${SCRIPTS_BASE_URL:-https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master}"
+BIN_SCRIPTS=(gitea-backup.sh gitea-restore.sh)
+CONFIG_FILES=(gitea_docker-compose.yml gitea.env.example nginx_gitea.conf.template)
+UPDATE=0
 ROLE=primary
 ALLOW_PLACEHOLDERS=0
 TAKEOVER=0
@@ -39,13 +55,14 @@ info()  { printf '    %s\n' "$*"; }
 warn()  { printf '\033[33m    WARNING: %s\033[0m\n' "$*" >&2; }
 die()   { printf '\033[31m    ERROR: %s\033[0m\n' "$*" >&2; exit 1; }
 
-usage() { sed -n '3,15p' "$0" | sed 's/^#//'; exit 0; }
+usage() { sed -n '3,23p' "$0" | sed 's/^#//'; exit 0; }
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --standby)            ROLE=standby ;;
         --takeover)           TAKEOVER=1 ;;
-        --env)                ENV_FILE="${2:?--env needs a file}"; shift ;;
+        --env)                ENV_FILE="${2:?--env needs a file}"; DEFAULT_ENV=0; shift ;;
+        --update)             UPDATE=1 ;;
         --allow-placeholders) ALLOW_PLACEHOLDERS=1 ;;
         -h|--help)            usage ;;
         *)                    die "unknown option: $1 (see --help)" ;;
@@ -80,8 +97,32 @@ bold "1/8  Preflight checks  (role: $ROLE, host: $THIS_HOST)"
 ##############################################################################################
 [[ $EUID -eq 0 ]]            || die "run as root:  sudo $0 $*"
 [[ $(uname -s) == Linux ]]   || die "this installer is for the Linux servers (use workstation/setup-workstation.sh on a Mac)"
-[[ -f $ENV_FILE ]]           || die "settings file not found: $ENV_FILE
-    Create it:  cp $SCRIPT_DIR/gitea.env.example $SCRIPT_DIR/gitea.env   then edit it."
+
+command -v curl >/dev/null || { info "installing curl"; apt-get update -qq && apt-get install -y -qq curl; }
+
+# Download any config file that's missing (or all of them with --update) from GitHub.
+for f in "${CONFIG_FILES[@]}"; do
+    dest="$SCRIPT_DIR/$f"
+    if [[ -f $dest && $UPDATE == 0 ]]; then
+        info "have $f"
+        continue
+    fi
+    tmp="$(mktemp)"
+    if curl -fsSL --retry 3 "$CONFIG_BASE_URL/$f" -o "$tmp" && [[ -s $tmp ]]; then
+        install -m 0644 "$tmp" "$dest"
+        info "downloaded $f"
+        rm -f "$tmp"
+    else
+        rm -f "$tmp"
+        die "couldn't download $CONFIG_BASE_URL/$f"
+    fi
+done
+
+if [[ ! -f $ENV_FILE && $DEFAULT_ENV == 1 ]]; then
+    cp "$SCRIPT_DIR/gitea.env.example" "$ENV_FILE"
+    die "created $ENV_FILE from the example. Edit the lines marked '<-- CHANGE ME', then run this script again."
+fi
+[[ -f $ENV_FILE ]]           || die "settings file not found: $ENV_FILE"
 
 load_env "$ENV_FILE"
 
@@ -110,8 +151,8 @@ for org in $GITEA_ORGS; do
     [[ $org =~ ^[a-z0-9][a-z0-9_.-]*$ ]] || die "bad organization name '$org' (lowercase letters, digits, - _ . only)"
 done
 
-for cmd in curl openssl ss; do
-    command -v "$cmd" >/dev/null || { info "installing $cmd"; apt-get update -qq && apt-get install -y -qq curl openssl iproute2; break; }
+for cmd in openssl ss; do
+    command -v "$cmd" >/dev/null || { info "installing $cmd"; apt-get update -qq && apt-get install -y -qq openssl iproute2; break; }
 done
 
 if ! command -v docker >/dev/null; then
@@ -227,8 +268,18 @@ GITEA_LFS_JWT_SECRET=$GITEA_LFS_JWT_SECRET
 GITEA_OAUTH2_JWT_SECRET=$GITEA_OAUTH2_JWT_SECRET
 EOF
 )
-install -m 0644 "$SCRIPT_DIR/docker-compose.yml" "$GITEA_LOCAL_BASE/docker-compose.yml"
-install -m 0755 "$REPO_DIR/backup/gitea-backup.sh" "$REPO_DIR/backup/gitea-restore.sh" "$GITEA_LOCAL_BASE/bin/"
+install -m 0644 "$SCRIPT_DIR/gitea_docker-compose.yml" "$GITEA_LOCAL_BASE/docker-compose.yml"
+# Backup and restore scripts come straight from GitHub (refreshed on every run).
+for f in "${BIN_SCRIPTS[@]}"; do
+    tmp="$(mktemp)"
+    if curl -fsSL --retry 3 "$SCRIPTS_BASE_URL/$f" -o "$tmp" && [[ -s $tmp ]] && head -c2 "$tmp" | grep -q '^#!'; then
+        install -m 0755 "$tmp" "$GITEA_LOCAL_BASE/bin/$f"
+        rm -f "$tmp"
+    else
+        rm -f "$tmp"
+        die "couldn't download $SCRIPTS_BASE_URL/$f"
+    fi
+done
 info "wrote $GITEA_LOCAL_BASE/.env, docker-compose.yml, bin/gitea-backup.sh, bin/gitea-restore.sh"
 
 ##############################################################################################
