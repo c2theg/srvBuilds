@@ -123,7 +123,11 @@ done
 
 if [[ ! -f $ENV_FILE && $DEFAULT_ENV == 1 ]]; then
     cp "$SCRIPT_DIR/gitea.env.example" "$ENV_FILE"
-    die "created $ENV_FILE from the example. Edit the lines marked '<-- CHANGE ME', then run this script again."
+    bold "Settings file created: $ENV_FILE"
+    info "Next steps:"
+    info "  1. Edit it:       nano $ENV_FILE    (change the lines marked '<-- CHANGE ME')"
+    info "  2. Run again:     sudo $0 $*"
+    exit 0
 fi
 [[ -f $ENV_FILE ]]           || die "settings file not found: $ENV_FILE"
 
