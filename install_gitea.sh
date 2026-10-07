@@ -4,7 +4,10 @@
 #
 #   Author: Christopher Gray
 #   Updated: 10/7/2026
-#   Version: 0.2.1
+#   Version: 0.2.2
+#
+#   Install:
+#     wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_gitea.sh && chmod +x install_gitea.sh && sudo ./install_gitea.sh
 #
 #   Usage (as root, on a Debian/Ubuntu server):
 #     sudo ./install_gitea.sh                 primary server: installs AND starts Gitea
