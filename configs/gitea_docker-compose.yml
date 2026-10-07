@@ -1,0 +1,108 @@
+##############################################################################################
+#   Gitea + PostgreSQL
+#
+#   The installer copies this file to $GITEA_LOCAL_BASE (default /opt/gitea) and writes a .env
+#   file next to it with every ${VARIABLE} used below. Docker Compose reads that .env on its own.
+#
+#   Everyday commands (run inside /opt/gitea):
+#     docker compose ps              what is running
+#     docker compose logs -f gitea   live Gitea log (Ctrl+C to stop watching)
+#     docker compose restart gitea   restart Gitea
+#     docker compose down            stop everything (data is kept on disk)
+#     docker compose up -d           start everything in the background
+#
+#   Folder mapping  (host path  →  path inside container):
+#     $GITEA_LOCAL_BASE/data            → /data                       Gitea working data (local only)
+#     $GIT_SYNC_BASE/repositories       → /data/git/repositories      git repos (Resilio-synced)
+#     $GITEA_LOCAL_BASE/backup-tmp      → /backup-tmp                 scratch space for nightly dumps
+#     $GITEA_LOCAL_BASE/postgres        → /var/lib/postgresql/data    database files (local only)
+##############################################################################################
+
+name: gitea
+
+networks:
+  gitea:
+
+services:
+
+  db:
+    image: postgres:${POSTGRES_IMAGE_TAG}
+    container_name: gitea-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gitea
+      POSTGRES_PASSWORD: ${GITEA_DB_PASSWORD}
+      POSTGRES_DB: gitea
+    volumes:
+      - ${GITEA_LOCAL_BASE}/postgres:/var/lib/postgresql/data
+    networks:
+      - gitea
+    # No "ports:" — the database is only reachable by Gitea on the private Docker network.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gitea -d gitea"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  gitea:
+    image: gitea/gitea:${GITEA_IMAGE_TAG}
+    container_name: gitea
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Gitea runs as this user id inside the container. The installer sets it to the owner of
+      # $GIT_SYNC_BASE so Resilio and Gitea can both read/write the repo files.
+      USER_UID: ${GITEA_UID}
+      USER_GID: ${GITEA_GID}
+
+      # Every GITEA__section__KEY variable is written into Gitea's app.ini on each start,
+      # so this file (not app.ini) is the source of truth for these settings.
+      GITEA__database__DB_TYPE: postgres
+      GITEA__database__HOST: db:5432
+      GITEA__database__NAME: gitea
+      GITEA__database__USER: gitea
+      GITEA__database__PASSWD: ${GITEA_DB_PASSWORD}
+
+      GITEA__server__DOMAIN: ${GITEA_DOMAIN}
+      GITEA__server__ROOT_URL: https://${GITEA_DOMAIN}/
+      GITEA__server__HTTP_PORT: "3000"
+      GITEA__server__SSH_DOMAIN: ${GITEA_SSH_DOMAIN}
+      GITEA__server__SSH_PORT: ${GITEA_SSH_PORT}   # port shown in clone URLs
+      GITEA__server__SSH_LISTEN_PORT: "22"         # port inside the container
+      GITEA__server__LFS_START_SERVER: "true"      # Git LFS for large binary files
+      GITEA__server__OFFLINE_MODE: "true"          # no external CDNs / Gravatar calls
+
+      GITEA__security__INSTALL_LOCK: "true"        # skip the web setup wizard; installer configures everything
+      GITEA__security__SECRET_KEY: ${GITEA_SECRET_KEY}
+      GITEA__security__INTERNAL_TOKEN: ${GITEA_INTERNAL_TOKEN}
+      # nginx reaches Gitea through Docker's bridge network, so trust those ranges for
+      # X-Forwarded-For (lets Gitea log the real visitor IP instead of nginx's).
+      GITEA__security__REVERSE_PROXY_TRUSTED_PROXIES: 127.0.0.0/8,::1/128,172.16.0.0/12,192.168.0.0/16
+      GITEA__security__LOGIN_REMEMBER_DAYS: "14"
+      GITEA__server__LFS_JWT_SECRET: ${GITEA_LFS_JWT_SECRET}
+      GITEA__oauth2__JWT_SECRET: ${GITEA_OAUTH2_JWT_SECRET}
+
+      GITEA__service__DISABLE_REGISTRATION: "true"          # private server: admin creates accounts
+      GITEA__service__REQUIRE_SIGNIN_VIEW: "true"           # nothing visible without logging in
+      GITEA__service__DEFAULT_KEEP_EMAIL_PRIVATE: "true"
+      GITEA__repository__DEFAULT_PRIVATE: private
+      GITEA__repository__DEFAULT_BRANCH: main
+      GITEA__repository__ROOT: /data/git/repositories
+      GITEA__repository__ENABLE_PUSH_CREATE_USER: "true"    # "git push" to a new name creates the repo
+      GITEA__repository__ENABLE_PUSH_CREATE_ORG: "true"
+
+      GITEA__actions__ENABLED: "false"             # CI/CD off until you pick an approach (see README)
+      GITEA__cron__ENABLED: "true"
+      GITEA__log__LEVEL: Info
+    volumes:
+      - ${GITEA_LOCAL_BASE}/data:/data
+      - ${GIT_SYNC_BASE}/repositories:/data/git/repositories
+      - ${GITEA_LOCAL_BASE}/backup-tmp:/backup-tmp
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "127.0.0.1:${GITEA_HTTP_PORT}:3000"   # web: local only, nginx is the public front door
+      - "${GITEA_SSH_PORT}:22"                # git over SSH: public
+    networks:
+      - gitea
