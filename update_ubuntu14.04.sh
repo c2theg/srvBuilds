@@ -17,10 +17,10 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.6.1
+Version:  2.6.3
 Last Updated:  10/7/2026
 Updated by:  Claude (Sonnet 5.5)
-    pnpm install/update (alongside npm), llama.cpp update (git rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
+    pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
 
 This supports ( ignore the file name - it's a legacy name 🫤 ):
     Ubuntu versions 20.04 - 26.04+, DGX Spark / GB10
@@ -483,41 +483,57 @@ fi
 llama_bin="$(command -v llama-server || command -v llama-cli)"
 if [ -n "$llama_bin" ]; then
     llama_bin="$(readlink -f "$llama_bin")"
-    llama_current="$("$llama_bin" --version 2>&1 | grep -m1 -oE 'version: [0-9]+' | grep -oE '[0-9]+')"
-    echo "llama.cpp detected: build ${llama_current:-unknown} ($llama_bin)"
-    llama_latest="$(curl -fsSL https://api.github.com/repos/ggml-org/llama.cpp/releases/latest 2>/dev/null | grep -m1 '"tag_name"' | grep -oE 'b[0-9]+' | head -n1 | tr -d b)"
+    echo "llama.cpp detected: $llama_bin"
+    # Format varies by release (e.g. "version: 0.5.0-dev (build 1, commit cee37ff)"
+    # or "version: 6789 (abc1234)"), so print the line as-is rather than parsing it.
+    echo "llama.cpp version: $("$llama_bin" --version 2>&1 | grep -m1 '^version:' | sed 's/^version: *//')"
     # Locate the source checkout the binary was built from (build/bin/<exe>)
     llama_src="$(dirname "$llama_bin")"
     while [ "$llama_src" != "/" ] && [ ! -d "$llama_src/.git" ]; do
         llama_src="$(dirname "$llama_src")"
     done
-    if [ -z "$llama_latest" ]; then
-        echo "Could not check latest llama.cpp version (GitHub API unreachable). Skipping update."
-    elif [ "$llama_current" = "$llama_latest" ]; then
-        echo "llama.cpp already up to date (build $llama_current)."
-    elif [ -d "$llama_src/.git" ]; then
-        echo "Updating llama.cpp: build ${llama_current:-unknown} -> $llama_latest (rebuilding $llama_src)"
-        llama_cmake_args=""
-        # Keep the same GPU backend the existing build used
-        if grep -q '^GGML_CUDA:BOOL=ON' "$llama_src/build/CMakeCache.txt" 2>/dev/null; then
-            llama_cmake_args="-DGGML_CUDA=ON"
-        elif grep -q '^GGML_HIP:BOOL=ON' "$llama_src/build/CMakeCache.txt" 2>/dev/null; then
-            llama_cmake_args="-DGGML_HIP=ON"
-        elif grep -q '^GGML_VULKAN:BOOL=ON' "$llama_src/build/CMakeCache.txt" 2>/dev/null; then
-            llama_cmake_args="-DGGML_VULKAN=ON"
+    if [ -d "$llama_src/.git" ]; then
+        # Git checkout: compare commits against upstream (no GitHub API / rate
+        # limit, and no reliance on the build number, which is 0 when the
+        # build ran as a user that git considers a "dubious owner" of the repo).
+        # Run git/cmake as the checkout's owner so git trusts it and the build
+        # directory keeps its ownership.
+        llama_owner="$(stat -c %U "$llama_src" 2>/dev/null || echo root)"
+        llama_run() {
+            if [ "$llama_owner" != "root" ]; then sudo -H -u "$llama_owner" "$@"; else "$@"; fi
+        }
+        echo "Checking for llama.cpp update..."
+        llama_run git -C "$llama_src" fetch --quiet 2>/dev/null
+        llama_head="$(llama_run git -C "$llama_src" rev-parse HEAD 2>/dev/null)"
+        llama_upstream="$(llama_run git -C "$llama_src" rev-parse '@{u}' 2>/dev/null)"
+        echo "llama.cpp checkout: $llama_src (owner $llama_owner), commit ${llama_head:0:9}"
+        if [ -z "$llama_head" ] || [ -z "$llama_upstream" ]; then
+            echo "Could not compare llama.cpp against upstream (fetch failed or no tracking branch). Skipping update."
+        elif [ "$llama_head" = "$llama_upstream" ]; then
+            echo "llama.cpp already up to date (${llama_head:0:9})."
+        else
+            echo "Updating llama.cpp: ${llama_head:0:9} -> ${llama_upstream:0:9} (rebuilding $llama_src)"
+            llama_cmake_args=""
+            # Keep the same GPU backend the existing build used
+            if grep -q '^GGML_CUDA:BOOL=ON' "$llama_src/build/CMakeCache.txt" 2>/dev/null; then
+                llama_cmake_args="-DGGML_CUDA=ON"
+            elif grep -q '^GGML_HIP:BOOL=ON' "$llama_src/build/CMakeCache.txt" 2>/dev/null; then
+                llama_cmake_args="-DGGML_HIP=ON"
+            elif grep -q '^GGML_VULKAN:BOOL=ON' "$llama_src/build/CMakeCache.txt" 2>/dev/null; then
+                llama_cmake_args="-DGGML_VULKAN=ON"
+            fi
+            llama_run git -C "$llama_src" pull --ff-only \
+                && llama_run cmake -S "$llama_src" -B "$llama_src/build" $llama_cmake_args \
+                && llama_run cmake --build "$llama_src/build" --config Release -j"$(nproc)" \
+                && echo "llama.cpp rebuilt. Restart any running llama-server for it to take effect." \
+                || echo "WARNING: llama.cpp update failed."
         fi
-        (
-            cd "$llama_src" \
-                && git pull --ff-only \
-                && cmake -B build $llama_cmake_args \
-                && cmake --build build --config Release -j"$(nproc)"
-        ) || echo "WARNING: llama.cpp update failed."
     elif command -v brew >/dev/null 2>&1 && brew list llama.cpp >/dev/null 2>&1; then
-        echo "Updating llama.cpp via Homebrew: build ${llama_current:-unknown} -> $llama_latest"
+        echo "Updating llama.cpp via Homebrew..."
         brew upgrade llama.cpp || echo "WARNING: llama.cpp update failed."
     else
-        echo "llama.cpp build ${llama_current:-unknown} is behind $llama_latest, but no git checkout"
-        echo "  or package manager install was found. Update manually: https://github.com/ggml-org/llama.cpp/releases"
+        echo "No git checkout or package manager install found for llama.cpp."
+        echo "  Update manually: https://github.com/ggml-org/llama.cpp/releases"
     fi
 else
     echo "llama.cpp not found. Skipping."
