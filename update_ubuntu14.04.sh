@@ -17,10 +17,10 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.5.1
-Last Updated:  7/21/2026
-Updated by:  Claude (Fable 5)
-    fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
+Version:  2.6.0
+Last Updated:  10/7/2026
+Updated by:  Claude (Sonnet 5.5)
+    pnpm install/update (alongside npm), llama.cpp update (git rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
 
 This supports ( ignore the file name - it's a legacy name 🫤 ):
     Ubuntu versions 20.04 - 26.04+, DGX Spark / GB10
@@ -198,6 +198,14 @@ if command -v npm >/dev/null 2>&1; then
     fi
     aptg install --only-upgrade -y npm
     npm install -g npm
+    # pnpm only when both Node.js and npm were already installed
+    if command -v node >/dev/null 2>&1; then
+        echo "Installing/updating pnpm..."
+        curl -fsSL https://get.pnpm.io/install.sh | sh - \
+            || echo "WARNING: pnpm install/update failed."
+    else
+        echo "Node.js not installed. Skipping pnpm."
+    fi
 else
     echo "npm not installed. Skipping."
 fi
@@ -460,6 +468,75 @@ if command -v ollama >/dev/null 2>&1; then
 else
     echo "Ollama not found. Skipping."
     echo "  To install: curl -fsSL https://ollama.com/install.sh | sh"
+fi
+
+# --- llama.cpp (only update if already installed) ---
+llama_bin="$(command -v llama-server || command -v llama-cli)"
+if [ -n "$llama_bin" ]; then
+    llama_bin="$(readlink -f "$llama_bin")"
+    llama_current="$("$llama_bin" --version 2>&1 | grep -m1 -oE 'version: [0-9]+' | grep -oE '[0-9]+')"
+    echo "llama.cpp detected: build ${llama_current:-unknown} ($llama_bin)"
+    llama_latest="$(curl -fsSL https://api.github.com/repos/ggml-org/llama.cpp/releases/latest 2>/dev/null | grep -m1 '"tag_name"' | grep -oE 'b[0-9]+' | head -n1 | tr -d b)"
+    # Locate the source checkout the binary was built from (build/bin/<exe>)
+    llama_src="$(dirname "$llama_bin")"
+    while [ "$llama_src" != "/" ] && [ ! -d "$llama_src/.git" ]; do
+        llama_src="$(dirname "$llama_src")"
+    done
+    if [ -z "$llama_latest" ]; then
+        echo "Could not check latest llama.cpp version (GitHub API unreachable). Skipping update."
+    elif [ "$llama_current" = "$llama_latest" ]; then
+        echo "llama.cpp already up to date (build $llama_current)."
+    elif [ -d "$llama_src/.git" ]; then
+        echo "Updating llama.cpp: build ${llama_current:-unknown} -> $llama_latest (rebuilding $llama_src)"
+        llama_cmake_args=""
+        # Keep the same GPU backend the existing build used
+        if grep -q '^GGML_CUDA:BOOL=ON' "$llama_src/build/CMakeCache.txt" 2>/dev/null; then
+            llama_cmake_args="-DGGML_CUDA=ON"
+        elif grep -q '^GGML_HIP:BOOL=ON' "$llama_src/build/CMakeCache.txt" 2>/dev/null; then
+            llama_cmake_args="-DGGML_HIP=ON"
+        elif grep -q '^GGML_VULKAN:BOOL=ON' "$llama_src/build/CMakeCache.txt" 2>/dev/null; then
+            llama_cmake_args="-DGGML_VULKAN=ON"
+        fi
+        (
+            cd "$llama_src" \
+                && git pull --ff-only \
+                && cmake -B build $llama_cmake_args \
+                && cmake --build build --config Release -j"$(nproc)"
+        ) || echo "WARNING: llama.cpp update failed."
+    elif command -v brew >/dev/null 2>&1 && brew list llama.cpp >/dev/null 2>&1; then
+        echo "Updating llama.cpp via Homebrew: build ${llama_current:-unknown} -> $llama_latest"
+        brew upgrade llama.cpp || echo "WARNING: llama.cpp update failed."
+    else
+        echo "llama.cpp build ${llama_current:-unknown} is behind $llama_latest, but no git checkout"
+        echo "  or package manager install was found. Update manually: https://github.com/ggml-org/llama.cpp/releases"
+    fi
+else
+    echo "llama.cpp not found. Skipping."
+fi
+
+# --- vLLM (only update if already installed) ---
+if command -v vllm >/dev/null 2>&1; then
+    vllm_bin="$(readlink -f "$(command -v vllm)")"
+    vllm_current="$(vllm --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
+    echo "vLLM detected: ${vllm_current:-unknown} ($vllm_bin)"
+    vllm_latest="$(curl -fsSL https://pypi.org/pypi/vllm/json 2>/dev/null | grep -oE '"version": *"[0-9]+\.[0-9]+\.[0-9]+"' | head -n1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+    # Upgrade with the same interpreter that vllm runs under (venv-safe),
+    # taken from the entry script's shebang
+    vllm_python="$(head -n1 "$vllm_bin" 2>/dev/null | sed -n 's|^#!||p' | awk '{print $1}')"
+    [ -x "$vllm_python" ] || vllm_python="$(dirname "$vllm_bin")/python"
+    [ -x "$vllm_python" ] || vllm_python="$(command -v python3)"
+    if [ -z "$vllm_latest" ]; then
+        echo "Could not check latest vLLM version (PyPI unreachable). Skipping update."
+    elif [ "$vllm_current" = "$vllm_latest" ]; then
+        echo "vLLM already up to date ($vllm_current)."
+    else
+        echo "Updating vLLM: ${vllm_current:-unknown} -> $vllm_latest"
+        "$vllm_python" -m pip install --upgrade vllm \
+            || echo "WARNING: vLLM update failed."
+    fi
+else
+    echo "vLLM not found. Skipping."
+    echo "  To install: pip install vllm"
 fi
 
 # --- Crontab setup ---
