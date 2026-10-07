@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.6.0
+Version:  2.6.1
 Last Updated:  10/7/2026
 Updated by:  Claude (Sonnet 5.5)
     pnpm install/update (alongside npm), llama.cpp update (git rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
@@ -201,8 +201,17 @@ if command -v npm >/dev/null 2>&1; then
     # pnpm only when both Node.js and npm were already installed
     if command -v node >/dev/null 2>&1; then
         echo "Installing/updating pnpm..."
-        curl -fsSL https://get.pnpm.io/install.sh | sh - \
-            || echo "WARNING: pnpm install/update failed."
+        # pnpm refuses to run under sudo (it installs into a home directory), so
+        # when invoked via sudo, install as the invoking user into their home;
+        # when run directly as root (e.g. cron), install for root.
+        if [ -n "${SUDO_USER:-}" ] && [ "$SUDO_USER" != "root" ]; then
+            echo "Running pnpm installer as $SUDO_USER (pnpm does not support sudo)."
+            sudo -H -u "$SUDO_USER" sh -c 'curl -fsSL https://get.pnpm.io/install.sh | sh -' \
+                || echo "WARNING: pnpm install/update failed."
+        else
+            curl -fsSL https://get.pnpm.io/install.sh | env -u SUDO_USER sh - \
+                || echo "WARNING: pnpm install/update failed."
+        fi
     else
         echo "Node.js not installed. Skipping pnpm."
     fi
