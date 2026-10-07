@@ -17,7 +17,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.6.3
+Version:  2.6.3.1
 Last Updated:  10/7/2026
 Updated by:  Claude (Sonnet 5.5)
     pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
@@ -480,6 +480,7 @@ else
 fi
 
 # --- llama.cpp (only update if already installed) ---
+echo "-----------------------------------------------------------------------"
 llama_bin="$(command -v llama-server || command -v llama-cli)"
 if [ -n "$llama_bin" ]; then
     llama_bin="$(readlink -f "$llama_bin")"
@@ -487,6 +488,7 @@ if [ -n "$llama_bin" ]; then
     # Format varies by release (e.g. "version: 0.5.0-dev (build 1, commit cee37ff)"
     # or "version: 6789 (abc1234)"), so print the line as-is rather than parsing it.
     echo "llama.cpp version: $("$llama_bin" --version 2>&1 | grep -m1 '^version:' | sed 's/^version: *//')"
+    echo "  To check the version yourself, run: $llama_bin --version"
     # Locate the source checkout the binary was built from (build/bin/<exe>)
     llama_src="$(dirname "$llama_bin")"
     while [ "$llama_src" != "/" ] && [ ! -d "$llama_src/.git" ]; do
@@ -538,6 +540,7 @@ if [ -n "$llama_bin" ]; then
 else
     echo "llama.cpp not found. Skipping."
 fi
+echo "-----------------------------------------------------------------------"
 
 # --- vLLM (only update if already installed) ---
 if command -v vllm >/dev/null 2>&1; then
