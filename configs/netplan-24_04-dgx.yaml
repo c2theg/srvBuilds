@@ -1,4 +1,4 @@
-# Christopher Gray - 10/8/2026 - netplan-24_04-dgx.yaml
+# Christopher Gray - 10/2026
 #
 #   Filtered DNS (malware + adult content blocked - servers don't need to access porn! HA)
 #     OpenDNS FamilyShield : 208.67.222.123, 208.67.220.123, 2620:119:35::123
@@ -9,7 +9,7 @@
 #     OpenDNS: 208.67.222.222, 2620:0:ccc::2 | Cloudflare: 1.1.1.1, 2606:4700:4700::1111 | Google: 8.8.8.8, 2001:4860:4860::8888
 #
 # Install:
-#     sudo wget -O /etc/netplan/01-netcfg.yaml https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/netplan-24_04-dgx.yaml
+#     sudo wget -O /etc/netplan/01-netcfg.yaml https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/netplan-vlans-24_04.yaml
 #     sudo chmod 600 /etc/netplan/01-netcfg.yaml   # netplan warns if the file is world-readable
 #
 # -------------------------------------------------------
@@ -28,42 +28,23 @@
 #
 # DEBUG: sudo netplan --debug apply
 # -------------------------------------------------------
-
 network:
   version: 2
+  renderer: NetworkManager
   ethernets:
-    NM-edc4a8c5-9816-3ca7-b7d5-f328db78e89b:
-      renderer: NetworkManager
-      match:
-        name: "enP7s7"
+    enP7s7:
       dhcp4: false
       dhcp6: false
       wakeonlan: true
-      networkmanager:
-        uuid: "edc4a8c5-9816-3ca7-b7d5-f328db78e89b"
-        name: "Wired connection 3"
-        passthrough:
-          connection.autoconnect-priority: "-999"
-          connection.timestamp: "1791479869"
-          ethernet._: ""
-          ipv6.addr-gen-mode: "default"
-          ipv6.ip6-privacy: "-1"
-          proxy._: ""
-
   vlans:
     vlan200:
-      renderer: NetworkManager
       id: 200
-      link: "NM-edc4a8c5-9816-3ca7-b7d5-f328db78e89b"
+      link: enP7s7
       dhcp4: false
       dhcp6: false
-      addresses:
-        - 10.1.1.21/24
+      addresses: [10.1.1.2/24]
       routes:
         - to: default
           via: 10.1.1.1
       nameservers:
-        addresses:
-          - 10.1.1.1
-          - 1.1.1.3
-          - "2620:119:35::123"
+        addresses: [10.1.1.1, 1.1.1.3]
