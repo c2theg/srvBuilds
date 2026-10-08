@@ -123,8 +123,8 @@ fetch "https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh"
       update_time.sh
 fetch "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf" \
       resolv_base.conf
-# fetch "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/50-staticip.yaml" \
-#       50-staticip.yaml
+fetch "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/netplan-vlans-24_04.yaml" \
+       netplan-vlans-24_04.yaml
 fetch "https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python3.sh" \
       install_python3.sh
 
