@@ -1,0 +1,69 @@
+# Christopher Gray - 10/8/2026 - netplan-24_04-dgx.yaml
+#
+#   Filtered DNS (malware + adult content blocked - servers don't need to access porn! HA)
+#     OpenDNS FamilyShield : 208.67.222.123, 208.67.220.123, 2620:119:35::123
+#     Cloudflare Family    : 1.1.1.3, 1.0.0.3, 2606:4700:4700::1113, 2606:4700:4700::1003
+#     Quad9 (malware only) : 9.9.9.9, 149.112.112.112, 2620:fe::fe, 2620:fe::9
+#
+#   Non-filtered alternatives:
+#     OpenDNS: 208.67.222.222, 2620:0:ccc::2 | Cloudflare: 1.1.1.1, 2606:4700:4700::1111 | Google: 8.8.8.8, 2001:4860:4860::8888
+#
+# Install:
+#     sudo wget -O /etc/netplan/01-netcfg.yaml https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/netplan-vlans-24_04.yaml
+#     sudo chmod 600 /etc/netplan/01-netcfg.yaml   # netplan warns if the file is world-readable
+#
+# -------------------------------------------------------
+# Source: https://netplan.io/examples
+#
+# 1) Find your interface name and VLAN tag id:
+#       ip a
+#    Examples: eno4 (Dell servers), ens160 (VMware), ens18 (Proxmox/KVM), enp0s3, etc.
+# 2) Edit the PARENT_NIC name below (it must match the vlan "link:" value) - NO TABS ALLOWED
+# 3) sudo netplan generate        # validate syntax
+# 4) sudo netplan try             # applies, auto-reverts in 120s unless confirmed (safe over SSH)
+#    (or: sudo netplan apply)
+# 5) ping -c3 1.1.1.1 && ping -c3 google.com
+#
+# renderer: "networkd" (servers) or "NetworkManager" (desktops)
+#
+# DEBUG: sudo netplan --debug apply
+# -------------------------------------------------------
+
+network:
+  version: 2
+  ethernets:
+    NM-edc4a8c5-9816-3ca7-b7d5-f328db78e89b:
+      renderer: NetworkManager
+      match:
+        name: "enP7s7"
+      dhcp4: false
+      dhcp6: false
+      wakeonlan: true
+      networkmanager:
+        uuid: "edc4a8c5-9816-3ca7-b7d5-f328db78e89b"
+        name: "Wired connection 3"
+        passthrough:
+          connection.autoconnect-priority: "-999"
+          connection.timestamp: "1791479869"
+          ethernet._: ""
+          ipv6.addr-gen-mode: "default"
+          ipv6.ip6-privacy: "-1"
+          proxy._: ""
+
+  vlans:
+    vlan200:
+      renderer: NetworkManager
+      id: 200
+      link: "NM-edc4a8c5-9816-3ca7-b7d5-f328db78e89b"
+      dhcp4: false
+      dhcp6: false
+      addresses:
+        - 10.1.1.21/24
+      routes:
+        - to: default
+          via: 10.1.1.1
+      nameservers:
+        addresses:
+          - 10.1.1.1
+          - 1.1.1.3
+          - "2620:119:35::123"
