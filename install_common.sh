@@ -27,7 +27,7 @@ cat <<'BANNER'
   curl -fsSL https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_common.sh \
     -o install_common.sh && chmod u+x install_common.sh
 
-  Ubuntu 20.04 – 26.04+ LTS  |  Version 2.0.1  |  Updated 2026-07-20
+  Ubuntu 20.04 – 26.04+ LTS  |  Version 2.2  |  Updated 2026-10-08
 
 BANNER
 
@@ -68,7 +68,11 @@ apt $APT_OPTS install -y --no-install-recommends \
     dos2unix \
     zip \
     unzip \
-    tmux
+    tmux \
+    network-manager-config-connectivity-ubuntu \
+    network-manager-gnome \
+    openvswitch-common \
+    openvswitch-switch
 
 # Monitoring and diagnostics
 apt $APT_OPTS install -y --no-install-recommends \
@@ -119,8 +123,8 @@ fetch "https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_time.sh"
       update_time.sh
 fetch "https://raw.githubusercontent.com/c2theg/srvBuilds/master/configs/resolv_base.conf" \
       resolv_base.conf
-fetch "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/50-staticip.yaml" \
-      50-staticip.yaml
+# fetch "https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/configs/50-staticip.yaml" \
+#       50-staticip.yaml
 fetch "https://raw.githubusercontent.com/c2theg/srvBuilds/master/install_python3.sh" \
       install_python3.sh
 
