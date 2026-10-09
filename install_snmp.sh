@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-#    If you update this from Windows, using Notepad ++, do the following:
-#       sudo apt-get -y install dos2unix
-#       dos2unix <FILE>
-#       chmod u+x <FILE>
+#
+#  Install:
+#       wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_snmp.sh && chmod +x install_snmp.sh
 #
 # Installs Net-SNMP (snmpd + tools) on Ubuntu / Debian, amd64 and arm64 (e.g. NVIDIA DGX Spark).
 #
