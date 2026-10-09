@@ -19,7 +19,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.6.4
+Version:  2.6.5
 Last Updated:  10/8/2026
 Updated by:  Claude (Sonnet 5.5)
     pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
@@ -133,6 +133,97 @@ if [ -n "$held_pkgs" ]; then
     echo "WARNING: The following packages are on hold and may block upgrades:"
     echo "$held_pkgs"
     echo "  To release: apt-mark unhold <package>"
+fi
+
+# --- Migrate legacy apt keys (/etc/apt/trusted.gpg) ---
+# Silences "Key is stored in legacy trusted.gpg keyring" (apt-key is deprecated).
+# Each key is exported to its own file in /etc/apt/trusted.gpg.d/ (still trusted by
+# apt, no warning). The old keyring is only retired after EVERY key exported
+# cleanly, and a dated backup is kept, so no repo can lose its key.
+if [ -s /etc/apt/trusted.gpg ] && command -v gpg >/dev/null 2>&1; then
+    legacy_fprs="$(gpg --no-default-keyring --keyring /etc/apt/trusted.gpg --list-keys --with-colons 2>/dev/null \
+        | awk -F: '/^pub/{p=1} /^fpr/ && p {print $10; p=0}')"
+    if [ -n "$legacy_fprs" ]; then
+        legacy_ok=1
+        for fpr in $legacy_fprs; do
+            out="/etc/apt/trusted.gpg.d/legacy-$fpr.gpg"
+            if ! gpg --no-default-keyring --keyring /etc/apt/trusted.gpg --export "$fpr" > "$out" 2>/dev/null || [ ! -s "$out" ]; then
+                rm -f "$out"; legacy_ok=0
+            fi
+        done
+        if [ "$legacy_ok" -eq 1 ]; then
+            cp -p /etc/apt/trusted.gpg "/etc/apt/trusted.gpg.bak-$(date +%Y%m%d)"
+            rm -f /etc/apt/trusted.gpg /etc/apt/trusted.gpg~
+            echo "Migrated $(echo "$legacy_fprs" | wc -w) legacy apt key(s) to /etc/apt/trusted.gpg.d/ (backup: /etc/apt/trusted.gpg.bak-*)."
+        else
+            echo "WARNING: could not export every legacy apt key; leaving /etc/apt/trusted.gpg in place."
+        fi
+    fi
+fi
+
+# --- Scope vendor repo keys with signed-by (Docker, Resilio) ---
+# A key in trusted.gpg(.d) is trusted for EVERY repo; signed-by pins it to just its
+# own. For each known repo whose source file has no signed-by: fetch the vendor key
+# into /etc/apt/keyrings, add signed-by, then confirm 'apt update' still verifies.
+# On any failure the source file is restored from its .bak. Idempotent.
+apt_update_verifies() {
+    ! aptg update 2>&1 | grep -qE 'NO_PUBKEY|is not signed|EXPKEYSIG|BADSIG|signatures couldn.t be verified'
+}
+scope_repo_key() {  # scope_repo_key <name> <host-regex> <key-url-or-""> 
+    local name="$1" host="$2" key_url="$3" keyring="/etc/apt/keyrings/$1.gpg" f changed=0 tmp
+    for f in /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
+        [ -f "$f" ] && grep -qE "^[^#]*$host" "$f" || continue
+        grep -qiE 'signed-by' "$f" && continue
+        if [ -z "$key_url" ]; then   # derive from the repo URI (Docker: .../linux/<distro>/gpg)
+            key_url="$(grep -ohE "https://$host/linux/(ubuntu|debian)" "$f" | head -n1)/gpg"
+        fi
+        if [ ! -s "$keyring" ]; then
+            tmp="$(mktemp)"
+            mkdir -p /etc/apt/keyrings
+            if curl -fsSL "$key_url" -o "$tmp" && gpg --dearmor < "$tmp" > "$keyring.new" 2>/dev/null && [ -s "$keyring.new" ] \
+                && gpg --show-keys --with-colons "$keyring.new" 2>/dev/null | grep -q '^fpr'; then
+                mv "$keyring.new" "$keyring"; chmod 644 "$keyring"
+            else
+                echo "WARNING: could not fetch/validate $name repo key from $key_url; leaving $f unchanged."
+                rm -f "$tmp" "$keyring.new"; continue
+            fi
+            rm -f "$tmp"
+        fi
+        cp -p "$f" "$f.bak"
+        case "$f" in
+            *.sources) printf '\nSigned-By: %s\n' "$keyring" >> "$f" ;;
+            *) sed -i -E "/^[[:space:]]*deb(-src)?[[:space:]]/{
+                    /\\[/ s|\\[|[signed-by=$keyring |
+                    /\\[/! s|^([[:space:]]*deb(-src)?)[[:space:]]+|\\1 [signed-by=$keyring] |
+                }" "$f" ;;
+        esac
+        if apt_update_verifies; then
+            echo "Scoped $name repo key with signed-by in $f (backup: $f.bak)."
+            changed=1
+        else
+            echo "WARNING: apt could not verify $name after adding signed-by; restoring $f."
+            mv -f "$f.bak" "$f"
+        fi
+    done
+    # Drop the now-redundant global copy of the same key (moved aside, restored on failure)
+    if [ "$changed" -eq 1 ]; then
+        local fpr lf
+        for fpr in $(gpg --show-keys --with-colons "$keyring" 2>/dev/null | awk -F: '/^pub/{p=1} /^fpr/ && p {print $10; p=0}'); do
+            lf="/etc/apt/trusted.gpg.d/legacy-$fpr.gpg"
+            [ -f "$lf" ] || continue
+            mkdir -p /etc/apt/trusted.gpg.bak.d && mv "$lf" /etc/apt/trusted.gpg.bak.d/
+            if apt_update_verifies; then
+                echo "Removed global trust for the $name key (now trusted only for its own repo)."
+            else
+                mv -f "/etc/apt/trusted.gpg.bak.d/legacy-$fpr.gpg" "$lf"
+                echo "WARNING: another repo needs the $name key globally; restored it."
+            fi
+        done
+    fi
+}
+if command -v gpg >/dev/null 2>&1; then
+    scope_repo_key docker 'download\.docker\.com' ""
+    scope_repo_key resilio-sync 'linux-packages\.resilio\.com' "https://linux-packages.resilio.com/resilio-sync/key.asc"
 fi
 
 # --- System update ---
