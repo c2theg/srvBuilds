@@ -19,7 +19,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.6.5
+Version:  2.6.6
 Last Updated:  10/8/2026
 Updated by:  Claude (Sonnet 5.5)
     pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
@@ -77,6 +77,13 @@ if [ -f "$SELF" ]; then
         && chmod u+x "$SELF.tmp" \
         && mv "$SELF.tmp" "$SELF" \
         || { echo "WARNING: self-update failed download or syntax validation. Keeping current version."; rm -f "$SELF.tmp"; }
+    # The running shell still holds the OLD script; restart into the freshly
+    # downloaded one so fixes take effect on this run, not the next. The env
+    # guard prevents a re-exec loop.
+    if [ -z "${UPDATE_UBUNTU_REEXEC:-}" ]; then
+        export UPDATE_UBUNTU_REEXEC=1
+        exec bash "$SELF" "$@"
+    fi
 fi
 
 # --- Fix duplicate Docker apt sources (archive_uri-*.list duplicates docker.list
@@ -166,8 +173,23 @@ fi
 # own. For each known repo whose source file has no signed-by: fetch the vendor key
 # into /etc/apt/keyrings, add signed-by, then confirm 'apt update' still verifies.
 # On any failure the source file is restored from its .bak. Idempotent.
+# Repair deb822 files where a stray 'Signed-By:'-only stanza was appended (apt: "Malformed
+# stanza 2"): drop any stanza that has no 'Types:' field.
+for f in /etc/apt/sources.list.d/*.sources; do
+    [ -f "$f" ] || continue
+    if awk 'BEGIN{RS="";FS="\n"} !/(^|\n)Types:/{bad=1} END{exit !bad}' "$f"; then
+        echo "Repairing malformed deb822 source file: $f"
+        cp -p "$f" "$f.bak-malformed"
+        awk 'BEGIN{RS="";ORS="\n\n";FS="\n"} /(^|\n)Types:/' "$f" > "$f.fixed" && [ -s "$f.fixed" ] && mv "$f.fixed" "$f" || rm -f "$f.fixed"
+        # keep the Signed-By the stray stanza carried, inside the real stanza
+        sb="$(grep -hE '^Signed-By:' "$f.bak-malformed" | head -n1)"
+        if [ -n "$sb" ] && ! grep -q '^Signed-By:' "$f"; then
+            sed -i "/^URIs:/a $sb" "$f"
+        fi
+    fi
+done
 apt_update_verifies() {
-    ! aptg update 2>&1 | grep -qE 'NO_PUBKEY|is not signed|EXPKEYSIG|BADSIG|signatures couldn.t be verified'
+    ! aptg update 2>&1 | grep -qE 'NO_PUBKEY|is not signed|EXPKEYSIG|BADSIG|signatures couldn.t be verified|^E: Malformed|^E: Type|could not be read|^E: Conflicting values'
 }
 scope_repo_key() {  # scope_repo_key <name> <host-regex> <key-url-or-""> 
     local name="$1" host="$2" key_url="$3" keyring="/etc/apt/keyrings/$1.gpg" f changed=0 tmp
@@ -191,7 +213,7 @@ scope_repo_key() {  # scope_repo_key <name> <host-regex> <key-url-or-"">
         fi
         cp -p "$f" "$f.bak"
         case "$f" in
-            *.sources) printf '\nSigned-By: %s\n' "$keyring" >> "$f" ;;
+            *.sources) sed -i -E "/^URIs:.*$host/a Signed-By: $keyring" "$f" ;;
             *) sed -i -E "/^[[:space:]]*deb(-src)?[[:space:]]/{
                     /\\[/ s|\\[|[signed-by=$keyring |
                     /\\[/! s|^([[:space:]]*deb(-src)?)[[:space:]]+|\\1 [signed-by=$keyring] |
