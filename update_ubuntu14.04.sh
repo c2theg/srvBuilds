@@ -1,6 +1,8 @@
 #!/bin/bash
 
-clear
+# cron has no terminal/TERM: a bare clear fails there
+[ -t 1 ] && clear
+export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
 now=$(date)
 echo "Running update_ubuntu14.04.sh at $now
 
@@ -17,8 +19,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.6.3.1
-Last Updated:  10/7/2026
+Version:  2.6.4
+Last Updated:  10/8/2026
 Updated by:  Claude (Sonnet 5.5)
     pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
 
@@ -67,12 +69,15 @@ aptg() {
 # --- Self-update (download to a temp file, then atomically replace; ---
 # --- never overwrite the running script's file in place, or bash   ---
 # --- will read corrupted/misaligned content mid-execution)         ---
-curl -fsSL -o "update_ubuntu14.04.sh.tmp" \
-    "https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh" \
-    && bash -n "update_ubuntu14.04.sh.tmp" \
-    && chmod u+x update_ubuntu14.04.sh.tmp \
-    && mv update_ubuntu14.04.sh.tmp update_ubuntu14.04.sh \
-    || { echo "WARNING: self-update failed download or syntax validation. Keeping current version."; rm -f update_ubuntu14.04.sh.tmp; }
+SELF="$(readlink -f "$0" 2>/dev/null)"
+if [ -f "$SELF" ]; then
+    curl -fsSL -o "$SELF.tmp" \
+        "https://raw.githubusercontent.com/c2theg/srvBuilds/master/update_ubuntu14.04.sh" \
+        && bash -n "$SELF.tmp" \
+        && chmod u+x "$SELF.tmp" \
+        && mv "$SELF.tmp" "$SELF" \
+        || { echo "WARNING: self-update failed download or syntax validation. Keeping current version."; rm -f "$SELF.tmp"; }
+fi
 
 # --- Fix duplicate Docker apt sources (archive_uri-*.list duplicates docker.list
 # --- after Docker's install script is re-run or add-apt-repository was used) ---
@@ -160,7 +165,7 @@ echo "Downloading required dependencies..."
 # tmux: lets long-running interactive tasks (e.g. the OS release upgrade
 # below) survive a dropped SSH connection.
 aptg install -y ca-certificates unattended-upgrades tmux
-update-ca-certificates
+update-ca-certificates --fresh
 
 # --- Cleanup ---
 echo "-----------------------------------------------------------------------"
@@ -241,6 +246,8 @@ if command -v docker >/dev/null 2>&1; then
     # Exclude a container with label: com.centurylinklabs.watchtower.enable=false
     # NOTE: containers on pinned version tags (e.g. nginx:1.25.3) never receive
     # updates; run internet-exposed services on :latest or a rolling major tag.
+    # containrrr/watchtower is archived/unmaintained; nickfedor/watchtower is the
+    # maintained drop-in fork (same flags).
     # Watchtower's bundled client negotiates Docker API 1.25 by default,
     # which modern daemons reject ("client version 1.25 is too old");
     # pin DOCKER_API_VERSION to the daemon's own API version.
@@ -249,7 +256,7 @@ if command -v docker >/dev/null 2>&1; then
     docker run --rm \
         -e DOCKER_API_VERSION="${docker_api:-1.44}" \
         -v /var/run/docker.sock:/var/run/docker.sock \
-        containrrr/watchtower --run-once --cleanup \
+        nickfedor/watchtower --run-once --cleanup \
         || echo "WARNING: container image update pass failed."
 
     # Run the same one-shot pass via cron, restricted to the 04:00-09:00
@@ -258,11 +265,61 @@ if command -v docker >/dev/null 2>&1; then
     # trigger is running this script itself.
     # The entry is rewritten (old watchtower lines filtered out) each run so
     # fixes to the command line propagate to already-deployed machines.
-    wt_cron="15 4-8 * * * docker run --rm -e DOCKER_API_VERSION=\$(docker version --format '{{.Server.APIVersion}}') -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --run-once --cleanup >> /var/log/container_updates.log 2>&1"
-    (crontab -u root -l 2>/dev/null | grep -v "containrrr/watchtower"; echo "$wt_cron") | crontab -u root -
+    wt_cron="15 4-8 * * * docker run --rm -e DOCKER_API_VERSION=\$(docker version --format '{{.Server.APIVersion}}') -v /var/run/docker.sock:/var/run/docker.sock nickfedor/watchtower --run-once --cleanup >> /var/log/container_updates.log 2>&1"
+    (crontab -u root -l 2>/dev/null | grep -v -e "containrrr/watchtower" -e "nickfedor/watchtower"; echo "$wt_cron") | crontab -u root -
     echo "Container-update cron entry installed/refreshed (runs 04:15-08:15)."
 else
     echo "Docker not found. Skipping."
+fi
+
+# --- Go (only update if already installed) ---
+# Go may come from apt (distro or the longsleep/golang-backports PPA), snap, or
+# the official tarball in /usr/local/go; each is updated its own way.
+go_bin="$(command -v go || true)"
+[ -z "$go_bin" ] && [ -x /usr/local/go/bin/go ] && go_bin=/usr/local/go/bin/go
+if [ -n "$go_bin" ]; then
+    go_real="$(readlink -f "$go_bin")"
+    go_current="$("$go_bin" version 2>/dev/null | awk '{print $3}')"
+    echo "Go detected: ${go_current:-unknown} ($go_real)"
+    if dpkg -S "$go_real" >/dev/null 2>&1; then
+        # apt-managed: golang-go (+ versioned golang-1.NN-go) upgrade with the system
+        aptg install --only-upgrade -y golang-go $(dpkg -l 'golang-[0-9]*-go' 2>/dev/null | awk '/^ii/{print $2}') || true
+    elif echo "$go_real" | grep -q '^/snap/'; then
+        snap refresh go || true
+    elif [ "$(dirname "$(dirname "$go_real")")" = "/usr/local/go" ] || [ "$go_real" = "/usr/local/go/bin/go" ]; then
+        go_latest="$(curl -fsSL 'https://go.dev/VERSION?m=text' 2>/dev/null | head -n1)"
+        go_arch="$(dpkg --print-architecture 2>/dev/null)"
+        if [ -z "$go_latest" ]; then
+            echo "Could not check latest Go version (go.dev unreachable). Skipping."
+        elif [ "$go_current" = "$go_latest" ]; then
+            echo "Go already up to date ($go_current)."
+        else
+            echo "Updating Go: $go_current -> $go_latest"
+            go_tmp="$(mktemp -d)"
+            # Verify the SHA-256 published by go.dev before replacing anything
+            go_file="$go_latest.linux-$go_arch.tar.gz"
+            go_sha="$(curl -fsSL 'https://go.dev/dl/?mode=json' 2>/dev/null | python3 -c '
+import json,sys
+for r in json.load(sys.stdin):
+    for f in r["files"]:
+        if f["filename"]==sys.argv[1]: print(f["sha256"])' "$go_file" 2>/dev/null)"
+            if curl -fsSL -o "$go_tmp/go.tgz" "https://go.dev/dl/$go_file" \
+                && [ -n "$go_sha" ] && [ "$(sha256sum "$go_tmp/go.tgz" | awk '{print $1}')" = "$go_sha" ] \
+                && tar -xzf "$go_tmp/go.tgz" -C "$go_tmp"; then
+                rm -rf /usr/local/go.old && mv /usr/local/go /usr/local/go.old \
+                    && mv "$go_tmp/go" /usr/local/go \
+                    && rm -rf /usr/local/go.old \
+                    && echo "Go updated to $(/usr/local/go/bin/go version | awk '{print $3}')"
+            else
+                echo "WARNING: Go download/checksum/extract failed; keeping $go_current."
+            fi
+            rm -rf "$go_tmp"
+        fi
+    else
+        echo "Go at $go_real is not managed by apt, snap, or /usr/local/go. Skipping."
+    fi
+else
+    echo "Go not found. Skipping."
 fi
 
 # --- Rust (only update if already installed) ---
@@ -280,6 +337,43 @@ if command -v rustup >/dev/null 2>&1; then
     echo "Rust toolchain updated."
 else
     echo "Rust not found. Skipping."
+fi
+
+# --- SNMP / net-snmp (only update if already installed) ---
+if command -v snmpd >/dev/null 2>&1 || dpkg -s snmpd >/dev/null 2>&1 || command -v snmpget >/dev/null 2>&1; then
+    snmp_before="$(dpkg-query -W -f='${Version}' snmpd 2>/dev/null)"
+    echo "SNMP detected: snmpd ${snmp_before:-not packaged} / $(snmpget --version 2>&1 | head -n1)"
+    aptg install --only-upgrade -y snmp snmpd libsnmp-base libsnmp40 libsnmp40t64 >/dev/null 2>&1 || true
+    snmp_after="$(dpkg-query -W -f='${Version}' snmpd 2>/dev/null)"
+    # MIB definitions (non-free snmp-mibs-downloader): refresh only if present
+    if command -v download-mibs >/dev/null 2>&1; then
+        download-mibs >/dev/null 2>&1 && echo "SNMP MIB files refreshed." || echo "WARNING: download-mibs failed."
+    fi
+    if [ -n "$snmp_after" ] && [ "$snmp_before" != "$snmp_after" ]; then
+        echo "snmpd upgraded: $snmp_before -> $snmp_after"
+    fi
+    # The package postinst restarts snmpd on upgrade; make sure it is running again
+    if systemctl is-enabled --quiet snmpd 2>/dev/null && ! systemctl is-active --quiet snmpd; then
+        systemctl restart snmpd >/dev/null 2>&1 && echo "snmpd restarted." || echo "WARNING: snmpd failed to start: journalctl -u snmpd -n 20"
+    fi
+    # install_snmp.sh also compiles net-snmp from source into /usr/local; that copy
+    # is NOT touched by apt and shadows the packaged binaries (stale + unpatched).
+    if [ -x /usr/local/sbin/snmpd ] || [ -x /usr/local/bin/snmpget ]; then
+        echo "WARNING: source-built net-snmp found in /usr/local ($(/usr/local/bin/snmpget --version 2>&1 | head -n1))."
+        echo "  It shadows the apt package and is never updated by this script. To use the"
+        echo "  patched distro build: remove /usr/local/{sbin,bin}/snmp* and /usr/local/lib/libnetsnmp*"
+        echo "  (or 'make uninstall' in the net-snmp source dir), then run: ldconfig; hash -r"
+    fi
+    # Security check: default community strings are a classic info-leak/RCE vector
+    if grep -qE '^[[:space:]]*(rocommunity|rwcommunity|com2sec).*[[:space:]]public([[:space:]]|$)' /etc/snmp/snmpd.conf 2>/dev/null; then
+        echo "WARNING: /etc/snmp/snmpd.conf uses the default 'public' community string - change it,"
+        echo "  restrict by source IP, or move to SNMPv3 (net-snmp-create-v3-user)."
+    fi
+    if grep -qE '^[[:space:]]*rwcommunity' /etc/snmp/snmpd.conf 2>/dev/null; then
+        echo "WARNING: snmpd.conf grants read-WRITE community access (rwcommunity)."
+    fi
+else
+    echo "SNMP not installed. Skipping."
 fi
 
 # --- ClamAV (upgrade engine, then update definitions, if installed) ---
@@ -308,6 +402,8 @@ if command -v freshclam >/dev/null 2>&1; then
         fi
     fi
     service clamav-freshclam start >/dev/null 2>&1 || true
+    # clamd only loads signatures/engine at start; reload so the new ones apply
+    systemctl is-active --quiet clamav-daemon && systemctl restart clamav-daemon >/dev/null 2>&1 || true
 else
     echo "ClamAV not found. Skipping."
     echo "  To install: apt install -y clamav clamav-freshclam"
@@ -322,7 +418,32 @@ if command -v rkhunter >/dev/null 2>&1; then
         sed -i 's|^WEB_CMD=.*|WEB_CMD=""|' /etc/rkhunter.conf
         echo "Fixed rkhunter WEB_CMD config option."
     fi
-    rkhunter --update --nocolors || true
+    # rkhunter fetches its data files with wget/curl; with neither installed,
+    # or with mirror updating disabled (Ubuntu/Debian default), every file shows
+    # "Update failed" / mirrors.dat "Skipped".
+    command -v wget >/dev/null 2>&1 || command -v curl >/dev/null 2>&1 || aptg install -y wget
+    rkh_set() {  # rkh_set KEY VALUE: replace the active line, else append
+        if grep -qE "^[[:space:]]*$1=" /etc/rkhunter.conf; then
+            sed -i "s|^[[:space:]]*$1=.*|$1=$2|" /etc/rkhunter.conf
+        else
+            echo "$1=$2" >> /etc/rkhunter.conf
+        fi
+    }
+    if [ -f /etc/rkhunter.conf ]; then
+        rkh_set UPDATE_MIRRORS 1
+        rkh_set MIRRORS_MODE 0
+    fi
+    rkh_out="$(rkhunter --update --nocolors 2>&1)"; rkh_rc=$?
+    echo "$rkh_out"
+    # rkhunter --update exit codes: 0 = updated, 1 = no update available (fine), 2 = failed
+    if [ "$rkh_rc" -ge 2 ] || echo "$rkh_out" | grep -q 'Update failed'; then
+        echo "WARNING: rkhunter data update failed. Last log lines:"
+        tail -n 15 /var/log/rkhunter.log 2>/dev/null | sed 's/^/    /'
+        echo "  Test connectivity: curl -sI https://rkhunter.sourceforge.net/ | head -n1"
+        echo "  Note: Debian/Ubuntu's rkhunter 1.4.6 is unmaintained upstream; if the"
+        echo "  data files still will not update, the packaged data is simply current enough"
+        echo "  and the failure is harmless to --propupd/--check."
+    fi
     rkhunter --propupd
 else
     echo "rkhunter not found. Skipping."
@@ -396,35 +517,53 @@ if [ "$(systemd-detect-virt 2>/dev/null || echo none)" = "none" ]; then
     # (a failed/interrupted flash can brick the device), so this only lists
     # what's available and asks before applying - default is No, and it
     # never prompts from a non-interactive (cron) run.
+    # FW_AUTO_UPDATE=false disables unattended flashing (default: apply).
     command -v fwupdmgr >/dev/null 2>&1 || aptg install -y fwupd
     if command -v fwupdmgr >/dev/null 2>&1; then
-        echo "Running: fwupdmgr refresh"
-        fwupdmgr refresh || true
+        # fwupdmgr talks to the fwupd daemon; it is socket-activated normally
+        # but may be stopped/masked on minimal or freshly-installed systems.
+        systemctl unmask fwupd.service >/dev/null 2>&1 || true
+        systemctl start fwupd.service >/dev/null 2>&1 || true
+        echo "Running: fwupdmgr refresh --force"
+        fwupdmgr refresh --force || echo "WARNING: could not refresh LVFS metadata (offline, or LVFS remote disabled: fwupdmgr enable-remote lvfs)."
         echo "Running: fwupdmgr get-updates"
-        fwupdmgr get-updates
-        # fwupdmgr prints its "nothing available" message to stderr, so stdout
-        # alone (already proven against a real device) is the reliable signal.
-        fw_upgrades="$(fwupdmgr get-updates 2>/dev/null)"
-        if echo "$fw_upgrades" | grep -q .; then
+        # Exit code is the reliable signal: 0 = updates available,
+        # 2 = nothing to do. Anything else = error. (Output text varies
+        # by fwupd version and language.)
+        fwupdmgr get-updates --no-reboot-check
+        fw_rc=$?
+        if [ "$fw_rc" -eq 0 ]; then
+            fw_apply="no"
             if [ -t 0 ]; then
-                printf "Firmware updates are available above. Install them now? [y/N] "
-                read -r -t 120 fw_answer || fw_answer=""
-                case "$fw_answer" in
-                    [Yy]*)
-                        echo "Running: fwupdmgr update"
-                        fwupdmgr update
-                        echo "***********************************************************************"
-                        echo "***  REBOOT REQUIRED to apply the firmware update(s) just installed. ***"
-                        echo "***********************************************************************"
-                        ;;
-                    *)
-                        echo "Skipping firmware install (answered no or timed out)."
-                        ;;
-                esac
+                printf "Firmware updates are available above. Install them now? [Y/n] "
+                read -r -t 120 fw_answer || fw_answer="y"
+                case "$fw_answer" in [Nn]*) ;; *) fw_apply="yes" ;; esac
+            elif [ "${FW_AUTO_UPDATE:-true}" = "true" ]; then
+                echo "Non-interactive run: applying firmware updates (set FW_AUTO_UPDATE=false to disable)."
+                fw_apply="yes"
             else
-                echo "(Non-interactive run: firmware install prompt skipped. Run this script"
-                echo " from a terminal to be offered the install, or run 'fwupdmgr update')"
+                echo "Firmware updates available; FW_AUTO_UPDATE=false so not applying. Run: fwupdmgr update"
             fi
+            if [ "$fw_apply" = "yes" ]; then
+                echo "Running: fwupdmgr update"
+                # -y answers confirmations; --no-reboot-check stops fwupdmgr
+                # from prompting to reboot (we only print a notice below).
+                if fwupdmgr update -y --no-reboot-check; then
+                    touch /var/run/reboot-required
+                    echo "fwupdmgr update" >> /var/run/reboot-required.pkgs
+                    echo "***********************************************************************"
+                    echo "***  REBOOT REQUIRED to apply the firmware update(s) just installed. ***"
+                    echo "***********************************************************************"
+                else
+                    echo "WARNING: fwupdmgr update failed (see output above)."
+                fi
+            else
+                echo "Skipping firmware install."
+            fi
+        elif [ "$fw_rc" -eq 2 ]; then
+            echo "Firmware is up to date (no updates available)."
+        else
+            echo "WARNING: fwupdmgr get-updates failed (exit $fw_rc). Check: fwupdmgr get-devices"
         fi
     else
         echo "fwupdmgr install failed. Skipping firmware checks."
@@ -463,7 +602,7 @@ if command -v ollama >/dev/null 2>&1; then
         case "$model" in
             *:cloud) echo "Skipping cloud-hosted model (not pullable): $model"; continue ;;
         esac
-        if ollama pull "$model"; then
+        if ollama pull "$model" </dev/null; then
             new_digest="$(ollama list 2>/dev/null | awk -v m="$model" '$1 == m {print $2}')"
             if [ -n "$new_digest" ] && [ "$old_digest" != "$new_digest" ]; then
                 echo "UPDATED: $model ($old_digest -> $new_digest)"
@@ -543,44 +682,214 @@ fi
 echo "-----------------------------------------------------------------------"
 
 # --- vLLM (only update if already installed) ---
+# vLLM normally lives in a venv (DGX Spark: ~/vllm-install/.vllm), and a venv's
+# bin/ is not on root's PATH under sudo/cron - so 'command -v vllm' alone misses
+# it. Search PATH first, then the usual venv locations.
+vllm_bin=""
 if command -v vllm >/dev/null 2>&1; then
     vllm_bin="$(readlink -f "$(command -v vllm)")"
-    vllm_current="$(vllm --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
-    echo "vLLM detected: ${vllm_current:-unknown} ($vllm_bin)"
-    vllm_latest="$(curl -fsSL https://pypi.org/pypi/vllm/json 2>/dev/null | grep -oE '"version": *"[0-9]+\.[0-9]+\.[0-9]+"' | head -n1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-    # Upgrade with the same interpreter that vllm runs under (venv-safe),
-    # taken from the entry script's shebang
-    vllm_python="$(head -n1 "$vllm_bin" 2>/dev/null | sed -n 's|^#!||p' | awk '{print $1}')"
-    [ -x "$vllm_python" ] || vllm_python="$(dirname "$vllm_bin")/python"
+else
+    vllm_homes="${VLLM_VENV:+$VLLM_VENV }"
+    [ -n "${SUDO_USER:-}" ] && vllm_homes="$vllm_homes$(getent passwd "$SUDO_USER" | cut -d: -f6)/vllm-install/.vllm "
+    for vllm_home in /home/*/vllm-install/.vllm /root/vllm-install/.vllm /opt/vllm/.vllm /opt/vllm-install/.vllm; do
+        vllm_homes="$vllm_homes$vllm_home "
+    done
+    for vllm_venv in $vllm_homes; do
+        if [ -x "$vllm_venv/bin/python" ] && [ -x "$vllm_venv/bin/vllm" ]; then
+            vllm_bin="$vllm_venv/bin/vllm"
+            break
+        fi
+    done
+fi
+
+if [ -n "$vllm_bin" ]; then
+    vllm_dir="$(dirname "$vllm_bin")"
+    # Use the interpreter belonging to vllm (venv-safe): the venv's python,
+    # else the entry script's shebang.
+    vllm_python="$vllm_dir/python"
+    [ -x "$vllm_python" ] || vllm_python="$(head -n1 "$vllm_bin" 2>/dev/null | sed -n 's|^#!||p' | awk '{print $1}')"
     [ -x "$vllm_python" ] || vllm_python="$(command -v python3)"
+    # Version from package metadata: 'vllm --version' imports torch/CUDA and
+    # is slow or fails when the GPU is busy/unavailable.
+    vllm_current="$("$vllm_python" -c 'import importlib.metadata as m; print(m.version("vllm"))' 2>/dev/null)"
+    echo "vLLM detected: ${vllm_current:-unknown} ($vllm_bin)"
+    vllm_latest="$(curl -fsSL https://pypi.org/pypi/vllm/json 2>/dev/null | python3 -c 'import json,sys; print(json.load(sys.stdin)["info"]["version"])' 2>/dev/null)"
+    # Run pip as the venv's owner so files in the venv are not turned root-owned
+    # (a root-owned file in the user's venv breaks their later updates)
+    vllm_owner="$(stat -c %U "$vllm_dir" 2>/dev/null || echo root)"
+    vllm_run() {
+        if [ "$vllm_owner" != "root" ] && [ "$(id -u)" -eq 0 ]; then sudo -H -u "$vllm_owner" "$@"; else "$@"; fi
+    }
     if [ -z "$vllm_latest" ]; then
         echo "Could not check latest vLLM version (PyPI unreachable). Skipping update."
     elif [ "$vllm_current" = "$vllm_latest" ]; then
         echo "vLLM already up to date ($vllm_current)."
+    elif [ -n "$vllm_current" ] && [ "$(printf '%s\n%s\n' "$vllm_current" "$vllm_latest" | sort -V | tail -n1)" = "$vllm_current" ]; then
+        echo "vLLM $vllm_current is newer than the latest PyPI release ($vllm_latest). Skipping."
     else
         echo "Updating vLLM: ${vllm_current:-unknown} -> $vllm_latest"
-        "$vllm_python" -m pip install --upgrade vllm \
-            || echo "WARNING: vLLM update failed."
+        # SAFETY: on DGX Spark/GB10 the venv holds NVIDIA's aarch64+CUDA torch,
+        # which PyPI does not carry. A plain 'pip install -U vllm' replaces it
+        # with a CPU/blind build and the box loses its GPU. So: pin torch & co to
+        # what is installed (pip fails cleanly if the new vLLM needs a different
+        # torch), snapshot the environment, and roll back if the GPU check fails.
+        vllm_tmp="$(mktemp -d)"
+        chmod 755 "$vllm_tmp"
+        vllm_run "$vllm_python" -m pip freeze > "$vllm_tmp/before.txt" 2>/dev/null
+        grep -iE '^(torch|torchvision|torchaudio|triton)==' "$vllm_tmp/before.txt" > "$vllm_tmp/constraints.txt"
+        chmod 644 "$vllm_tmp"/*.txt
+        vllm_probe='import torch,vllm,sys; sys.exit(0 if torch.cuda.is_available() else 3)'
+        had_gpu=0
+        vllm_run "$vllm_python" -c "$vllm_probe" >/dev/null 2>&1 && had_gpu=1
+        if vllm_run "$vllm_python" -m pip install --upgrade vllm -c "$vllm_tmp/constraints.txt"; then
+            vllm_new="$("$vllm_python" -c 'import importlib.metadata as m; print(m.version("vllm"))' 2>/dev/null)"
+            # Only require a working GPU after the upgrade if it worked before
+            # (a busy/driver-down box shouldn't trigger a pointless rollback)
+            if [ "$had_gpu" -eq 1 ] && ! vllm_run "$vllm_python" -c "$vllm_probe" >/dev/null 2>&1; then
+                echo "WARNING: vLLM upgraded but torch/CUDA check FAILED. Rolling back to ${vllm_current:-previous versions}."
+                vllm_run "$vllm_python" -m pip install --force-reinstall --no-deps -r "$vllm_tmp/before.txt" \
+                    || echo "ERROR: rollback failed. Rebuild with: ./install_ai_spark_vllm.sh (FORCE_VLLM_REINSTALL=true)"
+            else
+                echo "vLLM updated: ${vllm_current:-unknown} -> ${vllm_new:-?}. Restart running vLLM servers to use it."
+            fi
+        else
+            echo "WARNING: vLLM update failed or was blocked by the torch pin; the existing install is unchanged."
+            echo "  A new vLLM that needs a newer torch must go through install_ai_spark_vllm.sh,"
+            echo "  which upgrades a copy of the venv, verifies the GPU, and restores on failure."
+        fi
+        rm -rf "$vllm_tmp"
     fi
 else
-    echo "vLLM not found. Skipping."
-    echo "  To install: pip install vllm"
+    echo "vLLM not found (not on PATH, none in ~/vllm-install/.vllm). Skipping."
+    echo "  Set VLLM_VENV=/path/to/venv to point this script at a custom location."
 fi
+
+# --- TLS certificates & security housekeeping ---
+echo "-----------------------------------------------------------------------"
+# Let's Encrypt / certbot: renew anything within 30 days of expiry (no-op otherwise)
+if command -v certbot >/dev/null 2>&1; then
+    echo "certbot detected: renewing certificates due for renewal..."
+    certbot renew --quiet --no-random-sleep-on-renew || echo "WARNING: certbot renew reported errors (see /var/log/letsencrypt/letsencrypt.log)."
+    certbot certificates 2>/dev/null | grep -E 'Certificate Name|Expiry Date' | sed 's/^/    /'
+fi
+# Java keeps its own copy of the CA store (rebuilt from the system store by this hook)
+if [ -x /etc/ca-certificates/update.d/jks-keystore ] || dpkg -s ca-certificates-java >/dev/null 2>&1; then
+    aptg install --only-upgrade -y ca-certificates-java >/dev/null 2>&1 || true
+fi
+# Snap / Flatpak apps bundle their own libraries and CA stores
+command -v snap >/dev/null 2>&1 && { echo "Refreshing snaps..."; snap refresh || true; }
+command -v flatpak >/dev/null 2>&1 && { echo "Updating flatpaks..."; flatpak update -y --noninteractive || true; }
+# Unattended security updates should stay enabled between runs of this script
+if dpkg -s unattended-upgrades >/dev/null 2>&1 && ! grep -qs 'Unattended-Upgrade "1"' /etc/apt/apt.conf.d/20auto-upgrades; then
+    echo "Enabling unattended security upgrades (/etc/apt/apt.conf.d/20auto-upgrades)."
+    printf 'APT::Periodic::Update-Package-Lists "1";\nAPT::Periodic::Unattended-Upgrade "1";\n' > /etc/apt/apt.conf.d/20auto-upgrades
+fi
+# Kernel livepatch status (Ubuntu Pro)
+command -v canonical-livepatch >/dev/null 2>&1 && canonical-livepatch status 2>/dev/null | head -n 5
+# Services still running old libraries after the upgrade (needs restart, not reboot)
+if command -v needrestart >/dev/null 2>&1; then
+    needrestart -b 2>/dev/null | grep -E '^NEEDRESTART-(KSTA|SVC)' | sed 's/^/    /'
+fi
+# Python venvs carry their OWN CA bundle (certifi) that the system store never
+# touches. Refresh certifi (+ pip) in every venv found, as the venv's owner. Only
+# these two packages are upgraded - never the venv's other deps (e.g. the DGX
+# Spark vLLM venv holds a pinned NVIDIA torch that a blanket upgrade would break).
+echo "Refreshing certifi + pip in Python venvs..."
+for venv_cfg in $(find /home /root /opt /srv -maxdepth 5 -name pyvenv.cfg -not -path '*/site-packages/*' 2>/dev/null); do
+    venv_dir="$(dirname "$venv_cfg")"
+    venv_py="$venv_dir/bin/python"
+    [ -x "$venv_py" ] || continue
+    venv_owner="$(stat -c %U "$venv_dir" 2>/dev/null || echo root)"
+    if [ "$venv_owner" != "root" ]; then venv_exec="sudo -H -u $venv_owner"; else venv_exec=""; fi
+    venv_before="$($venv_exec "$venv_py" -c 'import certifi; print(certifi.__version__)' 2>/dev/null)"
+    timeout 300 $venv_exec "$venv_py" -m pip install --quiet --disable-pip-version-check --upgrade pip certifi >/dev/null 2>&1 \
+        || { echo "  $venv_dir: pip/certifi upgrade failed (skipped)"; continue; }
+    venv_after="$($venv_exec "$venv_py" -c 'import certifi; print(certifi.__version__)' 2>/dev/null)"
+    echo "  $venv_dir: certifi ${venv_before:-none} -> ${venv_after:-?}"
+done
+
+# Containers: images bundle their own CA stores/libraries. Watchtower refreshes
+# images tracking a rolling tag, but pinned tags (nginx:1.25.3) never update, so
+# report every running container whose image is older than 90 days.
+if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+    {
+        echo "=== Container image age report: $(date) ==="
+        for cid in $(docker ps -q 2>/dev/null); do
+            c_name="$(docker inspect -f '{{.Name}}' "$cid" | sed 's|^/||')"
+            c_image="$(docker inspect -f '{{.Config.Image}}' "$cid")"
+            c_created="$(docker image inspect -f '{{.Created}}' "$(docker inspect -f '{{.Image}}' "$cid")" 2>/dev/null)"
+            c_days=$(( ( $(date +%s) - $(date -d "$c_created" +%s 2>/dev/null || date +%s) ) / 86400 ))
+            flag=""; [ "$c_days" -gt 90 ] && flag="  <-- STALE (>90 days): pinned tag or no upstream updates?"
+            printf '%-30s %-50s %5s days%s\n' "$c_name" "$c_image" "$c_days" "$flag"
+        done
+    } 2>&1 | tee /var/log/container_image_age.log | grep -E 'STALE|===' 
+    echo "  Full report: /var/log/container_image_age.log"
+fi
+
+# --- Vulnerability scanners (reports saved under /var/log; previous run kept as .1) ---
+sec_log() { [ -f "$1" ] && mv -f "$1" "$1.1"; }
+if [ "$(. /etc/os-release 2>/dev/null; echo "${ID:-}")" = "debian" ]; then
+    # debsecan reads the Debian Security Tracker, so it is only meaningful on Debian
+    command -v debsecan >/dev/null 2>&1 || aptg install -y debsecan
+    if command -v debsecan >/dev/null 2>&1; then
+        sec_log /var/log/debsecan.log
+        sec_suite="$(. /etc/os-release; echo "${VERSION_CODENAME:-}")"
+        { echo "=== debsecan $(date) (suite: $sec_suite) ==="; debsecan --suite "$sec_suite" --only-fixed --format detail; } > /var/log/debsecan.log 2>&1
+        echo "debsecan: $(grep -c '^CVE-' /var/log/debsecan.log) fixable CVEs affecting installed packages -> /var/log/debsecan.log"
+    fi
+else
+    # Ubuntu isn't covered by debsecan (it has no Ubuntu tracker support); the
+    # equivalent is Canonical's own security-status report.
+    if command -v ubuntu-security-status >/dev/null 2>&1 || command -v pro >/dev/null 2>&1; then
+        sec_log /var/log/ubuntu-security-status.log
+        { echo "=== ubuntu-security-status $(date) ==="; (ubuntu-security-status 2>&1 || pro security-status 2>&1); } > /var/log/ubuntu-security-status.log
+        grep -E 'packages|esm|security updates' /var/log/ubuntu-security-status.log | head -n 6 | sed 's/^/    /'
+        echo "Ubuntu security status -> /var/log/ubuntu-security-status.log"
+    fi
+fi
+# lynis: hardening audit (config/permissions/services). Takes 1-3 min.
+command -v lynis >/dev/null 2>&1 || aptg install -y lynis
+if command -v lynis >/dev/null 2>&1; then
+    sec_log /var/log/lynis-audit.log
+    echo "Running lynis audit (output -> /var/log/lynis-audit.log, details /var/log/lynis-report.dat)..."
+    lynis audit system --cronjob --quiet > /var/log/lynis-audit.log 2>&1
+    grep -E 'hardening_index|warning\[\]|suggestion\[\]' /var/log/lynis-report.dat 2>/dev/null | sed -e 's/^/    /' | head -n 25
+    echo "  Hardening index and all warnings/suggestions: /var/log/lynis-report.dat"
+fi
+# Secure Boot revocation list (UEFI dbx) updates ship through fwupd - covered above.
+echo "-----------------------------------------------------------------------"
 
 # --- Crontab setup ---
-if ! crontab -l 2>/dev/null | grep -q "update_core.sh"; then
-    echo "Adding crontab entries."
-    (crontab -u root -l 2>/dev/null; echo "20 4 * * * /root/update_core.sh >> /var/log/update_core.log 2>&1") | crontab -u root -
-    (crontab -u root -l 2>/dev/null; echo "50 4 * * 7 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1") | crontab -u root -
-    (crontab -u root -l 2>/dev/null; echo "@reboot /root/update_core.sh >> /var/log/update_core.log 2>&1") | crontab -u root -
-    service cron restart >/dev/null 2>&1 || true
+# Runs THIS script (its real path, not a hard-coded /root/update_core.sh that may
+# not exist) every Saturday at 04:20, plus once at boot. The entry is rewritten
+# every run (old update_core.sh / update_ubuntu14.04.sh lines removed) so a stale
+# or broken entry gets fixed. PATH is set because cron's default PATH lacks
+# /usr/sbin and /snap/bin.
+SELF="$(readlink -f "$0" 2>/dev/null)"
+if [ -f "$SELF" ] && command -v crontab >/dev/null 2>&1; then
+    cron_new="$(mktemp)"
+    crontab -u root -l 2>/dev/null \
+        | grep -v -e 'update_core\.sh' -e 'update_ubuntu14\.04\.sh' -e '^# managed by update_ubuntu14.04' -e '^PATH=' \
+        > "$cron_new" || true
+    {
+        echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+        cat "$cron_new"
+        echo "# managed by update_ubuntu14.04.sh - weekly (Saturday) full update"
+        echo "20 4 * * 6 /bin/bash $SELF >> /var/log/update_ubuntu.log 2>&1"
+        echo "@reboot sleep 120 && /bin/bash $SELF >> /var/log/update_ubuntu.log 2>&1"
+    } | crontab -u root -
+    rm -f "$cron_new"
+    systemctl enable --now cron >/dev/null 2>&1 || systemctl enable --now crond >/dev/null 2>&1 || true
+    echo "Crontab: $SELF runs Saturdays 04:20 and at boot (log: /var/log/update_ubuntu.log)."
 else
-    echo "update_core.sh already in crontab. Skipping."
+    echo "WARNING: could not determine script path or crontab missing; cron not configured."
 fi
 
-if ! crontab -l 2>/dev/null | grep -q "sys_restart.sh"; then
-    (crontab -u root -l 2>/dev/null; echo "13 3 7 * * /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1") | crontab -u root -
-fi
+# Companion scripts (only scheduled if present)
+[ -x /root/sys_cleanup.sh ] && ! crontab -u root -l 2>/dev/null | grep -q "sys_cleanup.sh" \
+    && (crontab -u root -l 2>/dev/null; echo "50 4 * * 0 /root/sys_cleanup.sh >> /var/log/sys_cleanup.log 2>&1") | crontab -u root -
+[ -x /root/sys_restart.sh ] && ! crontab -u root -l 2>/dev/null | grep -q "sys_restart.sh" \
+    && (crontab -u root -l 2>/dev/null; echo "13 3 7 * * /root/sys_restart.sh >> /var/log/sys_restart.log 2>&1") | crontab -u root -
 
 # --- Proxmox VE: detect a running kernel older than the newest installed
 # --- pve-kernel (Debian's /var/run/reboot-required hook comes from
