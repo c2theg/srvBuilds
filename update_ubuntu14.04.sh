@@ -19,8 +19,8 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.6.6
-Last Updated:  10/8/2026
+Version:  2.6.7
+Last Updated:  10/24/2026
 Updated by:  Claude (Sonnet 5.5)
     pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
 
@@ -175,14 +175,21 @@ fi
 # On any failure the source file is restored from its .bak. Idempotent.
 # Repair deb822 files where a stray 'Signed-By:'-only stanza was appended (apt: "Malformed
 # stanza 2"): drop any stanza that has no 'Types:' field.
+# Backups go to /var/backups/apt-sources: apt warns ("invalid filename extension")
+# about any unrecognised file left in sources.list.d. Move older in-place ones there.
+mkdir -p /var/backups/apt-sources
+for b in /etc/apt/sources.list.d/*.bak-malformed; do
+    [ -f "$b" ] && mv -f "$b" /var/backups/apt-sources/ && echo "Moved $b to /var/backups/apt-sources/"
+done
 for f in /etc/apt/sources.list.d/*.sources; do
     [ -f "$f" ] || continue
     if awk 'BEGIN{RS="";FS="\n"} !/(^|\n)Types:/{bad=1} END{exit !bad}' "$f"; then
         echo "Repairing malformed deb822 source file: $f"
-        cp -p "$f" "$f.bak-malformed"
+        bk="/var/backups/apt-sources/$(basename "$f").bak-malformed"
+        cp -p "$f" "$bk"
         awk 'BEGIN{RS="";ORS="\n\n";FS="\n"} /(^|\n)Types:/' "$f" > "$f.fixed" && [ -s "$f.fixed" ] && mv "$f.fixed" "$f" || rm -f "$f.fixed"
         # keep the Signed-By the stray stanza carried, inside the real stanza
-        sb="$(grep -hE '^Signed-By:' "$f.bak-malformed" | head -n1)"
+        sb="$(grep -hE '^Signed-By:' "$bk" | head -n1)"
         if [ -n "$sb" ] && ! grep -q '^Signed-By:' "$f"; then
             sed -i "/^URIs:/a $sb" "$f"
         fi
@@ -278,7 +285,9 @@ echo "Downloading required dependencies..."
 # tmux: lets long-running interactive tasks (e.g. the OS release upgrade
 # below) survive a dropped SSH connection.
 aptg install -y ca-certificates unattended-upgrades tmux
-update-ca-certificates --fresh
+# rehash always warns that the ca-certificates.crt bundle holds more than one
+# certificate; that is expected, so filter it out
+update-ca-certificates --fresh 2>&1 | grep -v 'rehash: warning: skipping ca-certificates.crt'
 
 # --- Cleanup ---
 echo "-----------------------------------------------------------------------"
@@ -364,9 +373,14 @@ if command -v docker >/dev/null 2>&1; then
     # Watchtower's bundled client negotiates Docker API 1.25 by default,
     # which modern daemons reject ("client version 1.25 is too old");
     # pin DOCKER_API_VERSION to the daemon's own API version.
+    # --network host: Watchtower does its registry digest checks itself, so on the
+    # bridge network it uses Docker's copy of the upstream DNS servers instead of
+    # the host's resolver. If those answer differently (e.g. a router returning
+    # 10.0.0.1 for index.docker.io), every check times out. Host networking makes
+    # it resolve exactly as the host (and apt) do.
     docker_api="$(docker version --format '{{.Server.APIVersion}}' 2>/dev/null)"
     echo "Checking for container image updates (one-shot)..."
-    docker run --rm \
+    docker run --rm --network host \
         -e DOCKER_API_VERSION="${docker_api:-1.44}" \
         -v /var/run/docker.sock:/var/run/docker.sock \
         nickfedor/watchtower --run-once --cleanup \
@@ -378,7 +392,7 @@ if command -v docker >/dev/null 2>&1; then
     # trigger is running this script itself.
     # The entry is rewritten (old watchtower lines filtered out) each run so
     # fixes to the command line propagate to already-deployed machines.
-    wt_cron="15 4-8 * * * docker run --rm -e DOCKER_API_VERSION=\$(docker version --format '{{.Server.APIVersion}}') -v /var/run/docker.sock:/var/run/docker.sock nickfedor/watchtower --run-once --cleanup >> /var/log/container_updates.log 2>&1"
+    wt_cron="15 4-8 * * * docker run --rm --network host -e DOCKER_API_VERSION=\$(docker version --format '{{.Server.APIVersion}}') -v /var/run/docker.sock:/var/run/docker.sock nickfedor/watchtower --run-once --cleanup >> /var/log/container_updates.log 2>&1"
     (crontab -u root -l 2>/dev/null | grep -v -e "containrrr/watchtower" -e "nickfedor/watchtower"; echo "$wt_cron") | crontab -u root -
     echo "Container-update cron entry installed/refreshed (runs 04:15-08:15)."
 else
