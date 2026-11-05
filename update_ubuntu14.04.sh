@@ -19,10 +19,10 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.6.9
+Version:  2.7.0
 Last Updated:  11/05/2026
 Updated by:  Claude (Opus 5.5)
-    CA trust-store cleanup (upgrade ca-certificates/libnss3/ca-certificates-java, distrust every root on Mozilla's CCADB removed-CA list plus blocked names - default emSign/eMudhra - and /etc/ca-certificates/distrust.local, rebuild Java cacerts, keytool-remove blocked aliases from every JDK, verify the bundle by decoding each cert), rotated vendor apt key auto-refresh (fixes HashiCorp NO_PUBKEY FC9CA96ACA026560: re-fetches the current key into the repo's signed-by keyring, verifies, restores on failure) + HashiCorp repo key scoping, pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
+    weekly cron now runs /home/ubuntu/update_core.sh Saturdays 04:00 + at boot (Debian/Ubuntu with cron installed; falls back to this script if missing), hang protection (single-run PID lock, 8h cap per cron run, curl + per-command timeouts, dpkg --configure -a before upgrading), CA trust-store cleanup (upgrade ca-certificates/libnss3/ca-certificates-java, distrust every root on Mozilla's CCADB removed-CA list plus blocked names - default emSign/eMudhra - and /etc/ca-certificates/distrust.local, rebuild Java cacerts, keytool-remove blocked aliases from every JDK, verify the bundle by decoding each cert), rotated vendor apt key auto-refresh (fixes HashiCorp NO_PUBKEY FC9CA96ACA026560: re-fetches the current key into the repo's signed-by keyring, verifies, restores on failure) + HashiCorp repo key scoping, pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
 
 This supports ( ignore the file name - it's a legacy name 🫤 ):
     Ubuntu versions 20.04 - 26.04+, DGX Spark / GB10
@@ -39,6 +39,32 @@ if [ "$(id -u)" -ne 0 ]; then
     echo "Usage: sudo bash $0" >&2
     exit 1
 fi
+
+# --- One run at a time + no endless hangs ---
+# A second copy (boot run, weekly run and a manual run overlapping) would
+# fight the first over the apt/dpkg lock and the files this script rewrites.
+# The PID file records the running copy. A new run exits only if that PID is
+# still alive AND is this script. A stale file (crash, kill -9, reboot) never
+# blocks future runs. (Not flock: daemons started during the run can inherit
+# its file descriptor and keep holding the lock forever, which would silently
+# skip every later run.) The PID survives the self-update 'exec' below, so the
+# re-executed copy recognises its own lock. /run is cleared at boot.
+lock_pidfile=/run/update_ubuntu.pid
+lock_pid="$(cat "$lock_pidfile" 2>/dev/null)"
+if [ -n "$lock_pid" ] && [ "$lock_pid" != "$$" ] && kill -0 "$lock_pid" 2>/dev/null \
+    && tr '\0' ' ' < "/proc/$lock_pid/cmdline" 2>/dev/null | grep -q 'update_ubuntu14\.04\.sh'; then
+    echo "update_ubuntu14.04.sh is already running (PID $lock_pid, started$(ps -o lstart= -p "$lock_pid" 2>/dev/null)); exiting." >&2
+    exit 1
+fi
+echo $$ > "$lock_pidfile"
+trap '[ "$(cat "$lock_pidfile" 2>/dev/null)" = "$$" ] && rm -f "$lock_pidfile"' EXIT
+# Every curl in this script gets a connect timeout and an overall time limit:
+# by default curl has no limit, and a stalled download would hang the run
+# forever. A later -m/--max-time on a call overrides this default.
+# CURL_MAX_TIME (seconds) changes the default limit.
+curl() { command curl --connect-timeout 20 --max-time "${CURL_MAX_TIME:-900}" "$@"; }
+# The whole weekly run is also capped by 'timeout' in its cron line (see
+# Crontab setup), and the slow network commands below have their own timeouts.
 
 # --- OS version report (lsb_release is absent on minimal installs; fall ---
 # --- back to os-release, which every systemd distro ships)              ---
@@ -313,6 +339,10 @@ if command -v gpg >/dev/null 2>&1; then
 fi
 
 # --- System update ---
+# Finish any dpkg work an earlier run left half-done (e.g. killed by the cron
+# time limit, or by a power cut). Otherwise apt refuses to upgrade anything
+# ("dpkg was interrupted") and this week's upgrades are skipped.
+dpkg --configure -a
 aptg update
 # Driver-series transitions (e.g. NVIDIA 590 -> 595) declare Breaks:/Replaces:
 # on the old packages, which plain 'upgrade' cannot satisfy because it is never
@@ -534,7 +564,7 @@ if command -v npm >/dev/null 2>&1; then
         echo "Removed deprecated 'globalignorefile' setting from $npm_globalconfig"
     fi
     aptg install --only-upgrade -y npm
-    npm install -g npm
+    timeout 900 npm install -g npm || echo "WARNING: npm self-update failed or timed out."
     # pnpm only when both Node.js and npm were already installed
     if command -v node >/dev/null 2>&1; then
         echo "Installing/updating pnpm..."
@@ -590,11 +620,12 @@ if command -v docker >/dev/null 2>&1; then
     # it resolve exactly as the host (and apt) do.
     docker_api="$(docker version --format '{{.Server.APIVersion}}' 2>/dev/null)"
     echo "Checking for container image updates (one-shot)..."
-    docker run --rm --network host \
+    # timeout: a registry that stops responding must not stall the whole run
+    timeout 3600 docker run --rm --network host \
         -e DOCKER_API_VERSION="${docker_api:-1.44}" \
         -v /var/run/docker.sock:/var/run/docker.sock \
         nickfedor/watchtower --run-once --cleanup \
-        || echo "WARNING: container image update pass failed."
+        || echo "WARNING: container image update pass failed or timed out."
 
     # Run the same one-shot pass via cron, restricted to the 04:00-09:00
     # maintenance window (04:15, 05:15, 06:15, 07:15, 08:15) so containers
@@ -728,7 +759,7 @@ if command -v freshclam >/dev/null 2>&1; then
         rm -f /var/lib/clamav/freshclam.dat
     fi
     service clamav-freshclam stop >/dev/null 2>&1 || true
-    if ! freshclam; then
+    if ! timeout 1800 freshclam; then
         echo "WARNING: ClamAV definition update FAILED - malware signatures are stale."
         if clamscan --version 2>/dev/null | grep -qE '^ClamAV 0\.'; then
             echo "  This engine is end-of-life and the ClamAV CDN refuses it (HTTP 403),"
@@ -770,7 +801,7 @@ if command -v rkhunter >/dev/null 2>&1; then
         rkh_set UPDATE_MIRRORS 1
         rkh_set MIRRORS_MODE 0
     fi
-    rkh_out="$(rkhunter --update --nocolors 2>&1)"; rkh_rc=$?
+    rkh_out="$(timeout 900 rkhunter --update --nocolors 2>&1)"; rkh_rc=$?
     echo "$rkh_out"
     # rkhunter --update exit codes: 0 = updated, 1 = no update available (fine), 2 = failed
     if [ "$rkh_rc" -ge 2 ] || echo "$rkh_out" | grep -q 'Update failed'; then
@@ -790,7 +821,7 @@ fi
 # --- Linux Malware Detect / maldet (only update signatures if already installed) ---
 if command -v maldet >/dev/null 2>&1; then
     echo "maldet detected: $(maldet --version 2>/dev/null | head -n1)"
-    maldet -u
+    timeout 900 maldet -u || echo "WARNING: maldet signature update failed or timed out."
 else
     echo "maldet not found. Skipping."
     echo "  To install: curl -fsSL https://www.rfxn.com/downloads/maldetect-current.tar.gz -o /tmp/maldetect-current.tar.gz && tar -xzf /tmp/maldetect-current.tar.gz -C /tmp && cd /tmp/maldetect-*/ && ./install.sh"
@@ -862,12 +893,13 @@ if [ "$(systemd-detect-virt 2>/dev/null || echo none)" = "none" ]; then
         systemctl unmask fwupd.service >/dev/null 2>&1 || true
         systemctl start fwupd.service >/dev/null 2>&1 || true
         echo "Running: fwupdmgr refresh --force"
-        fwupdmgr refresh --force || echo "WARNING: could not refresh LVFS metadata (offline, or LVFS remote disabled: fwupdmgr enable-remote lvfs)."
+        timeout 600 fwupdmgr refresh --force || echo "WARNING: could not refresh LVFS metadata (offline, or LVFS remote disabled: fwupdmgr enable-remote lvfs)."
         echo "Running: fwupdmgr get-updates"
         # Exit code is the reliable signal: 0 = updates available,
         # 2 = nothing to do. Anything else = error. (Output text varies
         # by fwupd version and language.)
-        fwupdmgr get-updates --no-reboot-check
+        # (timeout exits 124 on a hang: falls into the "failed" branch below)
+        timeout 600 fwupdmgr get-updates --no-reboot-check
         fw_rc=$?
         if [ "$fw_rc" -eq 0 ]; then
             fw_apply="no"
@@ -981,7 +1013,7 @@ if [ -n "$llama_bin" ]; then
             if [ "$llama_owner" != "root" ]; then sudo -H -u "$llama_owner" "$@"; else "$@"; fi
         }
         echo "Checking for llama.cpp update..."
-        llama_run git -C "$llama_src" fetch --quiet 2>/dev/null
+        llama_run timeout 600 git -C "$llama_src" fetch --quiet 2>/dev/null
         llama_head="$(llama_run git -C "$llama_src" rev-parse HEAD 2>/dev/null)"
         llama_upstream="$(llama_run git -C "$llama_src" rev-parse '@{u}' 2>/dev/null)"
         echo "llama.cpp checkout: $llama_src (owner $llama_owner), commit ${llama_head:0:9}"
@@ -1106,7 +1138,7 @@ echo "-----------------------------------------------------------------------"
 # Let's Encrypt / certbot: renew anything within 30 days of expiry (no-op otherwise)
 if command -v certbot >/dev/null 2>&1; then
     echo "certbot detected: renewing certificates due for renewal..."
-    certbot renew --quiet --no-random-sleep-on-renew || echo "WARNING: certbot renew reported errors (see /var/log/letsencrypt/letsencrypt.log)."
+    timeout 900 certbot renew --quiet --no-random-sleep-on-renew || echo "WARNING: certbot renew reported errors or timed out (see /var/log/letsencrypt/letsencrypt.log)."
     certbot certificates 2>/dev/null | grep -E 'Certificate Name|Expiry Date' | sed 's/^/    /'
 fi
 # Java keeps its own copy of the CA store (rebuilt from the system store by this hook)
@@ -1114,8 +1146,8 @@ if [ -x /etc/ca-certificates/update.d/jks-keystore ] || dpkg -s ca-certificates-
     aptg install --only-upgrade -y ca-certificates-java >/dev/null 2>&1 || true
 fi
 # Snap / Flatpak apps bundle their own libraries and CA stores
-command -v snap >/dev/null 2>&1 && { echo "Refreshing snaps..."; snap refresh || true; }
-command -v flatpak >/dev/null 2>&1 && { echo "Updating flatpaks..."; flatpak update -y --noninteractive || true; }
+command -v snap >/dev/null 2>&1 && { echo "Refreshing snaps..."; timeout 1800 snap refresh || true; }
+command -v flatpak >/dev/null 2>&1 && { echo "Updating flatpaks..."; timeout 1800 flatpak update -y --noninteractive || true; }
 # Unattended security updates should stay enabled between runs of this script
 if dpkg -s unattended-upgrades >/dev/null 2>&1 && ! grep -qs 'Unattended-Upgrade "1"' /etc/apt/apt.conf.d/20auto-upgrades; then
     echo "Enabling unattended security upgrades (/etc/apt/apt.conf.d/20auto-upgrades)."
@@ -1306,29 +1338,62 @@ fi
 echo "-----------------------------------------------------------------------"
 
 # --- Crontab setup ---
-# Runs THIS script (its real path, not a hard-coded /root/update_core.sh that may
-# not exist) every Saturday at 04:20, plus once at boot. The entry is rewritten
-# every run (old update_core.sh / update_ubuntu14.04.sh lines removed) so a stale
-# or broken entry gets fixed. PATH is set because cron's default PATH lacks
-# /usr/sbin and /snap/bin.
+# On Debian/Ubuntu-family systems (incl. Raspberry Pi OS, Proxmox) that already
+# have cron installed (this script does not install it), schedule
+# /home/ubuntu/update_core.sh every Saturday at 04:00, plus once at boot.
+# update_core.sh downloads the latest copy of THIS script from GitHub and then
+# runs it, so each weekly run uses the current GitHub version.
+# If /home/ubuntu/update_core.sh doesn't exist (no 'ubuntu' user, e.g. Debian
+# or Raspberry Pi OS), this script is scheduled directly at the same time.
+# Its self-update step still pulls the GitHub version first.
+# The entry is rewritten every run: all older update_core.sh /
+# update_ubuntu14.04.sh lines are removed first, so a stale entry (e.g. the
+# daily /root/update_core.sh line update_core.sh used to add) can't cause
+# duplicate runs. update_core.sh only adds its own cron line when none
+# mentioning update_core.sh exists, so it leaves this one alone.
+# PATH is set because cron's default PATH lacks /usr/sbin and /snap/bin.
+# Always run with /bin/bash: works even if the file lost its exec bit.
 SELF="$(readlink -f "$0" 2>/dev/null)"
-if [ -f "$SELF" ] && command -v crontab >/dev/null 2>&1; then
-    cron_new="$(mktemp)"
-    crontab -u root -l 2>/dev/null \
-        | grep -v -e 'update_core\.sh' -e 'update_ubuntu14\.04\.sh' -e '^# managed by update_ubuntu14.04' -e '^PATH=' \
-        > "$cron_new" || true
-    {
-        echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
-        cat "$cron_new"
-        echo "# managed by update_ubuntu14.04.sh - weekly (Saturday) full update"
-        echo "20 4 * * 6 /bin/bash $SELF >> /var/log/update_ubuntu.log 2>&1"
-        echo "@reboot sleep 120 && /bin/bash $SELF >> /var/log/update_ubuntu.log 2>&1"
-    } | crontab -u root -
-    rm -f "$cron_new"
-    systemctl enable --now cron >/dev/null 2>&1 || systemctl enable --now crond >/dev/null 2>&1 || true
-    echo "Crontab: $SELF runs Saturdays 04:20 and at boot (log: /var/log/update_ubuntu.log)."
+os_family="$(. /etc/os-release 2>/dev/null; echo "${ID:-} ${ID_LIKE:-}")"
+core_script=/home/ubuntu/update_core.sh
+if ! echo "$os_family" | grep -qwE 'debian|ubuntu'; then
+    echo "Not a Debian/Ubuntu-family system ($os_family); cron not configured."
+elif ! command -v crontab >/dev/null 2>&1; then
+    echo "cron is not installed; weekly update not scheduled (install it with: apt-get install cron)."
 else
-    echo "WARNING: could not determine script path or crontab missing; cron not configured."
+    if [ -f "$core_script" ]; then
+        cron_target="$core_script"; cron_log=/var/log/update_core.log
+    elif [ -f "$SELF" ]; then
+        cron_target="$SELF"; cron_log=/var/log/update_ubuntu.log
+        echo "WARNING: $core_script not found; scheduling $SELF directly instead."
+    else
+        cron_target=""
+    fi
+    if [ -n "$cron_target" ]; then
+        cron_new="$(mktemp)"
+        crontab -u root -l 2>/dev/null \
+            | grep -v -e 'update_core\.sh' -e 'update_ubuntu14\.04\.sh' -e '^# managed by update_ubuntu14.04' -e '^PATH=' \
+            > "$cron_new" || true
+        # 'timeout' caps a whole run (update_core.sh + this script) at 8 hours, so
+        # a run that hangs can't block the following weeks. GNU timeout signals
+        # its entire process group (apt, curl, docker, ...), with -k sending
+        # SIGKILL 5 min later to anything that ignores SIGTERM. If dpkg was cut
+        # off mid-upgrade, the next run repairs it first (dpkg --configure -a).
+        cron_cmd="timeout -k 300 8h /bin/bash $cron_target >> $cron_log 2>&1"
+        {
+            echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+            cat "$cron_new"
+            echo "# managed by update_ubuntu14.04.sh - weekly (Saturday 04:00) full update"
+            echo "0 4 * * 6 $cron_cmd"
+            # 120 s delay: let the network come up (update_core.sh exits if it can't reach GitHub)
+            echo "@reboot sleep 120 && $cron_cmd"
+        } | crontab -u root -
+        rm -f "$cron_new"
+        systemctl enable --now cron >/dev/null 2>&1 || true
+        echo "Crontab: $cron_target runs Saturdays 04:00 and at boot (log: $cron_log)."
+    else
+        echo "WARNING: could not determine a script path to schedule; cron not configured."
+    fi
 fi
 
 # Companion scripts (only scheduled if present)
