@@ -19,10 +19,10 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.6.7
-Last Updated:  10/24/2026
-Updated by:  Claude (Sonnet 5.5)
-    pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
+Version:  2.6.8
+Last Updated:  11/05/2026
+Updated by:  Claude (Opus 5.5)
+    rotated vendor apt key auto-refresh (fixes HashiCorp NO_PUBKEY FC9CA96ACA026560: re-fetches the current key into the repo's signed-by keyring, verifies, restores on failure) + HashiCorp repo key scoping, pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
 
 This supports ( ignore the file name - it's a legacy name 🫤 ):
     Ubuntu versions 20.04 - 26.04+, DGX Spark / GB10
@@ -250,9 +250,66 @@ scope_repo_key() {  # scope_repo_key <name> <host-regex> <key-url-or-"">
         done
     fi
 }
+# --- Refresh rotated vendor repo keys ---
+# Vendors periodically rotate their apt signing key. The keyring saved at install
+# time then lacks the new signing key and 'apt update' fails for that repo only:
+#   W: GPG error: https://apt.releases.hashicorp.com noble InRelease: The following
+#      signatures couldn't be verified because the public key is not available:
+#      NO_PUBKEY FC9CA96ACA026560
+# apt silently keeps the stale index, so the repo's packages (terraform, vault,
+# ...) stop getting updates. Fix: when apt reports NO_PUBKEY/EXPKEYSIG for <host>,
+# download the vendor's current key and overwrite the keyring that the repo's
+# signed-by points at (e.g. /usr/share/keyrings/hashicorp-archive-keyring.gpg).
+# The old keyring is backed up and restored if the repo still doesn't verify.
+# Repos without signed-by are left to scope_repo_key below, which fetches a
+# fresh key into /etc/apt/keyrings/<name>.gpg. Only runs apt update when the
+# vendor's repo is configured; does nothing when the key is fine.
+refresh_repo_key() {  # refresh_repo_key <name> <host-regex> <key-url>
+    local name="$1" host="$2" key_url="$3" f kr bk tmp fixed=0 restore=""
+    grep -qsE "^[^#]*$host" /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources || return 0
+    aptg update 2>&1 | grep -E "$host" | grep -qE 'NO_PUBKEY|EXPKEYSIG|signatures couldn.t be verified' || return 0
+    echo "$name apt repo key is missing or expired (vendor key rotation); fetching the current key from $key_url"
+    tmp="$(mktemp)"
+    # Validate the download: it must dearmor and contain at least one key.
+    if ! curl -fsSL "$key_url" -o "$tmp" \
+        || ! gpg --dearmor < "$tmp" > "$tmp.gpg" 2>/dev/null \
+        || ! gpg --show-keys --with-colons "$tmp.gpg" 2>/dev/null | grep -q '^fpr'; then
+        echo "WARNING: could not fetch/validate the $name key; leaving its keyring unchanged."
+        rm -f "$tmp" "$tmp.gpg"; return 0
+    fi
+    for f in /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
+        [ -f "$f" ] && grep -qE "^[^#]*$host" "$f" || continue
+        # signed-by=<path> (one-line .list) or Signed-By: <path> (deb822 .sources).
+        # Inline armored keys in Signed-By are not file paths; skip those.
+        kr="$(grep -E "^[^#]*$host|^Signed-By:" "$f" | grep -oiE 'signed-by[=:][[:space:]]*/[^] ,]+' | head -n1 | sed -E 's/^[Ss]igned-[Bb]y[=:][[:space:]]*//')"
+        [ -n "$kr" ] || continue
+        bk="/var/backups/apt-sources/$(basename "$kr").bak-$(date +%Y%m%d%H%M%S)"
+        # Remember "<keyring> <backup>" so a failed check can put the old key back.
+        if [ -f "$kr" ] && cp -p "$kr" "$bk"; then restore="$restore$kr $bk
+"; fi
+        mkdir -p "$(dirname "$kr")"
+        cp "$tmp.gpg" "$kr" && chmod 644 "$kr"
+        fixed=1
+        echo "Replaced $name keyring $kr (old copy in /var/backups/apt-sources/)."
+    done
+    rm -f "$tmp" "$tmp.gpg"
+    [ "$fixed" -eq 1 ] || return 0
+    # Re-check just this repo: unrelated repo errors must not trigger a rollback.
+    if aptg update 2>&1 | grep -E "$host" | grep -qE 'NO_PUBKEY|EXPKEYSIG|BADSIG|signatures couldn.t be verified'; then
+        echo "WARNING: $name repo still fails verification with the new key; restoring the old keyring(s)."
+        echo "$restore" | while read -r kr bk; do
+            [ -n "$kr" ] && [ -f "$bk" ] && cp -p "$bk" "$kr"
+        done
+    else
+        echo "$name apt repo now verifies with the refreshed key."
+    fi
+}
 if command -v gpg >/dev/null 2>&1; then
+    # Refresh before scoping: scope_repo_key only touches repos without signed-by.
+    refresh_repo_key hashicorp 'apt\.releases\.hashicorp\.com' "https://apt.releases.hashicorp.com/gpg"
     scope_repo_key docker 'download\.docker\.com' ""
     scope_repo_key resilio-sync 'linux-packages\.resilio\.com' "https://linux-packages.resilio.com/resilio-sync/key.asc"
+    scope_repo_key hashicorp 'apt\.releases\.hashicorp\.com' "https://apt.releases.hashicorp.com/gpg"
 fi
 
 # --- System update ---
