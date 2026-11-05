@@ -19,10 +19,10 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.7.0
+Version:  2.7.1
 Last Updated:  11/05/2026
 Updated by:  Claude (Opus 5.5)
-    weekly cron now runs /home/ubuntu/update_core.sh Saturdays 04:00 + at boot (Debian/Ubuntu with cron installed; falls back to this script if missing), hang protection (single-run PID lock, 8h cap per cron run, curl + per-command timeouts, dpkg --configure -a before upgrading), CA trust-store cleanup (upgrade ca-certificates/libnss3/ca-certificates-java, distrust every root on Mozilla's CCADB removed-CA list plus blocked names - default emSign/eMudhra - and /etc/ca-certificates/distrust.local, rebuild Java cacerts, keytool-remove blocked aliases from every JDK, verify the bundle by decoding each cert), rotated vendor apt key auto-refresh (fixes HashiCorp NO_PUBKEY FC9CA96ACA026560: re-fetches the current key into the repo's signed-by keyring, verifies, restores on failure) + HashiCorp repo key scoping, pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
+    pip upgraded in the vLLM venv before the vLLM update (every run), clear message when the torch pin keeps vLLM at its current version, weekly cron now runs /home/ubuntu/update_core.sh Saturdays 04:00 + at boot (Debian/Ubuntu with cron installed; falls back to this script if missing), hang protection (single-run PID lock, 8h cap per cron run, curl + per-command timeouts, dpkg --configure -a before upgrading), CA trust-store cleanup (upgrade ca-certificates/libnss3/ca-certificates-java, distrust every root on Mozilla's CCADB removed-CA list plus blocked names - default emSign/eMudhra - and /etc/ca-certificates/distrust.local, rebuild Java cacerts, keytool-remove blocked aliases from every JDK, verify the bundle by decoding each cert), rotated vendor apt key auto-refresh (fixes HashiCorp NO_PUBKEY FC9CA96ACA026560: re-fetches the current key into the repo's signed-by keyring, verifies, restores on failure) + HashiCorp repo key scoping, pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
 
 This supports ( ignore the file name - it's a legacy name 🫤 ):
     Ubuntu versions 20.04 - 26.04+, DGX Spark / GB10
@@ -1089,6 +1089,17 @@ if [ -n "$vllm_bin" ]; then
     vllm_run() {
         if [ "$vllm_owner" != "root" ] && [ "$(id -u)" -eq 0 ]; then sudo -H -u "$vllm_owner" "$@"; else "$@"; fi
     }
+    # Upgrade pip in the vLLM venv first, on every run (even when vLLM itself is
+    # current): an old pip prints "[notice] A new release of pip is available"
+    # and its older resolver can pick worse versions for the vLLM upgrade below.
+    # Only pip is upgraded here, so the pinned torch is not touched.
+    vllm_pip_before="$("$vllm_python" -m pip --version 2>/dev/null | awk '{print $2}')"
+    if vllm_run timeout 300 "$vllm_python" -m pip install --quiet --disable-pip-version-check --upgrade pip >/dev/null 2>&1; then
+        vllm_pip_after="$("$vllm_python" -m pip --version 2>/dev/null | awk '{print $2}')"
+        [ "$vllm_pip_before" != "$vllm_pip_after" ] && echo "pip in the vLLM venv upgraded: ${vllm_pip_before:-?} -> ${vllm_pip_after:-?}"
+    else
+        echo "WARNING: could not upgrade pip in the vLLM venv ($vllm_dir)."
+    fi
     if [ -z "$vllm_latest" ]; then
         echo "Could not check latest vLLM version (PyPI unreachable). Skipping update."
     elif [ "$vllm_current" = "$vllm_latest" ]; then
@@ -1110,11 +1121,16 @@ if [ -n "$vllm_bin" ]; then
         vllm_probe='import torch,vllm,sys; sys.exit(0 if torch.cuda.is_available() else 3)'
         had_gpu=0
         vllm_run "$vllm_python" -c "$vllm_probe" >/dev/null 2>&1 && had_gpu=1
-        if vllm_run "$vllm_python" -m pip install --upgrade vllm -c "$vllm_tmp/constraints.txt"; then
+        if vllm_run "$vllm_python" -m pip install --disable-pip-version-check --upgrade vllm -c "$vllm_tmp/constraints.txt"; then
             vllm_new="$("$vllm_python" -c 'import importlib.metadata as m; print(m.version("vllm"))' 2>/dev/null)"
             # Only require a working GPU after the upgrade if it worked before
             # (a busy/driver-down box shouldn't trigger a pointless rollback)
-            if [ "$had_gpu" -eq 1 ] && ! vllm_run "$vllm_python" -c "$vllm_probe" >/dev/null 2>&1; then
+            if [ -n "$vllm_new" ] && [ "$vllm_new" = "$vllm_current" ]; then
+                # pip succeeds but keeps the installed version when the newest
+                # vLLM that fits the torch pin is the one already installed.
+                echo "vLLM stays at $vllm_current: $vllm_latest needs a different torch than the pinned one."
+                echo "  To move to $vllm_latest, run install_ai_spark_vllm.sh (upgrades a copy of the venv, verifies the GPU)."
+            elif [ "$had_gpu" -eq 1 ] && ! vllm_run "$vllm_python" -c "$vllm_probe" >/dev/null 2>&1; then
                 echo "WARNING: vLLM upgraded but torch/CUDA check FAILED. Rolling back to ${vllm_current:-previous versions}."
                 vllm_run "$vllm_python" -m pip install --force-reinstall --no-deps -r "$vllm_tmp/before.txt" \
                     || echo "ERROR: rollback failed. Rebuild with: ./install_ai_spark_vllm.sh (FORCE_VLLM_REINSTALL=true)"
