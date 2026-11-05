@@ -19,10 +19,10 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.6.8
+Version:  2.6.9
 Last Updated:  11/05/2026
 Updated by:  Claude (Opus 5.5)
-    rotated vendor apt key auto-refresh (fixes HashiCorp NO_PUBKEY FC9CA96ACA026560: re-fetches the current key into the repo's signed-by keyring, verifies, restores on failure) + HashiCorp repo key scoping, pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
+    CA trust-store cleanup (upgrade ca-certificates/libnss3/ca-certificates-java, distrust every root on Mozilla's CCADB removed-CA list plus blocked names - default emSign/eMudhra - and /etc/ca-certificates/distrust.local, rebuild Java cacerts, keytool-remove blocked aliases from every JDK, verify the bundle by decoding each cert), rotated vendor apt key auto-refresh (fixes HashiCorp NO_PUBKEY FC9CA96ACA026560: re-fetches the current key into the repo's signed-by keyring, verifies, restores on failure) + HashiCorp repo key scoping, pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
 
 This supports ( ignore the file name - it's a legacy name 🫤 ):
     Ubuntu versions 20.04 - 26.04+, DGX Spark / GB10
@@ -342,9 +342,162 @@ echo "Downloading required dependencies..."
 # tmux: lets long-running interactive tasks (e.g. the OS release upgrade
 # below) survive a dropped SSH connection.
 aptg install -y ca-certificates unattended-upgrades tmux
+
+# --- CA trust store: update, remove distrusted/compromised roots, rebuild ---
+# 1. Upgrade the CA packages. libnss3 carries the root list built into
+#    NSS-based apps; ca-certificates-java keeps Java's store in sync.
+#    --only-upgrade skips any of these that are not installed.
+# 2. Build a blocklist from two sources:
+#    a) Mozilla's "Removed CA Certificate Report" (CCADB): every root Mozilla
+#       has pulled from NSS, keyed by SHA-256 fingerprint. Downloaded each run
+#       (the last good copy is reused if the download fails), so new distrust
+#       events are picked up without editing this script. NOTE: this also
+#       covers roots retired for age/expiry, not only compromised ones; set
+#       CA_USE_MOZILLA_REMOVED=false to use only the name/local lists.
+#    b) CA names blocked ahead of Mozilla's list: CA_BLOCK_NAMES (default
+#       "emSign": eMudhra's roots. Its key was reported stolen; Mozilla's list
+#       had C1, C3 and G3 but not "emSign Root CA - G1" when this was written).
+#    c) /etc/ca-certificates/distrust.local (optional, one entry per line):
+#       a SHA-256 fingerprint (colons optional) or a CA-name substring.
+# 3. System store: matching certs are deselected in /etc/ca-certificates.conf
+#    ("!" prefix). Deselections survive ca-certificates package upgrades, so
+#    a later update can't silently re-add them. Matching certs added locally
+#    in /usr/local/share/ca-certificates are moved to /var/backups/ca-distrusted.
+# 4. Java: /etc/ssl/certs/java/cacerts is deleted and rebuilt from the cleaned
+#    system store by update-ca-certificates --fresh. It is backed up first and
+#    restored if the rebuild doesn't produce it. JDKs that ship their own
+#    cacerts (Temurin/Oracle/Zulu tarballs in /opt, /usr/lib/jvm, ...) are
+#    scanned with keytool, and matching aliases (e.g. "emsignrootcag1 [jdk]")
+#    are deleted. This is the 'keytool -delete -cacerts' fix applied to every
+#    JDK and every bad alias. Non-default store password: JAVA_CACERTS_PASS.
+# 5. Verify by decoding every cert in /etc/ssl/certs/ca-certificates.crt.
+#    (grep "emSign" on that file always prints 0: it holds only base64.)
+# Python venvs (certifi) are refreshed further down; certifi follows Mozilla.
+aptg install --only-upgrade -y ca-certificates libnss3 ca-certificates-java
+CA_BLOCK_NAMES="${CA_BLOCK_NAMES:-emSign}"
+CA_USE_MOZILLA_REMOVED="${CA_USE_MOZILLA_REMOVED:-true}"
+ca_state=/var/lib/ca-distrust
+ca_block_fps="$ca_state/blocked-sha256.txt"
+ca_block_names="$ca_state/blocked-names.txt"
+mkdir -p "$ca_state" /var/backups/ca-distrusted
+if [ "$CA_USE_MOZILLA_REMOVED" = "true" ]; then
+    if curl -fsSL -m 60 -o "$ca_state/mozilla-removed.csv.new" \
+            "https://ccadb.my.salesforce-sites.com/mozilla/RemovedCACertificateReportCSVFormat" \
+        && grep -q 'SHA-256 Fingerprint' "$ca_state/mozilla-removed.csv.new"; then
+        mv -f "$ca_state/mozilla-removed.csv.new" "$ca_state/mozilla-removed.csv"
+    else
+        rm -f "$ca_state/mozilla-removed.csv.new"
+        echo "WARNING: could not download Mozilla's removed-CA list; using the cached copy (if any)."
+    fi
+fi
+# Fingerprints: every quoted 64-hex field in the CSV (SHA-256 cert fingerprint
+# and Subject+SPKI hash; the latter can never equal a cert fingerprint, so it's harmless).
+{
+    [ "$CA_USE_MOZILLA_REMOVED" = "true" ] && grep -ohE '"[0-9A-F]{64}"' "$ca_state/mozilla-removed.csv" 2>/dev/null | tr -d '"'
+    grep -vE '^[[:space:]]*(#|$)' /etc/ca-certificates/distrust.local 2>/dev/null | tr -d ': \t' | tr 'a-f' 'A-F' | grep -xE '[0-9A-F]{64}'
+} | sort -u > "$ca_block_fps"
+{
+    printf '%s\n' $CA_BLOCK_NAMES
+    grep -vE '^[[:space:]]*(#|$)' /etc/ca-certificates/distrust.local 2>/dev/null | grep -vxiE '[0-9a-f: \t]{64,}'
+} | sed '/^[[:space:]]*$/d' > "$ca_block_names"
+echo "CA blocklist: $(wc -l < "$ca_block_fps") fingerprints, names: $(tr '\n' ' ' < "$ca_block_names")"
+ca_fp() { openssl x509 -in "$1" -noout -fingerprint -sha256 2>/dev/null | sed 's/.*=//; s/://g' | tr 'a-f' 'A-F'; }
+ca_is_blocked() {  # ca_is_blocked <sha256-hex> <names/subject text>
+    [ -n "$1" ] && grep -qxF "$1" "$ca_block_fps" && return 0
+    [ -s "$ca_block_names" ] && printf '%s\n' "$2" | grep -qiF -f "$ca_block_names"
+}
+if command -v openssl >/dev/null 2>&1 && [ -f /etc/ca-certificates.conf ]; then
+    ca_conf_new="$(mktemp)"; ca_removed=0
+    while IFS= read -r ca_line; do
+        case "$ca_line" in ""|\#*|!*) printf '%s\n' "$ca_line"; continue ;; esac
+        ca_crt="/usr/share/ca-certificates/$ca_line"
+        if [ -f "$ca_crt" ] && ca_is_blocked "$(ca_fp "$ca_crt")" "$ca_line $(openssl x509 -in "$ca_crt" -noout -subject 2>/dev/null)"; then
+            printf '!%s\n' "$ca_line"
+            echo "Distrusting CA: $ca_line" >&2
+            ca_removed=$((ca_removed + 1))
+        else
+            printf '%s\n' "$ca_line"
+        fi
+    done < /etc/ca-certificates.conf > "$ca_conf_new"
+    if [ "$ca_removed" -gt 0 ]; then
+        cp -p /etc/ca-certificates.conf "/var/backups/ca-certificates.conf.bak-$(date +%Y%m%d%H%M%S)"
+        cat "$ca_conf_new" > /etc/ca-certificates.conf
+        echo "Deselected $ca_removed CA(s) in /etc/ca-certificates.conf (backup in /var/backups/)."
+    fi
+    rm -f "$ca_conf_new"
+    # Locally added CAs are always trusted (not listed in ca-certificates.conf)
+    find /usr/local/share/ca-certificates -type f -name '*.crt' 2>/dev/null | while IFS= read -r ca_crt; do
+        if ca_is_blocked "$(ca_fp "$ca_crt")" "$(basename "$ca_crt") $(openssl x509 -in "$ca_crt" -noout -subject 2>/dev/null)"; then
+            mv -f "$ca_crt" /var/backups/ca-distrusted/ && echo "Removed locally added CA: $ca_crt (moved to /var/backups/ca-distrusted/)"
+        fi
+    done
+else
+    echo "WARNING: openssl or /etc/ca-certificates.conf missing; skipping CA blocklist."
+fi
+# Java: drop the system Java store so --fresh rebuilds it from the cleaned store.
+# Only when ca-certificates-java's hook exists; without it nothing would rebuild it.
+java_store=/etc/ssl/certs/java/cacerts
+java_store_bk=""
+if [ -x /etc/ca-certificates/update.d/jks-keystore ] && [ -f "$java_store" ]; then
+    java_store_bk="/var/backups/ca-distrusted/java-cacerts.bak-$(date +%Y%m%d%H%M%S)"
+    cp -p "$java_store" "$java_store_bk" && rm -f "$java_store"
+fi
 # rehash always warns that the ca-certificates.crt bundle holds more than one
 # certificate; that is expected, so filter it out
 update-ca-certificates --fresh 2>&1 | grep -v 'rehash: warning: skipping ca-certificates.crt'
+if [ -n "$java_store_bk" ] && [ ! -s "$java_store" ]; then
+    cp -p "$java_store_bk" "$java_store"
+    echo "WARNING: Java cacerts was not rebuilt; restored the backup (blocked aliases are removed below)."
+fi
+# Java: remove blocked roots from every JDK cacerts (bundled JDK stores aren't
+# fed from the system store). Debian JDKs symlink theirs to $java_store; readlink
+# -f + sort -u makes sure each real file is processed once.
+for ks in $( { [ -f "$java_store" ] && echo "$java_store"
+               find /usr/lib/jvm /opt /usr/local -path '*/lib/security/cacerts' 2>/dev/null; } \
+             | xargs -r -n1 readlink -f 2>/dev/null | sort -u ); do
+    [ -f "$ks" ] || continue
+    kt="$(dirname "$(dirname "$(dirname "$ks")")")/bin/keytool"   # <jdk>/lib/security/cacerts -> <jdk>/bin/keytool
+    [ -x "$kt" ] || kt="$(command -v keytool || true)"
+    [ -n "$kt" ] || { echo "No keytool available for $ks; skipping."; continue; }
+    ks_list="$("$kt" -J-Duser.language=en -list -v -keystore "$ks" -storepass "${JAVA_CACERTS_PASS:-changeit}" 2>/dev/null \
+        | awk '/^Alias name: /{a=substr($0,13)} /^Owner: /{o=substr($0,8)}
+               /^[[:space:]]*SHA256: /{f=$2; gsub(":","",f); print f "\t" a "\t" o}')"
+    if [ -z "$ks_list" ]; then
+        echo "WARNING: could not read Java keystore $ks (non-default password? set JAVA_CACERTS_PASS)."
+        continue
+    fi
+    ks_bk=""
+    while IFS="$(printf '\t')" read -r ks_fp ks_alias ks_owner; do
+        ca_is_blocked "$ks_fp" "$ks_alias $ks_owner" || continue
+        if [ -z "$ks_bk" ]; then
+            ks_bk="/var/backups/ca-distrusted/$(echo "$ks" | tr '/' '_').bak-$(date +%Y%m%d%H%M%S)"
+            cp -p "$ks" "$ks_bk"
+        fi
+        "$kt" -delete -noprompt -keystore "$ks" -storepass "${JAVA_CACERTS_PASS:-changeit}" -alias "$ks_alias" >/dev/null 2>&1 \
+            && echo "Removed Java CA \"$ks_alias\" from $ks" \
+            || echo "WARNING: failed to remove Java CA \"$ks_alias\" from $ks"
+    done <<EOF
+$ks_list
+EOF
+done
+# Verify: decode every cert in the system bundle and check it against the blocklist
+if command -v openssl >/dev/null 2>&1 && [ -s /etc/ssl/certs/ca-certificates.crt ]; then
+    ca_tmp="$(mktemp -d)"
+    awk -v d="$ca_tmp" '/-BEGIN CERTIFICATE-/{n++; f=d "/c" n ".pem"} f{print > f} /-END CERTIFICATE-/{close(f); f=""}' \
+        /etc/ssl/certs/ca-certificates.crt
+    ca_total=0; ca_left=0
+    for ca_crt in "$ca_tmp"/c*.pem; do
+        [ -f "$ca_crt" ] || continue
+        ca_total=$((ca_total + 1))
+        ca_subj="$(openssl x509 -in "$ca_crt" -noout -subject 2>/dev/null)"
+        if ca_is_blocked "$(ca_fp "$ca_crt")" "$ca_subj"; then
+            echo "WARNING: blocked CA is STILL trusted: $ca_subj"
+            ca_left=$((ca_left + 1))
+        fi
+    done
+    rm -rf "$ca_tmp"
+    echo "CA store check: $ca_total trusted roots, $ca_left blocked ones remaining; emSign links in /etc/ssl/certs: $(ls /etc/ssl/certs | grep -ci emsign)"
+fi
 
 # --- Cleanup ---
 echo "-----------------------------------------------------------------------"
@@ -991,6 +1144,115 @@ for venv_cfg in $(find /home /root /opt /srv -maxdepth 5 -name pyvenv.cfg -not -
     venv_after="$($venv_exec "$venv_py" -c 'import certifi; print(certifi.__version__)' 2>/dev/null)"
     echo "  $venv_dir: certifi ${venv_before:-none} -> ${venv_after:-?}"
 done
+
+# --- Language runtimes: remove distrusted CAs from their own trust stores ---
+# Cleaning the system store (above) only protects code that READS it. Several
+# runtimes ship their own copy of Mozilla's roots, which lag behind or are
+# compiled in. Each is handled here, using the same blocklist ($ca_block_fps /
+# $ca_block_names from the CA trust store section):
+#   Python  - certifi/cacert.pem in every venv, system pip, conda, and pip's own
+#             vendored copy (pip/_vendor/certifi), plus botocore/httplib2 bundles:
+#             blocked certs are removed from the file. Runs AFTER the certifi
+#             upgrade above, which would otherwise bring them back.
+#             REQUESTS_CA_BUNDLE points 'requests' at the system store.
+#   pip     - pip 24.2+ verifies with the system store (truststore); older pip uses
+#             its vendored certifi (cleaned above). A custom 'pip config' cert
+#             file is cleaned too.
+#   Node.js - roots are compiled into the node binary and can't be edited.
+#   npm/pnpm  NODE_OPTIONS=--use-openssl-ca + SSL_CERT_FILE make node (and npm,
+#             pnpm, npx, which run on it) use the cleaned system store instead.
+#             A custom 'npm config cafile' bundle is cleaned too.
+#   Go      - crypto/x509 reads /etc/ssl/certs on Linux: covered by the system
+#             store. (Only binaries built with x509roots/fallback AND no system
+#             store would differ.)
+#   Rust    - cargo/rustup (curl / rustls-platform-verifier) use the system
+#             store. Programs compiled with webpki-roots embed their own roots;
+#             they need a rebuild against a newer webpki-roots.
+#   Java    - every JDK cacerts, handled in the CA trust store section.
+#   Others  - curl, wget, git, Ruby, PHP, Perl link system OpenSSL/GnuTLS: covered.
+#             Docker images ship their own stores; rebuild/pull to update them.
+# Env vars go in /etc/profile.d/ca-system-trust.sh (login shells). systemd
+# services and cron jobs don't read it; add the same variables there with
+# Environment= if needed. CA_FORCE_SYSTEM_STORE=false skips the env file.
+ca_scrub_pem() {  # ca_scrub_pem <file>: drop blocked certs (+ their comment headers)
+    local f="$1" d i blk out removed=0 sum
+    sum="$(sha256sum "$f" 2>/dev/null | awk '{print $1}')"
+    # Many venvs share the same certifi release; scan each distinct file only once.
+    grep -qxF "$sum" "$ca_state/clean-bundles.txt" 2>/dev/null && return 0
+    d="$(mktemp -d)"; out="$d/out"; : > "$out"
+    awk -v d="$d" 'BEGIN{n=1; f=d "/b1"} {print > f} /-END CERTIFICATE-/{close(f); n++; f=d "/b" n}' "$f"
+    i=1
+    while [ -f "$d/b$i" ]; do
+        blk="$d/b$i"
+        if grep -q -- '-BEGIN CERTIFICATE-' "$blk" \
+            && ca_is_blocked "$(ca_fp "$blk")" "$(grep -E '^# (Issuer|Subject|Label)' "$blk") $(openssl x509 -in "$blk" -noout -subject 2>/dev/null)"; then
+            removed=$((removed + 1))
+        else
+            cat "$blk" >> "$out"
+        fi
+        i=$((i + 1))
+    done
+    if [ "$removed" -gt 0 ] && grep -q -- '-BEGIN CERTIFICATE-' "$out"; then
+        cp -p "$f" "/var/backups/ca-distrusted/$(echo "$f" | tr '/' '_').bak-$(date +%Y%m%d%H%M%S)"
+        cat "$out" > "$f"   # cat (not mv) keeps the file's owner and permissions
+        echo "  Removed $removed blocked CA(s) from $f"
+        sum="$(sha256sum "$f" | awk '{print $1}')"
+    fi
+    echo "$sum" >> "$ca_state/clean-bundles.txt"
+    rm -rf "$d"
+}
+if command -v openssl >/dev/null 2>&1 && [ -s "$ca_block_fps" -o -s "$ca_block_names" ]; then
+    echo "Removing distrusted CAs from bundled runtime trust stores (Python/certifi, pip, conda, npm, ...)..."
+    : > "$ca_state/clean-bundles.txt"
+    # Regular files only: Debian's python3-certifi symlinks to the system bundle.
+    # -xdev: don't wander into network/backup mounts.
+    timeout 600 find /home /root /opt /srv /usr/local /usr/lib /usr/share -xdev -type f \
+        \( -name cacert.pem -o -path '*httplib2*/cacerts.txt' \) 2>/dev/null \
+        | while IFS= read -r ca_bundle; do ca_scrub_pem "$ca_bundle"; done
+    # Custom CA files configured for npm or pip (for root and the sudo user)
+    for ca_u in root ${SUDO_USER:-}; do
+        [ -n "$ca_u" ] || continue
+        if command -v npm >/dev/null 2>&1; then
+            ca_f="$(sudo -H -u "$ca_u" npm config get cafile 2>/dev/null)"
+            [ -f "$ca_f" ] && ca_scrub_pem "$ca_f"
+            [ "$(sudo -H -u "$ca_u" npm config get strict-ssl 2>/dev/null)" = "false" ] \
+                && echo "WARNING: npm strict-ssl=false for $ca_u: certificates are NOT verified (npm config delete strict-ssl)."
+        fi
+        if command -v pip3 >/dev/null 2>&1; then
+            ca_f="$(sudo -H -u "$ca_u" pip3 config list 2>/dev/null | grep -E '\.cert=' | head -n1 | cut -d= -f2- | tr -d "'\"")"
+            [ -f "$ca_f" ] && ca_scrub_pem "$ca_f"
+        fi
+    done
+fi
+if [ "${CA_FORCE_SYSTEM_STORE:-true}" = "true" ] && [ -s /etc/ssl/certs/ca-certificates.crt ]; then
+    ca_env=/etc/profile.d/ca-system-trust.sh
+    {
+        echo "# managed by update_ubuntu14.04.sh: point runtimes that bundle their own CA"
+        echo "# list at the system store, which is cleaned of distrusted/compromised roots."
+        echo "export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt"
+        echo "export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt"
+        echo "export CARGO_HTTP_CAINFO=/etc/ssl/certs/ca-certificates.crt"
+        # Only add the node flag if this node accepts it: an unknown flag in
+        # NODE_OPTIONS stops node from starting at all.
+        if command -v node >/dev/null 2>&1 && node --use-openssl-ca -e 0 >/dev/null 2>&1; then
+            echo 'case " ${NODE_OPTIONS:-} " in *" --use-openssl-ca "*) ;; *) export NODE_OPTIONS="${NODE_OPTIONS:+$NODE_OPTIONS }--use-openssl-ca" ;; esac'
+        fi
+    } > "$ca_env.new" && mv -f "$ca_env.new" "$ca_env" && chmod 644 "$ca_env"
+    echo "System CA store enforced for Python requests, cargo and Node.js/npm via $ca_env (new login shells)."
+fi
+# Report: how many blocked roots are compiled into node (harmless once it uses the system store)
+if command -v node >/dev/null 2>&1; then
+    node_blocked="$(node -e '
+        const fs=require("fs"),tls=require("tls"),{X509Certificate}=require("crypto");
+        const fps=new Set(fs.readFileSync(process.argv[1],"utf8").split("\n").filter(Boolean));
+        const names=fs.readFileSync(process.argv[2],"utf8").split("\n").filter(Boolean).map(s=>s.toLowerCase());
+        let n=0; for (const p of tls.rootCertificates){const c=new X509Certificate(p);
+          if (fps.has(c.fingerprint256.replace(/:/g,""))||names.some(s=>c.subject.toLowerCase().includes(s))) n++;}
+        console.log(n);' "$ca_block_fps" "$ca_block_names" 2>/dev/null)"
+    echo "Node.js $(node -v): ${node_blocked:-?} blocked root(s) compiled in; $( [ -f /etc/profile.d/ca-system-trust.sh ] && grep -q use-openssl-ca /etc/profile.d/ca-system-trust.sh && echo 'overridden by --use-openssl-ca (system store)' || echo 'NOT overridden - update Node.js to drop them')."
+fi
+command -v go >/dev/null 2>&1 && echo "Go: uses the system CA store on Linux (covered)."
+command -v cargo >/dev/null 2>&1 && echo "Rust/cargo: uses the system CA store (covered); apps built with webpki-roots need a rebuild."
 
 # Containers: images bundle their own CA stores/libraries. Watchtower refreshes
 # images tracking a rolling tag, but pinned tags (nginx:1.25.3) never update, so
