@@ -2,11 +2,14 @@
 #
 # update_arcane.sh - check and update a native (systemd) Arcane install
 #
-# Version:      1.0.0
+# Version:      1.0.3
 # Last Updated: 11/07/2026
 # Updated by:   Claude (Opus 5.5)
 #
 # Source: https://github.com/getarcaneapp/arcane/releases
+#
+# Install: wget https://raw.githubusercontent.com/c2theg/srvBuilds/refs/heads/master/install_arcane.sh && chmod u+x install_arcane.sh
+#
 #
 # What it does:
 #   1. Detects the OS (Ubuntu 24.04 / 26.04) and CPU arch (amd64 / arm64)
