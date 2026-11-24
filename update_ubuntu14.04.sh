@@ -19,10 +19,10 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.7.1
-Last Updated:  11/05/2026
+Version:  2.7.2
+Last Updated:  11/23/2026
 Updated by:  Claude (Opus 5.5)
-    pip upgraded in the vLLM venv before the vLLM update (every run), clear message when the torch pin keeps vLLM at its current version, weekly cron now runs /home/ubuntu/update_core.sh Saturdays 04:00 + at boot (Debian/Ubuntu with cron installed; falls back to this script if missing), hang protection (single-run PID lock, 8h cap per cron run, curl + per-command timeouts, dpkg --configure -a before upgrading), CA trust-store cleanup (upgrade ca-certificates/libnss3/ca-certificates-java, distrust every root on Mozilla's CCADB removed-CA list plus blocked names - default emSign/eMudhra - and /etc/ca-certificates/distrust.local, rebuild Java cacerts, keytool-remove blocked aliases from every JDK, verify the bundle by decoding each cert), rotated vendor apt key auto-refresh (fixes HashiCorp NO_PUBKEY FC9CA96ACA026560: re-fetches the current key into the repo's signed-by keyring, verifies, restores on failure) + HashiCorp repo key scoping, pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
+    boot guard (GRUB_DEFAULT=saved pinned to the last kernel that booted + panic=10; a new kernel gets one grub-reboot trial boot - promoted if it boots with its DKMS drivers, marked bad and never retried if it panics; missing initramfs rebuilt before arming; only on plain ext2-4 /boot where GRUB can clear the one-shot), kernel vs. DKMS safety net (a new kernel whose DKMS driver - e.g. NVIDIA 590 on the 7.0 HWE kernel - fails to build is purged with the metapackages that pulled it in, so dpkg stops failing every run and the half-installed kernel can never become the boot default; metapackages auto-reinstall once the driver or kernel candidate changes), pip upgraded in the vLLM venv before the vLLM update (every run), clear message when the torch pin keeps vLLM at its current version, weekly cron now runs /home/ubuntu/update_core.sh Saturdays 04:00 + at boot (Debian/Ubuntu with cron installed; falls back to this script if missing), hang protection (single-run PID lock, 8h cap per cron run, curl + per-command timeouts, dpkg --configure -a before upgrading), CA trust-store cleanup (upgrade ca-certificates/libnss3/ca-certificates-java, distrust every root on Mozilla's CCADB removed-CA list plus blocked names - default emSign/eMudhra - and /etc/ca-certificates/distrust.local, rebuild Java cacerts, keytool-remove blocked aliases from every JDK, verify the bundle by decoding each cert), rotated vendor apt key auto-refresh (fixes HashiCorp NO_PUBKEY FC9CA96ACA026560: re-fetches the current key into the repo's signed-by keyring, verifies, restores on failure) + HashiCorp repo key scoping, pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
 
 This supports ( ignore the file name - it's a legacy name 🫤 ):
     Ubuntu versions 20.04 - 26.04+, DGX Spark / GB10
@@ -338,18 +338,135 @@ if command -v gpg >/dev/null 2>&1; then
     scope_repo_key hashicorp 'apt\.releases\.hashicorp\.com' "https://apt.releases.hashicorp.com/gpg"
 fi
 
+# --- Kernel vs. DKMS driver safety net ---
+# A new kernel series (e.g. the 24.04 HWE jump to 7.0) can arrive before an
+# out-of-tree DKMS driver (e.g. NVIDIA 590.48.01) can build against it. The
+# kernel's postinst then aborts in /etc/kernel/postinst.d/dkms - BEFORE the
+# initramfs and grub hooks run - and dpkg leaves that kernel plus every kernel
+# metapackage unconfigured. From then on EVERY apt run fails the same way, so
+# all upgrades stop. Worse, anything that later runs update-grub makes that
+# half-installed kernel (no initrd, no GPU driver) the boot default.
+# Fix: remove only that kernel (never the running one) and the metapackages
+# that pull it in, remember them, and reinstall them on a later run once the
+# DKMS driver version or the kernel candidate has changed.
+KDKMS_STATE=/var/lib/update_ubuntu/kernel-dkms-rollback
+kdkms_get() { sed -n "s/^$1=//p" "$KDKMS_STATE" 2>/dev/null; }
+# "nvidia/590.48.01 ..." - changes when a new driver version is installed
+dkms_snapshot() {
+    command -v dkms >/dev/null 2>&1 || return 0
+    dkms status 2>/dev/null | sed 's/:.*//' \
+        | awk -F', ' '{print ($1 ~ /\//) ? $1 : $1"/"$2}' | sort -u | tr '\n' ' '
+}
+meta_candidates() { [ -n "$*" ] && apt-cache policy "$@" 2>/dev/null | awk '/Candidate:/{print $2}' | tr '\n' ' '; }
+# Installed package names belonging to kernel ABI <base> (e.g. 7.0.0-43)
+kernel_abi_pkgs() {
+    dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' 2>/dev/null \
+        | awk '$1 !~ /^[up]n/ {print $2}' | grep -E -- "-${1//./\\.}(-|$)"
+}
+# Half-configured kernels (not the running one) missing a DKMS module that
+# the running kernel has installed
+dkms_failed_kernels() {
+    command -v dkms >/dev/null 2>&1 || return 0
+    local running v mod mods
+    running="$(uname -r)"
+    mods="$(dkms status -k "$running" 2>/dev/null | grep ': installed' | sed 's/[,/].*//' | sort -u)"
+    [ -n "$mods" ] || mods="$(dkms status 2>/dev/null | sed 's/[,/].*//' | sort -u)"
+    [ -n "$mods" ] || return 0
+    dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' 'linux-image-*' 'linux-headers-*' 2>/dev/null \
+        | awk '$1 ~ /^i[UF]/ {print $2}' \
+        | sed -E 's/^linux-(image|headers)-(unsigned-)?//' | sort -u \
+        | while read -r v; do
+            case "$v" in [0-9]*.[0-9]*-[0-9]*-*) ;; *) continue ;; esac
+            [ "${v%-*}" = "${running%-*}" ] && continue
+            for mod in $mods; do
+                if ! dkms status -m "$mod" -k "$v" 2>/dev/null | grep -q ': installed'; then
+                    echo "$v"; break
+                fi
+            done
+        done
+}
+dkms_kernel_rollback() {
+    local failed v pkgs="" plan bad metas running
+    failed="$(dkms_failed_kernels | sort -u | tr '\n' ' ')"
+    [ -n "${failed// /}" ] || return 1
+    running="$(uname -r)"
+    for v in $failed; do pkgs="$pkgs $(kernel_abi_pkgs "${v%-*}" | tr '\n' ' ')"; done
+    echo "***********************************************************************"
+    echo "DKMS module build FAILED for kernel: $failed (running: $running)"
+    echo "Driver(s): $(dkms_snapshot)  - see /var/lib/dkms/*/*/build/make.log"
+    # Removing the metapackages must never leave the running kernel auto-removable
+    apt-mark manual $(kernel_abi_pkgs "${running%-*}") >/dev/null 2>&1
+    # Dry run first: only proceed if the removal touches kernel packages alone
+    plan="$(apt-get -s purge $pkgs 2>/dev/null | awk '/^(Purg|Remv) /{print $2}')"
+    bad="$(echo "$plan" | grep -v '^linux-'; echo "$plan" | grep -F -- "${running%-*}")"
+    if [ -z "$plan" ] || [ -n "${bad//[[:space:]]/}" ]; then
+        echo "NOT rolling back automatically (removal would also take: ${bad:-nothing planned})."
+        echo "Fix by hand:  sudo apt purge $pkgs"
+        echo "***********************************************************************"
+        return 1
+    fi
+    metas="$( { echo "$plan" | grep -vxF -f <(printf '%s\n' $pkgs); kdkms_get metas | tr ' ' '\n'; } | grep . | sort -u | tr '\n' ' ')"
+    echo "Removing that kernel so dpkg/apt keep working and it can never become"
+    echo "the boot default without its driver: $pkgs"
+    [ -n "$metas" ] && echo "Kernel metapackages paused (auto-reinstalled when the driver or kernel changes): $metas"
+    echo "***********************************************************************"
+    aptg purge -y $pkgs || return 1
+    dpkg --configure -a
+    mkdir -p "${KDKMS_STATE%/*}"
+    {
+        echo "kernel=$failed"
+        echo "metas=$metas"
+        echo "dkms=$(dkms_snapshot)"
+        echo "cand=$(meta_candidates $metas)"
+        echo "date=$(date '+%F %T')"
+    } > "$KDKMS_STATE"
+    return 0
+}
+# Later runs: reinstall the paused metapackages once something has changed
+kernel_dkms_retry() {
+    [ -f "$KDKMS_STATE" ] || return 0
+    local metas
+    metas="$(kdkms_get metas)"
+    if [ -z "${metas// /}" ]; then rm -f "$KDKMS_STATE"; return 0; fi
+    if [ "$(dkms_snapshot)" = "$(kdkms_get dkms)" ] && [ "$(meta_candidates $metas)" = "$(kdkms_get cand)" ]; then
+        echo "-----------------------------------------------------------------------"
+        echo "KERNEL UPDATES PAUSED since $(kdkms_get date): kernel $(kdkms_get kernel | xargs) failed"
+        echo "to build DKMS driver $(kdkms_get dkms)."
+        echo "Retrying automatically when a new driver or kernel is published."
+        echo "Force a retry now:  sudo rm $KDKMS_STATE && sudo apt install $metas"
+        echo "-----------------------------------------------------------------------"
+        return 0
+    fi
+    echo "Driver or kernel changed since the DKMS failure - reinstalling: $metas"
+    if aptg install -y $metas; then
+        rm -f "$KDKMS_STATE"
+        echo "Kernel metapackages restored; the new kernel built its DKMS modules."
+    else
+        dkms_kernel_rollback || true
+    fi
+}
+
 # --- System update ---
 # Finish any dpkg work an earlier run left half-done (e.g. killed by the cron
 # time limit, or by a power cut). Otherwise apt refuses to upgrade anything
-# ("dpkg was interrupted") and this week's upgrades are skipped.
-dpkg --configure -a
+# ("dpkg was interrupted") and this week's upgrades are skipped. If that
+# half-done work is a kernel whose DKMS driver can't build, roll it back.
+dpkg --configure -a || dkms_kernel_rollback
 aptg update
 # Driver-series transitions (e.g. NVIDIA 590 -> 595) declare Breaks:/Replaces:
 # on the old packages, which plain 'upgrade' cannot satisfy because it is never
 # allowed to remove a package. It then exits with an error and ALL pending
 # upgrades are skipped. 'full-upgrade' may remove/replace packages, so fall
 # back to it when 'upgrade' fails. (--with-new-pkgs matches 'apt upgrade' behavior.)
-if ! aptg upgrade --with-new-pkgs -y; then
+# A kernel whose DKMS build fails is rolled back first and 'upgrade' retried
+# once; full-upgrade can't fix that (it re-runs the same failing build).
+upgrade_ok=no
+for upgrade_try in 1 2; do
+    if aptg upgrade --with-new-pkgs -y; then upgrade_ok=yes; break; fi
+    [ "$upgrade_try" = 1 ] && dkms_kernel_rollback || break
+    echo "Retrying the upgrade without the failed kernel..."
+done
+if [ "$upgrade_ok" = "no" ]; then
     echo "-----------------------------------------------------------------------"
     echo "'apt upgrade' failed (likely a package conflict that requires removals,"
     echo "e.g. an NVIDIA driver series transition). Retrying with 'full-upgrade'."
@@ -357,8 +474,10 @@ if ! aptg upgrade --with-new-pkgs -y; then
     # --allow-downgrades: a partially-published driver set (e.g. NVIDIA 595 from
     # a PPA) can leave installed versions newer than any complete set the repos
     # can supply; the only consistent solution is to downgrade back to it.
-    aptg full-upgrade -y --allow-downgrades
+    aptg full-upgrade -y --allow-downgrades || dkms_kernel_rollback
 fi
+# After the upgrade, so a driver update from this same run is picked up now
+kernel_dkms_retry
 
 # --- Fix broken package installs ---
 aptg install -f -y
@@ -1431,6 +1550,176 @@ if [ "$is_pve" = "yes" ]; then
         echo "Newer Proxmox kernel installed (running: $pve_running_kernel, installed: $pve_latest_kernel)."
     fi
 fi
+
+# --- Boot guard: a new kernel gets ONE trial boot; GRUB's default stays on ---
+# --- the last kernel that is known to boot.                               ---
+# Stock Ubuntu boots the newest kernel every time, so a kernel that panics
+# (e.g. no initramfs because its DKMS hook failed) breaks every boot until
+# someone picks an older one by hand. Instead:
+#   - GRUB_DEFAULT=saved, pinned to the last good kernel; panic=10 makes a
+#     panic reboot after 10 s instead of hanging.
+#   - A newer kernel is armed with 'grub-reboot' (one-shot). If it panics, the
+#     machine reboots straight back into the good kernel, and the next run
+#     marks it bad and stops offering it. If it boots (and its DKMS drivers are
+#     built), the next run makes it the new default.
+# Only on GRUB systems where GRUB can clear the one-shot entry itself (plain
+# ext2/3/4 /boot, no LVM/RAID/LUKS/btrfs/zfs) - otherwise a bad trial kernel
+# would be retried forever. Skipped if GRUB_DEFAULT was hand-set to an entry.
+BOOTG_STATE=/var/lib/update_ubuntu/boot-guard
+bg_get() { sed -n "s/^$1=//p" "$BOOTG_STATE" 2>/dev/null; }
+bg_set() {
+    mkdir -p "${BOOTG_STATE%/*}"; touch "$BOOTG_STATE"
+    sed -i "/^$1=/d" "$BOOTG_STATE"; echo "$1=$2" >> "$BOOTG_STATE"
+}
+# Effective value of a GRUB setting (grub.d snippets override /etc/default/grub)
+bg_grubvar() {
+    ( . /etc/default/grub 2>/dev/null
+      for f in /etc/default/grub.d/*.cfg; do [ -f "$f" ] && . "$f" 2>/dev/null; done
+      eval "echo \"\${$1}\"" )
+}
+# GRUB menu path for kernel <v>, e.g. gnulinux-advanced-UUID>gnulinux-<v>-advanced-UUID
+bg_entry() {
+    local cfg=/boot/grub/grub.cfg sub ent
+    sub="$(grep -o "\$menuentry_id_option 'gnulinux-advanced-[^']*'" "$cfg" 2>/dev/null | head -n1 | sed "s/.*'\(.*\)'/\1/")"
+    ent="$(grep -F "'gnulinux-$1-advanced-" "$cfg" 2>/dev/null | head -n1 | sed "s/.*\$menuentry_id_option '\([^']*\)'.*/\1/")"
+    [ -n "$ent" ] && echo "${sub:+$sub>}$ent"
+}
+# DKMS modules installed for kernel <ref> are also installed for kernel <v>
+dkms_ok_for() {
+    command -v dkms >/dev/null 2>&1 || return 0
+    local mod
+    for mod in $(dkms status -k "$2" 2>/dev/null | grep ': installed' | sed 's/[,/].*//' | sort -u); do
+        dkms status -m "$mod" -k "$1" 2>/dev/null | grep -q ': installed' || return 1
+    done
+}
+bg_supported() {
+    [ "$is_pve" = "yes" ] && return 1
+    command -v grub-reboot >/dev/null 2>&1 && command -v grub-set-default >/dev/null 2>&1 \
+        && command -v grub-probe >/dev/null 2>&1 && command -v update-grub >/dev/null 2>&1 || return 1
+    [ -f /boot/grub/grub.cfg ] && [ -f /etc/default/grub ] || return 1
+    [ "$(grub-probe --target=fs /boot/grub 2>/dev/null)" = "ext2" ] || return 1
+    [ -z "$(grub-probe --target=abstraction /boot/grub 2>/dev/null)" ] || return 1
+    [ "$(bg_grubvar GRUB_SAVEDEFAULT)" = "true" ] && return 1
+    case "$(bg_grubvar GRUB_DEFAULT)" in 0|""|saved) return 0 ;; *) return 1 ;; esac
+}
+bg_setup() {
+    local changed=no
+    if [ "$(bg_grubvar GRUB_DEFAULT)" != "saved" ]; then
+        [ -f /etc/default/grub.bak-bootguard ] || cp -a /etc/default/grub /etc/default/grub.bak-bootguard
+        if grep -q '^GRUB_DEFAULT=' /etc/default/grub; then
+            sed -i 's/^GRUB_DEFAULT=.*/GRUB_DEFAULT=saved/' /etc/default/grub
+        else
+            echo 'GRUB_DEFAULT=saved' >> /etc/default/grub
+        fi
+        changed=yes
+    fi
+    if ! echo " $(bg_grubvar GRUB_CMDLINE_LINUX_DEFAULT) $(bg_grubvar GRUB_CMDLINE_LINUX) " | grep -q ' panic='; then
+        [ -f /etc/default/grub.bak-bootguard ] || cp -a /etc/default/grub /etc/default/grub.bak-bootguard
+        if grep -q '^GRUB_CMDLINE_LINUX_DEFAULT=' /etc/default/grub; then
+            sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 panic=10"/' /etc/default/grub
+        else
+            echo 'GRUB_CMDLINE_LINUX_DEFAULT="panic=10"' >> /etc/default/grub
+        fi
+        changed=yes
+    fi
+    # After a failed boot Ubuntu's GRUB shows the menu for GRUB_RECORDFAIL_TIMEOUT;
+    # -1 would wait forever on a headless box instead of booting the good kernel
+    if [ "$(bg_grubvar GRUB_RECORDFAIL_TIMEOUT)" = "-1" ] && grep -q '^GRUB_RECORDFAIL_TIMEOUT=' /etc/default/grub; then
+        [ -f /etc/default/grub.bak-bootguard ] || cp -a /etc/default/grub /etc/default/grub.bak-bootguard
+        sed -i 's/^GRUB_RECORDFAIL_TIMEOUT=.*/GRUB_RECORDFAIL_TIMEOUT=30/' /etc/default/grub
+        changed=yes
+    fi
+    if [ "$changed" = "yes" ]; then
+        echo "Boot guard: GRUB_DEFAULT=saved + panic=10 (backup: /etc/default/grub.bak-bootguard)"
+        update-grub >/dev/null 2>&1 || { echo "WARNING: update-grub failed; boot guard disabled this run."; return 1; }
+    fi
+    # A grub.d snippet that forces another default wins - stay out of its way
+    [ "$(bg_grubvar GRUB_DEFAULT)" = "saved" ]
+}
+bg_promote() {  # bg_promote <v>: make <v> the default boot kernel
+    local e; e="$(bg_entry "$1")"
+    [ -n "$e" ] || return 1
+    grub-set-default "$e" && bg_set good "$1"
+}
+kernel_boot_guard() {
+    bg_supported || return 0
+    local running trial good newest v bad
+    running="$(uname -r)"
+    trial="$(bg_get trial)"
+    bad=" $(bg_get bad) "
+
+    # 1. Outcome of the last trial boot
+    if [ -n "$trial" ]; then
+        if [ "$running" = "$trial" ]; then
+            if dkms_ok_for "$trial" "$(bg_get good)"; then
+                bg_promote "$trial" && echo "Boot guard: kernel $trial booted fine - now the default."
+            else
+                echo "Boot guard: kernel $trial booted but its DKMS driver(s) are missing - NOT made default."
+                echo "            The next reboot returns to $(bg_get good)."
+                bad="$bad$trial "
+            fi
+            bg_set trial ""
+        elif ! grub-editenv list 2>/dev/null | grep -q '^next_entry=.'; then
+            # One-shot was used, but we're not in it. If the journal saw it boot,
+            # it worked and someone picked the old kernel later; otherwise it died.
+            if journalctl -k -o cat --since "@$(bg_get armed)" 2>/dev/null | grep -qF "Linux version $trial "; then
+                bg_promote "$trial" && echo "Boot guard: kernel $trial booted fine earlier - now the default."
+            else
+                echo "***********************************************************************"
+                echo "Boot guard: kernel $trial FAILED its trial boot (panic/hang) - the"
+                echo "machine came back on $running. It will not be tried again; a newer"
+                echo "kernel will be. To retry it: remove '$trial' from 'bad=' in $BOOTG_STATE"
+                echo "***********************************************************************"
+                bad="$bad$trial "
+            fi
+            bg_set trial ""
+        fi
+        bg_set bad "$(echo $bad)"
+    fi
+
+    # 2. Pin the default to the last good kernel (first run: the running one)
+    good="$(bg_get good)"
+    if [ -z "$good" ] || [ ! -e "/boot/vmlinuz-$good" ] || [ -z "$(bg_entry "$good")" ]; then
+        good="$running"
+    fi
+    bg_setup || return 0
+    if [ "$(grub-editenv list 2>/dev/null | sed -n 's/^saved_entry=//p')" != "$(bg_entry "$good")" ]; then
+        bg_promote "$good" && echo "Boot guard: default boot kernel pinned to $good."
+    fi
+    [ "$(bg_get good)" = "$good" ] || bg_set good "$good"
+
+    # 3. Arm a one-shot trial for the newest kernel, if it looks bootable
+    [ -n "$(bg_get trial)" ] && return 0
+    newest="$(ls /boot/vmlinuz-* 2>/dev/null | sed 's|^/boot/vmlinuz-||' | grep -E '^[0-9]+\.[0-9]+' | sort -V | tail -n1)"
+    [ -n "$newest" ] && [ "$newest" != "$good" ] || return 0
+    case "$bad" in *" $newest "*)
+        echo "Boot guard: newest kernel $newest previously failed to boot; staying on $good."
+        return 0 ;;
+    esac
+    if ! dpkg-query -W -f='${db:Status-Abbrev}' "linux-image-$newest" "linux-image-unsigned-$newest" 2>/dev/null | grep -q '^ii'; then
+        echo "Boot guard: kernel $newest is not fully installed; not offering it."
+        return 0
+    fi
+    if [ ! -s "/boot/initrd.img-$newest" ]; then
+        echo "Boot guard: kernel $newest has no initramfs - building it..."
+        update-initramfs -c -k "$newest" >/dev/null 2>&1 && update-grub >/dev/null 2>&1 \
+            || { echo "Boot guard: initramfs build failed; not offering $newest."; return 0; }
+    fi
+    if ! dkms_ok_for "$newest" "$good"; then
+        echo "Boot guard: kernel $newest is missing DKMS driver(s) that $good has; not offering it."
+        return 0
+    fi
+    [ -n "$(bg_entry "$newest")" ] || update-grub >/dev/null 2>&1
+    v="$(bg_entry "$newest")"
+    [ -n "$v" ] || { echo "Boot guard: no GRUB entry for $newest; not offering it."; return 0; }
+    if grub-reboot "$v"; then
+        bg_set trial "$newest"
+        bg_set armed "$(date +%s)"
+        echo "Boot guard: the next reboot tries kernel $newest ONCE. If it panics, the"
+        echo "            machine reboots back into $good automatically."
+    fi
+}
+kernel_boot_guard
 
 # --- Reboot-required notice (kernel, glibc, GPU driver, firmware) ---
 if [ -f /var/run/reboot-required ]; then
