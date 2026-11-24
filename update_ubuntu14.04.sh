@@ -19,7 +19,7 @@ echo "Running update_ubuntu14.04.sh at $now
                             |_|                                             |___|
 
 
-Version:  2.7.2
+Version:  2.7.3
 Last Updated:  11/23/2026
 Updated by:  Claude (Opus 5.5)
     boot guard (GRUB_DEFAULT=saved pinned to the last kernel that booted + panic=10; a new kernel gets one grub-reboot trial boot - promoted if it boots with its DKMS drivers, marked bad and never retried if it panics; missing initramfs rebuilt before arming; only on plain ext2-4 /boot where GRUB can clear the one-shot), kernel vs. DKMS safety net (a new kernel whose DKMS driver - e.g. NVIDIA 590 on the 7.0 HWE kernel - fails to build is purged with the metapackages that pulled it in, so dpkg stops failing every run and the half-installed kernel can never become the boot default; metapackages auto-reinstall once the driver or kernel candidate changes), pip upgraded in the vLLM venv before the vLLM update (every run), clear message when the torch pin keeps vLLM at its current version, weekly cron now runs /home/ubuntu/update_core.sh Saturdays 04:00 + at boot (Debian/Ubuntu with cron installed; falls back to this script if missing), hang protection (single-run PID lock, 8h cap per cron run, curl + per-command timeouts, dpkg --configure -a before upgrading), CA trust-store cleanup (upgrade ca-certificates/libnss3/ca-certificates-java, distrust every root on Mozilla's CCADB removed-CA list plus blocked names - default emSign/eMudhra - and /etc/ca-certificates/distrust.local, rebuild Java cacerts, keytool-remove blocked aliases from every JDK, verify the bundle by decoding each cert), rotated vendor apt key auto-refresh (fixes HashiCorp NO_PUBKEY FC9CA96ACA026560: re-fetches the current key into the repo's signed-by keyring, verifies, restores on failure) + HashiCorp repo key scoping, pnpm install/update (alongside npm), llama.cpp update (git commit check run as checkout owner + rebuild / Homebrew) and vLLM update (pip, same interpreter) when already installed, fwupd installed automatically if missing; firmware check now runs fwupdmgr refresh + get-updates with output shown, then asks before fwupdmgr update, Proxmox VE support (enterprise/Ceph repo 401 fix, pve-kernel reboot detection, guarded release-upgrade with pveXtoY checklist pointer), tmux installed automatically, container image updates restricted to the 04:00-09:00 maintenance window, cron-safe non-interactive apt (confold + lock timeout), self-update syntax validation, reboot-required notice, Raspberry Pi firmware/EEPROM support, Ollama model digest verification, Docker image auto-update with compose recreation, thermald + NUC detection, ClamAV engine upgrades
@@ -110,6 +110,64 @@ if [ -f "$SELF" ]; then
         export UPDATE_UBUNTU_REEXEC=1
         exec bash "$SELF" "$@"
     fi
+fi
+
+# --- Apt repo hosts blocked by a DNS filter (Pi-hole, AdGuard, router) ---
+# A blocklist that matches a repo host (e.g. pkgs.tailscale.com) makes the
+# local resolver answer 0.0.0.0, and apt then fails with:
+#   Could not connect to pkgs.tailscale.com:443 (0.0.0.0). - connect (111: Connection refused)
+# That repo's packages then silently stop updating. Fix for this run only: look
+# up the real address over DNS-over-HTTPS (Cloudflare, then Google, queried by
+# IP so the local resolver is not involved) and pin it in /etc/hosts with a
+# marker. The pin is removed when the script exits, and any pin left by a
+# crashed run is removed at the next start. The permanent fix is to allowlist
+# the host in the DNS filter. Mappings someone added to /etc/hosts by hand are
+# reported but never overridden. Skipped when apt goes through a proxy (the
+# proxy does the DNS lookups). Set APT_DNS_BYPASS=0 to disable.
+DNSPIN_MARK="# update_ubuntu-dns-bypass"
+dnspin_clear() {
+    grep -qF "$DNSPIN_MARK" /etc/hosts 2>/dev/null || return 0
+    # Rewrite in place (not sed -i): /etc/hosts is a bind mount in containers.
+    local t; t="$(grep -vF "$DNSPIN_MARK" /etc/hosts)" && printf '%s\n' "$t" > /etc/hosts
+}
+trap '[ "$(cat "$lock_pidfile" 2>/dev/null)" = "$$" ] && rm -f "$lock_pidfile"; dnspin_clear' EXIT
+dnspin_clear
+dnspin_sinkholed() {  # true when the local resolver gives no IPv4 or only 0.0.0.0/127.x
+    local ips; ips="$(getent ahostsv4 "$1" 2>/dev/null | awk '{print $1}' | sort -u)"
+    [ -z "$ips" ] || ! echo "$ips" | grep -qvE '^(0\.0\.0\.0|127\.)'
+}
+dnspin_doh() {  # dnspin_doh <host>: first public IPv4 for <host>, via DoH
+    local u ip
+    for u in "https://1.1.1.1/dns-query" "https://8.8.8.8/resolve"; do
+        ip="$(curl -fsS -m 10 -H 'accept: application/dns-json' "$u?name=$1&type=A" 2>/dev/null \
+            | grep -oE '"data": ?"[0-9]+(\.[0-9]+){3}"' | grep -oE '[0-9]+(\.[0-9]+){3}' \
+            | grep -vE '^(0\.|127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)' | head -n1)"
+        [ -n "$ip" ] && { echo "$ip"; return 0; }
+    done
+    return 1
+}
+if [ "${APT_DNS_BYPASS:-1}" != "0" ] \
+    && ! apt-config dump 2>/dev/null | grep -qiE '^Acquire::(https?::)?Proxy(::[^ ]+)? "[^"]+' ; then
+    for h in $( { grep -hsE '^[[:space:]]*deb(-src)?[[:space:]]' /etc/apt/sources.list /etc/apt/sources.list.d/*.list \
+                    | sed -E 's/\[[^]]*\]//'
+                  grep -hsiE '^[[:space:]]*URIs:' /etc/apt/sources.list.d/*.sources; } \
+                | grep -oE 'https?://[^/[:space:]]+' | sed -E 's#^https?://##; s/:[0-9]+$//; s/^.*@//' | sort -u); do
+        # IP literals and local hosts (apt caches, mirrors) are never "blocked"
+        echo "$h" | grep -qE '^[0-9.]+$|^localhost$|\.(local|lan|home|internal)$' && continue
+        dnspin_sinkholed "$h" || continue
+        if grep -qE "^[^#]*[[:space:]]$(echo "$h" | sed 's/\./\\./g')([[:space:]]|$)" /etc/hosts; then
+            echo "WARNING: apt repo host $h is mapped to a blocking address in /etc/hosts; that repo cannot update. Remove the entry to fix it."
+            continue
+        fi
+        if ip="$(dnspin_doh "$h")"; then
+            echo "$ip $h $DNSPIN_MARK" >> /etc/hosts
+            echo "NOTE: your DNS server blocks apt repo host $h (answers 0.0.0.0 / no address)."
+            echo "  Using its real address $ip (via DNS-over-HTTPS) for this run only; to fix"
+            echo "  it permanently, allowlist $h in your DNS filter (Pi-hole/AdGuard/router)."
+        else
+            echo "WARNING: apt repo host $h does not resolve (DNS block?) and DNS-over-HTTPS failed; that repo will be skipped."
+        fi
+    done
 fi
 
 # --- Fix duplicate Docker apt sources (archive_uri-*.list duplicates docker.list
